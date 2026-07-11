@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title description">
+  <title id="title">Mantosh Kumar engineering mark</title>
+  <desc id="description">A blue network mark representing connected engineering systems.</desc>
+  <rect width="512" height="512" rx="112" fill="#060b12"/>
+  <g fill="none" stroke="#3b82f6" stroke-linecap="round" stroke-linejoin="round" stroke-width="30">
+    <path d="M120 172 256 96l136 76v168l-136 76-136-76z"/>
+    <path d="M120 172l136 76 136-76M256 248v168"/>
+  </g>
+  <circle cx="256" cy="248" r="27" fill="#f8fafc"/>
+</svg>

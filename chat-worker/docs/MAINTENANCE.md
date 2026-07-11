@@ -19,7 +19,7 @@
 ## Monthly
 
 - Rotate the index token if it is shared with a departing contributor.
-- Check dependencies and Cloudflare/OpenAI change notices.
+- Check Cloudflare Workers AI model, quota, and rate-limit change notices.
 - Exercise a staging rollback and run accessibility checks on the chat panel.
 
 ## Data lifecycle

@@ -1,11 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://mantoshkumar.com/</loc>
-    <priority>1.0</priority>
+    <loc>https://mantoshkumar1.github.io/contact/</loc>
   </url>
   <url>
-    <loc>https://mantoshkumar.com/resume/</loc>
-    <priority>0.8</priority>
+    <loc>https://mantoshkumar1.github.io/experience/</loc>
+  </url>
+  <url>
+    <loc>https://mantoshkumar1.github.io/</loc>
+  </url>
+  <url>
+    <loc>https://mantoshkumar1.github.io/projects/photosahi.html</loc>
+  </url>
+  <url>
+    <loc>https://mantoshkumar1.github.io/resume/</loc>
+  </url>
+  <url>
+    <loc>https://mantoshkumar1.github.io/systems/</loc>
+  </url>
+  <url>
+    <loc>https://mantoshkumar1.github.io/thinking/</loc>
   </url>
 </urlset>

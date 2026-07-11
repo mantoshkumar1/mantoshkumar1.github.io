@@ -1,6 +1,6 @@
 export const DEFAULTS = Object.freeze({
   maxQuestionLength: 1000,
-  openAiTimeoutMs: 15_000,
+  aiTimeoutMs: 20_000,
   maxOutputTokens: 700,
   retrievalTopK: 5,
   retrievalMaxContextChars: 8_000,
@@ -15,8 +15,10 @@ export const DEFAULTS = Object.freeze({
   maxAnswerChars: 12_000,
   minBotScore: 1,
   enableStreaming: false,
-  embeddingModel: "text-embedding-3-small",
-  model: "gpt-5.5"
+  embeddingModel: "@cf/baai/bge-m3",
+  model: "@cf/meta/llama-3.1-8b-instruct-fast",
+  freeDailyRequestLimit: 50,
+  freePerMinuteRequestLimit: 5
 });
 
 function positiveInteger(value, fallback, name) {
@@ -36,8 +38,6 @@ function unitInterval(value, fallback, name) {
 }
 
 export function loadConfig(env) {
-  if (!env.OPENAI_API_KEY) throw new Error("OPENAI_API_KEY is not configured.");
-
   const origins = (env.ALLOWED_ORIGINS || "")
     .split(",")
     .map((origin) => origin.trim())
@@ -45,13 +45,14 @@ export function loadConfig(env) {
   if (origins.length === 0) throw new Error("ALLOWED_ORIGINS is not configured.");
 
   return Object.freeze({
-    apiKey: env.OPENAI_API_KEY,
     allowedOrigins: new Set(origins),
-    model: env.OPENAI_MODEL || DEFAULTS.model,
+    model: env.AI_MODEL || DEFAULTS.model,
     maxQuestionLength: positiveInteger(env.MAX_QUESTION_LENGTH, DEFAULTS.maxQuestionLength, "MAX_QUESTION_LENGTH"),
-    openAiTimeoutMs: positiveInteger(env.OPENAI_TIMEOUT_MS, DEFAULTS.openAiTimeoutMs, "OPENAI_TIMEOUT_MS"),
+    aiTimeoutMs: positiveInteger(env.AI_TIMEOUT_MS, DEFAULTS.aiTimeoutMs, "AI_TIMEOUT_MS"),
     maxOutputTokens: positiveInteger(env.MAX_OUTPUT_TOKENS, DEFAULTS.maxOutputTokens, "MAX_OUTPUT_TOKENS"),
-    embeddingModel: env.EMBEDDING_MODEL || DEFAULTS.embeddingModel,
+    embeddingModel: env.AI_EMBEDDING_MODEL || DEFAULTS.embeddingModel,
+    freeDailyRequestLimit: positiveInteger(env.FREE_DAILY_REQUEST_LIMIT, DEFAULTS.freeDailyRequestLimit, "FREE_DAILY_REQUEST_LIMIT"),
+    freePerMinuteRequestLimit: positiveInteger(env.FREE_PER_MINUTE_REQUEST_LIMIT, DEFAULTS.freePerMinuteRequestLimit, "FREE_PER_MINUTE_REQUEST_LIMIT"),
     retrievalTopK: positiveInteger(env.RETRIEVAL_TOP_K, DEFAULTS.retrievalTopK, "RETRIEVAL_TOP_K"),
     retrievalMaxContextChars: positiveInteger(env.RETRIEVAL_MAX_CONTEXT_CHARS, DEFAULTS.retrievalMaxContextChars, "RETRIEVAL_MAX_CONTEXT_CHARS"),
     semanticScoreThreshold: unitInterval(env.SEMANTIC_SCORE_THRESHOLD, DEFAULTS.semanticScoreThreshold, "SEMANTIC_SCORE_THRESHOLD"),

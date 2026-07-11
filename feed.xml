@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Mantosh Kumar — Engineering Writing and Systems</title>
+  <id>https://mantoshkumar1.github.io/</id>
+  <link href="https://mantoshkumar1.github.io/" />
+  <link href="https://mantoshkumar1.github.io/feed.xml" rel="self" type="application/atom+xml" />
+  <updated>2026-07-11T00:00:00Z</updated>
+  <author>
+    <name>Mantosh Kumar</name>
+    <email>hello@mantoshkumar.com</email>
+  </author>
+  <subtitle>Public engineering case studies, writing, and notes by Mantosh Kumar.</subtitle>
+  <entry>
+    <title>PhotoSahi: Privacy-First Browser Image Processing</title>
+    <id>https://mantoshkumar1.github.io/projects/photosahi.html</id>
+    <link href="https://mantoshkumar1.github.io/projects/photosahi.html" />
+    <published>2026-07-11T00:00:00Z</published>
+    <updated>2026-07-11T00:00:00Z</updated>
+    <author><name>Mantosh Kumar</name></author>
+    <category term="project-case-study" label="Project Case Study" />
+    <category term="browser-side-image-processing" label="Browser-side image processing" />
+    <category term="privacy" label="Privacy" />
+    <summary>How PhotoSahi uses local HTML5 Canvas processing for passport and visa photo preparation without a backend.</summary>
+  </entry>
+  <entry>
+    <title>Engineering Writing and Notes</title>
+    <id>https://mantoshkumar1.github.io/thinking/</id>
+    <link href="https://mantoshkumar1.github.io/thinking/" />
+    <published>2026-07-11T00:00:00Z</published>
+    <updated>2026-07-11T00:00:00Z</updated>
+    <author><name>Mantosh Kumar</name></author>
+    <category term="engineering-notes" label="Engineering Notes" />
+    <category term="platform-engineering" label="Platform Engineering" />
+    <category term="automation" label="Automation" />
+    <summary>Public engineering notes on distributed systems, platform engineering, automation, developer productivity, and AI-assisted engineering.</summary>
+  </entry>
+</feed>

@@ -1,4 +1,4 @@
-name = "personal-website-chat"
+name = "ask-mantosh"
 main = "src/index.js"
 compatibility_date = "2026-07-11"
 workers_dev = true
@@ -6,30 +6,32 @@ workers_dev = true
 [vars]
 # Comma-separated exact origins. Do not use * in production.
 ALLOWED_ORIGINS = "https://mantoshkumar1.github.io"
-OPENAI_MODEL = "gpt-5.5"
+AI_MODEL = "@cf/meta/llama-3.1-8b-instruct-fast"
 MAX_QUESTION_LENGTH = "1000"
-OPENAI_TIMEOUT_MS = "15000"
+AI_TIMEOUT_MS = "20000"
 MAX_OUTPUT_TOKENS = "700"
-EMBEDDING_MODEL = "text-embedding-3-small"
+AI_EMBEDDING_MODEL = "@cf/baai/bge-m3"
 RETRIEVAL_TOP_K = "5"
 RETRIEVAL_MAX_CONTEXT_CHARS = "8000"
 SEMANTIC_SCORE_THRESHOLD = "0.25"
 CONVERSATION_HISTORY_TURNS = "6"
 CONVERSATION_TTL_SECONDS = "86400"
 RECOMMENDATION_LIMIT = "6"
+FREE_DAILY_REQUEST_LIMIT = "50"
+FREE_PER_MINUTE_REQUEST_LIMIT = "5"
 
 [secrets]
-required = ["OPENAI_API_KEY", "INDEXER_TOKEN"]
+required = ["INDEXER_TOKEN"]
 
-# Set OPENAI_API_KEY with `npx wrangler secret put OPENAI_API_KEY`.
+# INDEXER_TOKEN protects the private GitHub-to-Worker indexing endpoint.
 # Do not put secrets in this file or commit a .dev.vars file.
 #
-# Optional future rate-limiting binding. The worker detects this binding when
-# configured and calls `RATE_LIMITER.limit({ key })` before OpenAI.
-# [[ratelimits]]
-# name = "RATE_LIMITER"
-# namespace_id = "replace-with-your-Cloudflare-namespace-id"
-# simple = { limit = 20, period = 60 }
+# This mandatory limiter rejects requests before retrieval or Workers AI calls.
+# Keep namespace_id unique within the Cloudflare account.
+[[ratelimits]]
+name = "RATE_LIMITER"
+namespace_id = "31001"
+simple = { limit = 5, period = 60 }
 #
 # Required RAG storage bindings. Create the resources with the commands in
 # README.md, then add the generated binding snippets here.
@@ -40,4 +42,11 @@ required = ["OPENAI_API_KEY", "INDEXER_TOKEN"]
 #
 # [[vectorize]]
 # binding = "KNOWLEDGE_INDEX"
-# index_name = "personal-website-knowledge"
+# index_name = "ask-mantosh-knowledge-v3"
+#
+# [[kv_namespaces]]
+# binding = "CACHE_VERSION"
+# id = "replace-with-your-KV-namespace-id"
+
+[ai]
+binding = "AI"

@@ -1,7 +1,9 @@
 import { AppError, badRequest } from "./errors.js";
-import { createEmbeddings } from "./openai.js";
+import { bumpKnowledgeVersion } from "./cache.js";
+import { createEmbeddings } from "./ai.js";
+import { enforceFreeUsageLimit } from "./quota.js";
 
-const MAX_CHUNKS_PER_DOCUMENT = 80;
+const MAX_CHUNKS_PER_DOCUMENT = 20;
 const MAX_CHUNK_CHARS = 2_000;
 const CATEGORIES = new Set(["project", "article", "note", "experience", "resume", "faq"]);
 const CATEGORY_DIRECTORIES = Object.freeze({ project: "projects", article: "articles", note: "notes", experience: "experience", resume: "resume", faq: "faq" });
@@ -58,11 +60,12 @@ async function upsertDocument(env, config, document) {
   validateDocument(document);
   if (document.visibility !== "public") {
     await deleteDocument(env, document.path);
+    await bumpKnowledgeVersion(env);
     return { indexed: false, path: document.path };
   }
 
   const oldIds = await existingChunkIds(env.KNOWLEDGE_DB, document.path);
-  const embeddings = await createEmbeddings({ config, input: document.chunks.map((chunk) => chunk.content) });
+  const embeddings = await createEmbeddings({ env, config, input: document.chunks.map((chunk) => chunk.content) });
   await env.KNOWLEDGE_INDEX.upsert(document.chunks.map((chunk, index) => ({
     id: chunk.id,
     values: embeddings[index],
@@ -89,6 +92,7 @@ async function upsertDocument(env, config, document) {
   const currentIds = new Set(document.chunks.map((chunk) => chunk.id));
   const staleIds = oldIds.filter((id) => !currentIds.has(id));
   if (staleIds.length) await env.KNOWLEDGE_INDEX.deleteByIds(staleIds);
+  await bumpKnowledgeVersion(env);
   return { indexed: true, path: document.path, chunks: document.chunks.length };
 }
 
@@ -99,8 +103,12 @@ export async function handleIndexRequest(request, env, config) {
   try { payload = await request.json(); } catch { throw badRequest("Malformed JSON body."); }
   if (payload?.action === "delete" && isString(payload.path, 512)) {
     await deleteDocument(env, payload.path);
+    await bumpKnowledgeVersion(env);
     return { success: true, deleted: payload.path };
   }
-  if (payload?.action === "upsert") return { success: true, ...(await upsertDocument(env, config, payload.document)) };
+  if (payload?.action === "upsert") {
+    await enforceFreeUsageLimit(env, config);
+    return { success: true, ...(await upsertDocument(env, config, payload.document)) };
+  }
   throw badRequest("Unsupported indexing action.");
 }

@@ -1,0 +1,23 @@
+{
+  "name": "Mantosh Kumar — Engineering Systems",
+  "short_name": "Mantosh Kumar",
+  "description": "Engineering systems, platform engineering, automation, and operational intelligence.",
+  "start_url": "/",
+  "display": "browser",
+  "background_color": "#060b12",
+  "theme_color": "#060b12",
+  "icons": [
+    {
+      "src": "/assets/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

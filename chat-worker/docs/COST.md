@@ -1,4 +1,4 @@
-# Cost and token controls
+# Free-tier and usage controls
 
 ## Controls
 
@@ -11,18 +11,10 @@
 - Cap output tokens and reject oversized output. Stream for perceived latency,
   not to increase output allowance.
 
-## Estimation
+## Usage monitoring
 
-Record `input_tokens` and `output_tokens` from Responses API usage plus
-embedding input tokens. Estimate each request as:
-
-```text
-(input_tokens × input_price + output_tokens × output_price) / 1,000,000
-+ (embedding_tokens × embedding_price) / 1,000,000
-```
-
-Keep pricing as deployment configuration or a dashboard calculation, not a
-hard-coded application claim. Compare a weekly baseline of cache-hit rate,
-retrieval context size, token usage, no-answer rate, and cost per grounded
-answer. A response-cache hit avoids both retrieval and generation; an
+Workers AI's free allocation is finite and resets daily. Monitor its dashboard
+usage plus cache-hit rate, retrieval context size, no-answer rate, and model
+cache-hit rate, retrieval context size, no-answer rate, and model
+failures. A response-cache hit avoids both retrieval and generation; an
 embedding-cache hit avoids only the embedding request.

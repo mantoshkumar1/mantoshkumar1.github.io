@@ -1,0 +1,21 @@
+name: Technical SEO
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node scripts/generate-seo.mjs
+      - run: node scripts/seo-audit.mjs
+      - run: node scripts/validate-discoverability.mjs

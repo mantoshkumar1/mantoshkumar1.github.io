@@ -1,5 +1,5 @@
 import { AppError } from "./errors.js";
-import { createEmbeddings } from "./openai.js";
+import { createEmbeddings } from "./ai.js";
 import { scoreRetrievalConfidence } from "./prompt/confidence-scorer.js";
 import { fingerprint, isCacheableQuestion, knowledgeVersion, readCachedJson, writeCachedJson } from "./cache.js";
 
@@ -37,7 +37,7 @@ export async function retrieveKnowledge(question, env, config) {
   let embedding = embeddingKey ? await readCachedJson("embedding", embeddingKey) : null;
   let embeddingCache = embedding ? "hit" : "miss";
   if (!Array.isArray(embedding)) {
-    embedding = (await createEmbeddings({ config, input: [question] }))[0];
+    embedding = (await createEmbeddings({ env, config, input: [question] }))[0];
     if (embeddingKey) writeCachedJson("embedding", embeddingKey, embedding, config.embeddingCacheTtlSeconds);
     embeddingCache = "miss";
   }

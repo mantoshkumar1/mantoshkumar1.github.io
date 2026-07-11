@@ -12,7 +12,7 @@ function testDatabase() {
           all: async () => sql.includes("FROM chunks c")
             ? { results: [{ chunk_id: "photo-1", content: "PhotoSahi was built with browser-side image processing.", title: "PhotoSahi", slug: "photosahi", category: "project", tags: "[\"image-processing\"]", related_topics: "[\"privacy\"]", summary: "A browser-side image-processing project.", path: "knowledge/projects/photosahi.md", url: "/projects/photosahi.html" }] }
             : { results: [] },
-          first: async () => null,
+          first: async () => (sql.includes("ai_daily_usage") || sql.includes("ai_request_windows")) ? { request_count: 1 } : null,
           run: async () => ({ success: true })
         })
       };
@@ -22,27 +22,29 @@ function testDatabase() {
 }
 
 const env = {
-  OPENAI_API_KEY: "test-key",
   ALLOWED_ORIGINS: "https://mantoshkumar1.github.io",
-  OPENAI_MODEL: "gpt-5.5",
+  INDEXER_TOKEN: "indexer-test-token",
+  AI: { run: async (model) => model.includes("bge-m3") ? { data: [[0.1, 0.2]] } : { response: "PhotoSahi answer [Project: PhotoSahi]" } },
+  RATE_LIMITER: { limit: async () => ({ success: true }) },
   KNOWLEDGE_INDEX: { query: async () => ({ matches: [{ score: 0.9, metadata: { chunk_id: "photo-1" } }] }) },
   KNOWLEDGE_DB: testDatabase()
 };
 
 function request(body, options = {}) {
-  return new Request("https://worker.example/chat", {
+  return new Request(`https://worker.example${options.path || "/chat"}`, {
     method: options.method || "POST",
     headers: { "Content-Type": "application/json", Origin: "https://mantoshkumar1.github.io", ...options.headers },
     body: body === undefined ? undefined : typeof body === "string" ? body : JSON.stringify(body)
   });
 }
 
+test("accepts POST / as the deployed Worker endpoint", async (t) => {
+  const response = await worker.fetch(request({ question: "How did you build PhotoSahi?" }, { path: "/" }), env);
+  assert.equal(response.status, 200);
+  assert.equal((await response.json()).success, true);
+});
+
 test("returns the stable chat contract", async (t) => {
-  const originalFetch = globalThis.fetch;
-  globalThis.fetch = async (url) => new Response(JSON.stringify(url.includes("embeddings")
-    ? { data: [{ embedding: [0.1, 0.2] }] }
-    : { output_text: "PhotoSahi answer [Project: PhotoSahi]" }), { status: 200 });
-  t.after(() => { globalThis.fetch = originalFetch; });
   const response = await worker.fetch(request({ question: "Why no backend?" }), env);
   assert.equal(response.status, 200);
   const payload = await response.json();
@@ -77,11 +79,9 @@ test("rejects an untrusted browser origin", async () => {
   assert.equal(response.status, 401);
 });
 
-test("routes direct navigation without calling OpenAI", async (t) => {
-  const originalFetch = globalThis.fetch;
-  globalThis.fetch = async () => { throw new Error("OpenAI must not be called for navigation"); };
-  t.after(() => { globalThis.fetch = originalFetch; });
-  const response = await worker.fetch(request({ question: "Resume", conversationId: "session_navigation_123" }), env);
+test("routes direct navigation without calling Workers AI", async () => {
+  const navigationEnv = { ...env, AI: { run: async () => { throw new Error("No AI call is expected for navigation"); } } };
+  const response = await worker.fetch(request({ question: "Resume", conversationId: "session_navigation_123" }), navigationEnv);
   const payload = await response.json();
   assert.equal(response.status, 200);
   assert.equal(payload.action.type, "navigate");
@@ -91,53 +91,94 @@ test("routes direct navigation without calling OpenAI", async (t) => {
   assert.equal(payload.confidence, "high");
 });
 
-test("maps OpenAI rate limits safely", async (t) => {
-  const originalFetch = globalThis.fetch;
-  globalThis.fetch = async (url) => url.includes("embeddings")
-    ? new Response(JSON.stringify({ data: [{ embedding: [0.1, 0.2] }] }), { status: 200 })
-    : new Response("busy", { status: 429, headers: { "Retry-After": "30" } });
-  t.after(() => { globalThis.fetch = originalFetch; });
-  const response = await worker.fetch(request({ question: "Hello" }), env);
+test("maps Workers AI quota exhaustion safely", async () => {
+  const rateLimitedEnv = { ...env, AI: { run: async (model) => model.includes("bge-m3") ? { data: [[0.1, 0.2]] } : Promise.reject({ code: 429 }) } };
+  const response = await worker.fetch(request({ question: "Hello" }), rateLimitedEnv);
   assert.equal(response.status, 429);
-  assert.equal(response.headers.get("Retry-After"), "30");
+  assert.equal((await response.json()).error.code, "workers_ai_quota_exhausted");
 });
 
-test("relays Responses API streaming events with source metadata", async (t) => {
-  const originalFetch = globalThis.fetch;
-  globalThis.fetch = async (url) => url.includes("embeddings")
-    ? new Response(JSON.stringify({ data: [{ embedding: [0.1, 0.2] }] }), { status: 200 })
-    : new Response("event: response.output_text.delta\ndata: {\"delta\":\"Streaming answer\"}\n\nevent: response.completed\ndata: {}\n\n", { status: 200, headers: { "Content-Type": "text/event-stream" } });
-  t.after(() => { globalThis.fetch = originalFetch; });
+test("returns frontend-compatible SSE events with source metadata", async (t) => {
   const response = await worker.fetch(request({ question: "What is PhotoSahi?" }, { headers: { Accept: "text/event-stream" } }), env);
   assert.equal(response.headers.get("Content-Type"), "text/event-stream; charset=utf-8");
   const body = await response.text();
   assert.match(body, /event: metadata/);
   assert.match(body, /Project: PhotoSahi/);
   assert.match(body, /event: response\.output_text\.delta/);
-  assert.match(body, /Streaming answer/);
+  assert.match(body, /PhotoSahi answer/);
 });
 
-test("handles an OpenAI timeout", async (t) => {
-  const originalFetch = globalThis.fetch;
-  globalThis.fetch = (_url, options) => new Promise((_, reject) => {
-    options.signal.addEventListener("abort", () => reject(Object.assign(new Error("aborted"), { name: "AbortError" })));
-  });
-  t.after(() => { globalThis.fetch = originalFetch; });
-  const response = await worker.fetch(request({ question: "Hello" }), { ...env, OPENAI_TIMEOUT_MS: "1" });
+test("handles a Workers AI timeout", async () => {
+  const timedOutEnv = { ...env, AI: { run: async () => new Promise(() => {}) } };
+  const response = await worker.fetch(request({ question: "Hello" }), { ...timedOutEnv, AI_TIMEOUT_MS: "1" });
   assert.equal(response.status, 500);
   assert.equal((await response.json()).error.code, "embedding_timeout");
 });
 
-test("does not call the Responses API when retrieval finds no published knowledge", async (t) => {
-  const originalFetch = globalThis.fetch;
-  t.after(() => { globalThis.fetch = originalFetch; });
+test("does not call Workers AI generation when retrieval finds no published knowledge", async () => {
   const noMatchEnv = { ...env, KNOWLEDGE_INDEX: { query: async () => ({ matches: [] }) } };
-  globalThis.fetch = async (url) => {
-    assert.ok(url.includes("embeddings"));
-    return new Response(JSON.stringify({ data: [{ embedding: [0.1, 0.2] }] }), { status: 200 });
-  };
+  noMatchEnv.AI = { run: async (model) => {
+    assert.match(model, /bge-m3/);
+    return { data: [[0.1, 0.2]] };
+  } };
   const response = await worker.fetch(request({ question: "zzzxqv" }), noMatchEnv);
   assert.equal((await response.json()).answer, "I haven't written about this topic yet.");
+});
+
+test("exposes an unauthenticated health endpoint without configuration details", async () => {
+  const response = await worker.fetch(new Request("https://worker.example/health"), env);
+  assert.equal(response.status, 200);
+  assert.deepEqual(await response.json(), { success: true, service: "ask-mantosh" });
+});
+
+test("invalidates the knowledge cache after a successful index update", async () => {
+  const writes = [];
+  const indexEnv = {
+    ...env,
+    CACHE_VERSION: { put: async (key, value) => writes.push([key, value]) },
+    KNOWLEDGE_INDEX: { upsert: async () => {}, deleteByIds: async () => {} }
+  };
+  const response = await worker.fetch(new Request("https://worker.example/internal/index", {
+    method: "POST",
+    headers: { Authorization: "Bearer indexer-test-token", "Content-Type": "application/json" },
+    body: JSON.stringify({ action: "upsert", document: {
+      path: "knowledge/projects/test.md", checksum: "a".repeat(64), title: "Test project", slug: "test-project", category: "project",
+      tags: ["test"], summary: "A test project.", last_updated: "2026-07-11", related_topics: [], visibility: "public", url: "/projects/test.html",
+      chunks: [{ id: "test-chunk", content: "Test evidence." }]
+    } })
+  }), indexEnv);
+  assert.equal(response.status, 200);
+  assert.equal(writes.length, 1);
+  assert.equal(writes[0][0], "knowledge-version");
+});
+
+test("fails closed when the mandatory rate limiter is absent", async () => {
+  const { RATE_LIMITER: _rateLimiter, ...withoutLimiter } = env;
+  const response = await worker.fetch(request({ question: "What is PhotoSahi?" }), withoutLimiter);
+  assert.equal(response.status, 503);
+  assert.equal((await response.json()).error.code, "rate_limit_unconfigured");
+});
+
+test("rejects requests after the configured daily free-use limit", async () => {
+  const quotaExhaustedDb = { ...testDatabase(), prepare: (sql) => ({ bind: () => ({
+    all: async () => sql.includes("FROM chunks c") ? { results: [] } : { results: [] },
+    first: async () => sql.includes("ai_request_windows") ? { request_count: 1 } : null,
+    run: async () => ({ success: true })
+  }) }) };
+  const response = await worker.fetch(request({ question: "What is PhotoSahi?" }), { ...env, KNOWLEDGE_DB: quotaExhaustedDb });
+  assert.equal(response.status, 429);
+  assert.equal((await response.json()).error.code, "free_usage_limit_reached");
+});
+
+test("rejects requests after the configured per-minute free-use limit", async () => {
+  const rateExhaustedDb = { ...testDatabase(), prepare: (sql) => ({ bind: () => ({
+    all: async () => sql.includes("FROM chunks c") ? { results: [] } : { results: [] },
+    first: async () => sql.includes("ai_request_windows") ? null : { request_count: 1 },
+    run: async () => ({ success: true })
+  }) }) };
+  const response = await worker.fetch(request({ question: "What is PhotoSahi?" }), { ...env, KNOWLEDGE_DB: rateExhaustedDb });
+  assert.equal(response.status, 429);
+  assert.equal((await response.json()).error.code, "request_rate_limit_reached");
 });
 
 test("extracts exactly three Markdown follow-up questions", () => {

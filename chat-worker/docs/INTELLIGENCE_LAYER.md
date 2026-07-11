@@ -12,7 +12,7 @@ flowchart LR
   R -->|knowledge question| K["Hybrid RAG"]
   K --> C["ConfidenceScorer"]
   C --> P["Evidence-only prompt"]
-  P --> G["Responses API"]
+  P --> G["Workers AI"]
   K --> RE["RecommendationEngine"]
   G --> O["Response + metadata"]
   RE --> O
@@ -35,7 +35,7 @@ flowchart LR
 A conversation ID is generated when the client does not provide one. The Worker
 persists at most six turns of user/assistant messages and a compact extractive
 summary of earlier topics and cited sources. The complete transcript is never
-re-sent to OpenAI. Sessions expire after `CONVERSATION_TTL_SECONDS` (24 hours
+re-sent to the AI model. Sessions expire after `CONVERSATION_TTL_SECONDS` (24 hours
 by default); no user identity is required today.
 
 When authentication is added, bind `conversation_sessions.subject_id` to a
@@ -48,7 +48,7 @@ identity from IP address, browser fingerprint, or analytics data.
 not whether a model sounds certain. `confidenceDetails` exposes the best vector
 similarity, lexical candidate count, retrieved source count, and selected
 context count. A low-confidence query returns the fixed knowledge-gap answer
-without calling the Responses API.
+without calling the AI model.
 
 ## Recommendation and analytics privacy
 

@@ -10,7 +10,7 @@ finds public, published evidence.
 flowchart LR
   A["Markdown + YAML\nknowledge/"] --> B["GitHub Actions\nchanged-file sync"]
   B --> C["Authenticated Worker\n/internal/index"]
-  C --> D["OpenAI Embeddings"]
+  C --> D["Workers AI Embeddings"]
   C --> E["Cloudflare D1\nchunks + FTS5"]
   C --> F["Cloudflare Vectorize\nembeddings"]
   U["Visitor question"] --> W["Cloudflare Worker\n/chat"]
@@ -20,7 +20,7 @@ flowchart LR
   E --> H
   F --> H
   H --> P["Evidence-only prompt"]
-  P --> R["OpenAI Responses API"]
+  P --> R["Workers AI Generation"]
   R --> S["Answer + clickable sources"]
 ```
 
@@ -30,10 +30,10 @@ flowchart LR
 sequenceDiagram
   participant V as Visitor
   participant W as Worker
-  participant E as OpenAI Embeddings
+  participant E as Workers AI Embeddings
   participant X as Vectorize
   participant D as D1 FTS5
-  participant G as OpenAI Responses
+  participant G as Workers AI Generation
 
   V->>W: POST /chat {question}
   W->>W: Validate and normalize
@@ -131,7 +131,7 @@ Future capabilities should remain behind small adapters:
 
 ## Security controls
 
-- `OPENAI_API_KEY` and `INDEXER_TOKEN` are Worker secrets, never browser values.
+- `INDEXER_TOKEN` is a Worker secret. Workers AI uses a managed binding; no external provider API key is present in the Worker or browser.
 - The index route has no CORS headers and uses a bearer token comparison.
 - Only expected category directories and public URLs are accepted at ingestion.
 - D1 queries use prepared parameters; FTS terms are tokenized before matching.

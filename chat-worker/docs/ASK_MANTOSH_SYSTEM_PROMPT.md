@@ -46,7 +46,7 @@ The builder has five durable layers:
 
 Confidence is a groundedness gate, not a user-visible percentage:
 
-1. No fused retrieval candidates: unavailable answer without an OpenAI call.
+1. No fused retrieval candidates: unavailable answer without a Workers AI generation call.
 2. Candidates below the semantic threshold and with no BM25 support: unavailable
    answer.
 3. Retrieved candidates: the model must still verify explicit documentary

@@ -50,4 +50,4 @@ __pycache__/
 # Local static output or caches
 .cache/
 .tmp/
-
+dist/

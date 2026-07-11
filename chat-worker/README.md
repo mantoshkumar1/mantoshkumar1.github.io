@@ -3,7 +3,7 @@
 Production backend for the static personal website chat UI. The public API is:
 
 ```http
-POST /chat
+POST /chat (or `POST /` for the deployed Worker root URL)
 Content-Type: application/json
 
 {"question":"Why did you build PhotoSahi without a backend?"}
@@ -18,7 +18,7 @@ Successful responses always have this shape:
 ## Design
 
 - `src/validation.js`: bounded JSON parsing, type checks, control-character removal, and question normalization.
-- `src/openai.js`: the only module that speaks to the Responses API. It uses the `gpt-5.5` model, a Worker-side timeout, `store: false`, and never returns upstream details.
+- `src/ai.js`: isolated Cloudflare Workers AI adapter with Worker-side timeouts; the browser never receives a provider credential.
 - `src/prompt/`: reusable prompt engine for durable policy, injection guardrails, evidence confidence, citations, prompt construction, and response formatting.
 - `src/retrieval.js`: hybrid retrieval (semantic Vectorize + D1 FTS5/BM25), reciprocal-rank fusion, context budget enforcement, and public-visibility filtering.
 - `src/intelligence/`: session memory, deterministic navigation routing, metadata recommendations, retrieval confidence, and privacy-preserving analytics.
@@ -27,7 +27,7 @@ Successful responses always have this shape:
 - `src/formatter.js`: the stable public response contract.
 - `src/rate-limit.js`: calls a Cloudflare Rate Limiting binding when one is configured.
 
-The worker never sees a browser-supplied OpenAI key. `OPENAI_API_KEY` exists only as a Cloudflare Worker secret.
+The Worker reads the managed Cloudflare `AI` binding from its environment. No OpenAI API key or external model-provider credential is used.
 
 Grounded responses contain `answer`, `sources`, `relatedArticles`,
 `relatedProjects`, `relatedNotes`, `recommendations`, `followUpQuestions`,
@@ -36,11 +36,11 @@ Grounded responses contain `answer`, `sources`, `relatedArticles`,
 
 ## Intelligence layer
 
-Every request takes this path before an OpenAI Responses API call:
+Every request takes this path before a Workers AI generation call:
 
 1. Validate or create a client-held `conversationId`.
 2. Load the bounded session memory and expand retrieval only with the most recent visitor topic.
-3. Route deterministic commands such as `Resume`, `Contact`, `Show PhotoSahi`, and `Latest article` directly to a page. These return `action: { type: "navigate", ... }` and do not call OpenAI.
+3. Route deterministic commands such as `Resume`, `Contact`, `Show PhotoSahi`, and `Latest article` directly to a page. These return `action: { type: "navigate", ... }` and do not call the AI model.
 4. Use hybrid retrieval for questions that need an answer, then calculate retrieval evidence confidence.
 5. Build metadata-only recommendations and three follow-up questions from public tags and related topics. This requires no generative call.
 6. Cache eligible first-turn responses by normalized question and knowledge version. Multi-turn responses are never shared through this cache.
@@ -61,7 +61,7 @@ Prerequisites: a Cloudflare account and Node.js 20+.
 cd chat-worker
 npm install
 npx wrangler login
-npx wrangler secret put OPENAI_API_KEY
+npx wrangler secret put INDEXER_TOKEN
 npm run deploy
 ```
 
@@ -70,7 +70,6 @@ Create the Worker by running `npm run deploy`; Wrangler creates or updates the W
 For local development, create an untracked `.dev.vars` file:
 
 ```dotenv
-OPENAI_API_KEY=your-development-key
 INDEXER_TOKEN=a-long-random-local-value
 ```
 
@@ -96,7 +95,7 @@ curl -i https://YOUR-WORKER.workers.dev/chat \
 
 ## Before opening the endpoint publicly
 
-Configure the optional Cloudflare Rate Limiting binding shown in `wrangler.toml`. The code already invokes it using `CF-Connecting-IP`; the binding is deliberately absent from source because its namespace is account-specific. Do not rely on CORS as an access-control or abuse-control mechanism.
+The Cloudflare Rate Limiting binding in `wrangler.toml` is mandatory and the Worker fails closed if it is missing or unavailable. D1 also enforces strict global counters: `FREE_PER_MINUTE_REQUEST_LIMIT` defaults to 5 requests per UTC minute and `FREE_DAILY_REQUEST_LIMIT` defaults to 50 AI-bearing requests per UTC day. Do not rely on CORS as an access-control or abuse-control mechanism.
 
 No application-level user authentication is included: a static public chat client cannot keep a bearer secret. If private access is later needed, put Cloudflare Access in front of the Worker or add a server-side session issuer.
 
@@ -107,11 +106,11 @@ in `projects/`, `articles/`, `notes/`, `experience/`, `resume/`, or `faq/` and
 uses the front matter in [`../knowledge/_template.md`](../knowledge/_template.md), including an explicit public `url`. The structured `sources` response returns this URL so the frontend can render clickable citations.
 Only `visibility: public` documents are indexed. A document is chunked into
 small, overlapping passages; the Worker sends only the top five passages (and
-at most 8,000 characters) to OpenAI.
+at most 8,000 characters) to Workers AI.
 
 The retrieval path is hybrid:
 
-1. Generate one `text-embedding-3-small` query embedding.
+1. Generate one Workers AI `@cf/baai/bge-m3` query embedding.
 2. Query Cloudflare Vectorize for semantically similar chunks.
 3. Query D1 FTS5/BM25 for exact engineering names, acronyms, and project terms.
 4. Fuse both ranked lists with reciprocal-rank fusion, retrieve full chunks from
@@ -128,7 +127,7 @@ Run these once from `chat-worker`. Do not commit the generated D1 ID.
 
 ```bash
 npx wrangler d1 create personal-website-knowledge
-npx wrangler vectorize create personal-website-knowledge --dimensions=1536 --metric=cosine
+npx wrangler vectorize create ask-mantosh-knowledge-v3 --dimensions=1024 --metric=cosine
 npx wrangler d1 migrations apply personal-website-knowledge --remote
 ```
 
@@ -137,13 +136,12 @@ commented sections of `wrangler.toml`. Then create a long, random value for the
 private indexing endpoint and store both required secrets:
 
 ```bash
-npx wrangler secret put OPENAI_API_KEY
 npx wrangler secret put INDEXER_TOKEN
 npm run deploy
 ```
 
-The Vectorize dimension must remain `1536` while `EMBEDDING_MODEL` remains
-`text-embedding-3-small`. Changing either requires creating a new index and a
+The Vectorize dimension must remain `1024` while `AI_EMBEDDING_MODEL` remains
+`@cf/baai/bge-m3`. Changing either requires creating a new index and a
 full reindex.
 
 ## Automatic indexing
@@ -169,6 +167,23 @@ node scripts/sync-knowledge.mjs --all
 The endpoint is intentionally not CORS-enabled. It accepts only a Bearer token,
 does not return document content, and excludes `draft` and `private` documents
 from public retrieval.
+
+## Free-plan safety and monitoring
+
+This Worker makes no paid external API calls. Workers AI is available on the
+Cloudflare Workers Free plan with a daily free allocation. Do not enable
+Workers Paid or add a payment method for this Worker. In the Cloudflare
+dashboard, open **Workers & Pages → Overview** and confirm the account plan is
+**Workers Free**; then open **Workers AI → Usage** to monitor daily Neuron
+usage. The allocation resets at 00:00 UTC.
+
+The Worker rejects requests after `FREE_PER_MINUTE_REQUEST_LIMIT` or
+`FREE_DAILY_REQUEST_LIMIT`, rejects traffic when the Cloudflare limiter is
+unavailable, and returns a clear 429 if Workers AI reports quota exhaustion.
+These application caps are conservative safety guards; Cloudflare remains the
+final free-tier enforcement boundary. Each authenticated indexing upsert also
+consumes the daily safety budget, and documents are capped at 20 chunks, so an
+automated content sync cannot bypass the free-use guard.
 
 ## RAG verification
 

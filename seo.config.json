@@ -1,0 +1,70 @@
+{
+  "site": {
+    "name": "Mantosh Kumar",
+    "url": "https://mantoshkumar1.github.io",
+    "author": "Mantosh Kumar",
+    "description": "Engineering systems, platform engineering, automation, and operational intelligence.",
+    "socialImage": "/assets/seo/social-default.png",
+    "themeColor": "#060b12",
+    "language": "en",
+    "analytics": {
+      "provider": "plausible",
+      "domain": "mantoshkumar1.github.io"
+    }
+  },
+  "pages": {
+    "/": {
+      "title": "Mantosh Kumar | Platform Engineering, Automation & AI Systems",
+      "description": "Mantosh Kumar builds engineering systems that scale teams through platform engineering, automation, operational intelligence, and AI-assisted engineering.",
+      "kind": "home"
+    },
+    "/systems/": {
+      "title": "Engineering Systems | Mantosh Kumar",
+      "description": "Projects and engineering systems demonstrating platform thinking, automation, operational intelligence, and backend architecture.",
+      "kind": "collection",
+      "schemaType": "CollectionPage"
+    },
+    "/thinking/": {
+      "title": "Engineering Notes & Technical Writing | Mantosh Kumar",
+      "description": "Technical writing and engineering notes on distributed systems, platform engineering, automation, and developer productivity.",
+      "kind": "collection",
+      "schemaType": "CollectionPage"
+    },
+    "/experience/": {
+      "title": "Engineering Experience | Mantosh Kumar",
+      "description": "A career timeline focused on platform engineering, systems delivery, automation, and engineering leverage across global teams.",
+      "kind": "collection",
+      "schemaType": "CollectionPage"
+    },
+    "/resume/": {
+      "title": "Staff Software Engineer Resume | Mantosh Kumar",
+      "description": "Resume for Mantosh Kumar, a Staff Software Engineer focused on platform engineering, automation, operational intelligence, and backend systems.",
+      "kind": "page",
+      "schemaType": "ProfilePage"
+    },
+    "/contact/": {
+      "title": "Contact Mantosh Kumar | Engineering Systems",
+      "description": "Contact Mantosh Kumar to discuss engineering systems, platform engineering, technical writing, and long-term collaborations.",
+      "kind": "page",
+      "schemaType": "ContactPage"
+    },
+    "/projects/photosahi.html": {
+      "title": "PhotoSahi: Privacy-First Browser Photo Processing | Mantosh Kumar",
+      "description": "PhotoSahi is a privacy-first passport and visa photo generator that processes images locally in the browser with HTML5 Canvas.",
+      "kind": "project",
+      "entityName": "PhotoSahi",
+      "dateModified": "2026-07-11",
+      "softwareApplication": true,
+      "applicationCategory": "UtilitiesApplication",
+      "breadcrumbs": [
+        { "name": "Engineering Systems", "path": "/systems/" }
+      ]
+    },
+    "/404.html": {
+      "title": "Page Not Found | Mantosh Kumar",
+      "description": "The requested page could not be found.",
+      "kind": "page",
+      "noindex": true
+    }
+  }
+}

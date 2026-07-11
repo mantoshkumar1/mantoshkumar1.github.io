@@ -3,8 +3,10 @@
 | Symptom | Safe diagnosis | Action |
 | --- | --- | --- |
 | `401` | Origin or index credential rejected | Check exact origin and rotate/re-enter `INDEXER_TOKEN`; do not log credentials. |
-| `429` | Worker or OpenAI rate limit | Respect `Retry-After`; inspect aggregate rate metrics and bot/WAF controls. |
-| `500 upstream_timeout` | OpenAI request exceeded timeout | Check provider status and latency metrics; return the retryable user message. |
+| `429 workers_ai_quota_exhausted` | Workers AI free quota or provider rate limit reached | Wait for the daily reset; do not upgrade the account automatically. |
+| `429 free_usage_limit_reached` | Configured daily application limit reached | Wait for 00:00 UTC or lower the limit after reviewing usage. |
+| `503 rate_limit_*` | Mandatory rate limiter unavailable or missing | Correct the binding before serving chat traffic. |
+| `500 workers_ai_timeout` | Workers AI request exceeded timeout | Check provider status and latency metrics; return the retryable user message. |
 | `500 embedding_*` | Semantic retrieval unavailable | Check embedding key, model, and provider status; never answer from model memory. |
 | No-answer response | No sufficiently grounded result | Verify document visibility, index workflow, vector dimensions, and D1 FTS row. |
 | Source URL missing | Invalid metadata/indexing | Fix the Markdown front matter and reindex. |

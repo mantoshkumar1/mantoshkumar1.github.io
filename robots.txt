@@ -1,4 +1,58 @@
+# Public search and answer-engine discovery. These rules do not grant
+# permission to GPTBot or any other model-training crawler.
+
 User-agent: *
 Allow: /
+Disallow: /chat-worker/
+Disallow: /plan/
+Disallow: /.github/
 
-Sitemap: https://mantoshkumar.com/sitemap.xml
+User-agent: OAI-SearchBot
+Allow: /
+Disallow: /chat-worker/
+Disallow: /plan/
+Disallow: /.github/
+
+User-agent: ChatGPT-User
+Allow: /
+Disallow: /chat-worker/
+Disallow: /plan/
+Disallow: /.github/
+
+User-agent: PerplexityBot
+Allow: /
+Disallow: /chat-worker/
+Disallow: /plan/
+Disallow: /.github/
+
+User-agent: Perplexity-User
+Allow: /
+Disallow: /chat-worker/
+Disallow: /plan/
+Disallow: /.github/
+
+User-agent: ClaudeBot
+Allow: /
+Disallow: /chat-worker/
+Disallow: /plan/
+Disallow: /.github/
+
+User-agent: Claude-SearchBot
+Allow: /
+Disallow: /chat-worker/
+Disallow: /plan/
+Disallow: /.github/
+
+User-agent: Googlebot
+Allow: /
+Disallow: /chat-worker/
+Disallow: /plan/
+Disallow: /.github/
+
+User-agent: Bingbot
+Allow: /
+Disallow: /chat-worker/
+Disallow: /plan/
+Disallow: /.github/
+
+Sitemap: https://mantoshkumar1.github.io/sitemap.xml

@@ -4,12 +4,11 @@
 GitHub Pages → Cloudflare Worker → validation/rate limit → hybrid retrieval
                                                      ↘ D1 FTS5/BM25
                                                       ↘ Vectorize
-                                                      ↘ OpenAI embeddings
-                                         grounded prompt → OpenAI Responses API
+                                                      ↘ Workers AI embeddings
+                                         grounded prompt → Workers AI generation
 ```
 
-The Worker is the only component with the OpenAI credential. The browser sends
-only a JSON question and receives a structured response with sources. Markdown
+The Worker reads Cloudflare's managed AI binding from its environment. The browser sends only a JSON question and receives a structured response with sources. Markdown
 under `knowledge/` is the source of truth; the authenticated index route chunks
 and embeds only `visibility: public` documents.
 
