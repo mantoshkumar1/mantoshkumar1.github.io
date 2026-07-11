@@ -33,16 +33,15 @@ name = "RATE_LIMITER"
 namespace_id = "31001"
 simple = { limit = 5, period = 60 }
 #
-# Required RAG storage bindings. Create the resources with the commands in
-# README.md, then add the generated binding snippets here.
-# [[d1_databases]]
-# binding = "KNOWLEDGE_DB"
-# database_name = "personal-website-knowledge"
-# database_id = "replace-with-your-D1-database-id"
+# Required RAG storage bindings.
+[[d1_databases]]
+binding = "KNOWLEDGE_DB"
+database_name = "personal-website-knowledge"
+database_id = "66ebeda4-a0f0-480e-bcbd-78d44875dc8e"
 #
-# [[vectorize]]
-# binding = "KNOWLEDGE_INDEX"
-# index_name = "ask-mantosh-knowledge-v3"
+[[vectorize]]
+binding = "KNOWLEDGE_INDEX"
+index_name = "ask-mantosh-knowledge-v3"
 #
 # [[kv_namespaces]]
 # binding = "CACHE_VERSION"
