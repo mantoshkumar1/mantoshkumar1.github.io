@@ -1,0 +1,522 @@
+Good. Let's stop talking about HTML and define the product once and for all.
+
+I think we've reached the point where we need a **Product Requirements Document (PRD)**. This will guide every implementation decision.
+
+---
+
+# Product Vision
+
+## Name
+
+**mantoshkumar.com**
+
+## Mission
+
+Build a long-term engineering brand that demonstrates how I think, what I build, and why organizations trust me with difficult engineering problems.
+
+---
+
+# Success Criteria
+
+When someone leaves the website after 60 seconds, they should think:
+
+> **"Mantosh is the kind of Staff/Principal Engineer who builds systems that improve entire engineering organizations."**
+
+Not:
+
+* "Nice portfolio."
+* "Knows Python."
+* "Worked at Nokia."
+
+---
+
+# Target Audience (Priority Order)
+
+### Tier 1 (Primary)
+
+Engineering Managers
+
+Director of Engineering
+
+VP Engineering
+
+Principal Engineers
+
+Staff Engineers
+
+---
+
+### Tier 2
+
+Recruiters hiring Staff+ Backend Engineers
+
+---
+
+### Tier 3
+
+Potential consulting clients
+
+---
+
+### Tier 4
+
+Other engineers interested in distributed systems, automation, and platform engineering
+
+---
+
+# Brand Positioning
+
+## Core Positioning
+
+> Building engineering systems that increase organizational leverage.
+
+---
+
+## Three Pillars
+
+### 1. Build Foundations
+
+Platform Engineering
+
+Backend Systems
+
+Distributed Systems
+
+Developer Platforms
+
+---
+
+### 2. Automate Workflows
+
+Developer Productivity
+
+CI/CD
+
+Engineering Automation
+
+Workflow Automation
+
+---
+
+### 3. Enable Better Decisions
+
+Release Health
+
+Operational Intelligence
+
+Engineering Reporting
+
+Executive Visibility
+
+---
+
+# Homepage Narrative
+
+```
+Hero
+        ↓
+Selected Systems
+        ↓
+Engineering Philosophy
+        ↓
+Writing
+        ↓
+Experience
+        ↓
+Contact
+```
+
+---
+
+# Navigation
+
+```
+Home
+
+Systems
+
+Thinking
+
+Experience
+
+Resume
+
+GitHub
+```
+
+No "About."
+
+---
+
+# Hero
+
+Headline
+
+```
+Engineering Systems
+That Scale Teams.
+```
+
+Eyebrow
+
+```
+PLATFORMS • AUTOMATION • OPERATIONAL INTELLIGENCE
+```
+
+Description
+
+```
+I help engineering organizations build faster by designing platforms, automating engineering workflows, and transforming operational data into actionable engineering intelligence.
+```
+
+Buttons
+
+```
+Explore Systems
+
+Read My Thinking
+```
+
+Credibility
+
+```
+Staff Software Engineer
+
+14+ Years
+
+India → Germany → Canada
+
+Nokia • Intel • Siemens • Cisco • Aricent • KI Labs
+```
+
+---
+
+# Section 1 — Selected Systems
+
+Purpose:
+
+Show evidence.
+
+Each card follows the same structure.
+
+```
+Title
+
+Problem
+
+Approach
+
+Impact
+
+Technology
+
+GitHub / Demo
+```
+
+---
+
+### 1. PhotoSahi
+
+Problem
+
+Passport photo compliance is confusing.
+
+Approach
+
+Browser-based image processing.
+
+Impact
+
+Real users.
+
+---
+
+### 2. Workflow Automation Toolkit
+
+Problem
+
+Manual document processing.
+
+Approach
+
+Python automation.
+
+Impact
+
+Engineering productivity.
+
+---
+
+### 3. Release Health Reporting
+
+Problem
+
+Engineering leaders lacked concise release visibility.
+
+Approach
+
+Automated weekly executive reporting.
+
+Impact
+
+Better release decisions.
+
+---
+
+### 4. Distributed Systems Project
+
+Problem
+
+Learn distributed systems by implementation.
+
+Approach
+
+Event-driven architecture.
+
+Impact
+
+Technical depth.
+
+---
+
+# Section 2 — Engineering Philosophy
+
+Title
+
+```
+Engineering organizations don't scale by adding more people.
+They scale by building better systems.
+```
+
+Then explain:
+
+* Platform thinking
+* Automation
+* Operational intelligence
+
+---
+
+# Section 3 — Thinking
+
+Categories
+
+```
+Distributed Systems
+
+Platform Engineering
+
+Automation
+
+Engineering Productivity
+
+AI Engineering
+
+Bitcoin Through Distributed Systems
+```
+
+Initially:
+
+"Coming soon."
+
+Later:
+
+Actual articles.
+
+---
+
+# Section 4 — Experience
+
+Timeline
+
+```
+Canada
+
+Nokia
+
+-----------------
+
+Germany
+
+KI Labs
+
+Intel
+
+Siemens
+
+-----------------
+
+India
+
+Cisco
+
+Aricent
+```
+
+---
+
+# Footer
+
+```
+Building engineering systems that scale teams.
+
+GitHub
+
+LinkedIn
+
+Email
+```
+
+---
+
+# Future Pages
+
+## Systems
+
+Detailed project case studies.
+
+---
+
+## Thinking
+
+All articles.
+
+---
+
+## Experience
+
+Career timeline.
+
+---
+
+## Resume
+
+Download.
+
+---
+
+## Contact
+
+Email
+
+LinkedIn
+
+GitHub
+
+---
+
+# Design System
+
+Style
+
+* Minimal
+* Content first
+* Engineering documentation aesthetic
+* No marketing fluff
+
+Typography
+
+* Inter
+* JetBrains Mono
+
+Theme
+
+Dark-first
+
+Colors
+
+```
+Background      #0B0F14
+Surface         #111827
+Border          #1F2937
+Primary         #2563EB
+Text            #F8FAFC
+Muted           #94A3B8
+```
+
+---
+
+# Technology Stack
+
+* HTML5
+* CSS3
+* Vanilla JavaScript
+* GitHub Pages
+* No framework
+* No build tools
+
+---
+
+# SEO
+
+Title
+
+```
+Mantosh Kumar | Staff Software Engineer
+```
+
+Description
+
+```
+Platform Engineering, Distributed Systems, Automation, Engineering Productivity.
+```
+
+Open Graph
+
+Twitter Cards
+
+JSON-LD Person
+
+Sitemap
+
+Robots.txt
+
+---
+
+# Version Roadmap
+
+## V1 (Tonight)
+
+* Hero
+* Systems
+* Philosophy
+* Thinking
+* Experience
+* Footer
+
+---
+
+## V2
+
+* Project pages
+* Resume page
+* Contact page
+
+---
+
+## V3
+
+* Technical blog
+* Search
+* RSS
+* Tags
+
+---
+
+## V4
+
+* AI demos
+* Interactive architecture diagrams
+* Newsletter
+* Consulting page
+
+---
+
+## One final recommendation
+
+I would make **Release Health Reporting** a first-class project on the website.
+
+Most engineers showcase code.
+
+Very few showcase **engineering systems that influence organizational decision-making**.
+
+That is one of the strongest signals of Staff-level impact, and it differentiates your website from the typical "here are my GitHub repositories" portfolio.
