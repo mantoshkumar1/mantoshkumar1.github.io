@@ -1,0 +1,256 @@
+I think this is a good place to stop. We now have momentum, and the biggest risk is adding features without a roadmap.
+
+I'd treat this website like a real product.
+
+---
+
+# Mantosh Kumar Website Roadmap
+
+## Vision
+
+Build a long-term engineering brand that demonstrates how I think, what I build, and how I improve engineering organizations through platforms, automation, and operational intelligence.
+
+**Mission**
+
+> Help engineering organizations build faster by designing platforms, automating workflows, and improving engineering decision-making.
+
+---
+
+# Phase 1 — Foundation (Current)
+
+**Goal:** Get a professional online presence.
+
+### Completed
+
+* ✅ GitHub profile cleaned up
+* ✅ Positioning defined
+* ✅ Website repository created
+* ✅ Initial homepage built
+* ✅ GitHub Pages deployed
+
+### Remaining polish
+
+* Improve typography and spacing
+* Add favicon
+* Add resume download
+* Add custom 404 page
+* Add footer links
+
+---
+
+# Phase 2 — Systems (Highest Priority)
+
+This becomes the heart of the website.
+
+Each system gets its own case study.
+
+## 1. PhotoSahi
+
+Cover:
+
+* Problem
+* Why it exists
+* Architecture
+* Technical challenges
+* Lessons learned
+* GitHub
+* Live demo
+
+---
+
+## 2. Workflow Automation Toolkit
+
+Rename publicly if appropriate.
+
+Document:
+
+* PDF compression
+* Image → PDF
+* Image optimization
+* PDF snapshots
+* Batch automation
+* Design decisions
+
+---
+
+## 3. Release Health Reporting
+
+One of the strongest pieces of your portfolio.
+
+Describe:
+
+* The problem
+* Weekly executive report
+* Nightly build aggregation
+* Release readiness
+* Risks
+* Trend reporting
+* Stakeholder communication
+
+Focus on **the system**, not the email.
+
+---
+
+## 4. Distributed Systems Project
+
+This becomes the flagship project.
+
+Everything else supports it.
+
+---
+
+# Phase 3 — Thinking
+
+Purpose:
+
+Show engineering judgment.
+
+Initial article roadmap:
+
+1. Bitcoin Through the Lens of Distributed Systems
+2. Before Designing Synchronization, Decide What Actually Needs Synchronization
+3. What Platform Engineering Actually Means
+4. Why Engineering Organizations Need Better Operational Intelligence
+5. How Distributed Systems Fail
+6. Event-Driven Systems Explained
+7. Release Confidence Is an Engineering Problem
+8. AI Should Remove Friction, Not Create It
+9. Building Internal Developer Platforms
+10. The Cost of Manual Engineering Work
+
+Target:
+
+* One article every 2–3 weeks.
+
+---
+
+# Phase 4 — Experience
+
+Instead of a résumé dump:
+
+Create a timeline.
+
+For each company:
+
+* Mission
+* Scope
+* Biggest contributions
+* Technologies (secondary)
+* Key lessons
+
+Companies:
+
+* Nokia (Canada)
+* KI Labs (Germany)
+* Intel (Germany)
+* Siemens (Germany)
+* Cisco (India)
+* Aricent (India)
+
+---
+
+# Phase 5 — Resume
+
+Dedicated page.
+
+Features:
+
+* Online résumé
+* PDF download
+* Printable version
+* Recruiter-friendly layout
+
+---
+
+# Phase 6 — Professional Polish
+
+* Buy `mantoshkumar.com`
+* Open Graph metadata
+* JSON-LD structured data
+* `robots.txt`
+* `sitemap.xml`
+* Google Search Console
+* Google Analytics (or a privacy-friendly alternative)
+* Performance optimization
+* Accessibility review
+
+---
+
+# Phase 7 — Writing Platform
+
+Create categories:
+
+* Distributed Systems
+* Platform Engineering
+* Automation
+* Engineering Productivity
+* Operational Intelligence
+* AI Engineering
+* Bitcoin & Blockchain
+
+Add:
+
+* Tags
+* Search
+* RSS feed
+
+---
+
+# Phase 8 — Future Engineering Systems
+
+Potential additions:
+
+* AI-assisted Engineering Tools
+* Distributed Systems Playground
+* System Design Notes
+* Architecture Diagrams
+* Interactive demos
+
+---
+
+# Long-Term Vision (3–5 Years)
+
+The website evolves into the central hub for everything you do:
+
+* Engineering systems
+* Technical writing
+* Open source
+* Talks and presentations
+* Consulting
+* AI tools
+* Future products
+
+When someone thinks of Mantosh Kumar, they should associate your name with **engineering leverage**—building systems that help organizations become more effective.
+
+---
+
+# Guiding Principles
+
+Every new page, project, or article should satisfy at least one of these:
+
+* Demonstrates deep engineering judgment.
+* Solves a real engineering problem.
+* Shows measurable impact or clear outcomes.
+* Reinforces the themes of platforms, automation, or operational intelligence.
+* Helps another engineer learn something useful.
+
+If it doesn't, it probably doesn't belong on the website.
+
+---
+
+## Working Process
+
+From now on, don't think of this as "building a website."
+
+Think of it as maintaining a product.
+
+A simple workflow:
+
+1. Keep a backlog of ideas.
+2. Pick one small feature or article at a time.
+3. Build it to completion.
+4. Deploy.
+5. Share it.
+6. Repeat.
+
+That steady cadence will make the site far more valuable over time than trying to make it perfect in one weekend.
