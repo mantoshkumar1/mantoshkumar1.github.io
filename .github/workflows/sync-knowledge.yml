@@ -1,0 +1,31 @@
+name: Sync Ask Mantosh knowledge
+
+on:
+  push:
+    branches: [main]
+    paths: ["knowledge/**/*.md"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Synchronize changed knowledge documents
+        env:
+          INDEXER_URL: ${{ secrets.ASK_MANTOSH_INDEXER_URL }}
+          INDEXER_TOKEN: ${{ secrets.ASK_MANTOSH_INDEXER_TOKEN }}
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            node chat-worker/scripts/sync-knowledge.mjs --all
+          else
+            node chat-worker/scripts/sync-knowledge.mjs --base "${{ github.event.before }}"
+          fi

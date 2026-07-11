@@ -1,0 +1,208 @@
+This is actually the most important question.
+
+If we assume **Version 1.0 is complete**, then **you're no longer in website development**.
+
+You're in **brand compounding**.
+
+The website becomes infrastructure.
+
+Everything else feeds it.
+
+---
+
+# Phase 2: Compound Your Reputation
+
+Think of the website as a Git repository.
+
+Everything else creates commits.
+
+---
+
+## 1. Publish
+
+Every 2–3 weeks.
+
+Not because you need content.
+
+Because your thinking evolves.
+
+Possible posts:
+
+* Distributed Systems
+* Backend Architecture
+* Engineering Productivity
+* AI-assisted Engineering
+* Bitcoin
+* Lessons from Building Systems
+* Career notes
+
+One article every few weeks is enough.
+
+---
+
+## 2. Build
+
+Every few months.
+
+A new engineering system.
+
+Examples:
+
+* Distributed Systems Playground
+* AI Engineering Tool
+* CLI Utility
+* Developer Productivity Tool
+* Backend Framework
+* Internal Dashboard
+
+Every project gets a case study.
+
+---
+
+## 3. Improve Existing Systems
+
+PhotoSahi v2
+
+Automation Toolkit v2
+
+Distributed Systems v2
+
+The website automatically grows.
+
+---
+
+## 4. Open Source
+
+Contribute.
+
+Write documentation.
+
+Improve READMEs.
+
+Those become links from your website.
+
+---
+
+## 5. LinkedIn
+
+Don't post motivational quotes.
+
+Instead:
+
+```text
+I built this.
+
+Here's why.
+
+Here's what I learned.
+
+Full write-up:
+mantoshkumar1.github.io
+```
+
+Every LinkedIn post points back to your website.
+
+---
+
+## 6. Interviews
+
+Your website becomes your interview companion.
+
+Instead of saying:
+
+> "I worked on..."
+
+You say:
+
+> "Here's the architecture and lessons learned."
+
+---
+
+## 7. Conference Talks (Future)
+
+Every article can become:
+
+* Internal presentation
+* Meetup talk
+* Conference proposal
+* YouTube video
+
+One piece of work → many formats.
+
+---
+
+# The Flywheel
+
+```text
+Build
+      ↓
+Write
+      ↓
+Publish
+      ↓
+Share
+      ↓
+People Discover
+      ↓
+Opportunities
+      ↓
+Build Again
+```
+
+Repeat.
+
+---
+
+# Eventually
+
+The website stops being a portfolio.
+
+It becomes your engineering notebook.
+
+Recruiters read it.
+
+Engineers learn from it.
+
+Hiring managers evaluate your thinking.
+
+Potential clients understand your approach.
+
+---
+
+# The Next Big Project
+
+Once the website is "done", I would **not** spend another month polishing it.
+
+I would immediately switch to building your **Distributed Systems project**.
+
+Why?
+
+Because in five years, people won't remember your website's CSS.
+
+They'll remember:
+
+* the distributed systems project,
+* the engineering articles,
+* the open-source tools,
+* and the ideas you've published.
+
+The website is simply the place where all of that lives.
+
+---
+
+## My advice
+
+You told me at the beginning:
+
+> *"I want people to think: let's hire this guy and pay him a lot of money."*
+
+I think the website alone won't achieve that.
+
+The combination will:
+
+* **A clean, professional website** (built once)
+* **A flagship distributed systems project** (deep technical credibility)
+* **Consistent technical writing** (demonstrates judgment)
+* **A few genuinely useful engineering tools** (shows execution)
+
+That's a durable strategy. Five years from now, those assets will still be working for you, even if the underlying web technology hasn't changed.
