@@ -25,6 +25,29 @@ Temporary Items
 *.swp
 *.swo
 *~
+*.tmp
+*.temp
+*.bak
+*.orig
+*.rej
 .vscode/
 .idea/
+../.DS_Store
+../.idea/
+
+# Local environment and runtime artifacts
+.env
+.env.*
+*.log
+npm-debug.log*
+pids/
+*.pid
+.coverage
+.pytest_cache/
+__pycache__/
+*.py[cod]
+
+# Local static output or caches
+.cache/
+.tmp/
 

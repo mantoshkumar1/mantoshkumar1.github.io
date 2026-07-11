@@ -4,22 +4,28 @@ A simple, polished personal website for showcasing engineering systems, thinking
 
 ## Overview
 
-This project is a one-page website for Mantosh Kumar, positioned around:
+This project is a long-term engineering publication and portfolio site for Mantosh Kumar. It is designed to remain intentionally simple, stable, and content-first.
 
-- Platform engineering
-- Workflow automation
-- Operational intelligence
-- Distributed systems and backend architecture
+## Core Pages
 
-The site highlights selected systems, a short philosophy section, experience, and contact/resume links.
+- Home
+- Systems
+- Thinking
+- Experience
+- Resume
+- Contact
 
 ## Structure
 
 - index.html — main homepage content
+- systems/index.html — systems catalog
+- thinking/index.html — technical writing index
+- experience/index.html — experience timeline
+- resume/index.html — online resume
+- contact/index.html — contact page
+- projects/photosahi.html — project case study
 - assets/css/style.css — styling and responsive layout
 - assets/js/main.js — small page-level JavaScript
-- assets/images/ — image assets directory
-- assets/samples/ — sample assets directory
 
 ## Run Locally
 
@@ -37,10 +43,11 @@ http://localhost:8000
 
 ## Features
 
-- Clean, modern dark-theme design
+- Dark minimalist documentation-style design
 - Responsive layout for desktop and mobile
-- Sections for systems, thinking, experience, and resume links
-- External links to projects such as PhotoSahi and the automation toolkit
+- Structured pages for systems, thinking, experience, resume, and contact
+- Project case study support for PhotoSahi
+- Static deployment via GitHub Pages
 
 ## Deployment
 
@@ -48,4 +55,4 @@ This site is intended to be published via GitHub Pages or a similar static hosti
 
 ## Notes
 
-The content reflects the current product direction for a long-term engineering brand focused on building systems that increase organizational leverage.
+The site is intentionally frozen in structure and technology so future growth comes from publishing new content rather than rebuilding the platform.
