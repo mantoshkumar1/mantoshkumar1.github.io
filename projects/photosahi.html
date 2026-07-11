@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="PhotoSahi is a privacy-first passport and visa photo generator that runs entirely in the browser."
+    />
+    <title>PhotoSahi | Mantosh Kumar</title>
+    <link rel="icon" href="../favicon.ico" />
+    <link rel="stylesheet" href="../assets/css/style.css" />
+    <style>
+      .project-shell {
+        padding: 4rem 0 5rem;
+      }
+
+      .hero-card,
+      .content-card {
+        background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.015));
+        border: 1px solid var(--border);
+        border-radius: 24px;
+        padding: 2rem;
+      }
+
+      .hero-card {
+        margin-bottom: 1.4rem;
+      }
+
+      .hero-card p {
+        color: var(--muted);
+        max-width: 720px;
+      }
+
+      .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-top: 1.5rem;
+      }
+
+      .section-block {
+        margin-top: 1.4rem;
+      }
+
+      .content-card h2,
+      .content-card h3 {
+        margin-bottom: 0.8rem;
+      }
+
+      .content-card p,
+      .content-card li {
+        color: var(--muted);
+      }
+
+      .content-card ul {
+        padding-left: 1.2rem;
+        display: grid;
+        gap: 0.55rem;
+      }
+
+      .feature-grid,
+      .decision-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1rem;
+      }
+
+      .feature,
+      .decision {
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        padding: 1.1rem 1.2rem;
+        background: var(--surface);
+      }
+
+      .feature h3,
+      .decision h3 {
+        margin-bottom: 0.45rem;
+      }
+
+      .architecture-flow {
+        display: grid;
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+        gap: 0.75rem;
+        align-items: center;
+        margin-top: 1rem;
+      }
+
+      .flow-step {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 0.9rem;
+        text-align: center;
+        font-size: 0.95rem;
+      }
+
+      .flow-arrow {
+        text-align: center;
+        color: var(--primary);
+        font-weight: 700;
+      }
+
+      .link-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-top: 1rem;
+      }
+
+      @media (max-width: 900px) {
+        .feature-grid,
+        .decision-grid,
+        .architecture-flow {
+          grid-template-columns: 1fr;
+        }
+
+        .flow-arrow {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="navbar">
+      <div class="container nav-wrap">
+        <a class="logo" href="../">mantoshkumar</a>
+        <nav>
+          <a href="../#systems">Systems</a>
+          <a href="../#thinking">Thinking</a>
+          <a href="../#experience">Experience</a>
+          <a href="../resume/">Resume</a>
+          <a href="https://github.com/mantoshkumar1" target="_blank" rel="noreferrer">GitHub</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="project-shell">
+      <div class="container">
+        <section class="hero-card" aria-labelledby="project-title">
+          <p class="eyebrow">Project Case Study</p>
+          <h1 id="project-title">PhotoSahi</h1>
+          <p>
+            Privacy-first passport and visa photo generation running entirely inside the browser.
+          </p>
+          <div class="hero-actions">
+            <a class="button primary" href="https://mantoshkumar1.github.io/photosahi/" target="_blank" rel="noreferrer">Live Demo</a>
+            <a class="button secondary" href="https://github.com/mantoshkumar1/photosahi" target="_blank" rel="noreferrer">GitHub</a>
+          </div>
+        </section>
+
+        <section class="content-card section-block" aria-labelledby="problem-title">
+          <h2 id="problem-title">Problem</h2>
+          <p>
+            Creating passport and visa photos is frustrating. Most online tools require users to upload sensitive images to remote servers, which creates privacy concerns and leaves too much room for error. Official photo requirements are also difficult to satisfy without a clear, guided workflow.
+          </p>
+        </section>
+
+        <section class="content-card section-block" aria-labelledby="solution-title">
+          <h2 id="solution-title">Solution</h2>
+          <p>
+            PhotoSahi was built to remove that friction. The experience runs completely in the browser, uses HTML5 Canvas for local processing, and requires no backend. Photos are processed locally, never uploaded, and the workflow is optimized for passport and visa photo preparation.
+          </p>
+        </section>
+
+        <section class="content-card section-block" aria-labelledby="architecture-title">
+          <h2 id="architecture-title">Architecture</h2>
+          <div class="architecture-flow" aria-label="PhotoSahi processing flow">
+            <div class="flow-step">Input Image</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-step">Canvas Processing</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-step">Crop</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-step">Resize</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-step">Background Adjustment</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-step">Export</div>
+          </div>
+        </section>
+
+        <section class="content-card section-block" aria-labelledby="highlights-title">
+          <h2 id="highlights-title">Technical Highlights</h2>
+          <div class="feature-grid">
+            <article class="feature">
+              <h3>Client-side Processing</h3>
+              <p>Image transformations happen locally in the browser, which keeps the experience fast and responsive.</p>
+            </article>
+            <article class="feature">
+              <h3>Privacy First</h3>
+              <p>Nothing needs to be uploaded to a remote service, which makes the workflow more trustworthy.</p>
+            </article>
+            <article class="feature">
+              <h3>Zero Backend Cost</h3>
+              <p>By avoiding server-side image handling, the system remains simple and inexpensive to operate.</p>
+            </article>
+            <article class="feature">
+              <h3>Fast Image Processing</h3>
+              <p>The use of canvas primitives keeps transformations lightweight for the end user.</p>
+            </article>
+            <article class="feature">
+              <h3>Responsive UI</h3>
+              <p>The interface was designed to work smoothly across desktop and mobile environments.</p>
+            </article>
+            <article class="feature">
+              <h3>Open Source</h3>
+              <p>The project is intended to be approachable and transparent for learning and reuse.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="content-card section-block" aria-labelledby="decisions-title">
+          <h2 id="decisions-title">Engineering Decisions</h2>
+          <div class="decision-grid">
+            <article class="decision">
+              <h3>Why browser-only?</h3>
+              <p>It allows the tool to be simple, immediate, and private without introducing operational complexity.</p>
+            </article>
+            <article class="decision">
+              <h3>Why no backend?</h3>
+              <p>A backend would add latency, cost, and trust concerns that were not necessary for the core use case.</p>
+            </article>
+            <article class="decision">
+              <h3>Performance</h3>
+              <p>The implementation focuses on efficient canvas operations and careful image handling to stay responsive.</p>
+            </article>
+            <article class="decision">
+              <h3>Privacy and trade-offs</h3>
+              <p>Keeping everything local improves privacy, but it also means the browser must handle more of the complexity and resource use.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="content-card section-block" aria-labelledby="lessons-title">
+          <h2 id="lessons-title">Lessons Learned</h2>
+          <ul>
+            <li>Image processing requires careful attention to quality, cropping, and edge cases.</li>
+            <li>The Canvas API is powerful, but browser compatibility and performance must be considered from the beginning.</li>
+            <li>User experience matters as much as technical correctness when the task is highly procedural.</li>
+            <li>Small workflow improvements can make a big difference for users preparing official documents.</li>
+          </ul>
+        </section>
+
+        <section class="content-card section-block" aria-labelledby="future-title">
+          <h2 id="future-title">Future Improvements</h2>
+          <ul>
+            <li>More precise compliance presets for different countries and document types.</li>
+            <li>Improved background adjustment controls and previewing.</li>
+            <li>Better accessibility and guidance for first-time users.</li>
+            <li>Additional export options and better image quality tuning.</li>
+          </ul>
+        </section>
+
+        <section class="content-card section-block" aria-labelledby="links-title">
+          <h2 id="links-title">Links</h2>
+          <div class="link-list">
+            <a class="button primary" href="https://mantoshkumar1.github.io/photosahi/" target="_blank" rel="noreferrer">Live Demo</a>
+            <a class="button secondary" href="https://github.com/mantoshkumar1/photosahi" target="_blank" rel="noreferrer">GitHub Repository</a>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="container footer-wrap">
+        <div>
+          <p class="eyebrow">Resume</p>
+          <h2>Building engineering systems that scale teams.</h2>
+        </div>
+        <div class="footer-links">
+          <a href="../resume/">Resume</a>
+          <a href="https://github.com/mantoshkumar1" target="_blank" rel="noreferrer">GitHub</a>
+          <a href="https://www.linkedin.com/" target="_blank" rel="noreferrer">LinkedIn</a>
+          <a href="mailto:hello@mantoshkumar.com">Email</a>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
