@@ -8,6 +8,7 @@ Mantosh Kumar is a Staff Software Engineer publishing documented engineering pro
 
 - Privacy-conscious browser-side image processing
 - Local Python workflow automation for PDF, image, and file tasks
+- Inspectable Python and Streamlit trigger-price calculations with explicit rule-freshness limits
 - Engineering leverage through reusable systems, delegated ownership, and explicit workflow design
 
 ## Important pages
@@ -23,6 +24,7 @@ Mantosh Kumar is a Staff Software Engineer publishing documented engineering pro
 
 - [PhotoSahi: privacy-first browser image processing case study](https://mantoshkumar1.github.io/projects/photosahi.html)
 - [Workflow Automation Toolkit case study](https://mantoshkumar1.github.io/projects/workflow-automation-toolkit.html)
+- [GTT Trigger Price Calculator case study](https://mantoshkumar1.github.io/projects/gtt-price-calculator.html)
 
 ## Engineering insights
 

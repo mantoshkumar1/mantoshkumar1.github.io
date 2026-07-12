@@ -92,6 +92,18 @@
         { "name": "Engineering Systems", "path": "/systems/" }
       ]
     },
+    "/projects/gtt-price-calculator.html": {
+      "title": "GTT Trigger Price Calculator: Python & Streamlit | Mantosh Kumar",
+      "description": "An evidence-bounded case study of a Python and Streamlit utility for explicit GTT trigger-distance, rounding, and order-size calculations.",
+      "kind": "project",
+      "entityName": "GTT Trigger Price Calculator",
+      "dateModified": "2026-07-12",
+      "softwareApplication": true,
+      "applicationCategory": "FinanceApplication",
+      "breadcrumbs": [
+        { "name": "Engineering Systems", "path": "/systems/" }
+      ]
+    },
     "/404.html": {
       "title": "Page Not Found | Mantosh Kumar",
       "description": "The requested page could not be found.",

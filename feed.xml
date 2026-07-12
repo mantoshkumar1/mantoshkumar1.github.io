@@ -11,6 +11,18 @@
   </author>
   <subtitle>Public engineering case studies, writing, and notes by Mantosh Kumar.</subtitle>
   <entry>
+    <title>GTT Trigger Price Calculator</title>
+    <id>https://mantoshkumar1.github.io/projects/gtt-price-calculator.html</id>
+    <link href="https://mantoshkumar1.github.io/projects/gtt-price-calculator.html" />
+    <published>2026-07-12T23:00:00Z</published>
+    <updated>2026-07-12T23:00:00Z</updated>
+    <author><name>Mantosh Kumar</name></author>
+    <category term="project-case-study" label="Project Case Study" />
+    <category term="python" label="Python" />
+    <category term="streamlit" label="Streamlit" />
+    <summary>A Python and Streamlit utility for explicit trigger-distance, rounding, and order-size calculations, with documented rule-freshness limits.</summary>
+  </entry>
+  <entry>
     <title>Engineering Philosophy: Build Leverage, Not Just Software</title>
     <id>https://mantoshkumar1.github.io/thinking/engineering-philosophy.html</id>
     <link href="https://mantoshkumar1.github.io/thinking/engineering-philosophy.html" />
