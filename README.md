@@ -6,7 +6,7 @@ Production source for [mantoshkumar1.github.io](https://mantoshkumar1.github.io/
 
 The repository contains two deployed surfaces:
 
-1. A static GitHub Pages site with ten SEO-configured HTML documents, project case studies, an engineering-note archive, résumé preview/download, and contact flows.
+1. A static GitHub Pages site with sixteen SEO-configured HTML documents, project case studies, an engineering-note archive, résumé preview/download, and contact flows.
 2. Ask Mantosh, a Cloudflare Worker that answers only from public Markdown under `knowledge/` using hybrid D1 FTS5 and Vectorize retrieval plus Workers AI.
 
 The current production inventory, data flow, deployment paths, controls, and known limits are maintained in [`docs/SYSTEM_STATE.md`](docs/SYSTEM_STATE.md). Start with the [`documentation map`](docs/README.md) for source authority and subsystem references.
@@ -21,6 +21,10 @@ The current production inventory, data flow, deployment paths, controls, and kno
 - `thinking/index.html` — engineering Insights archive
 - `thinking/engineering-philosophy.html` — evidence-bounded engineering philosophy
 - `thinking/why-does-this-still-require-me.html` — engineering-leverage note
+- `thinking/release-reports-as-operational-history.html` — operational-history and AI-assisted analysis note
+- `thinking/complexity-changes-address.html` — distributed-systems trade-off note
+- `thinking/blockchain-without-a-master-branch.html` — distributed shared-history analogy
+- `thinking/ownership-before-escalation.html` — proactive engineering-ownership note
 - `experience/index.html` — résumé-verified experience and highlights
 - `resume/index.html` — résumé summary, browser preview, and PDF download
 - `contact/index.html` — prepared email, copy-email, LinkedIn, and GitHub actions

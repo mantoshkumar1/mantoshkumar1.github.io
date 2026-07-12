@@ -24,6 +24,15 @@ Automation is one response, but not the only one. Repeated work may need a reusa
 
 A high-leverage system should continue producing a useful outcome when its original author steps away. That requires explicit inputs, visible state, understandable failure modes, an owner, and a path for exceptions that still require judgment.
 
+## Escalation ladder
+
+- Document rare work when context is easy to lose.
+- Automate repeated work when inputs and decisions are stable enough to encode safely.
+- Make it self-service when others repeatedly wait for the same execution.
+- Move it into a platform when multiple teams need the same dependable capability, ownership, and feedback loop.
+
+Not every documented task deserves automation, and not every automation deserves a platform. Additional ownership should be justified by repetition, risk, and shared demand.
+
 ## Review questions
 
 - Does the same work recur often enough to justify a system?

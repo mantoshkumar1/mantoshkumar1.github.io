@@ -6,8 +6,9 @@ Use documents in this order when statements overlap:
 2. [`SYSTEM_STATE.md`](SYSTEM_STATE.md) records the verified production inventory, endpoints, controls, and known limits.
 3. [`../chat-worker/docs/`](../chat-worker/docs/) explains subsystem architecture, policy, deployment, security, cost, maintenance, and troubleshooting.
 4. [`PUBLISHING_INSIGHTS.md`](PUBLISHING_INSIGHTS.md) defines how a human-readable insight and Ask Mantosh knowledge source are published together.
-5. [`ai-discoverability.md`](ai-discoverability.md) explains crawler, structured-data, sitemap, submission, and AI-referral practices.
-6. [`../VISION.md`](../VISION.md) describes durable product intent rather than deployed state.
+5. [`LINKEDIN_CONTENT_AUDIT.md`](LINKEDIN_CONTENT_AUDIT.md) records reviewed LinkedIn posts and publication decisions.
+6. [`ai-discoverability.md`](ai-discoverability.md) explains crawler, structured-data, sitemap, submission, and AI-referral practices.
+7. [`../VISION.md`](../VISION.md) describes durable product intent rather than deployed state.
 
 Documentation changes run through `scripts/audit-docs.mjs`, which checks deployed endpoint references, production configuration values, public knowledge and Worker-test counts, prohibited stale wording, workflow enforcement, and local Markdown links.
 

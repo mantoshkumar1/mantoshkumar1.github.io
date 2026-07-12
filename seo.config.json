@@ -52,6 +52,42 @@
         { "name": "Insights", "path": "/thinking/" }
       ]
     },
+    "/thinking/release-reports-as-operational-history.html": {
+      "title": "Release Reports as Operational History | Mantosh Kumar",
+      "description": "How comparable release-health reports can reveal longer-term engineering patterns while AI assistance remains accountable to human judgment.",
+      "kind": "article",
+      "schemaType": "TechArticle",
+      "datePublished": "2026-07-12",
+      "dateModified": "2026-07-12",
+      "breadcrumbs": [{ "name": "Insights", "path": "/thinking/" }]
+    },
+    "/thinking/complexity-changes-address.html": {
+      "title": "In Distributed Systems, Complexity Changes Address | Mantosh Kumar",
+      "description": "A system-design heuristic for tracking the failure modes and operational responsibilities that an architectural simplification moves elsewhere.",
+      "kind": "article",
+      "schemaType": "TechArticle",
+      "datePublished": "2026-07-12",
+      "dateModified": "2026-07-12",
+      "breadcrumbs": [{ "name": "Insights", "path": "/thinking/" }]
+    },
+    "/thinking/blockchain-without-a-master-branch.html": {
+      "title": "Blockchain Without a Master Branch | Mantosh Kumar",
+      "description": "A limited Git analogy for understanding blockchain as a distributed shared-history problem without a central source of truth.",
+      "kind": "article",
+      "schemaType": "TechArticle",
+      "datePublished": "2026-07-12",
+      "dateModified": "2026-07-12",
+      "breadcrumbs": [{ "name": "Insights", "path": "/thinking/" }]
+    },
+    "/thinking/ownership-before-escalation.html": {
+      "title": "Engineering Ownership Before Escalation | Mantosh Kumar",
+      "description": "A practical communication standard for making material engineering issues, risks, and next actions visible before someone has to ask.",
+      "kind": "article",
+      "schemaType": "TechArticle",
+      "datePublished": "2026-07-12",
+      "dateModified": "2026-07-12",
+      "breadcrumbs": [{ "name": "Insights", "path": "/thinking/" }]
+    },
     "/experience/": {
       "title": "Engineering Experience & Technical Skills | Mantosh Kumar",
       "description": "Résumé-backed experience and technical capabilities across platform automation, Python backend systems, networking, observability, and engineering intelligence.",
