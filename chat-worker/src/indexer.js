@@ -2,6 +2,7 @@ import { AppError, badRequest } from "./errors.js";
 import { bumpKnowledgeVersion } from "./cache.js";
 import { createEmbeddings } from "./ai.js";
 import { enforceFreeUsageLimit } from "./quota.js";
+import { verifyGitHubOidcToken } from "./github-oidc.js";
 
 const MAX_CHUNKS_PER_DOCUMENT = 20;
 const MAX_CHUNK_CHARS = 2_000;
@@ -12,15 +13,17 @@ function isString(value, max = 10_000) {
   return typeof value === "string" && value.length > 0 && value.length <= max;
 }
 
-function assertIndexerToken(request, env) {
-  const token = request.headers.get("Authorization")?.replace(/^Bearer\s+/i, "");
-  const expected = env.INDEXER_TOKEN || "";
+function staticTokenMatches(token, expected) {
   const length = Math.max(token?.length || 0, expected.length);
   let difference = (token?.length || 0) ^ expected.length;
   for (let index = 0; index < length; index += 1) difference |= (token?.charCodeAt(index) || 0) ^ (expected.charCodeAt(index) || 0);
-  if (difference !== 0 || !expected) {
-    throw new AppError(401, "unauthorized", "Unauthorized.");
-  }
+  return difference === 0 && Boolean(expected);
+}
+
+async function assertIndexerAuthorization(request, env) {
+  const token = request.headers.get("Authorization")?.replace(/^Bearer\s+/i, "");
+  if (staticTokenMatches(token, env.INDEXER_TOKEN || "")) return;
+  await verifyGitHubOidcToken(token, env);
 }
 
 function validateDocument(document) {
@@ -97,7 +100,7 @@ async function upsertDocument(env, config, document) {
 }
 
 export async function handleIndexRequest(request, env, config) {
-  assertIndexerToken(request, env);
+  await assertIndexerAuthorization(request, env);
   if (!env.KNOWLEDGE_DB || !env.KNOWLEDGE_INDEX) throw new AppError(500, "knowledge_unconfigured", "Knowledge storage is not configured.");
   let payload;
   try { payload = await request.json(); } catch { throw badRequest("Malformed JSON body."); }

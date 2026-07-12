@@ -133,7 +133,7 @@ npx wrangler d1 migrations apply personal-website-knowledge --remote
 
 Copy the D1 and Vectorize binding snippets returned by Cloudflare into the
 commented sections of `wrangler.toml`. Then create a long, random value for the
-private indexing endpoint and store both required secrets:
+manual recovery path and store it only as a Worker secret:
 
 ```bash
 npx wrangler secret put INDEXER_TOKEN
@@ -149,11 +149,9 @@ full reindex.
 The committed GitHub Actions workflow
 [`sync-knowledge.yml`](../.github/workflows/sync-knowledge.yml) runs after a
 knowledge Markdown change reaches `main`. It indexes only added/modified files,
-deletes removed files, and handles renames. Add these repository Actions
-secrets:
-
-- `ASK_MANTOSH_INDEXER_URL`: the exact deployed Worker origin, for example `https://personal-website-chat.<subdomain>.workers.dev`
-- `ASK_MANTOSH_INDEXER_TOKEN`: the same value stored as the Worker `INDEXER_TOKEN` secret
+deletes removed files, and handles renames. No GitHub Actions secret is needed:
+the workflow requests a short-lived GitHub OIDC token, and the Worker verifies
+its signature, audience, repository, workflow path, branch, event, and expiry.
 
 For the first population, run the workflow manually with **Run workflow**. For
 a controlled one-off reindex:
@@ -164,7 +162,8 @@ INDEXER_TOKEN=YOUR_INDEXER_TOKEN \
 node scripts/sync-knowledge.mjs --all
 ```
 
-The endpoint is intentionally not CORS-enabled. It accepts only a Bearer token,
+The endpoint is intentionally not CORS-enabled. It accepts either the verified
+GitHub workflow identity or the manual recovery Bearer token,
 does not return document content, and excludes `draft` and `private` documents
 from public retrieval.
 

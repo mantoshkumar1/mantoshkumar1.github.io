@@ -2,7 +2,7 @@
 
 | Symptom | Safe diagnosis | Action |
 | --- | --- | --- |
-| `401` | Origin or index credential rejected | Check exact origin and rotate/re-enter `INDEXER_TOKEN`; do not log credentials. |
+| `401` | Origin or index identity rejected | For automatic sync, verify `id-token: write`, audience, workflow path, repository, and branch. For manual recovery, rotate `INDEXER_TOKEN`; never log either token. |
 | `429 workers_ai_quota_exhausted` | Workers AI free quota or provider rate limit reached | Wait for the daily reset; do not upgrade the account automatically. |
 | `429 free_usage_limit_reached` | Configured daily application limit reached | Wait for 00:00 UTC or lower the limit after reviewing usage. |
 | `503 rate_limit_*` | Mandatory rate limiter unavailable or missing | Correct the binding before serving chat traffic. |

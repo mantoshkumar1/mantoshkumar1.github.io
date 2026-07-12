@@ -3,27 +3,41 @@ name: Sync Ask Mantosh knowledge
 on:
   push:
     branches: [main]
-    paths: ["knowledge/**/*.md"]
+    paths:
+      - "knowledge/**/*.md"
+      - ".github/workflows/sync-knowledge.yml"
+      - "chat-worker/scripts/sync-knowledge.mjs"
+      - "chat-worker/src/github-oidc.js"
+      - "chat-worker/src/indexer.js"
   workflow_dispatch:
 
 permissions:
   contents: read
+  id-token: write
 
 jobs:
   sync:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 2
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: 22
       - name: Synchronize changed knowledge documents
         env:
-          INDEXER_URL: ${{ secrets.ASK_MANTOSH_INDEXER_URL }}
-          INDEXER_TOKEN: ${{ secrets.ASK_MANTOSH_INDEXER_TOKEN }}
+          INDEXER_URL: https://ask-mantosh.mantoshk234.workers.dev
         run: |
+          INDEXER_ID_TOKEN="$(curl -fsSL \
+            -H "Authorization: bearer ${ACTIONS_ID_TOKEN_REQUEST_TOKEN}" \
+            "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=ask-mantosh-indexer" | jq -r '.value')"
+          if [ -z "${INDEXER_ID_TOKEN}" ] || [ "${INDEXER_ID_TOKEN}" = "null" ]; then
+            echo "GitHub did not issue an OIDC identity token." >&2
+            exit 1
+          fi
+          echo "::add-mask::${INDEXER_ID_TOKEN}"
+          export INDEXER_ID_TOKEN
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             node chat-worker/scripts/sync-knowledge.mjs --all
           else

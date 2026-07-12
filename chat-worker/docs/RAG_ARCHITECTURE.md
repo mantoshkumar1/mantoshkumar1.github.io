@@ -131,8 +131,8 @@ Future capabilities should remain behind small adapters:
 
 ## Security controls
 
-- `INDEXER_TOKEN` is a Worker secret. Workers AI uses a managed binding; no external provider API key is present in the Worker or browser.
-- The index route has no CORS headers and uses a bearer token comparison.
+- Automatic indexing uses a short-lived GitHub OIDC token constrained to the repository, workflow, and `main` branch. `INDEXER_TOKEN` remains a Worker-only manual recovery secret.
+- The index route has no CORS headers and accepts verified GitHub identity or a timing-safe recovery-token comparison.
 - Only expected category directories and public URLs are accepted at ingestion.
 - D1 queries use prepared parameters; FTS terms are tokenized before matching.
 - Answers contain only model output and approved public source metadata.

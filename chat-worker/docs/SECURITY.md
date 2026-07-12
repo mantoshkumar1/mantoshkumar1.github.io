@@ -2,8 +2,9 @@
 
 ## Required controls
 
-- Store `INDEXER_TOKEN` as a Worker secret; never put it
-  in Wrangler vars, GitHub Actions logs, source code, or frontend JavaScript.
+- Authenticate automatic indexing with short-lived GitHub OIDC identity tokens.
+  Validate their signature, audience, repository, workflow, branch, event, and
+  expiry. Keep `INDEXER_TOKEN` only as a Worker-side manual recovery secret.
 - Use exact-origin CORS, JSON-only requests, a 16 KiB request-body limit,
   normalized text, maximum question length, and a strict request schema.
 - Enable the Cloudflare Rate Limiting binding before public launch. Use a
@@ -28,5 +29,5 @@ markup. Retrieval confidence is evidence quality, not model certainty.
 
 Enable Cloudflare WAF/Bot Management where available. Alert on 401/429/5xx
 spikes, index-route authorization failures, embedding failures, and abnormal
-output volume. Rotate `INDEXER_TOKEN` immediately on suspected disclosure,
-redeploy, and invalidate all CI credentials that held the old index token.
+output volume. Rotate `INDEXER_TOKEN` immediately on suspected disclosure and
+redeploy. The automatic GitHub workflow holds no long-lived index credential.

@@ -9,9 +9,9 @@ const repositoryRoot = resolve(scriptDirectory, "../..");
 const knowledgeRoot = join(repositoryRoot, "knowledge");
 const categories = new Set(["project", "article", "note", "experience", "resume", "faq"]);
 const indexerUrl = process.env.INDEXER_URL?.replace(/\/$/, "");
-const indexerToken = process.env.INDEXER_TOKEN;
+const indexerToken = process.env.INDEXER_ID_TOKEN || process.env.INDEXER_TOKEN;
 
-if (!indexerUrl || !indexerToken) throw new Error("INDEXER_URL and INDEXER_TOKEN must be set.");
+if (!indexerUrl || !indexerToken) throw new Error("INDEXER_URL and INDEXER_ID_TOKEN or INDEXER_TOKEN must be set.");
 
 function sha256(value) { return createHash("sha256").update(value).digest("hex"); }
 

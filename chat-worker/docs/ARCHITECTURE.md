@@ -17,8 +17,9 @@ and embeds only `visibility: public` documents.
 - Treat browser input and retrieved Markdown as untrusted data.
 - Allow only configured exact origins; the API uses no cookies, so CSRF tokens
   are not required. Do not add cookie auth without adding origin/CSRF controls.
-- Keep the index endpoint separate from the public API and authorize it with a
-  Worker secret used only by CI.
+- Keep the index endpoint separate from the public API. Authorize CI with a
+  verified, short-lived GitHub OIDC token and retain a Worker secret only for
+  manual recovery.
 - Return generic application errors. Never return provider payloads, stack
   traces, prompt text, or storage internals.
 

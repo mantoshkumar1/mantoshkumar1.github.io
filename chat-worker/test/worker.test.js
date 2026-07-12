@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { formatSuccess } from "../src/formatter.js";
+import { verifyGitHubOidcToken } from "../src/github-oidc.js";
 import worker from "../src/index.js";
 import { buildPrompt, buildSystemPrompt, scoreRetrievalConfidence } from "../src/prompt/index.js";
 
@@ -150,6 +151,32 @@ test("invalidates the knowledge cache after a successful index update", async ()
   assert.equal(response.status, 200);
   assert.equal(writes.length, 1);
   assert.equal(writes[0][0], "knowledge-version");
+});
+
+test("accepts a signed GitHub OIDC token only for the sync workflow on main", async () => {
+  const pair = await crypto.subtle.generateKey({ name: "RSASSA-PKCS1-v1_5", modulusLength: 2048, publicExponent: new Uint8Array([1, 0, 1]), hash: "SHA-256" }, true, ["sign", "verify"]);
+  const jwk = { ...(await crypto.subtle.exportKey("jwk", pair.publicKey)), kid: "test-key", use: "sig", alg: "RS256" };
+  const encode = (value) => Buffer.from(JSON.stringify(value)).toString("base64url");
+  const now = Math.floor(Date.now() / 1_000);
+  const header = encode({ alg: "RS256", typ: "JWT", kid: "test-key" });
+  const claims = encode({
+    iss: "https://token.actions.githubusercontent.com", aud: "ask-mantosh-indexer", exp: now + 300, iat: now,
+    repository: "mantoshkumar1/mantoshkumar1.github.io", ref: "refs/heads/main", event_name: "push",
+    workflow_ref: "mantoshkumar1/mantoshkumar1.github.io/.github/workflows/sync-knowledge.yml@refs/heads/main"
+  });
+  const signature = Buffer.from(await crypto.subtle.sign("RSASSA-PKCS1-v1_5", pair.privateKey, new TextEncoder().encode(`${header}.${claims}`))).toString("base64url");
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = async () => new Response(JSON.stringify({ keys: [jwk] }), { headers: { "Content-Type": "application/json" } });
+  try {
+    const verified = await verifyGitHubOidcToken(`${header}.${claims}.${signature}`, {});
+    assert.equal(verified.repository, "mantoshkumar1/mantoshkumar1.github.io");
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
+test("rejects malformed GitHub OIDC tokens", async () => {
+  await assert.rejects(() => verifyGitHubOidcToken("not-a-jwt", {}), (error) => error.code === "unauthorized");
 });
 
 test("fails closed when the mandatory rate limiter is absent", async () => {
