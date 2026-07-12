@@ -191,16 +191,19 @@ class AskMantoshApp {
     if (this.controller) this.controller.abort();
     const user = this.add("user", question); const assistant = this.add("assistant", "", { question, sources: [] });
     this.elements.input.value = ""; this.resize(); this.view.setSuggestions([], () => this.ask()); this.view.setStatus("Searching published engineering knowledge…");
-    const controller = new AbortController(); this.controller = controller; let scheduled = false;
-    const render = () => { scheduled = false; this.view.updateAssistant(assistant, { streaming: true }); };
+    const controller = new AbortController(); this.controller = controller; let frameId = 0;
+    const render = () => { frameId = 0; this.view.updateAssistant(assistant, { streaming: true }); };
+    const cancelPendingRender = () => { if (frameId) { cancelAnimationFrame(frameId); frameId = 0; } };
     try {
       await this.api.stream(question, controller.signal, (type, data) => {
         if (type === "metadata") assistant.sources = data.sources || [];
-        if (type === "response.output_text.delta") { assistant.text += data.delta || ""; if (!scheduled) { scheduled = true; requestAnimationFrame(render); } }
+        if (type === "response.output_text.delta") { assistant.text += data.delta || ""; if (!frameId) frameId = requestAnimationFrame(render); }
         if (type === "error") throw new Error(data.message || "The response stream was interrupted.");
       });
+      cancelPendingRender();
       this.finish(assistant, this.controller === controller);
     } catch (error) {
+      cancelPendingRender();
       if (error.name === "AbortError") { assistant.text ||= "Response stopped."; this.finish(assistant, this.controller === controller); }
       else {
         assistant.error = error instanceof TypeError
