@@ -26,6 +26,7 @@ jobs:
       - run: node scripts/seo-audit.mjs
       - run: node scripts/validate-discoverability.mjs
       - run: node scripts/audit-links.mjs
+      - run: node scripts/audit-docs.mjs
       - run: node scripts/build-pages.mjs
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3

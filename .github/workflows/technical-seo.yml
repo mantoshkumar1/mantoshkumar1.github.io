@@ -20,3 +20,4 @@ jobs:
       - run: node scripts/seo-audit.mjs
       - run: node scripts/validate-discoverability.mjs
       - run: node scripts/audit-links.mjs
+      - run: node scripts/audit-docs.mjs

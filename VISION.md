@@ -28,3 +28,9 @@ A visitor should be able to understand within two minutes:
 
 ## Maintenance Philosophy
 The site should remain stable, documentation-like, and low-maintenance. Future growth should come from publishing new projects, articles, and notes.
+
+## Current implementation boundary
+
+The presentation remains static and progressively enhanced. Searchable answers are a separate Cloudflare Worker so the public site keeps no provider credential and remains useful if the AI service is unavailable. Git-tracked public Markdown is the retrieval source of truth; the model is never a source of evidence.
+
+The implemented production state is documented in [`docs/SYSTEM_STATE.md`](docs/SYSTEM_STATE.md). Vision describes intent; that document describes what is deployed now.

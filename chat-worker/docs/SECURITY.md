@@ -7,9 +7,9 @@
   expiry. Keep `INDEXER_TOKEN` only as a Worker-side manual recovery secret.
 - Use exact-origin CORS, JSON-only requests, a 16 KiB request-body limit,
   normalized text, maximum question length, and a strict request schema.
-- Enable the Cloudflare Rate Limiting binding before public launch. Use a
-  stable actor key where available; IP-only limits are abuse controls, not
-  identity or billing controls.
+- Keep the configured Cloudflare Rate Limiting binding mandatory. The Worker
+  fails closed if it is absent; D1 minute/day counters add a strict global
+  safety boundary. IP-derived limits are abuse controls, not identity controls.
 - Add Worker response headers: CSP `default-src 'none'`, `nosniff`, HSTS,
   `frame-ancestors 'none'`, restrictive Permissions Policy, and no-referrer.
 - Render model Markdown through an allowlist sanitizer in the frontend. Never

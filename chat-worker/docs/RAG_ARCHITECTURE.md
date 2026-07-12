@@ -119,13 +119,13 @@ The Worker does not return the system prompt or upstream errors.
 - Add Analytics Engine events for query latency, zero-result rate, retrieval
   source count, and model-fallback rate. Never log raw questions or chunks.
 
-Future capabilities should remain behind small adapters:
+Implemented and future capabilities remain behind small components:
 
 | Capability | Extension point |
 | --- | --- |
-| Conversation memory | Append a bounded, user-approved conversation summary before retrieval; never replace evidence retrieval. |
-| Suggested questions / related articles | Use retrieved document metadata after the answer; no additional model context required. |
-| Caching | Cache embeddings by normalized-question hash and final answers only when the retrieval document checksums match. |
+| Conversation memory | Implemented with bounded D1 sessions and extractive summaries; never replaces evidence retrieval. |
+| Suggested questions / related articles | Implemented from retrieved public metadata without an additional generative call. |
+| Caching | Implemented through Cloudflare Cache API for eligible embeddings, retrieval results, and first-turn responses; KV version invalidation remains optional. |
 | Multiple or local embedding models | Create a versioned Vectorize index and dual-write during migration; never mix dimensions in one index. |
 | Higher-scale retrieval | Add category/tag filters and metadata indexes, then re-rank a bounded candidate set. |
 
@@ -136,5 +136,5 @@ Future capabilities should remain behind small adapters:
 - Only expected category directories and public URLs are accepted at ingestion.
 - D1 queries use prepared parameters; FTS terms are tokenized before matching.
 - Answers contain only model output and approved public source metadata.
-- CORS, request limits, timeout handling, and a Cloudflare rate-limiter hook
-  protect the public chat route. Configure the rate-limit binding before launch.
+- Exact-origin CORS, request limits, timeout handling, D1 counters, and the
+  configured mandatory Cloudflare rate-limiter binding protect the public route.

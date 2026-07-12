@@ -1,6 +1,6 @@
-# Personal website chat Worker
+# Ask Mantosh Worker
 
-Production backend for the static personal website chat UI. The public API is:
+Production backend for the static personal website chat UI. The deployed service is `https://ask-mantosh.mantoshk234.workers.dev`. The public API is:
 
 ```http
 POST /chat (or `POST /` for the deployed Worker root URL)
@@ -65,7 +65,7 @@ npx wrangler secret put INDEXER_TOKEN
 npm run deploy
 ```
 
-Create the Worker by running `npm run deploy`; Wrangler creates or updates the Worker named in `wrangler.toml`. Before production, change `ALLOWED_ORIGINS` to the exact deployed website origin(s). Add a custom Worker route or set the frontend to the returned `*.workers.dev/chat` URL.
+`wrangler.toml` already contains the production Worker name, exact GitHub Pages origin, D1 binding, Vectorize binding, Workers AI binding, and mandatory rate-limiter binding. Running `npm run deploy` updates that production Worker. Review the diff and run tests before deploying; do not treat this command as a preview deployment.
 
 For local development, create an untracked `.dev.vars` file:
 
@@ -84,16 +84,16 @@ curl -i http://localhost:8787/chat \
   --data '{"question":"Why did you build PhotoSahi without a backend?"}'
 ```
 
-Run checks with `npm test`. Test the deployed Worker by replacing the URL below with the deployment URL:
+Run checks with `npm test`. Test the deployed Worker with:
 
 ```bash
-curl -i https://YOUR-WORKER.workers.dev/chat \
+curl -i https://ask-mantosh.mantoshk234.workers.dev/chat \
   -H 'Content-Type: application/json' \
   -H 'Origin: https://mantoshkumar1.github.io' \
   --data '{"question":"What do you build?"}'
 ```
 
-## Before opening the endpoint publicly
+## Public-endpoint controls
 
 The Cloudflare Rate Limiting binding in `wrangler.toml` is mandatory and the Worker fails closed if it is missing or unavailable. D1 also enforces strict global counters: `FREE_PER_MINUTE_REQUEST_LIMIT` defaults to 5 requests per UTC minute and `FREE_DAILY_REQUEST_LIMIT` defaults to 50 AI-bearing requests per UTC day. Do not rely on CORS as an access-control or abuse-control mechanism.
 
@@ -123,7 +123,7 @@ chunk text and Vectorize contains only embeddings plus minimal metadata.
 
 ## Provision and deploy the knowledge layer
 
-Run these once from `chat-worker`. Do not commit the generated D1 ID.
+These resources are already provisioned in production. Run equivalent commands only when creating an isolated environment or versioned replacement; never overwrite the committed production binding IDs with an unrelated resource.
 
 ```bash
 npx wrangler d1 create personal-website-knowledge
@@ -131,9 +131,9 @@ npx wrangler vectorize create ask-mantosh-knowledge-v3 --dimensions=1024 --metri
 npx wrangler d1 migrations apply personal-website-knowledge --remote
 ```
 
-Copy the D1 and Vectorize binding snippets returned by Cloudflare into the
-commented sections of `wrangler.toml`. Then create a long, random value for the
-manual recovery path and store it only as a Worker secret:
+For a new environment, copy its returned D1 and Vectorize binding snippets into
+an environment-specific Wrangler configuration. Then create a long, random
+value for the manual recovery path and store it only as a Worker secret:
 
 ```bash
 npx wrangler secret put INDEXER_TOKEN
@@ -157,7 +157,7 @@ For the first population, run the workflow manually with **Run workflow**. For
 a controlled one-off reindex:
 
 ```bash
-INDEXER_URL=https://YOUR-WORKER.workers.dev \
+INDEXER_URL=https://ask-mantosh.mantoshk234.workers.dev \
 INDEXER_TOKEN=YOUR_INDEXER_TOKEN \
 node scripts/sync-knowledge.mjs --all
 ```
@@ -166,6 +166,11 @@ The endpoint is intentionally not CORS-enabled. It accepts either the verified
 GitHub workflow identity or the manual recovery Bearer token,
 does not return document content, and excludes `draft` and `private` documents
 from public retrieval.
+
+## Current production state
+
+The authoritative cross-system inventory, active limits, deployment boundaries,
+and known limitations are maintained in [`../docs/SYSTEM_STATE.md`](../docs/SYSTEM_STATE.md). This README explains how to operate the Worker; it does not override executable configuration.
 
 ## Free-plan safety and monitoring
 

@@ -51,7 +51,7 @@ Confidence is a groundedness gate, not a user-visible percentage:
    answer.
 3. Retrieved candidates: the model must still verify explicit documentary
    support before responding.
-4. A future offline evaluation set—not intuition—must justify any change to the
+4. An offline evaluation set—not intuition—must justify any change to the
    semantic threshold, chunk size, or fusion weights.
 
 This avoids misleading numerical confidence labels while keeping the failure
@@ -63,16 +63,17 @@ model certainty.
 
 Each context document carries a source label and public URL. The model renders
 them as Markdown links; the Worker also returns the same URLs in `sources` for
-the frontend. Follow-up questions are generated only from retrieved documents,
-appear under `## Follow-up Questions`, and are extracted into both
-`followUpQuestions` and the backward-compatible `suggestedQuestions` API field.
+the frontend. Follow-up questions are generated deterministically from
+retrieved public metadata and returned in both `followUpQuestions` and the
+backward-compatible `suggestedQuestions` API field. The frontend preserves that
+metadata even if the generated Markdown reaches its output-length limit.
 
-## Future extension rules
+## Extension rules
 
-- Conversation memory may be appended only as user-provided context; it must
-  never become evidence about Mantosh.
-- Related content and suggested questions must come from retrieved metadata,
-  not general model recommendations.
+- Conversation memory is appended only as bounded visitor context; it never
+  becomes evidence about Mantosh.
+- Related content and suggested questions come from retrieved metadata, not
+  general model recommendations.
 - Add structured-output schemas only as a backward-compatible API version; the
   current Markdown response is intentionally frontend-safe.
 - Treat any modification to the evidence boundary, unavailable-answer text, or

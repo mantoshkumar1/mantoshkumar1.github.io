@@ -1,58 +1,84 @@
-# Mantosh Kumar Personal Website
+# Mantosh Kumar engineering website
 
-A simple, polished personal website for showcasing engineering systems, thinking, experience, and links to projects.
+Production source for [mantoshkumar1.github.io](https://mantoshkumar1.github.io/): an evidence-first engineering portfolio, publication, and searchable knowledge interface.
 
-## Overview
+## Current system
 
-This project is a long-term engineering publication and portfolio site for Mantosh Kumar. It is designed to remain intentionally simple, stable, and content-first.
+The repository contains two deployed surfaces:
 
-## Core Pages
+1. A static GitHub Pages site with ten SEO-configured HTML documents, project case studies, an engineering-note archive, résumé preview/download, and contact flows.
+2. Ask Mantosh, a Cloudflare Worker that answers only from public Markdown under `knowledge/` using hybrid D1 FTS5 and Vectorize retrieval plus Workers AI.
 
-- Home
-- Systems
-- Thinking
-- Experience
-- Resume
-- Contact
+The current production inventory, data flow, deployment paths, controls, and known limits are maintained in [`docs/SYSTEM_STATE.md`](docs/SYSTEM_STATE.md). Start with the [`documentation map`](docs/README.md) for source authority and subsystem references.
 
-## Structure
+## Public content
 
-- index.html — main homepage content
-- systems/index.html — systems catalog
-- thinking/index.html — technical writing index
-- experience/index.html — experience timeline
-- resume/index.html — online resume
-- contact/index.html — contact page
-- projects/photosahi.html — project case study
-- assets/css/style.css — styling and responsive layout
-- assets/js/main.js — small page-level JavaScript
+- `index.html` — positioning, selected systems, experience summary, and Ask Mantosh UI
+- `systems/index.html` — engineering-system catalog
+- `projects/photosahi.html` — PhotoSahi architecture case study
+- `projects/workflow-automation-toolkit.html` — automation toolkit case study
+- `thinking/index.html` — published engineering notes
+- `thinking/why-does-this-still-require-me.html` — engineering-leverage note
+- `experience/index.html` — résumé-verified experience and highlights
+- `resume/index.html` — résumé summary, browser preview, and PDF download
+- `contact/index.html` — prepared email, copy-email, LinkedIn, and GitHub actions
+- `404.html` — custom not-found page
 
-## Run Locally
+## Important source directories
 
-From the project root, start a local server:
+- `assets/` — production CSS, JavaScript, icons, and social image
+- `knowledge/` — sole source of truth for Ask Mantosh retrieval documents
+- `chat-worker/` — Cloudflare Worker, migrations, tests, and operational documentation
+- `scripts/` — deterministic SEO generation, static build, and release audits
+- `.github/workflows/` — Pages deployment, technical SEO, and knowledge synchronization
+
+`dist/` is generated and intentionally not committed. `scripts/build-pages.mjs` copies only public assets into it and regenerates SEO metadata there.
+
+## Run locally
+
+From the repository root:
 
 ```bash
 python3 -m http.server 8000
 ```
 
-Then open:
+Open `http://127.0.0.1:8000/`. Ask Mantosh accepts the production GitHub Pages origin only, so a local page will show the explicit connection-recovery state rather than bypass production CORS.
 
-```text
-http://localhost:8000
+## Release verification
+
+Run the same deterministic gates used by CI:
+
+```bash
+node scripts/generate-seo.mjs
+node scripts/build-pages.mjs
+node scripts/audit-site.mjs
+node scripts/validate-discoverability.mjs
+node scripts/seo-audit.mjs
+node scripts/audit-links.mjs
+node scripts/audit-docs.mjs
+npm test --prefix chat-worker
+git diff --check
 ```
 
-## Features
+What these gates protect:
 
-- Dark minimalist documentation-style design
-- Responsive layout for desktop and mobile
-- Structured pages for systems, thinking, experience, resume, and contact
-- Project case study support for PhotoSahi
-- Static deployment via GitHub Pages
+- generated canonicals, Open Graph, Twitter Card, JSON-LD, sitemap, and feed metadata;
+- exactly one H1 and required semantic/SEO elements on every indexable page;
+- internal links, fragments, and public assets;
+- discoverability files and crawler policy;
+- documentation references that must match the deployed endpoints and configuration;
+- Worker request validation, retrieval contracts, rate limits, OIDC indexing, prompt-injection boundaries, failure handling, and SSE output.
 
 ## Deployment
 
-This site is intended to be published via GitHub Pages or a similar static hosting provider.
+Pushing `main` triggers:
 
-## Notes
+- `Build and deploy GitHub Pages` for the static site;
+- `Technical SEO` for generated metadata, discoverability, link, and documentation audits;
+- `Sync Ask Mantosh knowledge` only when relevant knowledge or indexer files change.
 
-The site is intentionally frozen in structure and technology so future growth comes from publishing new content rather than rebuilding the platform.
+Worker code is deployed separately from `chat-worker/` with Wrangler. Knowledge documents are synchronized independently through GitHub OIDC after reaching `main`; no long-lived GitHub indexing secret is required.
+
+## Publication standard
+
+Public claims must be supported by a visible artifact, the résumé, or a reviewed first-person document. Keep unsupported outcomes, private employer details, inferred metrics, and draft material out of public knowledge. Prefer a smaller authoritative corpus over generic coverage.
