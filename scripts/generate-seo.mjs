@@ -77,7 +77,7 @@ function schemaFor({ site, page, url, route }) {
         url: site.url,
         jobTitle: "Staff Software Engineer",
         description: site.description,
-        sameAs: ["https://github.com/mantoshkumar1"]
+        sameAs: ["https://github.com/mantoshkumar1", "https://www.linkedin.com/in/mantoshk/"]
       },
       {
         "@type": "WebSite",

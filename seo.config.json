@@ -15,7 +15,7 @@
   "pages": {
     "/": {
       "title": "Mantosh Kumar | Platform Engineering, Automation & AI Systems",
-      "description": "Mantosh Kumar builds engineering systems that scale teams through platform engineering, automation, operational intelligence, and AI-assisted engineering.",
+      "description": "Staff Software Engineer Mantosh Kumar turns engineering friction into platform foundations, practical automation, and clearer operational decisions.",
       "kind": "home"
     },
     "/systems/": {
@@ -33,7 +33,7 @@
     },
     "/experience/": {
       "title": "Engineering Experience | Mantosh Kumar",
-      "description": "Mantosh Kumar's engineering career timeline across India, Germany, and Canada.",
+      "description": "Mantosh Kumar brings 14+ years of engineering experience across India, Germany, and Canada, focused on platforms, automation, and backend systems.",
       "kind": "collection",
       "schemaType": "CollectionPage"
     },
@@ -45,7 +45,7 @@
     },
     "/contact/": {
       "title": "Contact Mantosh Kumar | Engineering Systems",
-      "description": "Contact Mantosh Kumar to discuss engineering systems, platform engineering, technical writing, and long-term collaborations.",
+      "description": "Discuss a platform, automation, backend, or operational intelligence problem with Staff Software Engineer Mantosh Kumar.",
       "kind": "page",
       "schemaType": "ContactPage"
     },
