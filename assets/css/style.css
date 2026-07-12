@@ -2040,3 +2040,129 @@ button,
     text-decoration: underline;
   }
 }
+
+/* Visitor-controlled appearance: Auto follows the operating system. */
+.appearance-control {
+  position: relative;
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+}
+
+.appearance-control::before {
+  position: absolute;
+  left: .65rem;
+  content: "◐";
+  color: var(--muted);
+  font-size: .78rem;
+  pointer-events: none;
+}
+
+.appearance-control select {
+  min-height: 44px;
+  padding: .35rem 1.55rem .35rem 1.65rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  font-size: .78rem;
+  color-scheme: dark;
+  cursor: pointer;
+}
+
+html[data-theme="light"] {
+  color-scheme: light;
+  --bg: #f7f8fb;
+  --surface: #ffffff;
+  --surface-raised: rgba(255, 255, 255, .92);
+  --border: rgba(15, 23, 42, .16);
+  --border-strong: rgba(15, 23, 42, .26);
+  --text: #111827;
+  --muted: #536174;
+  --primary: #075fbd;
+  --primary-hover: #054e9d;
+  --shadow-card: 0 1px 0 rgba(255,255,255,.8) inset, 0 22px 60px rgba(30,41,59,.1);
+  --shadow-float: 0 1px 0 rgba(255,255,255,.9) inset, 0 20px 55px rgba(30,41,59,.16);
+}
+
+html[data-theme="light"] body {
+  background: radial-gradient(circle at 12% 0%, rgba(37, 99, 235, .1), transparent 30rem), linear-gradient(180deg, #fbfcfe 0%, var(--bg) 38rem, #f1f4f8 100%);
+}
+
+html[data-theme="light"] body::before { background-image: radial-gradient(rgba(15,23,42,.045) .6px, transparent .6px); }
+html[data-theme="light"] .navbar { background: rgba(247,248,251,.82); border-bottom-color: rgba(15,23,42,.1); box-shadow: 0 10px 35px rgba(30,41,59,.08); }
+html[data-theme="light"] nav a:hover,
+html[data-theme="light"] nav a:focus-visible,
+html[data-theme="light"] nav a[aria-current="page"] { background: rgba(15,23,42,.065); }
+html[data-theme="light"] nav .nav-cta { background: rgba(7,95,189,.1); color: #0b315d; }
+html[data-theme="light"] .secondary,
+html[data-theme="light"] .card,
+html[data-theme="light"] .resume-card,
+html[data-theme="light"] .content-card,
+html[data-theme="light"] .reference-card,
+html[data-theme="light"] .technical-toolkit,
+html[data-theme="light"] .contact-links a,
+html[data-theme="light"] .ask-mantosh-related-card { background: rgba(255,255,255,.8); }
+html[data-theme="light"] .value-strip { background: rgba(255,255,255,.42); }
+html[data-theme="light"] .evidence-link,
+html[data-theme="light"] .section-link,
+html[data-theme="light"] .ask-mantosh-answer a,
+html[data-theme="light"] .ask-mantosh-source { color: #075fbd; }
+html[data-theme="light"] .ask-mantosh-toggle,
+html[data-theme="light"] .ask-mantosh-panel { background: rgba(255,255,255,.96); }
+html[data-theme="light"] .ask-mantosh-answer pre { background: #eef2f7; }
+html[data-theme="light"] .ask-mantosh-source::after { background: #fff; }
+html[data-theme="light"] .ask-mantosh-jump { background: #e8f1fd; }
+html[data-theme="light"] .appearance-control select { color-scheme: light; }
+
+@media (prefers-color-scheme: light) {
+  html:not([data-theme]) {
+    color-scheme: light;
+    --bg: #f7f8fb;
+    --surface: #ffffff;
+    --surface-raised: rgba(255, 255, 255, .92);
+    --border: rgba(15, 23, 42, .16);
+    --border-strong: rgba(15, 23, 42, .26);
+    --text: #111827;
+    --muted: #536174;
+    --primary: #075fbd;
+    --primary-hover: #054e9d;
+    --shadow-card: 0 1px 0 rgba(255,255,255,.8) inset, 0 22px 60px rgba(30,41,59,.1);
+    --shadow-float: 0 1px 0 rgba(255,255,255,.9) inset, 0 20px 55px rgba(30,41,59,.16);
+  }
+
+  html:not([data-theme]) body { background: radial-gradient(circle at 12% 0%, rgba(37, 99, 235, .1), transparent 30rem), linear-gradient(180deg, #fbfcfe 0%, var(--bg) 38rem, #f1f4f8 100%); }
+  html:not([data-theme]) body::before { background-image: radial-gradient(rgba(15,23,42,.045) .6px, transparent .6px); }
+  html:not([data-theme]) .navbar { background: rgba(247,248,251,.82); border-bottom-color: rgba(15,23,42,.1); box-shadow: 0 10px 35px rgba(30,41,59,.08); }
+  html:not([data-theme]) nav a:hover,
+  html:not([data-theme]) nav a:focus-visible,
+  html:not([data-theme]) nav a[aria-current="page"] { background: rgba(15,23,42,.065); }
+  html:not([data-theme]) nav .nav-cta { background: rgba(7,95,189,.1); color: #0b315d; }
+  html:not([data-theme]) .secondary,
+  html:not([data-theme]) .card,
+  html:not([data-theme]) .resume-card,
+  html:not([data-theme]) .content-card,
+  html:not([data-theme]) .reference-card,
+  html:not([data-theme]) .technical-toolkit,
+  html:not([data-theme]) .contact-links a,
+  html:not([data-theme]) .ask-mantosh-related-card { background: rgba(255,255,255,.8); }
+  html:not([data-theme]) .value-strip { background: rgba(255,255,255,.42); }
+  html:not([data-theme]) .evidence-link,
+  html:not([data-theme]) .section-link,
+  html:not([data-theme]) .ask-mantosh-answer a,
+  html:not([data-theme]) .ask-mantosh-source { color: #075fbd; }
+  html:not([data-theme]) .ask-mantosh-toggle,
+  html:not([data-theme]) .ask-mantosh-panel { background: rgba(255,255,255,.96); }
+  html:not([data-theme]) .ask-mantosh-answer pre { background: #eef2f7; }
+  html:not([data-theme]) .ask-mantosh-source::after { background: #fff; }
+  html:not([data-theme]) .ask-mantosh-jump { background: #e8f1fd; }
+  html:not([data-theme]) .appearance-control select { color-scheme: light; }
+}
+
+@media (max-width: 640px) {
+  .appearance-control select {
+    min-width: 4.9rem;
+    font-size: .8rem;
+  }
+}

@@ -32,13 +32,16 @@ for (const file of await walk(root)) {
 
 try { await access(join(root, "accessibility", "index.html")); } catch { failures.push("missing accessibility statement"); }
 const css = await readFile(join(root, "assets/css/style.css"), "utf8");
-for (const feature of ["prefers-reduced-motion", "prefers-contrast: more", "prefers-reduced-transparency: reduce", "forced-colors: active", ":focus-visible"]) {
+for (const feature of ["prefers-color-scheme: light", "prefers-reduced-motion", "prefers-contrast: more", "prefers-reduced-transparency: reduce", "forced-colors: active", ":focus-visible"]) {
   if (!css.includes(feature)) failures.push(`stylesheet missing ${feature}`);
 }
 const widget = await readFile(join(root, "assets/js/ask-mantosh-widget.js"), "utf8");
 const client = await readFile(join(root, "assets/js/main.js"), "utf8");
 if (!/role=["']dialog["']/.test(widget) || !/aria-modal=["']true["']/.test(widget)) failures.push("Ask Mantosh missing modal dialog semantics");
 if (!client.includes('setAttribute("aria-busy"') || !client.includes('setAttribute("aria-live"')) failures.push("Ask Mantosh missing quiet streaming announcements");
+for (const themeFeature of ["mantosh-appearance", "appearance-select", "prefers-color-scheme: light", "localStorage.setItem"]) {
+  if (!widget.includes(themeFeature)) failures.push(`appearance control missing ${themeFeature}`);
+}
 
 if (failures.length) {
   console.error(failures.join("\n"));

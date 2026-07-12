@@ -1,5 +1,44 @@
 /* Shared Ask Mantosh launcher. Injects the minimized widget on every public page. */
 (() => {
+  const themeKey = "mantosh-appearance";
+  const supportedThemes = new Set(["auto", "light", "dark"]);
+  let savedTheme = "auto";
+  try {
+    const storedTheme = window.localStorage.getItem(themeKey);
+    if (supportedThemes.has(storedTheme)) savedTheme = storedTheme;
+  } catch { /* Preference storage may be unavailable in privacy modes. */ }
+
+  const applyTheme = (theme) => {
+    if (theme === "auto") document.documentElement.removeAttribute("data-theme");
+    else document.documentElement.dataset.theme = theme;
+    const themeColor = theme === "light" || (theme === "auto" && window.matchMedia("(prefers-color-scheme: light)").matches) ? "#f7f8fb" : "#05070a";
+    document.querySelector('meta[name="theme-color"]')?.setAttribute("content", themeColor);
+  };
+  applyTheme(savedTheme);
+
+  const navigation = document.querySelector(".navbar nav");
+  if (navigation && !document.getElementById("appearance-select")) {
+    navigation.insertAdjacentHTML("beforeend", `
+      <label class="appearance-control" for="appearance-select">
+        <span class="sr-only">Appearance</span>
+        <select id="appearance-select" aria-label="Appearance">
+          <option value="auto">Auto</option>
+          <option value="light">Light</option>
+          <option value="dark">Dark</option>
+        </select>
+      </label>`);
+    const select = document.getElementById("appearance-select");
+    select.value = savedTheme;
+    select.addEventListener("change", () => {
+      savedTheme = supportedThemes.has(select.value) ? select.value : "auto";
+      try { window.localStorage.setItem(themeKey, savedTheme); } catch { /* The current choice still applies for this page. */ }
+      applyTheme(savedTheme);
+    });
+    window.matchMedia("(prefers-color-scheme: light)").addEventListener?.("change", () => {
+      if (savedTheme === "auto") applyTheme("auto");
+    });
+  }
+
   document.querySelector(".skip-link")?.addEventListener("click", (event) => {
     const target = document.querySelector(event.currentTarget.getAttribute("href"));
     window.setTimeout(() => target?.focus(), 0);
