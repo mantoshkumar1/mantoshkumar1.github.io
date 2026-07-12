@@ -85,12 +85,11 @@
 
           <section class="resume-section">
             <h2>Engineering decisions</h2>
-            <h3>Keep the rule visible</h3>
-            <p>The calculation is a short, inspectable Python function rather than an opaque service. A reviewer can see the thresholds, rounding operation, and fallback behavior directly in `app.py`.</p>
-            <h3>Separate calculation from order execution</h3>
-            <p>The application does not connect to a brokerage account, place a trade, retrieve a live market price, or collect a credential. The visitor supplies the input and remains responsible for verifying the result.</p>
-            <h3>Use reactive state for paired inputs</h3>
-            <p>Streamlit callbacks track whether shares or amount was edited last, clear the paired field, and calculate the corresponding value with conservative floor operations.</p>
+            <ul class="case-study-list">
+              <li><strong>Keep the rule visible.</strong> The calculation stays in a short, inspectable Python function, so its thresholds, rounding operation, and fallback behavior can be reviewed directly in <code>app.py</code>.</li>
+              <li><strong>Keep calculation separate from trading.</strong> The application does not connect to a brokerage account, place a trade, retrieve a live market price, or collect credentials. The visitor verifies the result before using it.</li>
+              <li><strong>Keep amount and share inputs synchronized.</strong> Streamlit callbacks track which value changed last, clear the paired field, and calculate the corresponding value with conservative floor operations.</li>
+            </ul>
           </section>
 
           <section class="resume-section">
