@@ -358,8 +358,7 @@ test("classifies visitor questions into profile, problem, and direct response mo
 
 test("expands only profile retrieval with verified capability vocabulary", () => {
   const profileQuery = expandRetrievalQuery("Tell me about this guy", "Tell me about this guy");
-  assert.match(profileQuery, /engineering capabilities technical skills experience/i);
-  assert.match(profileQuery, /platform automation backend networking operational intelligence/i);
+  assert.match(profileQuery, /^About Mantosh Where His Experience Can Help Engineering Capabilities Technical Skills/i);
   assert.equal(expandRetrievalQuery("Why no PhotoSahi backend?", "Why no PhotoSahi backend?"), "Why no PhotoSahi backend?");
 });
 

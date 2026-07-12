@@ -43,5 +43,5 @@ export function responseModeInstructions(intent) {
 
 export function expandRetrievalQuery(question, conversationQuery = question) {
   if (classifyQuestionIntent(question) !== "profile") return conversationQuery;
-  return `${conversationQuery} Mantosh Kumar engineering capabilities technical skills experience platform automation backend networking operational intelligence hiring`;
+  return `About Mantosh Where His Experience Can Help Engineering Capabilities Technical Skills ${conversationQuery}`;
 }
