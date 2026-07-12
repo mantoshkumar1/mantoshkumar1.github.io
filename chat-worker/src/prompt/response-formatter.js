@@ -22,6 +22,25 @@ function extractFollowUpQuestions(answer) {
     .slice(0, 3);
 }
 
+function normalizeGroundedAnswer(answer, followUpQuestions = []) {
+  const answerBlock = /<answer>\s*([\s\S]*?)\s*<\/answer>/i.exec(answer);
+  let normalized = (answerBlock ? answerBlock[1] : answer).trim();
+  const sectionNames = ["Summary", "Detailed Explanation", "Engineering Decisions", "Trade-offs", "Lessons Learned", "Related Articles", "Related Projects", "Sources", "Follow-up Questions"];
+  for (const section of sectionNames) {
+    normalized = normalized.replace(new RegExp(`^#{0,2}\\s*${section}\\s*$`, "gim"), `## ${section}`);
+  }
+  const firstHeading = normalized.search(/^##\s+Summary\s*$/im);
+  normalized = firstHeading >= 0 ? normalized.slice(firstHeading).trim() : normalized;
+  const followUpHeading = /^##\s+Follow-up Questions\s*$/im;
+  const match = followUpHeading.exec(normalized);
+  if (match) {
+    const questions = followUpQuestions.length ? followUpQuestions.slice(0, 3) : extractFollowUpQuestions(normalized);
+    normalized = normalized.slice(0, match.index).trimEnd();
+    if (questions.length) normalized += `\n\n## Follow-up Questions\n${questions.map((question) => `- ${question}`).join("\n")}`;
+  }
+  return normalized;
+}
+
 function validateSafeModelOutput(answer, sources) {
   if (/<\/?(?:script|style|iframe|object|embed)\b|\bon\w+\s*=|(?:javascript|data):/i.test(answer)) {
     throw new AppError(500, "invalid_model_response", "The AI service returned an invalid response.");
@@ -34,8 +53,9 @@ function validateSafeModelOutput(answer, sources) {
 }
 
 export function formatResponse(response, { sources, confidence, maxAnswerChars = 12_000, recommendations, followUpQuestions, conversationId, action = null }) {
-  const answer = extractOutputText(response);
-  if (!answer) throw new AppError(500, "empty_model_response", "The AI service returned no answer.");
+  const rawAnswer = extractOutputText(response);
+  if (!rawAnswer) throw new AppError(500, "empty_model_response", "The AI service returned no answer.");
+  const answer = normalizeGroundedAnswer(rawAnswer, followUpQuestions);
   if (answer.length > maxAnswerChars || /<\/?(?:system|instructions|retrieved_documents)>/i.test(answer)) {
     throw new AppError(500, "invalid_model_response", "The AI service returned an invalid response.");
   }
