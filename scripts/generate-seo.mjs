@@ -83,7 +83,7 @@ function schemaFor({ site, page, url, route }) {
         "@type": "WebSite",
         "@id": `${site.url}/#website`,
         name: site.name,
-        alternateName: "Mantosh Kumar Engineering Systems",
+        alternateName: "Mantosh Kumar Engineering Portfolio",
         url: site.url,
         inLanguage: site.language,
         publisher: { "@id": `${site.url}/#person` }

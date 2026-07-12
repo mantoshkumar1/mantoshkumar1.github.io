@@ -3,7 +3,7 @@
     "name": "Mantosh Kumar",
     "url": "https://mantoshkumar1.github.io",
     "author": "Mantosh Kumar",
-    "description": "Engineering systems, platform engineering, automation, and operational intelligence.",
+    "description": "Platform engineering, automation, backend systems, and operational intelligence.",
     "socialImage": "/assets/seo/social-default.png",
     "themeColor": "#060b12",
     "language": "en",
@@ -19,7 +19,7 @@
       "kind": "home"
     },
     "/systems/": {
-      "title": "Engineering Systems | Mantosh Kumar",
+      "title": "Engineering Projects | Mantosh Kumar",
       "description": "Published engineering projects covering privacy-first browser processing and practical workflow automation.",
       "kind": "collection",
       "schemaType": "CollectionPage"
@@ -65,7 +65,7 @@
       "schemaType": "ProfilePage"
     },
     "/contact/": {
-      "title": "Contact Mantosh Kumar | Engineering Systems",
+      "title": "Contact Mantosh Kumar | Staff Software Engineer",
       "description": "Discuss a platform, automation, backend, or operational intelligence problem with Staff Software Engineer Mantosh Kumar.",
       "kind": "page",
       "schemaType": "ContactPage"
@@ -79,7 +79,7 @@
       "softwareApplication": true,
       "applicationCategory": "UtilitiesApplication",
       "breadcrumbs": [
-        { "name": "Engineering Systems", "path": "/systems/" }
+        { "name": "Projects", "path": "/systems/" }
       ]
     },
     "/projects/workflow-automation-toolkit.html": {
@@ -89,7 +89,7 @@
       "entityName": "Workflow Automation Toolkit",
       "dateModified": "2026-07-12",
       "breadcrumbs": [
-        { "name": "Engineering Systems", "path": "/systems/" }
+        { "name": "Projects", "path": "/systems/" }
       ]
     },
     "/projects/gtt-price-calculator.html": {
@@ -101,7 +101,7 @@
       "softwareApplication": true,
       "applicationCategory": "FinanceApplication",
       "breadcrumbs": [
-        { "name": "Engineering Systems", "path": "/systems/" }
+        { "name": "Projects", "path": "/systems/" }
       ]
     },
     "/404.html": {

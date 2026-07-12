@@ -14,7 +14,7 @@ The current production inventory, data flow, deployment paths, controls, and kno
 ## Public content
 
 - `index.html` — positioning, selected systems, experience summary, and Ask Mantosh UI
-- `systems/index.html` — engineering-system catalog
+- `systems/index.html` — selected engineering projects
 - `projects/photosahi.html` — PhotoSahi architecture case study
 - `projects/workflow-automation-toolkit.html` — automation toolkit case study
 - `projects/gtt-price-calculator.html` — rules-based Streamlit utility case study

@@ -16,7 +16,7 @@ His résumé-backed capabilities include engineering platforms and automation, P
 ## Important pages
 
 - [Home and engineering positioning](https://mantoshkumar1.github.io/)
-- [Engineering systems catalog](https://mantoshkumar1.github.io/systems/)
+- [Engineering projects](https://mantoshkumar1.github.io/systems/)
 - [Engineering experience timeline](https://mantoshkumar1.github.io/experience/)
 - [Resume](https://mantoshkumar1.github.io/resume/)
 - [Contact Mantosh Kumar](https://mantoshkumar1.github.io/contact/)
