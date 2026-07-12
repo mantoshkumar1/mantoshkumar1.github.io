@@ -1401,7 +1401,20 @@ nav a:focus-visible {
 
 nav a[aria-current="page"] {
   color: var(--text);
-  background: rgba(255,255,255,.065);
+  background: rgba(74, 139, 244, .13);
+  box-shadow: inset 0 0 0 1px rgba(107, 166, 255, .42);
+  font-weight: 700;
+}
+
+nav a[aria-current="page"]::before {
+  display: inline-block;
+  width: .38rem;
+  height: .38rem;
+  margin-right: .42rem;
+  border-radius: 999px;
+  background: var(--primary);
+  content: "";
+  vertical-align: .08em;
 }
 
 nav .nav-cta {
@@ -2094,7 +2107,7 @@ html[data-theme="light"] body::before { background-image: radial-gradient(rgba(1
 html[data-theme="light"] .navbar { background: rgba(247,248,251,.82); border-bottom-color: rgba(15,23,42,.1); box-shadow: 0 10px 35px rgba(30,41,59,.08); }
 html[data-theme="light"] nav a:hover,
 html[data-theme="light"] nav a:focus-visible,
-html[data-theme="light"] nav a[aria-current="page"] { background: rgba(15,23,42,.065); }
+html[data-theme="light"] nav a[aria-current="page"] { background: rgba(7,95,189,.1); }
 html[data-theme="light"] nav .nav-cta { background: rgba(7,95,189,.1); color: #0b315d; }
 html[data-theme="light"] .secondary,
 html[data-theme="light"] .card,
@@ -2137,7 +2150,7 @@ html[data-theme="light"] .appearance-control select { color-scheme: light; }
   html:not([data-theme]) .navbar { background: rgba(247,248,251,.82); border-bottom-color: rgba(15,23,42,.1); box-shadow: 0 10px 35px rgba(30,41,59,.08); }
   html:not([data-theme]) nav a:hover,
   html:not([data-theme]) nav a:focus-visible,
-  html:not([data-theme]) nav a[aria-current="page"] { background: rgba(15,23,42,.065); }
+  html:not([data-theme]) nav a[aria-current="page"] { background: rgba(7,95,189,.1); }
   html:not([data-theme]) nav .nav-cta { background: rgba(7,95,189,.1); color: #0b315d; }
   html:not([data-theme]) .secondary,
   html:not([data-theme]) .card,
@@ -2165,4 +2178,12 @@ html[data-theme="light"] .appearance-control select { color-scheme: light; }
     min-width: 4.9rem;
     font-size: .8rem;
   }
+}
+
+.resume-list {
+  padding-left: 1.25rem;
+}
+
+.resume-list li::marker {
+  color: var(--primary);
 }
