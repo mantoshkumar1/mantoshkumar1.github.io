@@ -25,7 +25,7 @@ function extractFollowUpQuestions(answer) {
 function normalizeGroundedAnswer(answer, followUpQuestions = []) {
   const answerBlock = /<answer>\s*([\s\S]*?)\s*<\/answer>/i.exec(answer);
   let normalized = (answerBlock ? answerBlock[1] : answer).trim();
-  const sectionNames = ["Summary", "Detailed Explanation", "Engineering Decisions", "Trade-offs", "Lessons Learned", "Related Articles", "Related Projects", "Sources", "Follow-up Questions"];
+  const sectionNames = ["Answer", "Summary", "In brief", "Where Mantosh can help", "Relevant evidence", "A sensible next step", "What matters", "How Mantosh's experience applies", "Practical next steps", "Limits", "Detailed Explanation", "Engineering Decisions", "Trade-offs", "Lessons Learned", "Related Articles", "Related Projects", "Sources", "Follow-up Questions"];
   for (const section of sectionNames) {
     normalized = normalized.replace(new RegExp(`^#{0,2}\\s*${section}\\s*$`, "gim"), `## ${section}`);
   }
@@ -33,8 +33,9 @@ function normalizeGroundedAnswer(answer, followUpQuestions = []) {
     /^##\s+(Engineering Decisions|Trade-offs|Lessons Learned|Related Articles|Related Projects)\s*\n\s*(?:Not discussed(?: in the retrieved documents)?\.?|Not available\.?)\s*(?=^##\s+|$)/gim,
     ""
   ).replace(/\n{3,}/g, "\n\n").trim();
-  const firstHeading = normalized.search(/^##\s+Summary\s*$/im);
-  normalized = firstHeading >= 0 ? normalized.slice(firstHeading).trim() : normalized;
+  const firstHeading = normalized.search(/^##\s+(?:Answer|In brief|What matters|Summary)\s*$/im);
+  if (firstHeading >= 0) normalized = normalized.slice(firstHeading).trim();
+  else normalized = `## Answer\n${normalized}`;
   const followUpHeading = /^##\s+Follow-up Questions\s*$/im;
   const match = followUpHeading.exec(normalized);
   if (match) {
@@ -70,6 +71,9 @@ function validateSafeModelOutput(answer, sources) {
   const markdownUrls = [...answer.matchAll(/\[[^\]]*\]\(([^)\s]+)(?:\s+[^)]*)?\)/g)].map((match) => match[1]);
   if (markdownUrls.some((url) => !allowedUrls.has(url))) {
     throw new AppError(500, "invalid_model_response", "The AI service returned an invalid response.");
+  }
+  if (allowedUrls.size && !markdownUrls.some((url) => allowedUrls.has(url))) {
+    throw new AppError(500, "uncited_model_response", "The AI service returned an answer without verifiable citations.");
   }
 }
 

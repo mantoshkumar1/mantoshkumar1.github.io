@@ -1,6 +1,7 @@
 import { deduplicateSources, sourceLabel } from "./citation-builder.js";
 import { escapeXmlText } from "./guardrails.js";
 import { buildSystemPrompt } from "./system-prompt.js";
+import { classifyQuestionIntent, responseModeInstructions } from "./intent-classifier.js";
 
 function formatDocument(chunk, index) {
   const label = sourceLabel(chunk);
@@ -18,6 +19,7 @@ function formatDocument(chunk, index) {
 }
 
 export function buildPrompt({ question, retrieval, memory = { summary: "", messages: [] } }) {
+  const intent = classifyQuestionIntent(question);
   const seenContent = new Set();
   const chunks = retrieval.chunks.filter((chunk) => {
     const fingerprint = `${chunk.path}:${chunk.content}`;
@@ -42,6 +44,10 @@ export function buildPrompt({ question, retrieval, memory = { summary: "", messa
       "<conversation_memory>",
       conversation || "No earlier conversation context.",
       "</conversation_memory>",
+      "",
+      `<response_mode intent="${intent}">`,
+      responseModeInstructions(intent),
+      "</response_mode>",
       "",
       "<retrieved_documents>",
       documents,

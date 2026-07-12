@@ -16,7 +16,7 @@ This document is the canonical description of what is deployed. Architecture pro
 ## Published inventory
 
 - Seventeen SEO-configured HTML documents: home, projects index, three project case studies, Insights index, six engineering articles and notes, experience, résumé, contact, accessibility statement, and custom 404.
-- 10 public Ask Mantosh documents: three project sources, six Insights sources, and one résumé-backed engineering-capabilities source.
+- 11 public Ask Mantosh documents: three project sources, six Insights sources, one résumé-backed engineering-capabilities source, and one evidence-backed profile and fit guide.
 - One résumé PDF served for in-browser preview and explicit download.
 - Sitemap, RSS feed, `robots.txt`, `llms.txt`, JSON-LD, Open Graph, Twitter Card, manifest, icons, and a 1200×630 social image.
 
@@ -89,11 +89,11 @@ The repository currently enforces:
 - internal link, fragment, and asset validation;
 - documentation drift checks;
 - autonomous content-lane counts and explicit zero-content states;
-- 26 Worker contract, security, quota, OIDC, retrieval, prompt, and failure-path tests.
+- 31 Worker contract, security, quota, OIDC, retrieval, intent-formatting, prompt, and failure-path tests.
 
 ## Known limits
 
-- Only six public knowledge documents are indexed; Ask Mantosh intentionally declines questions outside them.
+- Only 11 public knowledge documents are indexed; Ask Mantosh intentionally declines questions outside them.
 - Public evidence has no fabricated employer metrics or inferred organizational outcomes.
 - The Worker uses the Cloudflare free allocation and may return a clear 429 when safety or provider limits are reached.
 - There is no authenticated user account, durable personal profile, staging environment declared in this repository, formal accessibility conformance audit, or labeled offline retrieval-evaluation set.
