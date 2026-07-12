@@ -7,6 +7,12 @@
   --primary: #3b82f6;
   --primary-hover: #2563eb;
   --max-width: 1180px;
+  --space-hero-top: clamp(3rem, 6vw, 4.5rem);
+  --space-hero-bottom: clamp(2.75rem, 5.5vw, 4rem);
+  --space-section: clamp(3.25rem, 6vw, 4.5rem);
+  --space-section-title: clamp(1.4rem, 3vw, 1.75rem);
+  --space-footer-top: clamp(2.5rem, 4vw, 2.75rem);
+  --space-footer-bottom: clamp(2.5rem, 5vw, 3.25rem);
 }
 
 * {
@@ -98,10 +104,9 @@ nav a:hover {
 }
 
 .hero {
-  min-height: calc(100vh - 80px);
   display: flex;
   align-items: center;
-  padding: 5rem 0;
+  padding: var(--space-hero-top) 0 var(--space-hero-bottom);
 }
 
 .hero-grid {
@@ -233,7 +238,7 @@ nav a:hover {
 }
 
 .section {
-  padding: 6rem 0;
+  padding: var(--space-section) 0;
   content-visibility: auto;
   contain-intrinsic-size: auto 720px;
 }
@@ -243,7 +248,7 @@ nav a:hover {
 }
 
 .section-title {
-  margin-bottom: 2.4rem;
+  margin-bottom: var(--space-section-title);
 }
 
 .section-title p {
@@ -389,7 +394,7 @@ nav a:hover {
 }
 
 .footer {
-  padding: 3.2rem 0 4rem;
+  padding: var(--space-footer-top) 0 var(--space-footer-bottom);
   border-top: 1px solid rgba(255, 255, 255, 0.06);
 }
 
@@ -866,10 +871,6 @@ body.ask-mantosh-open {
 }
 
 @media (max-width: 640px) {
-  .hero {
-    padding: 3.5rem 0;
-  }
-
   .hero-buttons {
     flex-direction: column;
   }
