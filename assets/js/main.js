@@ -196,7 +196,10 @@ class AskMantoshApp {
     const cancelPendingRender = () => { if (frameId) { cancelAnimationFrame(frameId); frameId = 0; } };
     try {
       await this.api.stream(question, controller.signal, (type, data) => {
-        if (type === "metadata") assistant.sources = data.sources || [];
+        if (type === "metadata") {
+          assistant.sources = data.sources || [];
+          assistant.followUps = data.followUpQuestions || data.suggestedQuestions || [];
+        }
         if (type === "response.output_text.delta") { assistant.text += data.delta || ""; if (!frameId) frameId = requestAnimationFrame(render); }
         if (type === "error") throw new Error(data.message || "The response stream was interrupted.");
       });
@@ -213,7 +216,7 @@ class AskMantoshApp {
       }
     } finally { if (this.controller === controller) { this.controller = null; this.view.setStatus(""); } }
   }
-  finish(message, applyFollowUps = true) { message.followUps = this.followUps(message.text); message.text = this.stripResponseSections(message.text); this.view.updateAssistant(message); if (applyFollowUps) this.view.setSuggestions(message.followUps, (question) => this.ask(question)); }
+  finish(message, applyFollowUps = true) { message.followUps = message.followUps?.length ? message.followUps : this.followUps(message.text); message.text = this.stripResponseSections(message.text); this.view.updateAssistant(message); if (applyFollowUps) this.view.setSuggestions(message.followUps, (question) => this.ask(question)); }
   stripResponseSections(text) { return text.replace(/^##\s+(Sources|Follow-up Questions)\s*$[\s\S]*?(?=^##\s+|$)/gim, "").trim(); }
   followUps(text) { const match = /^##\s+Follow-up Questions\s*$([\s\S]*?)(?=^##\s+|$)/im.exec(text); return match ? match[1].split("\n").map((line) => line.replace(/^\s*(?:[-*]|\d+[.)])\s+/, "").trim()).filter((line) => line.endsWith("?")).slice(0, 3) : []; }
 }
