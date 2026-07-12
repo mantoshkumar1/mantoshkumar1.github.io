@@ -41,7 +41,7 @@
 
 
 
-<link rel="stylesheet" href="../assets/css/style.css?v=20260712-6" />
+<link rel="stylesheet" href="../assets/css/style.css?v=20260712-7" />
   </head>
   <body>
     <a class="skip-link" href="#main-content">Skip to main content</a>
@@ -62,21 +62,20 @@
         <section class="resume-card">
           <div class="resume-header">
             <p class="eyebrow">Contact</p>
-            <h1>Start with the engineering problem</h1>
-            <p>Useful context includes the bottleneck, current constraints, desired outcome, and why it matters now.</p>
+            <h1>Bring me the bottleneck</h1>
+            <p>Share what is slowing the team down, what you have tried, and what a better outcome looks like.</p>
           </div>
-          <div class="contact-detail">
-            <span class="contact-label">Email</span>
-            <a id="contact-email" href="mailto:mantoshk234@gmail.com">mantoshk234@gmail.com</a>
-            <p>Copy the address on any device, or open a prepared message if your device has a mail app configured.</p>
-          </div>
-          <div class="resume-actions">
-            <a class="button primary" href="mailto:mantoshk234@gmail.com?subject=Engineering%20problem%20to%20discuss&amp;body=Problem%3A%0A%0ACurrent%20constraints%3A%0A%0ADesired%20outcome%3A%0A%0AWhy%20it%20matters%20now%3A%0A">Open prepared email</a>
-            <button class="button secondary" id="copy-email" type="button">Copy email address</button>
-            <a class="button secondary" href="https://www.linkedin.com/in/mantoshk/" target="_blank" rel="noreferrer">LinkedIn</a>
-            <a class="button secondary" href="https://github.com/mantoshkumar1?tab=repositories" target="_blank" rel="noreferrer">GitHub repositories</a>
+          <div class="resume-actions contact-primary-actions">
+            <a class="button primary" href="mailto:mantoshk234@gmail.com?subject=Engineering%20problem%20to%20discuss&amp;body=Problem%3A%0A%0ACurrent%20constraints%3A%0A%0ADesired%20outcome%3A%0A%0AWhy%20it%20matters%20now%3A%0A">Write to Mantosh <span aria-hidden="true">→</span></a>
+            <button class="button secondary" id="copy-email" type="button">Copy email</button>
           </div>
           <p class="contact-copy-status" id="copy-email-status" role="status" aria-live="polite"></p>
+          <p class="contact-address">Direct: <a id="contact-email" href="mailto:mantoshk234@gmail.com">mantoshk234@gmail.com</a></p>
+          <nav class="contact-links" aria-label="Other ways to connect">
+            <span>Elsewhere</span>
+            <a href="https://www.linkedin.com/in/mantoshk/" target="_blank" rel="noreferrer">LinkedIn <span aria-hidden="true">↗</span></a>
+            <a href="https://github.com/mantoshkumar1?tab=repositories" target="_blank" rel="noreferrer">GitHub <span aria-hidden="true">↗</span></a>
+          </nav>
         </section>
       </div>
     </main>
@@ -89,12 +88,12 @@
         try {
           await navigator.clipboard.writeText(emailAddress);
           copyEmailButton.textContent = "Copied";
-          copyEmailStatus.textContent = "Email address copied to your clipboard.";
+          copyEmailStatus.textContent = `Copied: ${emailAddress}`;
           window.setTimeout(() => {
-            copyEmailButton.textContent = "Copy email address";
+            copyEmailButton.textContent = "Copy email";
           }, 1800);
         } catch {
-          copyEmailStatus.textContent = "Copy failed. Select the email address above and copy it manually.";
+          copyEmailStatus.textContent = `Could not copy. Email ${emailAddress} directly.`;
         }
       });
     </script>

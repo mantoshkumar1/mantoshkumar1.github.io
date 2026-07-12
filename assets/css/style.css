@@ -651,6 +651,39 @@ button.button {
   font-size: 0.92rem;
 }
 
+.contact-primary-actions {
+  margin-bottom: 1rem;
+}
+
+.contact-address {
+  margin: 0;
+  color: var(--muted);
+}
+
+.contact-address a,
+.contact-links a {
+  color: #b8d7ff;
+  text-underline-offset: 0.2em;
+}
+
+.contact-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem 1.1rem;
+  align-items: center;
+  margin-top: 2rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--border);
+}
+
+.contact-links > span {
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
 .action-note {
   max-width: 620px;
   margin-top: -0.9rem;
