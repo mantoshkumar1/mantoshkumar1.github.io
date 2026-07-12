@@ -701,35 +701,6 @@ button.button {
   cursor: pointer;
 }
 
-.contact-detail {
-  display: grid;
-  gap: 0.25rem;
-  max-width: 620px;
-  padding: 1.1rem 1.2rem;
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  background: rgba(255, 255, 255, 0.02);
-}
-
-.contact-label {
-  color: var(--muted);
-  font-size: 0.78rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-
-.contact-detail a {
-  width: fit-content;
-  color: #98c5ff;
-  font-size: clamp(1rem, 3vw, 1.2rem);
-  font-weight: 700;
-  text-decoration: underline;
-  text-decoration-color: rgba(152, 197, 255, 0.35);
-  text-underline-offset: 0.2em;
-}
-
-.contact-detail p,
 .contact-copy-status {
   color: var(--muted);
 }
@@ -741,25 +712,22 @@ button.button {
 }
 
 .contact-primary-actions {
+  display: grid;
+  width: min(100%, 430px);
+  gap: 0.75rem;
   margin-bottom: 1rem;
 }
 
-.contact-address {
-  margin: 0;
-  color: var(--muted);
-}
-
-.contact-address a,
-.contact-links a {
-  color: #b8d7ff;
-  text-underline-offset: 0.2em;
+.contact-primary-actions .button {
+  width: 100%;
 }
 
 .contact-links {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.7rem 1.1rem;
-  align-items: center;
+  flex-direction: column;
+  align-items: stretch;
+  width: min(100%, 430px);
+  gap: 0.65rem;
   margin-top: 2rem;
   padding-top: 1.2rem;
   border-top: 1px solid var(--border);
@@ -771,6 +739,31 @@ button.button {
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
+}
+
+.contact-links a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  color: #b8d7ff;
+  text-decoration: none;
+  background: rgba(255, 255, 255, 0.018);
+  transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+}
+
+.contact-links a:hover,
+.contact-links a:focus-visible {
+  border-color: rgba(59, 130, 246, 0.65);
+  background: rgba(59, 130, 246, 0.08);
+  transform: translateY(-1px);
+}
+
+.contact-card {
+  max-width: 680px;
+  margin-inline: auto;
 }
 
 .action-note {
