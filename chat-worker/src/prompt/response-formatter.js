@@ -55,6 +55,12 @@ function canonicalizeSourceSection(answer, sources) {
   return sourcesSection.test(answer) ? answer.replace(sourcesSection, canonical) : answer;
 }
 
+function citedSources(answer, sources) {
+  const citedUrls = new Set([...answer.matchAll(/\[[^\]]*\]\(([^)\s]+)(?:\s+[^)]*)?\)/g)].map((match) => match[1]));
+  const cited = sources.filter((source) => source.url && citedUrls.has(source.url));
+  return cited.length ? cited : sources;
+}
+
 function validateSafeModelOutput(answer, sources) {
   if (/<\/?(?:script|style|iframe|object|embed)\b|\bon\w+\s*=|(?:javascript|data):/i.test(answer)) {
     throw new AppError(500, "invalid_model_response", "The AI service returned an invalid response.");
@@ -69,8 +75,10 @@ function validateSafeModelOutput(answer, sources) {
 export function formatResponse(response, { sources, confidence, maxAnswerChars = 12_000, recommendations, followUpQuestions, conversationId, action = null }) {
   const rawAnswer = extractOutputText(response);
   if (!rawAnswer) throw new AppError(500, "empty_model_response", "The AI service returned no answer.");
-  const canonicalSources = deduplicateSources(sources);
-  const answer = canonicalizeSourceSection(normalizeGroundedAnswer(rawAnswer, followUpQuestions), canonicalSources);
+  const retrievedSources = deduplicateSources(sources);
+  const normalizedAnswer = normalizeGroundedAnswer(rawAnswer, followUpQuestions);
+  const canonicalSources = citedSources(normalizedAnswer, retrievedSources);
+  const answer = canonicalizeSourceSection(normalizedAnswer, canonicalSources);
   if (answer.length > maxAnswerChars || /<\/?(?:system|instructions|retrieved_documents)>/i.test(answer)) {
     throw new AppError(500, "invalid_model_response", "The AI service returned an invalid response.");
   }

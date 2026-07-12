@@ -262,7 +262,10 @@ test("keeps only the first XML-wrapped answer and normalizes plain section headi
 });
 
 test("removes empty optional sections and canonicalizes duplicate sources", () => {
-  const sources = [{ title: "PhotoSahi", label: "Project: PhotoSahi", category: "project", url: "/projects/photosahi.html" }];
+  const sources = [
+    { title: "PhotoSahi", label: "Project: PhotoSahi", category: "project", url: "/projects/photosahi.html" },
+    { title: "Unrelated", label: "Project: Unrelated", category: "project", url: "/projects/unrelated.html" }
+  ];
   const result = formatSuccess({ output_text: [
     "## Summary",
     "Grounded answer.",
@@ -280,6 +283,7 @@ test("removes empty optional sections and canonicalizes duplicate sources", () =
   ].join("\n") }, sources);
   assert.doesNotMatch(result.answer, /Not discussed|Not available|## Engineering Decisions|## Trade-offs/);
   assert.equal((result.answer.match(/\[Project: PhotoSahi\]/g) || []).length, 1);
+  assert.deepEqual(result.sources.map((source) => source.label), ["Project: PhotoSahi"]);
 });
 
 test("contains prompt injection by encoding the visitor question as data", () => {
