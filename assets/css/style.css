@@ -496,6 +496,13 @@ button.button {
   font-size: 0.92rem;
 }
 
+.action-note {
+  max-width: 620px;
+  margin-top: -0.9rem;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
 .resume-section {
   margin-top: 1.5rem;
 }
