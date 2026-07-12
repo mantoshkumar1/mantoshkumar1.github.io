@@ -29,6 +29,10 @@ function normalizeGroundedAnswer(answer, followUpQuestions = []) {
   for (const section of sectionNames) {
     normalized = normalized.replace(new RegExp(`^#{0,2}\\s*${section}\\s*$`, "gim"), `## ${section}`);
   }
+  normalized = normalized.replace(
+    /^##\s+(Engineering Decisions|Trade-offs|Lessons Learned|Related Articles|Related Projects)\s*\n\s*(?:Not discussed(?: in the retrieved documents)?\.?|Not available\.?)\s*(?=^##\s+|$)/gim,
+    ""
+  ).replace(/\n{3,}/g, "\n\n").trim();
   const firstHeading = normalized.search(/^##\s+Summary\s*$/im);
   normalized = firstHeading >= 0 ? normalized.slice(firstHeading).trim() : normalized;
   const followUpHeading = /^##\s+Follow-up Questions\s*$/im;
@@ -39,6 +43,16 @@ function normalizeGroundedAnswer(answer, followUpQuestions = []) {
     if (questions.length) normalized += `\n\n## Follow-up Questions\n${questions.map((question) => `- ${question}`).join("\n")}`;
   }
   return normalized;
+}
+
+function canonicalizeSourceSection(answer, sources) {
+  const sourceLines = sources
+    .filter((source) => source.url)
+    .map((source) => `- [${source.label || source.title}](${source.url})`);
+  if (!sourceLines.length) return answer;
+  const sourcesSection = /^##\s+Sources\s*$[\s\S]*?(?=^##\s+Follow-up Questions\s*$|(?![\s\S]))/im;
+  const canonical = `## Sources\n${sourceLines.join("\n")}\n\n`;
+  return sourcesSection.test(answer) ? answer.replace(sourcesSection, canonical) : answer;
 }
 
 function validateSafeModelOutput(answer, sources) {
@@ -55,11 +69,11 @@ function validateSafeModelOutput(answer, sources) {
 export function formatResponse(response, { sources, confidence, maxAnswerChars = 12_000, recommendations, followUpQuestions, conversationId, action = null }) {
   const rawAnswer = extractOutputText(response);
   if (!rawAnswer) throw new AppError(500, "empty_model_response", "The AI service returned no answer.");
-  const answer = normalizeGroundedAnswer(rawAnswer, followUpQuestions);
+  const canonicalSources = deduplicateSources(sources);
+  const answer = canonicalizeSourceSection(normalizeGroundedAnswer(rawAnswer, followUpQuestions), canonicalSources);
   if (answer.length > maxAnswerChars || /<\/?(?:system|instructions|retrieved_documents)>/i.test(answer)) {
     throw new AppError(500, "invalid_model_response", "The AI service returned an invalid response.");
   }
-  const canonicalSources = deduplicateSources(sources);
   validateSafeModelOutput(answer, canonicalSources);
   const modelFollowUps = extractFollowUpQuestions(answer);
   const questions = followUpQuestions?.length ? followUpQuestions : modelFollowUps;

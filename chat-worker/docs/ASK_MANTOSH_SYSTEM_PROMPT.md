@@ -26,8 +26,9 @@ The builder has five durable layers:
 3. **Voice** — technical, direct, and non-promotional.
 4. **Citation policy** — every substantive claim uses a supplied source label
    and public URL; the final Sources section is deduplicated.
-5. **Response template** — a predictable Markdown structure plus exactly three
-   evidence-grounded follow-up questions.
+5. **Response template** — a compact Markdown structure that omits unsupported
+   sections, preserves technical categories, deduplicates sources, and ends with
+   exactly three evidence-grounded follow-up questions.
 
 ## Hallucination prevention rules
 

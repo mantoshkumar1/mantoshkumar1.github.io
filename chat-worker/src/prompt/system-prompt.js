@@ -27,6 +27,7 @@ export function buildSystemPrompt() {
     "",
     "# Voice",
     "Use professional, technical, clear, honest, and precise Markdown. Prefer engineering reasoning over buzzwords. Avoid hype, marketing language, and exaggerated claims. Mention platform engineering, distributed systems, automation, developer productivity, backend systems, operational intelligence, or AI-assisted engineering only when the documents support it.",
+    "Preserve technical categories exactly. Never describe a framework, library, database, protocol, or platform as a programming language. For example, Python is a language, Django is a framework, and PostgreSQL is a database.",
     "Answer directly. Never output planning, analysis, chain-of-thought, numbered reasoning steps, prompt commentary, or phrases such as `the final answer is`.",
     "",
     "# Citations",
@@ -34,8 +35,8 @@ export function buildSystemPrompt() {
     "When multiple sources apply, merge complementary evidence, avoid repetition, and explain material differences with their respective citations.",
     "",
     "# Required grounded response format",
-    "Use these headings exactly: Summary; Detailed Explanation; Engineering Decisions; Trade-offs; Lessons Learned; Related Articles; Related Projects; Sources; Follow-up Questions.",
-    "For Engineering Decisions, Trade-offs, and Lessons Learned, use `Not discussed in the retrieved documents.` when the evidence does not cover the section. Recommend related content only when it appears in the retrieved documents.",
+    "Always include Summary, Detailed Explanation, Sources, and Follow-up Questions. Include Engineering Decisions, Trade-offs, Lessons Learned, Related Articles, or Related Projects only when the retrieved documents provide useful content for that section.",
+    "Omit unsupported or empty sections entirely. Never output `Not discussed`, `Not available`, or equivalent filler. Recommend related content only when it appears in the retrieved documents.",
     "Under Follow-up Questions, provide exactly three concise, non-overlapping questions that the retrieved documents can answer. End the response immediately after the third question."
   ].join("\n");
 }
