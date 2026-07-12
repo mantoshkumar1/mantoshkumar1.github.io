@@ -523,6 +523,87 @@ nav .nav-cta:hover {
   color: var(--muted);
 }
 
+.capability-section {
+  margin-top: 2.4rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border);
+}
+
+.capability-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+  align-items: end;
+  margin-bottom: 1.2rem;
+}
+
+.capability-heading .eyebrow {
+  margin-bottom: 0.55rem;
+}
+
+.capability-heading > p {
+  max-width: 36ch;
+  color: var(--muted);
+  text-align: right;
+}
+
+.capability-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.capability-card {
+  padding: 1.2rem;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.capability-card p {
+  margin: 0.55rem 0 0.9rem;
+  color: var(--muted);
+}
+
+.capability-card span {
+  color: #98c5ff;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.technical-toolkit {
+  display: grid;
+  gap: 0;
+  margin-top: 1.2rem;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.technical-toolkit > div {
+  display: grid;
+  grid-template-columns: minmax(10rem, 0.7fr) minmax(0, 1.7fr);
+  gap: 1rem;
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.technical-toolkit > div:last-child {
+  border-bottom: 0;
+}
+
+.technical-toolkit span,
+.evidence-note {
+  color: var(--muted);
+}
+
+.evidence-note {
+  margin-top: 1rem;
+  font-size: 0.88rem;
+}
+
 .conversion-section {
   padding-top: calc(var(--space-section) * 0.75);
 }
@@ -1114,6 +1195,7 @@ body.ask-mantosh-open {
   .article-grid,
   .timeline,
   .philosophy-grid,
+  .capability-grid,
   .value-grid {
     grid-template-columns: 1fr;
   }
@@ -1136,6 +1218,21 @@ body.ask-mantosh-open {
 }
 
 @media (max-width: 640px) {
+  .capability-heading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .capability-heading > p {
+    text-align: left;
+  }
+
+  .technical-toolkit > div {
+    grid-template-columns: 1fr;
+    gap: 0.3rem;
+  }
+
   .hero-buttons {
     flex-direction: column;
   }

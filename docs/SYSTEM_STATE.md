@@ -16,7 +16,7 @@ This document is the canonical description of what is deployed. Architecture pro
 ## Published inventory
 
 - Twelve SEO-configured HTML documents: home, systems, three project case studies, Insights index, engineering philosophy, one engineering note, experience, résumé, contact, and custom 404.
-- 5 public Ask Mantosh documents: PhotoSahi, Workflow Automation Toolkit, GTT Trigger Price Calculator, “Build Leverage, Not Just Software,” and “Why Does This Still Require Me?”.
+- 6 public Ask Mantosh documents: three project sources, two Insights sources, and one résumé-backed engineering-capabilities source.
 - One résumé PDF served for in-browser preview and explicit download.
 - Sitemap, RSS feed, `robots.txt`, `llms.txt`, JSON-LD, Open Graph, Twitter Card, manifest, icons, and a 1200×630 social image.
 
@@ -93,7 +93,7 @@ The repository currently enforces:
 
 ## Known limits
 
-- Only five public knowledge documents are indexed; Ask Mantosh intentionally declines questions outside them.
+- Only six public knowledge documents are indexed; Ask Mantosh intentionally declines questions outside them.
 - Public evidence has no fabricated employer metrics or inferred organizational outcomes.
 - The Worker uses the Cloudflare free allocation and may return a clear 429 when safety or provider limits are reached.
 - There is no authenticated user account, durable personal profile, staging environment declared in this repository, formal accessibility conformance audit, or labeled offline retrieval-evaluation set.

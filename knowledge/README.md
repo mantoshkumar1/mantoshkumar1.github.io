@@ -14,13 +14,14 @@ with `_` are intentionally not indexed.
 
 ## Current public corpus
 
-As of 2026-07-12, the public index contains five source documents:
+As of 2026-07-12, the public index contains six source documents:
 
 - `Project: PhotoSahi`
 - `Project: Workflow Automation Toolkit`
 - `Project: GTT Trigger Price Calculator`
 - `Note: Engineering Philosophy: Build Leverage, Not Just Software`
 - `Article: Why Does This Still Require Me?`
+- `Experience: Engineering Capabilities and Technical Skills`
 
 Each source has one clear topic, a factual summary, retrieval tags, related
 topics, an explicit public URL, and an evidence boundary in its body. The

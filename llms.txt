@@ -4,6 +4,8 @@ Canonical URL: https://mantoshkumar1.github.io/
 
 Mantosh Kumar is a Staff Software Engineer publishing documented engineering projects and case studies.
 
+His résumé-backed capabilities include engineering platforms and automation, Python backend and data systems, networking and distributed validation, observability, quality analytics, and AI-assisted engineering tools.
+
 ## Publicly documented work
 
 - Privacy-conscious browser-side image processing

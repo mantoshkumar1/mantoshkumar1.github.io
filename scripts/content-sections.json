@@ -13,7 +13,13 @@
     {
       "id": "reliability-observability",
       "page": "thinking/index.html",
+      "categories": ["article", "note"],
       "tagsAny": ["reliability", "observability"]
+    },
+    {
+      "id": "capabilities",
+      "page": "experience/index.html",
+      "categories": ["experience"]
     }
   ]
 }
