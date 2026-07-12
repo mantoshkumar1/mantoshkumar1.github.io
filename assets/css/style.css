@@ -451,6 +451,51 @@ nav a:hover {
   margin: 1.2rem 0 1.8rem;
 }
 
+button.button {
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.contact-detail {
+  display: grid;
+  gap: 0.25rem;
+  max-width: 620px;
+  padding: 1.1rem 1.2rem;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.contact-label {
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.contact-detail a {
+  width: fit-content;
+  color: #98c5ff;
+  font-size: clamp(1rem, 3vw, 1.2rem);
+  font-weight: 700;
+  text-decoration: underline;
+  text-decoration-color: rgba(152, 197, 255, 0.35);
+  text-underline-offset: 0.2em;
+}
+
+.contact-detail p,
+.contact-copy-status {
+  color: var(--muted);
+}
+
+.contact-copy-status {
+  min-height: 1.7em;
+  margin-top: -0.9rem;
+  font-size: 0.92rem;
+}
+
 .resume-section {
   margin-top: 1.5rem;
 }

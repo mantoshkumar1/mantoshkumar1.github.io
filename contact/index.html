@@ -41,7 +41,7 @@
 
 
 
-<link rel="stylesheet" href="../assets/css/style.css?v=20260712-3" />
+<link rel="stylesheet" href="../assets/css/style.css?v=20260712-4" />
   </head>
   <body>
     <a class="skip-link" href="#main-content">Skip to main content</a>
@@ -65,13 +65,38 @@
             <h1>Reach out</h1>
             <p>For engineering systems, technical writing, or long-term collaborations.</p>
           </div>
+          <div class="contact-detail">
+            <span class="contact-label">Email</span>
+            <a id="contact-email" href="mailto:mantoshk234@gmail.com">mantoshk234@gmail.com</a>
+            <p>Copy the address on any device, or compose an email if your device has a mail app configured.</p>
+          </div>
           <div class="resume-actions">
-            <a class="button primary" href="mailto:mantoshk234@gmail.com">Email me</a>
+            <button class="button secondary" id="copy-email" type="button">Copy email</button>
+            <a class="button primary" href="mailto:mantoshk234@gmail.com">Compose email</a>
             <a class="button secondary" href="https://www.linkedin.com/in/mantoshk/" target="_blank" rel="noreferrer">LinkedIn</a>
             <a class="button secondary" href="https://github.com/mantoshkumar1" target="_blank" rel="noreferrer">GitHub</a>
           </div>
+          <p class="contact-copy-status" id="copy-email-status" role="status" aria-live="polite"></p>
         </section>
       </div>
     </main>
+    <script>
+      const copyEmailButton = document.querySelector("#copy-email");
+      const copyEmailStatus = document.querySelector("#copy-email-status");
+      const emailAddress = "mantoshk234@gmail.com";
+
+      copyEmailButton.addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText(emailAddress);
+          copyEmailButton.textContent = "Copied";
+          copyEmailStatus.textContent = "Email address copied to your clipboard.";
+          window.setTimeout(() => {
+            copyEmailButton.textContent = "Copy email";
+          }, 1800);
+        } catch {
+          copyEmailStatus.textContent = "Copy failed. Select the email address above and copy it manually.";
+        }
+      });
+    </script>
   </body>
 </html>
