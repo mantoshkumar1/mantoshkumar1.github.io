@@ -1,5 +1,10 @@
 /* Shared Ask Mantosh launcher. Injects the minimized widget on every public page. */
 (() => {
+  document.querySelector(".skip-link")?.addEventListener("click", (event) => {
+    const target = document.querySelector(event.currentTarget.getAttribute("href"));
+    window.setTimeout(() => target?.focus(), 0);
+  });
+
   if (document.getElementById("ask-mantosh-toggle")) return;
 
   document.body.insertAdjacentHTML("beforeend", `

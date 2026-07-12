@@ -106,6 +106,12 @@
       "kind": "page",
       "schemaType": "ContactPage"
     },
+    "/accessibility/": {
+      "title": "Accessibility | Mantosh Kumar",
+      "description": "Accessibility features, known limitations, alternative résumé formats, and a direct way to report barriers on Mantosh Kumar's website.",
+      "kind": "page",
+      "schemaType": "WebPage"
+    },
     "/projects/photosahi.html": {
       "title": "PhotoSahi: Privacy-First Browser Photo Processing | Mantosh Kumar",
       "description": "PhotoSahi is a privacy-first passport and visa photo generator that processes images locally in the browser with HTML5 Canvas.",

@@ -1486,13 +1486,13 @@ nav .nav-cta:hover {
 
 .button.primary,
 .primary {
-  background: linear-gradient(180deg, #1978d8, #0a5fbb);
+  background: linear-gradient(180deg, #156fc8, #0a5fbb);
   box-shadow: 0 1px 0 rgba(255,255,255,.24) inset, 0 10px 30px rgba(48,112,220,.23);
 }
 
 .button.primary:hover,
 .primary:hover {
-  background: linear-gradient(180deg, #2385e8, #0f69c8);
+  background: linear-gradient(180deg, #126bc2, #0d64bd);
   box-shadow: 0 1px 0 rgba(255,255,255,.28) inset, 0 14px 36px rgba(48,112,220,.3);
 }
 
@@ -1906,4 +1906,137 @@ nav .nav-cta:hover {
 .reference-card span {
   color: var(--muted);
   font-size: .88rem;
+}
+
+/* Accessibility preferences and non-color interaction cues */
+:target {
+  scroll-margin-top: 6rem;
+}
+
+.card a,
+.section-link,
+.evidence-link,
+.inline-cta a,
+.footer-links a,
+.breadcrumb a,
+.resume-section > p a,
+.case-study-list a {
+  text-decoration: underline;
+  text-decoration-thickness: .08em;
+  text-underline-offset: .22em;
+}
+
+.card a:hover,
+.section-link:hover,
+.evidence-link:hover,
+.inline-cta a:hover,
+.footer-links a:hover,
+.breadcrumb a:hover,
+.resume-section > p a:hover,
+.case-study-list a:hover {
+  text-decoration-thickness: .14em;
+}
+
+button,
+.button,
+.ask-mantosh-chip,
+.ask-mantosh-close,
+.ask-mantosh-send {
+  min-height: 44px;
+}
+
+@media (prefers-contrast: more) {
+  :root {
+    --muted: #d5dce7;
+    --border: #708198;
+    --primary: #7db4ff;
+  }
+
+  body,
+  .navbar,
+  .card,
+  .resume-card,
+  .content-card,
+  .hero-card,
+  .ask-mantosh-panel,
+  .ask-mantosh-toggle {
+    background-image: none;
+  }
+
+  .card,
+  .resume-card,
+  .content-card,
+  .hero-card,
+  .button,
+  .ask-mantosh-panel,
+  .ask-mantosh-toggle {
+    border-width: 2px;
+  }
+
+  :focus-visible {
+    outline-width: 4px;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  body,
+  .navbar,
+  .ask-mantosh-panel,
+  .ask-mantosh-toggle,
+  .button.secondary {
+    background-image: none;
+    backdrop-filter: none;
+  }
+
+  .navbar { background: var(--bg); }
+  .ask-mantosh-panel,
+  .ask-mantosh-toggle { background: #0b111b; }
+}
+
+@media (forced-colors: active) {
+  *, *::before, *::after {
+    forced-color-adjust: auto;
+  }
+
+  .card,
+  .resume-card,
+  .content-card,
+  .hero-card,
+  .button,
+  .technical-toolkit,
+  .contact-links a,
+  .ask-mantosh-panel,
+  .ask-mantosh-toggle,
+  .ask-mantosh-chip {
+    border: 1px solid CanvasText;
+  }
+
+  nav a[aria-current="page"] {
+    outline: 2px solid Highlight;
+    outline-offset: 2px;
+  }
+
+  .ask-mantosh-presence {
+    border: 1px solid CanvasText;
+  }
+}
+
+@media print {
+  .navbar,
+  .ask-mantosh-toggle,
+  .ask-mantosh-panel,
+  .ask-mantosh-backdrop,
+  .skip-link {
+    display: none !important;
+  }
+
+  body {
+    background: #fff;
+    color: #000;
+  }
+
+  a {
+    color: #000;
+    text-decoration: underline;
+  }
 }

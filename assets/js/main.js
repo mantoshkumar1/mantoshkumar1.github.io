@@ -87,6 +87,10 @@ class ConversationView {
   scrollToLatest(force = false) { if (force || this.isNearBottom()) this.messages.scrollTo({ top: this.messages.scrollHeight, behavior: "smooth" }); this.updateJump(); }
   updateJump() { this.jump.hidden = this.isNearBottom(); }
   setStatus(text) { this.status.textContent = text; }
+  setStreaming(active) {
+    this.messages.setAttribute("aria-busy", String(active));
+    this.messages.setAttribute("aria-live", active ? "off" : "polite");
+  }
 
   showEmpty(onAsk) {
     this.messages.innerHTML = "";
@@ -191,7 +195,7 @@ class AskMantoshApp {
     const question = rawQuestion.trim(); if (!question) return; this.open();
     if (this.controller) this.controller.abort();
     const user = this.add("user", question); const assistant = this.add("assistant", "", { question, sources: [] });
-    this.elements.input.value = ""; this.resize(); this.view.setSuggestions([], () => this.ask()); this.view.setStatus("Searching published engineering knowledge…");
+    this.elements.input.value = ""; this.resize(); this.view.setSuggestions([], () => this.ask()); this.view.setStreaming(true); this.view.setStatus("Searching published engineering knowledge…");
     const controller = new AbortController(); this.controller = controller; let frameId = 0;
     const render = () => { frameId = 0; this.view.updateAssistant(assistant, { streaming: true }); };
     const cancelPendingRender = () => { if (frameId) { cancelAnimationFrame(frameId); frameId = 0; } };
@@ -215,9 +219,18 @@ class AskMantoshApp {
           : (error.message || "I couldn't answer that right now. Please try again.");
         this.finish(assistant, this.controller === controller);
       }
-    } finally { if (this.controller === controller) { this.controller = null; this.view.setStatus(""); } }
+    } finally { if (this.controller === controller) { this.controller = null; } }
   }
-  finish(message, applyFollowUps = true) { message.followUps = message.followUps?.length ? message.followUps : this.followUps(message.text); message.text = this.stripResponseSections(message.text); this.view.updateAssistant(message); if (applyFollowUps) this.view.setSuggestions(message.followUps, (question) => this.ask(question)); }
+  finish(message, applyFollowUps = true) {
+    message.followUps = message.followUps?.length ? message.followUps : this.followUps(message.text);
+    message.text = this.stripResponseSections(message.text);
+    this.view.setStreaming(false);
+    this.view.updateAssistant(message);
+    if (applyFollowUps) this.view.setSuggestions(message.followUps, (question) => this.ask(question));
+    const announcement = message.error ? "Answer unavailable." : "Answer ready.";
+    this.view.setStatus(announcement);
+    window.setTimeout(() => { if (this.view.status.textContent === announcement) this.view.setStatus(""); }, 2500);
+  }
   stripResponseSections(text) { return text.replace(/^##\s+(Sources|Follow-up Questions)\s*$[\s\S]*?(?=^##\s+|$)/gim, "").trim(); }
   followUps(text) { const match = /^##\s+Follow-up Questions\s*$([\s\S]*?)(?=^##\s+|$)/im.exec(text); return match ? match[1].split("\n").map((line) => line.replace(/^\s*(?:[-*]|\d+[.)])\s+/, "").trim()).filter((line) => line.endsWith("?")).slice(0, 3) : []; }
 }

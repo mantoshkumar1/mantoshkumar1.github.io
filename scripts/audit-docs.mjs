@@ -78,6 +78,7 @@ for (const file of await markdownFiles(root)) {
 for (const [workflow, label] of [[deployWorkflow, "Pages workflow"], [seoWorkflow, "SEO workflow"]]) {
   requireText(workflow, "node scripts/audit-docs.mjs", label);
   requireText(workflow, "node scripts/audit-content-sections.mjs", label);
+  requireText(workflow, "node scripts/audit-accessibility.mjs", label);
 }
 
 const stalePatterns = [
