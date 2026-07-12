@@ -56,9 +56,10 @@ function canonicalizeSourceSection(answer, sources) {
 }
 
 function citedSources(answer, sources) {
-  const citedUrls = new Set([...answer.matchAll(/\[[^\]]*\]\(([^)\s]+)(?:\s+[^)]*)?\)/g)].map((match) => match[1]));
+  const answerBody = answer.split(/^##\s+Sources\s*$/im, 1)[0];
+  const citedUrls = new Set([...answerBody.matchAll(/\[[^\]]*\]\(([^)\s]+)(?:\s+[^)]*)?\)/g)].map((match) => match[1]));
   const cited = sources.filter((source) => source.url && citedUrls.has(source.url));
-  return cited.length ? cited : sources;
+  return cited.length ? cited : sources.slice(0, 1);
 }
 
 function validateSafeModelOutput(answer, sources) {
