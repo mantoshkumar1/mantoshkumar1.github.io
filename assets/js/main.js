@@ -142,7 +142,8 @@ class ConversationView {
   }
 
   setSuggestions(questions, onAsk) {
-    this.followUps = questions || []; this.suggestions.hidden = !this.followUps.length; this.suggestions.innerHTML = this.followUps.map((question) => `<button class=\"ask-mantosh-chip\" type=\"button\" data-suggestion=\"${this.escape(question)}\">${this.escape(question)}</button>`).join("");
+    this.followUps = (questions || []).map((question) => question.replace(/([a-z])-([a-z])/gi, "$1 $2").replace(/\?+\s*$/, "?"));
+    this.suggestions.hidden = !this.followUps.length; this.suggestions.innerHTML = this.followUps.map((question) => `<button class=\"ask-mantosh-chip\" type=\"button\" data-suggestion=\"${this.escape(question)}\">${this.escape(question)}</button>`).join("");
     this.onAsk = onAsk;
   }
   handleAction(event) {
