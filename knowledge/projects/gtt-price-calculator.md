@@ -2,8 +2,8 @@
 title: "GTT Trigger Price Calculator"
 slug: "gtt-price-calculator"
 category: "project"
-tags: [python, streamlit, rules-engine, rounding, decision-support]
-summary: "A Streamlit utility that applies explicit trigger-distance and rounding assumptions to calculate candidate GTT buy and sell prices."
+tags: [indian-stock-market, gtt-orders, python, streamlit, decision-support]
+summary: "A helper for preparing candidate buy and sell trigger prices before placing a GTT order in the Indian stock market."
 last_updated: "2026-07-12"
 related_topics: [input-validation, reactive-ui, financial-utility, rule-freshness]
 visibility: "public"
@@ -14,7 +14,7 @@ url: "/projects/gtt-price-calculator.html"
 
 ## Problem
 
-The GTT Trigger Price Calculator is a public Python and Streamlit utility for calculating candidate buy and sell trigger prices from a visitor-provided current stock price. It also converts between order amount and share count.
+The GTT Trigger Price Calculator helps a visitor prepare candidate buy and sell trigger prices before placing a Good Till Triggered order in the Indian stock market. The visitor provides the current stock price; the tool also converts between investment amount and share count.
 
 ## Current implementation
 

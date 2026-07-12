@@ -17,7 +17,7 @@ The current production inventory, data flow, deployment paths, controls, and kno
 - `systems/index.html` — selected engineering projects
 - `projects/photosahi.html` — PhotoSahi architecture case study
 - `projects/workflow-automation-toolkit.html` — automation toolkit case study
-- `projects/gtt-price-calculator.html` — rules-based Streamlit utility case study
+- `projects/gtt-price-calculator.html` — Indian stock-market GTT calculator case study
 - `thinking/index.html` — engineering Insights archive
 - `thinking/engineering-philosophy.html` — evidence-bounded engineering philosophy
 - `thinking/why-does-this-still-require-me.html` — engineering-leverage note
