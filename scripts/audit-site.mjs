@@ -14,6 +14,8 @@ for (const page of pages) {
   const html = await readFile(join(root, page), "utf8");
   for (const [pattern, name] of requirements) if (!pattern.test(html)) { console.error(`${page}: missing ${name}`); failures += 1; }
   if ((html.match(/<h1\b/gi) || []).length !== 1) { console.error(`${page}: requires exactly one h1`); failures += 1; }
+  if (!/class=["'][^"']*logo[^"']*["'][^>]+aria-label=["']Mantosh Kumar — Home["']/i.test(html)) { console.error(`${page}: logo must provide an explicit home affordance`); failures += 1; }
+  if (!/ask-mantosh-widget\.js|id=["']ask-mantosh-toggle["']/i.test(html)) { console.error(`${page}: missing Ask Mantosh launcher`); failures += 1; }
   const version = /style\.css\?v=([\w-]+)/i.exec(html)?.[1];
   if (!version) { console.error(`${page}: missing versioned stylesheet`); failures += 1; }
   else stylesheetVersions.set(page, version);

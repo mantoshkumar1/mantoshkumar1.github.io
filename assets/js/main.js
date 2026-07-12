@@ -222,9 +222,12 @@ class AskMantoshApp {
   followUps(text) { const match = /^##\s+Follow-up Questions\s*$([\s\S]*?)(?=^##\s+|$)/im.exec(text); return match ? match[1].split("\n").map((line) => line.replace(/^\s*(?:[-*]|\d+[.)])\s+/, "").trim()).filter((line) => line.endsWith("?")).slice(0, 3) : []; }
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+const initializeAskMantosh = () => {
   document.querySelector("[data-year]")?.replaceChildren(String(new Date().getFullYear()));
   const byId = (id) => document.getElementById(id);
   const elements = { toggle: byId("ask-mantosh-toggle"), close: byId("ask-mantosh-close"), backdrop: byId("ask-mantosh-backdrop"), panel: byId("ask-mantosh-panel"), form: byId("ask-mantosh-form"), input: byId("ask-mantosh-input"), send: byId("ask-mantosh-send"), messages: byId("ask-mantosh-messages"), suggestions: byId("ask-mantosh-suggestions"), jump: byId("ask-mantosh-jump"), status: byId("ask-mantosh-status") };
   if (Object.values(elements).every(Boolean)) new AskMantoshApp(elements).init();
-});
+};
+
+if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", initializeAskMantosh);
+else initializeAskMantosh();
