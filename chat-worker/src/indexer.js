@@ -1,7 +1,6 @@
 import { AppError, badRequest } from "./errors.js";
 import { bumpKnowledgeVersion } from "./cache.js";
 import { createEmbeddings } from "./ai.js";
-import { enforceFreeUsageLimit } from "./quota.js";
 import { verifyGitHubOidcToken } from "./github-oidc.js";
 
 const MAX_CHUNKS_PER_DOCUMENT = 20;
@@ -110,7 +109,6 @@ export async function handleIndexRequest(request, env, config) {
     return { success: true, deleted: payload.path };
   }
   if (payload?.action === "upsert") {
-    await enforceFreeUsageLimit(env, config);
     return { success: true, ...(await upsertDocument(env, config, payload.document)) };
   }
   throw badRequest("Unsupported indexing action.");

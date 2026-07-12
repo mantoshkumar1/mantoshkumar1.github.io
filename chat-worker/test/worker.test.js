@@ -153,6 +153,34 @@ test("invalidates the knowledge cache after a successful index update", async ()
   assert.equal(writes[0][0], "knowledge-version");
 });
 
+test("keeps authenticated knowledge synchronization independent of visitor AI quotas", async () => {
+  const quotaDb = testDatabase();
+  const originalPrepare = quotaDb.prepare.bind(quotaDb);
+  quotaDb.prepare = (sql) => {
+    if (sql.includes("ai_daily_usage") || sql.includes("ai_request_windows")) {
+      throw new Error("The internal indexer must not read visitor quota tables.");
+    }
+    return originalPrepare(sql);
+  };
+  const indexEnv = {
+    ...env,
+    KNOWLEDGE_DB: quotaDb,
+    CACHE_VERSION: { put: async () => {} },
+    KNOWLEDGE_INDEX: { upsert: async () => {}, deleteByIds: async () => {} }
+  };
+  const response = await worker.fetch(new Request("https://worker.example/internal/index", {
+    method: "POST",
+    headers: { Authorization: "Bearer indexer-test-token", "Content-Type": "application/json" },
+    body: JSON.stringify({ action: "upsert", document: {
+      path: "knowledge/faq/about-mantosh.md", checksum: "b".repeat(64), title: "About Mantosh", slug: "about-mantosh", category: "faq",
+      tags: ["hiring"], summary: "An evidence-backed profile.", last_updated: "2026-07-12", related_topics: ["experience"], visibility: "public", url: "/experience/",
+      chunks: [{ id: "about-mantosh-chunk", content: "Mantosh has documented engineering experience." }]
+    } })
+  }), indexEnv);
+  assert.equal(response.status, 200);
+  assert.equal((await response.json()).indexed, true);
+});
+
 test("accepts a signed GitHub OIDC token only for the sync workflow on main", async () => {
   const pair = await crypto.subtle.generateKey({ name: "RSASSA-PKCS1-v1_5", modulusLength: 2048, publicExponent: new Uint8Array([1, 0, 1]), hash: "SHA-256" }, true, ["sign", "verify"]);
   const jwk = { ...(await crypto.subtle.exportKey("jwk", pair.publicKey)), kid: "test-key", use: "sig", alg: "RS256" };
