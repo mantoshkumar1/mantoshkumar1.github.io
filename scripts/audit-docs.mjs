@@ -8,14 +8,14 @@ const requireText = (content, expected, label) => {
   if (!content.includes(expected)) failures.push(`${label}: missing ${expected}`);
 };
 
-const [readme, state, docsIndex, workerReadme, workerDocsIndex, wrangler, home, deployWorkflow, seoWorkflow] = await Promise.all([
+const [readme, state, docsIndex, workerReadme, workerDocsIndex, wrangler, widget, deployWorkflow, seoWorkflow] = await Promise.all([
   read("README.md"),
   read("docs/SYSTEM_STATE.md"),
   read("docs/README.md"),
   read("chat-worker/README.md"),
   read("chat-worker/docs/README.md"),
   read("chat-worker/wrangler.toml"),
-  read("index.html"),
+  read("assets/js/ask-mantosh-widget.js"),
   read(".github/workflows/deploy-pages.yml"),
   read(".github/workflows/technical-seo.yml")
 ]);
@@ -34,7 +34,7 @@ async function markdownFiles(directory) {
 const siteOrigin = "https://mantoshkumar1.github.io";
 const workerOrigin = "https://ask-mantosh.mantoshk234.workers.dev";
 for (const [content, label] of [[readme, "README"], [state, "system state"]]) requireText(content, siteOrigin, label);
-for (const [content, label] of [[state, "system state"], [workerReadme, "Worker README"], [home, "home page"]]) requireText(content, workerOrigin, label);
+for (const [content, label] of [[state, "system state"], [workerReadme, "Worker README"], [widget, "shared Ask Mantosh widget"]]) requireText(content, workerOrigin, label);
 requireText(docsIndex, "SYSTEM_STATE.md", "documentation map");
 requireText(workerDocsIndex, "../../docs/SYSTEM_STATE.md", "Worker documentation map");
 
