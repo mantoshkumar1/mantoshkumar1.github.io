@@ -60,13 +60,13 @@
     },
     "/resume/": {
       "title": "Staff Software Engineer Resume | Mantosh Kumar",
-      "description": "Resume for Mantosh Kumar, a Staff Software Engineer focused on platform engineering, automation, operational intelligence, and backend systems.",
+      "description": "Resume for Toronto-based Staff Software Engineer Mantosh Kumar, with 14+ years across platform engineering, automation, backend systems, networking, and operational intelligence.",
       "kind": "page",
       "schemaType": "ProfilePage"
     },
     "/contact/": {
       "title": "Contact Mantosh Kumar | Staff Software Engineer",
-      "description": "Discuss a platform, automation, backend, or operational intelligence problem with Staff Software Engineer Mantosh Kumar.",
+      "description": "Discuss a senior engineering role, contract, or platform, automation, backend, and operational intelligence project with Mantosh Kumar.",
       "kind": "page",
       "schemaType": "ContactPage"
     },

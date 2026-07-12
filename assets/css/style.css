@@ -1882,3 +1882,28 @@ nav .nav-cta:hover {
     transition-duration: .01ms !important;
   }
 }
+
+.reference-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+  gap: .85rem;
+  margin: 1rem 0 1.25rem;
+}
+
+.reference-card {
+  padding: 1.25rem;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: rgba(255,255,255,.025);
+}
+
+.reference-card p {
+  margin: 0 0 .9rem;
+  color: var(--text);
+  line-height: 1.65;
+}
+
+.reference-card span {
+  color: var(--muted);
+  font-size: .88rem;
+}
