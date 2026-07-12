@@ -88,6 +88,7 @@ The repository currently enforces:
 - crawler/discoverability checks;
 - internal link, fragment, and asset validation;
 - documentation drift checks;
+- autonomous content-lane counts and explicit zero-content states;
 - 25 Worker contract, security, quota, OIDC, retrieval, prompt, and failure-path tests.
 
 ## Known limits

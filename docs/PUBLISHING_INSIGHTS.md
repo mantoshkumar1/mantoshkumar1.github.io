@@ -42,6 +42,22 @@ Never infer employer results, adoption, scale, incidents, or metrics. Put future
 7. Push `main`; Pages deploys the article and the knowledge workflow synchronizes the paired retrieval document.
 8. Ask one direct, one paraphrased, and one unrelated question. Verify the source label, URL, and no-evidence behavior.
 
+## Empty-section behavior
+
+Autonomous publishing must never leave an editorial lane visually blank and
+must never invent a dummy article to fill it. `scripts/content-sections.json`
+defines the public-document filter for each visible lane. The matching HTML
+element records its current count through `data-content-count`.
+
+When the count is zero, render a designed empty state with
+`data-empty-state="true"` that explains what evidence is required. When the
+first qualifying public document is added, replace that empty state with the
+real content and update the recorded count. `scripts/audit-content-sections.mjs`
+fails CI if the public knowledge corpus, count, or empty-state marker disagree.
+
+The empty state is a publication signal, not content. It must not have a
+canonical article URL, feed entry, sitemap entry, or Ask Mantosh document.
+
 ## Definition of done
 
 An insight is complete only when:
@@ -51,3 +67,4 @@ An insight is complete only when:
 - Ask Mantosh can answer a concrete question from its paired public document and cite the canonical page;
 - unsupported claims are excluded rather than softened with marketing language;
 - documentation and automated audits pass.
+- every configured publication lane contains real public content or an explicit evidence-first empty state.

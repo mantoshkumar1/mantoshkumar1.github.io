@@ -1,0 +1,19 @@
+{
+  "sections": [
+    {
+      "id": "systems",
+      "page": "systems/index.html",
+      "categories": ["project"]
+    },
+    {
+      "id": "insights",
+      "page": "thinking/index.html",
+      "categories": ["article", "note"]
+    },
+    {
+      "id": "reliability-observability",
+      "page": "thinking/index.html",
+      "tagsAny": ["reliability", "observability"]
+    }
+  ]
+}

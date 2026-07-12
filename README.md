@@ -60,6 +60,7 @@ node scripts/validate-discoverability.mjs
 node scripts/seo-audit.mjs
 node scripts/audit-links.mjs
 node scripts/audit-docs.mjs
+node scripts/audit-content-sections.mjs
 npm test --prefix chat-worker
 git diff --check
 ```
@@ -71,6 +72,7 @@ What these gates protect:
 - internal links, fragments, and public assets;
 - discoverability files and crawler policy;
 - documentation references that must match the deployed endpoints and configuration;
+- public-content counts and explicit empty states for autonomous publication lanes;
 - Worker request validation, retrieval contracts, rate limits, OIDC indexing, prompt-injection boundaries, failure handling, and SSE output.
 
 ## Deployment
