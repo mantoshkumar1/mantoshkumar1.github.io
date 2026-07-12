@@ -4,12 +4,24 @@
   <id>https://mantoshkumar1.github.io/</id>
   <link href="https://mantoshkumar1.github.io/" />
   <link href="https://mantoshkumar1.github.io/feed.xml" rel="self" type="application/atom+xml" />
-  <updated>2026-07-12T00:00:00Z</updated>
+  <updated>2026-07-12T21:00:00Z</updated>
   <author>
     <name>Mantosh Kumar</name>
     <email>mantoshk234@gmail.com</email>
   </author>
   <subtitle>Public engineering case studies, writing, and notes by Mantosh Kumar.</subtitle>
+  <entry>
+    <title>Why Does This Still Require Me?</title>
+    <id>https://mantoshkumar1.github.io/thinking/why-does-this-still-require-me.html</id>
+    <link href="https://mantoshkumar1.github.io/thinking/why-does-this-still-require-me.html" />
+    <published>2026-07-12T21:00:00Z</published>
+    <updated>2026-07-12T21:00:00Z</updated>
+    <author><name>Mantosh Kumar</name></author>
+    <category term="engineering-note" label="Engineering Note" />
+    <category term="engineering-leverage" label="Engineering Leverage" />
+    <category term="automation" label="Automation" />
+    <summary>A practical test for recognizing repeated work that should become a system, delegated responsibility, or automated workflow.</summary>
+  </entry>
   <entry>
     <title>PhotoSahi: Privacy-First Browser Image Processing</title>
     <id>https://mantoshkumar1.github.io/projects/photosahi.html</id>

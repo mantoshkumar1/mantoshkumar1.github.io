@@ -26,10 +26,20 @@
     },
     "/thinking/": {
       "title": "Engineering Notes & Technical Writing | Mantosh Kumar",
-      "description": "A future archive for reviewed and published engineering notes.",
+      "description": "Reviewed engineering notes from Mantosh Kumar about engineering leverage, system design, automation, and operational judgment.",
       "kind": "collection",
-      "schemaType": "CollectionPage",
-      "noindex": true
+      "schemaType": "CollectionPage"
+    },
+    "/thinking/why-does-this-still-require-me.html": {
+      "title": "Why Does This Still Require Me? | Mantosh Kumar",
+      "description": "A practical engineering heuristic for recognizing repeated work that should become a system, delegated responsibility, or automated workflow.",
+      "kind": "article",
+      "schemaType": "TechArticle",
+      "datePublished": "2026-07-12",
+      "dateModified": "2026-07-12",
+      "breadcrumbs": [
+        { "name": "Engineering Notes", "path": "/thinking/" }
+      ]
     },
     "/experience/": {
       "title": "Engineering Experience | Mantosh Kumar",

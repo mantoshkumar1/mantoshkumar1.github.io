@@ -331,6 +331,10 @@ nav .nav-cta:hover {
   gap: 1.4rem;
 }
 
+.single-card-grid {
+  grid-template-columns: minmax(0, 1fr);
+}
+
 .card {
   background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.015));
   border: 1px solid var(--border);
@@ -478,6 +482,15 @@ nav .nav-cta:hover {
   margin-bottom: 0.4rem;
 }
 
+.timeline-block p + p {
+  margin-top: 0.55rem;
+  font-size: 0.9rem;
+}
+
+.timeline-block strong {
+  color: var(--text);
+}
+
 .experience-focus {
   display: flex;
   flex-wrap: wrap;
@@ -491,6 +504,15 @@ nav .nav-cta:hover {
   border-radius: 999px;
   color: var(--muted);
   font-size: 0.86rem;
+}
+
+.experience-evidence {
+  padding-top: 1.4rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.experience-evidence .case-study-list {
+  color: var(--muted);
 }
 
 .conversion-section {

@@ -202,7 +202,12 @@ class AskMantoshApp {
       this.finish(assistant, this.controller === controller);
     } catch (error) {
       if (error.name === "AbortError") { assistant.text ||= "Response stopped."; this.finish(assistant, this.controller === controller); }
-      else { assistant.error = error.message || "I couldn't answer that right now. Please try again."; this.finish(assistant, this.controller === controller); }
+      else {
+        assistant.error = error instanceof TypeError
+          ? "Ask Mantosh couldn't be reached. Check your connection and try again."
+          : (error.message || "I couldn't answer that right now. Please try again.");
+        this.finish(assistant, this.controller === controller);
+      }
     } finally { if (this.controller === controller) { this.controller = null; this.view.setStatus(""); } }
   }
   finish(message, applyFollowUps = true) { message.followUps = this.followUps(message.text); message.text = this.stripResponseSections(message.text); this.view.updateAssistant(message); if (applyFollowUps) this.view.setSuggestions(message.followUps, (question) => this.ask(question)); }

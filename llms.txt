@@ -8,6 +8,7 @@ Mantosh Kumar is a Staff Software Engineer publishing documented engineering pro
 
 - Privacy-conscious browser-side image processing
 - Local Python workflow automation for PDF, image, and file tasks
+- Engineering leverage through reusable systems, delegated ownership, and explicit workflow design
 
 ## Important pages
 
@@ -16,11 +17,16 @@ Mantosh Kumar is a Staff Software Engineer publishing documented engineering pro
 - [Engineering experience timeline](https://mantoshkumar1.github.io/experience/)
 - [Resume](https://mantoshkumar1.github.io/resume/)
 - [Contact Mantosh Kumar](https://mantoshkumar1.github.io/contact/)
+- [Engineering notes](https://mantoshkumar1.github.io/thinking/)
 
 ## Featured projects
 
 - [PhotoSahi: privacy-first browser image processing case study](https://mantoshkumar1.github.io/projects/photosahi.html)
 - [Workflow Automation Toolkit case study](https://mantoshkumar1.github.io/projects/workflow-automation-toolkit.html)
+
+## Engineering notes
+
+- [Why Does This Still Require Me?](https://mantoshkumar1.github.io/thinking/why-does-this-still-require-me.html)
 
 ## Ask Mantosh
 
