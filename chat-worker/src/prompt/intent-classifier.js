@@ -40,3 +40,8 @@ export function responseModeInstructions(intent) {
     "Keep the opening answer to 1–3 short paragraphs. Prefer bullets for lists of three or more items. Do not repeat the same fact in multiple sections."
   ].join("\n");
 }
+
+export function expandRetrievalQuery(question, conversationQuery = question) {
+  if (classifyQuestionIntent(question) !== "profile") return conversationQuery;
+  return `${conversationQuery} Mantosh Kumar engineering capabilities technical skills experience platform automation backend networking operational intelligence hiring`;
+}

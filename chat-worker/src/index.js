@@ -6,10 +6,12 @@ import { handleIndexRequest } from "./indexer.js";
 import { AnalyticsService, ConfidenceScorer, MemoryManager, MetadataService, RecommendationEngine, SearchRouter } from "./intelligence/index.js";
 import { createResponse } from "./ai.js";
 import { enforceFreeUsageLimit, enforceStrictRequestLimit } from "./quota.js";
-import { buildPrompt, formatError, formatResponse, isAnswerable, unavailableResponse } from "./prompt/index.js";
+import { buildPrompt, expandRetrievalQuery, formatError, formatResponse, isAnswerable, unavailableResponse } from "./prompt/index.js";
 import { enforceRateLimit } from "./rate-limit.js";
 import { retrieveKnowledge } from "./retrieval.js";
 import { parseChatRequest } from "./validation.js";
+
+const ANSWER_POLICY_VERSION = "visitor-intent-v2";
 
 function json(body, status, origin, extraHeaders = {}) {
   const headers = corsHeaders(origin);
@@ -92,7 +94,7 @@ export default {
       const wantsStream = request.headers.get("Accept")?.includes("text/event-stream");
       const cacheable = !wantsStream && conversation.messages.length === 0 && !conversation.summary && isCacheableQuestion(question);
       const version = cacheable ? await knowledgeVersion(env, config.cacheVersion) : null;
-      const cacheKey = cacheable ? await fingerprint(`${version}:${question}`) : null;
+      const cacheKey = cacheable ? await fingerprint(`${ANSWER_POLICY_VERSION}:${version}:${question}`) : null;
       const cached = cacheKey ? await readCachedJson("response", cacheKey) : null;
       if (cached) {
         const result = { ...cached, conversationId, cache: "hit" };
@@ -102,7 +104,7 @@ export default {
       }
 
       await enforceFreeUsageLimit(env, config);
-      const retrievalQuery = memory.buildRetrievalQuery(question, conversation);
+      const retrievalQuery = expandRetrievalQuery(question, memory.buildRetrievalQuery(question, conversation));
       const retrieval = await retrieveKnowledge(retrievalQuery, env, config);
       const recommendationEngine = new RecommendationEngine(metadataService, config);
       const recommendations = await recommendationEngine.recommend({ sources: retrieval.sources });

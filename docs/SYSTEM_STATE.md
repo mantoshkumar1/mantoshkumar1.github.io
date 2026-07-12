@@ -89,7 +89,7 @@ The repository currently enforces:
 - internal link, fragment, and asset validation;
 - documentation drift checks;
 - autonomous content-lane counts and explicit zero-content states;
-- 32 Worker contract, security, quota, OIDC, retrieval, intent-formatting, prompt, and failure-path tests.
+- 33 Worker contract, security, quota, OIDC, retrieval, intent-formatting, prompt, and failure-path tests.
 
 ## Known limits
 

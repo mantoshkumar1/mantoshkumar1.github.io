@@ -3,7 +3,7 @@ import test from "node:test";
 import { formatSuccess } from "../src/formatter.js";
 import { verifyGitHubOidcToken } from "../src/github-oidc.js";
 import worker from "../src/index.js";
-import { buildPrompt, buildSystemPrompt, classifyQuestionIntent, scoreRetrievalConfidence } from "../src/prompt/index.js";
+import { buildPrompt, buildSystemPrompt, classifyQuestionIntent, expandRetrievalQuery, scoreRetrievalConfidence } from "../src/prompt/index.js";
 
 function testDatabase() {
   return {
@@ -354,6 +354,13 @@ test("classifies visitor questions into profile, problem, and direct response mo
   assert.equal(classifyQuestionIntent("How can Mantosh help my engineering team?"), "profile");
   assert.equal(classifyQuestionIntent("We have a slow release workflow. What should we improve?"), "problem");
   assert.equal(classifyQuestionIntent("Why did PhotoSahi avoid a backend?"), "direct");
+});
+
+test("expands only profile retrieval with verified capability vocabulary", () => {
+  const profileQuery = expandRetrievalQuery("Tell me about this guy", "Tell me about this guy");
+  assert.match(profileQuery, /engineering capabilities technical skills experience/i);
+  assert.match(profileQuery, /platform automation backend networking operational intelligence/i);
+  assert.equal(expandRetrievalQuery("Why no PhotoSahi backend?", "Why no PhotoSahi backend?"), "Why no PhotoSahi backend?");
 });
 
 test("gives profile questions a hiring-oriented, evidence-safe response contract", () => {
