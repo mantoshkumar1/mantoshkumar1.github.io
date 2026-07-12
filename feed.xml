@@ -11,6 +11,18 @@
   </author>
   <subtitle>Public engineering case studies, writing, and notes by Mantosh Kumar.</subtitle>
   <entry>
+    <title>Engineering Philosophy: Build Leverage, Not Just Software</title>
+    <id>https://mantoshkumar1.github.io/thinking/engineering-philosophy.html</id>
+    <link href="https://mantoshkumar1.github.io/thinking/engineering-philosophy.html" />
+    <published>2026-07-12T22:00:00Z</published>
+    <updated>2026-07-12T22:00:00Z</updated>
+    <author><name>Mantosh Kumar</name></author>
+    <category term="engineering-philosophy" label="Engineering Philosophy" />
+    <category term="engineering-leverage" label="Engineering Leverage" />
+    <category term="system-design" label="System Design" />
+    <summary>Four principles for choosing engineering interventions: start with the bottleneck, systematize repetition, preserve judgment, and keep evidence close to claims.</summary>
+  </entry>
+  <entry>
     <title>Why Does This Still Require Me?</title>
     <id>https://mantoshkumar1.github.io/thinking/why-does-this-still-require-me.html</id>
     <link href="https://mantoshkumar1.github.io/thinking/why-does-this-still-require-me.html" />

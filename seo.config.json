@@ -25,10 +25,21 @@
       "schemaType": "CollectionPage"
     },
     "/thinking/": {
-      "title": "Engineering Notes & Technical Writing | Mantosh Kumar",
-      "description": "Reviewed engineering notes from Mantosh Kumar about engineering leverage, system design, automation, and operational judgment.",
+      "title": "Engineering Insights & Philosophy | Mantosh Kumar",
+      "description": "Engineering philosophy and reviewed field notes from Mantosh Kumar about leverage, system design, automation, and operational judgment.",
       "kind": "collection",
       "schemaType": "CollectionPage"
+    },
+    "/thinking/engineering-philosophy.html": {
+      "title": "Engineering Philosophy: Build Leverage, Not Just Software | Mantosh Kumar",
+      "description": "Four principles for choosing engineering interventions: start with the bottleneck, systematize repetition, preserve judgment, and keep evidence close to claims.",
+      "kind": "article",
+      "schemaType": "TechArticle",
+      "datePublished": "2026-07-12",
+      "dateModified": "2026-07-12",
+      "breadcrumbs": [
+        { "name": "Insights", "path": "/thinking/" }
+      ]
     },
     "/thinking/why-does-this-still-require-me.html": {
       "title": "Why Does This Still Require Me? | Mantosh Kumar",
@@ -38,7 +49,7 @@
       "datePublished": "2026-07-12",
       "dateModified": "2026-07-12",
       "breadcrumbs": [
-        { "name": "Engineering Notes", "path": "/thinking/" }
+        { "name": "Insights", "path": "/thinking/" }
       ]
     },
     "/experience/": {

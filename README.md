@@ -17,7 +17,8 @@ The current production inventory, data flow, deployment paths, controls, and kno
 - `systems/index.html` — engineering-system catalog
 - `projects/photosahi.html` — PhotoSahi architecture case study
 - `projects/workflow-automation-toolkit.html` — automation toolkit case study
-- `thinking/index.html` — published engineering notes
+- `thinking/index.html` — engineering Insights archive
+- `thinking/engineering-philosophy.html` — evidence-bounded engineering philosophy
 - `thinking/why-does-this-still-require-me.html` — engineering-leverage note
 - `experience/index.html` — résumé-verified experience and highlights
 - `resume/index.html` — résumé summary, browser preview, and PDF download
@@ -31,6 +32,8 @@ The current production inventory, data flow, deployment paths, controls, and kno
 - `chat-worker/` — Cloudflare Worker, migrations, tests, and operational documentation
 - `scripts/` — deterministic SEO generation, static build, and release audits
 - `.github/workflows/` — Pages deployment, technical SEO, and knowledge synchronization
+
+New philosophy, notes, and articles follow [`docs/PUBLISHING_INSIGHTS.md`](docs/PUBLISHING_INSIGHTS.md), which keeps the readable page and Ask Mantosh retrieval source synchronized.
 
 `dist/` is generated and intentionally not committed. `scripts/build-pages.mjs` copies only public assets into it and regenerates SEO metadata there.
 

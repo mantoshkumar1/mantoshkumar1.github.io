@@ -14,10 +14,11 @@ with `_` are intentionally not indexed.
 
 ## Current public corpus
 
-As of 2026-07-12, the public index contains three source documents:
+As of 2026-07-12, the public index contains four source documents:
 
 - `Project: PhotoSahi`
 - `Project: Workflow Automation Toolkit`
+- `Note: Engineering Philosophy: Build Leverage, Not Just Software`
 - `Article: Why Does This Still Require Me?`
 
 Each source has one clear topic, a factual summary, retrieval tags, related

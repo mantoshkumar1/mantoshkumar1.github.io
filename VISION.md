@@ -21,7 +21,7 @@ A visitor should be able to understand within two minutes:
 ## Core Pages
 - Home
 - Systems
-- Thinking
+- Insights
 - Experience
 - Resume
 - Contact

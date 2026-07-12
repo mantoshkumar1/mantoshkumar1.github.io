@@ -17,15 +17,16 @@ Mantosh Kumar is a Staff Software Engineer publishing documented engineering pro
 - [Engineering experience timeline](https://mantoshkumar1.github.io/experience/)
 - [Resume](https://mantoshkumar1.github.io/resume/)
 - [Contact Mantosh Kumar](https://mantoshkumar1.github.io/contact/)
-- [Engineering notes](https://mantoshkumar1.github.io/thinking/)
+- [Engineering insights and philosophy](https://mantoshkumar1.github.io/thinking/)
 
 ## Featured projects
 
 - [PhotoSahi: privacy-first browser image processing case study](https://mantoshkumar1.github.io/projects/photosahi.html)
 - [Workflow Automation Toolkit case study](https://mantoshkumar1.github.io/projects/workflow-automation-toolkit.html)
 
-## Engineering notes
+## Engineering insights
 
+- [Engineering Philosophy: Build Leverage, Not Just Software](https://mantoshkumar1.github.io/thinking/engineering-philosophy.html)
 - [Why Does This Still Require Me?](https://mantoshkumar1.github.io/thinking/why-does-this-still-require-me.html)
 
 ## Ask Mantosh
