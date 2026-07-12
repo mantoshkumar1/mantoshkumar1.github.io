@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- seo:generated:start -->
+    <meta name="description" content="A case study of local Python command-line utilities for repetitive PDF, image, and file-processing tasks." />
+    <meta name="author" content="Mantosh Kumar" />
+    <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1" />
+    <meta name="theme-color" content="#060b12" />
+    <meta name="application-name" content="Mantosh Kumar" />
+    <meta name="apple-mobile-web-app-title" content="Mantosh Kumar" />
+    <link rel="canonical" href="https://mantoshkumar1.github.io/projects/workflow-automation-toolkit.html" />
+    <link rel="alternate" type="application/rss+xml" title="Mantosh Kumar — Engineering Writing and Systems" href="https://mantoshkumar1.github.io/feed.xml" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta property="og:locale" content="en_CA" />
+    <meta property="og:title" content="Workflow Automation Toolkit | Mantosh Kumar" />
+    <meta property="og:description" content="A case study of local Python command-line utilities for repetitive PDF, image, and file-processing tasks." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://mantoshkumar1.github.io/projects/workflow-automation-toolkit.html" />
+    <meta property="og:site_name" content="Mantosh Kumar" />
+    <meta property="og:image" content="https://mantoshkumar1.github.io/assets/seo/social-default.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Workflow Automation Toolkit | Mantosh Kumar" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Workflow Automation Toolkit | Mantosh Kumar" />
+    <meta name="twitter:description" content="A case study of local Python command-line utilities for repetitive PDF, image, and file-processing tasks." />
+    <meta name="twitter:image" content="https://mantoshkumar1.github.io/assets/seo/social-default.png" />
+    <meta name="twitter:image:alt" content="Workflow Automation Toolkit | Mantosh Kumar" />
+    <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","@id":"https://mantoshkumar1.github.io/projects/workflow-automation-toolkit.html#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://mantoshkumar1.github.io"},{"@type":"ListItem","position":2,"name":"Engineering Systems","item":"https://mantoshkumar1.github.io/systems/"},{"@type":"ListItem","position":3,"name":"Workflow Automation Toolkit","item":"https://mantoshkumar1.github.io/projects/workflow-automation-toolkit.html"}]},{"@id":"https://mantoshkumar1.github.io/projects/workflow-automation-toolkit.html#webpage","@type":"WebPage","name":"Workflow Automation Toolkit | Mantosh Kumar","description":"A case study of local Python command-line utilities for repetitive PDF, image, and file-processing tasks.","url":"https://mantoshkumar1.github.io/projects/workflow-automation-toolkit.html","inLanguage":"en","isPartOf":{"@id":"https://mantoshkumar1.github.io/#website"},"breadcrumb":{"@id":"https://mantoshkumar1.github.io/projects/workflow-automation-toolkit.html#breadcrumb"}},{"@type":["Project","CreativeWork"],"@id":"https://mantoshkumar1.github.io/projects/workflow-automation-toolkit.html#case-study","name":"Workflow Automation Toolkit architecture case study","description":"A case study of local Python command-line utilities for repetitive PDF, image, and file-processing tasks.","url":"https://mantoshkumar1.github.io/projects/workflow-automation-toolkit.html","author":{"@id":"https://mantoshkumar1.github.io/#person"},"mainEntityOfPage":"https://mantoshkumar1.github.io/projects/workflow-automation-toolkit.html","dateModified":"2026-07-12"}]}</script>
+    <script defer data-domain="mantoshkumar1.github.io" src="https://plausible.io/js/script.js"></script>
+    <script defer src="/assets/js/ai-referral-analytics.js"></script>
+    <!-- seo:generated:end -->
+
+<title>Workflow Automation Toolkit | Mantosh Kumar</title>
+    <link rel="stylesheet" href="../assets/css/style.css?v=20260712-2" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+    <header class="navbar">
+      <div class="container nav-wrap">
+        <a class="logo" href="../">Mantosh Kumar</a>
+        <nav aria-label="Primary navigation">
+          <a href="../systems/">Systems</a>
+          <a href="../experience/">Experience</a>
+          <a href="../resume/">Resume</a>
+          <a href="../contact/">Contact</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="page-shell" id="main-content">
+      <div class="container">
+        <article class="resume-card case-study">
+          <header class="resume-header">
+            <p class="eyebrow">Project case study</p>
+            <h1>Workflow Automation Toolkit</h1>
+            <p>A collection of local Python command-line utilities for repetitive PDF, image, and file-processing tasks.</p>
+            <div class="resume-actions">
+              <a class="button primary" href="https://github.com/mantoshkumar1/automated-Life" target="_blank" rel="noreferrer">View source on GitHub <span aria-hidden="true">↗</span></a>
+              <a class="button secondary" href="../systems/">All systems</a>
+            </div>
+          </header>
+
+          <section class="resume-section">
+            <h2>Problem</h2>
+            <p>Recurring document work—compressing sensitive PDFs, merging ordered files, creating page snapshots, converting images to PDF, and reducing image size—was being repeated manually or delegated to third-party web tools.</p>
+          </section>
+
+          <section class="resume-section">
+            <h2>Design approach</h2>
+            <p>The repository keeps processing local and organizes each task as a small command-line utility. Individual modules expose a <code>run.py</code> entry point, keep implementation code under an <code>app</code> package, and reuse file, image, PDF, input, and logging helpers from a shared <code>utility</code> package.</p>
+          </section>
+
+          <section class="resume-section">
+            <h2>Documented utilities</h2>
+            <ul class="case-study-list">
+              <li><strong>PDF compression:</strong> creates a duplicate near a requested target size while keeping sensitive documents local.</li>
+              <li><strong>Sort and merge:</strong> orders PDFs numerically and alphabetically before combining them.</li>
+              <li><strong>PDF snapshots:</strong> converts pages from one or more PDFs and nested directories into JPEG images.</li>
+              <li><strong>Image to PDF:</strong> sorts JPEG files and combines them into a page-width PDF.</li>
+              <li><strong>Image reduction:</strong> supports individual and batch image compression.</li>
+              <li><strong>Black-and-white conversion:</strong> creates lower-color copies of PDF pages for document-sharing workflows.</li>
+            </ul>
+          </section>
+
+          <section class="resume-section">
+            <h2>Engineering decisions</h2>
+            <div class="decision-grid">
+              <div>
+                <h3>Local processing</h3>
+                <p>Document operations run on the user's machine, avoiding mandatory uploads to an external service.</p>
+              </div>
+              <div>
+                <h3>Task-sized tools</h3>
+                <p>Separate commands keep unrelated workflows isolated while allowing common file and PDF behavior to be shared.</p>
+              </div>
+              <div>
+                <h3>Explicit inputs</h3>
+                <p>CLI arguments define source paths, output locations, quality, and target sizes instead of hiding behavior behind a remote interface.</p>
+              </div>
+            </div>
+          </section>
+
+          <section class="resume-section">
+            <h2>Trade-offs and current limits</h2>
+            <ul class="case-study-list">
+              <li>Several PDF workflows require system packages such as Poppler in addition to Python dependencies.</li>
+              <li>The utilities have separate dependency files and setup instructions rather than one unified installation experience.</li>
+              <li>Some filename sorting and file-format support remain explicitly documented as future work.</li>
+              <li>The repository demonstrates practical scripts, but it does not currently publish performance measurements or automated test coverage.</li>
+            </ul>
+          </section>
+
+          <section class="resume-section">
+            <h2>Evidence</h2>
+            <p>This case study is limited to behavior documented in the public repository and its source files. It does not claim production scale, organizational adoption, or measured impact.</p>
+            <a class="section-link" href="https://github.com/mantoshkumar1/automated-Life" target="_blank" rel="noreferrer">Inspect the repository <span aria-hidden="true">↗</span></a>
+          </section>
+        </article>
+      </div>
+    </main>
+  </body>
+</html>

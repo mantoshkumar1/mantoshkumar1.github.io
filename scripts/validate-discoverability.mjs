@@ -3,7 +3,7 @@ import { resolve } from "node:path";
 
 const root = resolve(import.meta.dirname, "..");
 const origin = "https://mantoshkumar1.github.io";
-const pages = ["index.html", "systems/index.html", "thinking/index.html", "experience/index.html", "resume/index.html", "contact/index.html", "projects/photosahi.html"];
+const pages = ["index.html", "systems/index.html", "experience/index.html", "resume/index.html", "contact/index.html", "projects/photosahi.html", "projects/workflow-automation-toolkit.html"];
 let failures = 0;
 
 function check(condition, message) {
@@ -30,6 +30,11 @@ for (const page of pages) {
   check(/type="application\/(?:rss|atom)\+xml"/.test(html), `${page} must reference the public feed`);
   check(html.includes("ai-referral-analytics.js"), `${page} must include the AI referral signal`);
 }
+
+const thinking = await readFile(`${root}/thinking/index.html`, "utf8");
+const sitemap = await readFile(`${root}/sitemap.xml`, "utf8");
+check(/<meta\s+name="robots"\s+content="noindex,follow"/i.test(thinking), "unpublished Thinking archive must remain noindex");
+check(!sitemap.includes(`${origin}/thinking/`), "unpublished Thinking archive must not appear in sitemap.xml");
 
 if (failures) process.exit(1);
 console.log("Discoverability checks passed.");

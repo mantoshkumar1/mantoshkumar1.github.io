@@ -41,17 +41,16 @@
 
 
 
-<link rel="stylesheet" href="assets/css/style.css" />
+<link rel="stylesheet" href="assets/css/style.css?v=20260712-2" />
   </head>
   <body>
     <a class="skip-link" href="#home">Skip to main content</a>
     <header class="navbar">
       <div class="container nav-wrap">
-        <a class="logo" href="/">mantoshkumar</a>
+        <a class="logo" href="/">Mantosh Kumar</a>
         <nav aria-label="Primary navigation">
           <a href="./">Home</a>
           <a href="systems/">Systems</a>
-          <a href="thinking/">Thinking</a>
           <a href="experience/">Experience</a>
           <a href="resume/">Resume</a>
           <a href="contact/">Contact</a>
@@ -72,8 +71,7 @@
             </p>
             <div class="hero-buttons">
               <a class="button primary" href="#systems">Explore Systems</a>
-              <a class="button secondary" href="resume/">Read Mantosh Kumar's engineering resume</a>
-              <a class="button secondary" href="resume/mantosh-kumar-resume.pdf" download>Download Mantosh Kumar's resume PDF</a>
+              <a class="button secondary" href="experience/">Experience <span aria-hidden="true">→</span></a>
             </div>
             <div class="hero-meta">
               <div>
@@ -117,44 +115,13 @@
 
             <article class="card">
               <h3>Workflow Automation Toolkit</h3>
-              <p>
-                Python-based utilities for document processing, workflow
-                automation, and repetitive engineering tasks.
-              </p>
+              <p>A collection of local Python command-line utilities for repetitive PDF, image, and file-processing tasks.</p>
               <div class="tech">
                 <span>Python</span>
                 <span>Automation</span>
                 <span>PDF</span>
               </div>
-              <a href="https://github.com/mantoshkumar1/automated-Life" target="_blank" rel="noreferrer">Explore the Workflow Automation Toolkit repository →</a>
-            </article>
-
-            <article class="card">
-              <h3>Release Health Reporting</h3>
-              <p>
-                Executive reporting that turns nightly build data into concise
-                release visibility for better engineering decisions.
-              </p>
-              <div class="tech">
-                <span>CI/CD</span>
-                <span>Reporting</span>
-                <span>Automation</span>
-              </div>
-              <span class="coming">Internal Project</span>
-            </article>
-
-            <article class="card">
-              <h3>Distributed Systems</h3>
-              <p>
-                An event-driven platform built to explore scalability,
-                reliability, and backend architecture through real implementation.
-              </p>
-              <div class="tech">
-                <span>Distributed Systems</span>
-                <span>Backend</span>
-                <span>Architecture</span>
-              </div>
-              <span class="coming">In Progress</span>
+              <a href="projects/workflow-automation-toolkit.html">Read the Workflow Automation Toolkit case study →</a>
             </article>
           </div>
         </div>
@@ -179,43 +146,12 @@
             <div class="pillar">
               <h3>Automation</h3>
               <p>Turn manual, error-prone processes into reliable engineering workflows.</p>
+              <a class="evidence-link" href="projects/workflow-automation-toolkit.html">See the automation toolkit <span aria-hidden="true">→</span></a>
             </div>
             <div class="pillar">
               <h3>Operational Intelligence</h3>
               <p>Translate engineering data into better decisions and stronger execution.</p>
             </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="thinking" class="section">
-        <div class="container">
-          <div class="section-title">
-            <p>Thinking</p>
-            <h2>Writing and Notes</h2>
-            <span>Distributed systems, platform engineering, automation, and engineering productivity.</span>
-          </div>
-          <div class="article-grid">
-            <article class="article-card">
-              <p class="article-tag">Distributed Systems</p>
-              <h3>Bitcoin Through the Lens of Distributed Systems</h3>
-              <p>How consensus, incentives, and failure modes shape the story of decentralized networks.</p>
-            </article>
-            <article class="article-card">
-              <p class="article-tag">Platform Engineering</p>
-              <h3>What Platform Engineering Actually Means</h3>
-              <p>Why internal platforms succeed when they remove friction rather than add process.</p>
-            </article>
-            <article class="article-card">
-              <p class="article-tag">Operational Intelligence</p>
-              <h3>Release Confidence Is an Engineering Problem</h3>
-              <p>How better visibility and reporting create healthier release decisions.</p>
-            </article>
-            <article class="article-card">
-              <p class="article-tag">Automation</p>
-              <h3>The Cost of Manual Engineering Work</h3>
-              <p>Why reducing repetitive toil compounds into stronger engineering organizations.</p>
-            </article>
           </div>
         </div>
       </section>
@@ -240,6 +176,7 @@
               <p>Cisco • Aricent</p>
             </div>
           </div>
+          <a class="section-link" href="experience/">View Experience <span aria-hidden="true">→</span></a>
         </div>
       </section>
     </main>
@@ -254,7 +191,6 @@
           <a href="resume/">Resume</a>
           <a href="contact/">Contact</a>
           <a href="https://github.com/mantoshkumar1" target="_blank" rel="noreferrer">GitHub</a>
-          <a href="https://www.linkedin.com/" target="_blank" rel="noreferrer">LinkedIn</a>
         </div>
       </div>
     </footer>
@@ -272,10 +208,15 @@
 
     <section class="ask-mantosh-panel" id="ask-mantosh-panel" role="dialog" aria-modal="true" aria-labelledby="ask-mantosh-title" aria-describedby="ask-mantosh-description" data-api-url="https://ask-mantosh.mantoshk234.workers.dev/" hidden>
       <div class="ask-mantosh-header">
-        <div>
-          <p class="ask-mantosh-eyebrow">ASK MANTOSH</p>
-          <h2 id="ask-mantosh-title">Ask Mantosh</h2>
-          <p id="ask-mantosh-description">Ask questions about my engineering work, projects, and articles.</p>
+        <div class="ask-mantosh-header-content">
+          <div class="ask-mantosh-identity">
+            <span class="ask-mantosh-presence" aria-hidden="true"></span>
+            <div>
+              <p class="ask-mantosh-eyebrow">PUBLISHED KNOWLEDGE</p>
+              <h2 id="ask-mantosh-title">Ask Mantosh</h2>
+            </div>
+          </div>
+          <p id="ask-mantosh-description">Evidence-backed answers from my projects, systems, and engineering writing.</p>
         </div>
         <button class="ask-mantosh-close" id="ask-mantosh-close" type="button" aria-label="Close Ask Mantosh">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -303,6 +244,6 @@
       </div>
     </section>
 
-    <script src="assets/js/main.js"></script>
+    <script src="assets/js/main.js?v=20260712-2"></script>
   </body>
 </html>

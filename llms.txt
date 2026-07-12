@@ -2,21 +2,17 @@
 
 Canonical URL: https://mantoshkumar1.github.io/
 
-Mantosh Kumar is a Staff Software Engineer who writes about platform engineering, automation, distributed systems, developer productivity, and operational intelligence.
+Mantosh Kumar is a Staff Software Engineer publishing documented engineering projects and case studies.
 
-## Areas of expertise
+## Publicly documented work
 
-- Platform engineering and internal developer platforms
-- Workflow automation and engineering productivity
-- Distributed systems and backend architecture
-- Operational intelligence and release-health reporting
-- Privacy-conscious browser-side engineering
+- Privacy-conscious browser-side image processing
+- Local Python workflow automation for PDF, image, and file tasks
 
 ## Important pages
 
 - [Home and engineering positioning](https://mantoshkumar1.github.io/)
 - [Engineering systems catalog](https://mantoshkumar1.github.io/systems/)
-- [Engineering writing and notes](https://mantoshkumar1.github.io/thinking/)
 - [Engineering experience timeline](https://mantoshkumar1.github.io/experience/)
 - [Resume](https://mantoshkumar1.github.io/resume/)
 - [Contact Mantosh Kumar](https://mantoshkumar1.github.io/contact/)
@@ -24,7 +20,7 @@ Mantosh Kumar is a Staff Software Engineer who writes about platform engineering
 ## Featured projects
 
 - [PhotoSahi: privacy-first browser image processing case study](https://mantoshkumar1.github.io/projects/photosahi.html)
-- [Workflow Automation Toolkit repository](https://github.com/mantoshkumar1/automated-Life)
+- [Workflow Automation Toolkit case study](https://mantoshkumar1.github.io/projects/workflow-automation-toolkit.html)
 
 ## Ask Mantosh
 

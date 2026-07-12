@@ -20,19 +20,20 @@
     },
     "/systems/": {
       "title": "Engineering Systems | Mantosh Kumar",
-      "description": "Projects and engineering systems demonstrating platform thinking, automation, operational intelligence, and backend architecture.",
+      "description": "Published engineering projects covering privacy-first browser processing and practical workflow automation.",
       "kind": "collection",
       "schemaType": "CollectionPage"
     },
     "/thinking/": {
       "title": "Engineering Notes & Technical Writing | Mantosh Kumar",
-      "description": "Technical writing and engineering notes on distributed systems, platform engineering, automation, and developer productivity.",
+      "description": "A future archive for reviewed and published engineering notes.",
       "kind": "collection",
-      "schemaType": "CollectionPage"
+      "schemaType": "CollectionPage",
+      "noindex": true
     },
     "/experience/": {
       "title": "Engineering Experience | Mantosh Kumar",
-      "description": "A career timeline focused on platform engineering, systems delivery, automation, and engineering leverage across global teams.",
+      "description": "Mantosh Kumar's engineering career timeline across India, Germany, and Canada.",
       "kind": "collection",
       "schemaType": "CollectionPage"
     },
@@ -56,6 +57,16 @@
       "dateModified": "2026-07-11",
       "softwareApplication": true,
       "applicationCategory": "UtilitiesApplication",
+      "breadcrumbs": [
+        { "name": "Engineering Systems", "path": "/systems/" }
+      ]
+    },
+    "/projects/workflow-automation-toolkit.html": {
+      "title": "Workflow Automation Toolkit | Mantosh Kumar",
+      "description": "A case study of local Python command-line utilities for repetitive PDF, image, and file-processing tasks.",
+      "kind": "project",
+      "entityName": "Workflow Automation Toolkit",
+      "dateModified": "2026-07-12",
       "breadcrumbs": [
         { "name": "Engineering Systems", "path": "/systems/" }
       ]
