@@ -60,6 +60,8 @@ if (/contain-intrinsic-size:\s*auto\s+720px/i.test(stylesheet) || /\.section\s*\
   failures += 1;
 }
 const homeHtml = await readFile(join(root, "index.html"), "utf8");
+if (!/<h1 aria-label=["']Turn engineering friction into reusable systems\.["']>\s*<span class=["']hero-title-line["'][^>]*>Turn engineering<\/span>\s*<span class=["']hero-title-line["'][^>]*>friction<\/span>\s*<span class=["']hero-title-line["'][^>]*>into reusable systems\.<\/span>\s*<\/h1>/i.test(homeHtml)) { console.error("homepage: hero title must preserve its intentional three-line rhythm"); failures += 1; }
+if (!/\.hero-title-line\s*\{[^}]*display:\s*block;[^}]*white-space:\s*nowrap/is.test(stylesheet)) { console.error("stylesheet: hero title lines must remain explicit and unbroken"); failures += 1; }
 if (!/Aricent → Cisco → Intel → Siemens → KI Labs → Nokia/.test(homeHtml)) { console.error("homepage: career chronology is missing or out of order"); failures += 1; }
 if (/Infinera|acquisition/i.test(homeHtml)) { console.error("homepage: obsolete employer-transition story must stay removed"); failures += 1; }
 if (!/<strong>Staff Software Engineer<\/strong>\s*<span>Toronto<\/span>/.test(homeHtml)) { console.error("homepage: concise role and Toronto location signal is missing"); failures += 1; }
