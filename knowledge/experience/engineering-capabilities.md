@@ -14,7 +14,7 @@ url: "/experience/"
 
 ## Engineering platforms and automation
 
-Mantosh Kumar has documented experience building automation platforms, validation infrastructure, automation frameworks, CI/CD-driven workflows, and engineering tooling. The résumé connects this capability to Nokia, Intel, and Cisco roles.
+Mantosh Kumar has documented experience building automation platforms, validation infrastructure, automation frameworks, CI/CD-driven workflows, and engineering tooling. The published Experience page connects this capability to his continuing Infinera-to-Nokia role, as well as Intel and Cisco roles.
 
 ## Backend and data systems
 
@@ -26,7 +26,7 @@ Mantosh's résumé documents work across optical networking, mobile packet-core 
 
 ## Operational intelligence and AI-assisted engineering
 
-At Nokia, the résumé documents observability, quality analytics, reporting, failure investigation, build-health analysis, root-cause analysis, workflow hardening, and AI-assisted engineering tools that turn execution data into actionable quality insights.
+In the role that began at Infinera and continues at Nokia following the 2025 acquisition, the résumé documents observability, quality analytics, reporting, failure investigation, build-health analysis, root-cause analysis, workflow hardening, and AI-assisted engineering tools that turn execution data into actionable quality insights.
 
 ## Technical toolkit
 

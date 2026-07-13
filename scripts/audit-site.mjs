@@ -37,7 +37,7 @@ if (!/data-buttondown-status=["']review["']/i.test(newsletterHtml)) { console.er
 if (/action=["']https:\/\/buttondown\.com\/api\/emails\/embed-subscribe\/mantoshkumar["']/i.test(newsletterHtml)) { console.error("newsletter: must not collect subscribers while Buttondown is under review"); failures += 1; }
 const homeHtml = await readFile(join(root, "index.html"), "utf8");
 if (!/Aricent → Cisco → Intel → Siemens → KI Labs → Infinera → Nokia/.test(homeHtml)) { console.error("homepage: career chronology is missing or out of order"); failures += 1; }
-if (!/Infinera later became part of Nokia\./.test(homeHtml)) { console.error("homepage: Infinera-to-Nokia continuity needs an explicit explanation"); failures += 1; }
+if (!/Joined Infinera in Canada; the role continues at Nokia after its 2025 acquisition of Infinera\./.test(homeHtml)) { console.error("homepage: Infinera-to-Nokia employment continuity needs an explicit explanation"); failures += 1; }
 for (const region of ["india", "germany", "canada"]) {
   if (!new RegExp(`href=["']experience/#${region}["']`, "i").test(homeHtml)) { console.error(`homepage: ${region} experience card must link to its regional detail`); failures += 1; }
 }

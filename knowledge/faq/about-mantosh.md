@@ -14,7 +14,7 @@ url: "/experience/"
 
 ## In brief
 
-Mantosh Kumar is a Toronto-based Staff Software Engineer with more than 14 years of documented experience across platform engineering, engineering automation, backend systems, networking, distributed validation, and operational intelligence. His published résumé records engineering roles at Nokia, KI Labs, Intel, Siemens, Cisco, and Aricent in Canada, Germany, and India.
+Mantosh Kumar is a Toronto-based Staff Software Engineer with more than 14 years of documented experience across platform engineering, engineering automation, backend systems, networking, distributed validation, and operational intelligence. His published Experience page records engineering roles at Infinera (now Nokia), KI Labs, Intel, Siemens, Cisco, and Aricent in Canada, Germany, and India. Mantosh joined Infinera in Canada, and the role continues at Nokia following Nokia's 2025 acquisition of Infinera.
 
 ## Where his documented experience is most relevant
 
