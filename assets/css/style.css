@@ -274,16 +274,20 @@ nav .nav-cta:hover {
   text-transform: none;
 }
 
-.reference-quote {
+.reference-context {
+  margin: -0.35rem 0 1rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.reference-summary {
   margin: 0;
-  padding-left: 1rem;
-  border-left: 3px solid rgba(77, 163, 255, 0.5);
   color: var(--text);
   font-size: 1.02rem;
   line-height: 1.55;
 }
 
-.reference-quote + span {
+.reference-summary + span {
   display: block;
   margin-top: 0.75rem;
 }

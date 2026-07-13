@@ -135,6 +135,7 @@ if (/Infinera|acquisition/i.test(experienceHtml)) { console.error("experience: o
 if (!/Top 1% nationally in GATE CS &amp; IT, twice/.test(experienceHtml) || !/Technical University of Munich/.test(experienceHtml)) { console.error("experience: concise GATE top-1% result and TUM education must remain visible"); failures += 1; }
 if (/GATE is a prestigious national examination|About GATE/.test(experienceHtml)) { console.error("experience: detailed GATE context belongs in Ask Mantosh, not the scannable highlights list"); failures += 1; }
 if (!/href=["']https:\/\/www\.linkedin\.com\/in\/mantoshk\/details\/recommendations\/["'][^>]*>Read the recommendations on LinkedIn/i.test(experienceHtml)) { console.error("experience: recommendation link must open the dedicated LinkedIn recommendations page"); failures += 1; }
+if (/<blockquote[^>]*>\s*(?:Recognized|Highlighted)/i.test(experienceHtml) || !/Concise summaries of public LinkedIn recommendations/.test(experienceHtml)) { console.error("experience: recommendation paraphrases must not be presented as direct quotations"); failures += 1; }
 for (const region of ["india", "germany", "canada"]) {
   if (!new RegExp(`id=["']${region}["']`, "i").test(experienceHtml)) { console.error(`experience: missing ${region} regional anchor`); failures += 1; }
 }
