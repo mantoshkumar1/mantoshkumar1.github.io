@@ -6,12 +6,12 @@ import { handleIndexRequest } from "./indexer.js";
 import { AnalyticsService, ConfidenceScorer, MemoryManager, MetadataService, RecommendationEngine, SearchRouter } from "./intelligence/index.js";
 import { createResponse } from "./ai.js";
 import { enforceFreeUsageLimit, enforceStrictRequestLimit } from "./quota.js";
-import { buildPrompt, classifyQuestionIntent, expandRetrievalQuery, formatError, formatResponse, isAnswerable, isSubjectiveProfileQuestion, unavailableResponse } from "./prompt/index.js";
+import { buildPrompt, classifyQuestionIntent, conciseAchievementResponse, expandRetrievalQuery, formatError, formatResponse, isAnswerable, isSubjectiveProfileQuestion, unavailableResponse } from "./prompt/index.js";
 import { enforceRateLimit } from "./rate-limit.js";
 import { retrieveKnowledge } from "./retrieval.js";
 import { parseChatRequest } from "./validation.js";
 
-const ANSWER_POLICY_VERSION = "visitor-intent-v11";
+const ANSWER_POLICY_VERSION = "visitor-intent-v12";
 
 function json(body, status, origin, extraHeaders = {}) {
   const headers = corsHeaders(origin);
@@ -132,6 +132,24 @@ export default {
       if (!isAnswerable(retrieval.confidence, retrieval.sources.length)) {
         const result = { ...unavailableResponse({ conversationId, recommendations, followUpQuestions }), confidenceDetails, cache: "miss" };
         ctx?.waitUntil?.(memory.recordTurn({ conversationId, question, answer: result.answer, sources: [] }));
+        return wantsStream
+          ? eventStream([{ type: "metadata", data: result }, { type: "response.output_text.delta", data: { delta: result.answer } }, { type: "done", data: {} }], origin)
+          : json(result, 200, origin);
+      }
+
+      const conciseAchievement = conciseAchievementResponse(question, retrieval.sources);
+      if (conciseAchievement) {
+        const sources = [conciseAchievement.source];
+        const result = {
+          answer: conciseAchievement.answer,
+          sources,
+          relatedArticles: [], relatedProjects: [], relatedNotes: [], recommendations: [],
+          followUpQuestions: [], suggestedQuestions: [], confidence: retrieval.confidence,
+          confidenceDetails, conversationId, action: null, success: true, cache: "miss"
+        };
+        analytics.trackInBackground(ctx, "knowledge_answer", conciseAchievement.source.category);
+        ctx?.waitUntil?.(memory.recordTurn({ conversationId, question, answer: result.answer, sources }));
+        if (cacheKey) writeCachedJson("response", cacheKey, { ...result, conversationId: undefined, cache: undefined }, config.responseCacheTtlSeconds, ctx);
         return wantsStream
           ? eventStream([{ type: "metadata", data: result }, { type: "response.output_text.delta", data: { delta: result.answer } }, { type: "done", data: {} }], origin)
           : json(result, 200, origin);

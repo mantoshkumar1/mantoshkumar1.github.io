@@ -51,6 +51,7 @@ for (const feature of ["prefers-color-scheme: light", "prefers-reduced-motion", 
 const widget = await readFile(join(root, "assets/js/ask-mantosh-widget.js"), "utf8");
 const client = await readFile(join(root, "assets/js/main.js"), "utf8");
 if (!/role=["']dialog["']/.test(widget) || !/aria-modal=["']true["']/.test(widget)) failures.push("Ask Mantosh missing modal dialog semantics");
+if (!/id=["']ask-mantosh-toggle["'][^>]+aria-label=["']Ask Mantosh["']/.test(widget)) failures.push("Ask Mantosh mobile toggle needs an explicit accessible name");
 if (!/id=["']ask-mantosh-minimize["'][^>]+aria-label=["']Minimize Ask Mantosh; conversation will remain available["']/.test(widget)) failures.push("Ask Mantosh needs an explicit conversation-preserving minimize control");
 if (!/id=["']ask-mantosh-clear["'][^>]+aria-label=["']Close Ask Mantosh and clear conversation["']/.test(widget)) failures.push("Ask Mantosh needs an explicit close-and-clear control");
 if (!client.includes('setAttribute("aria-busy"') || !client.includes('setAttribute("aria-live"')) failures.push("Ask Mantosh missing quiet streaming announcements");

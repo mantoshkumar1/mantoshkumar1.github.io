@@ -51,7 +51,7 @@
   if (document.getElementById("ask-mantosh-toggle")) return;
 
   document.body.insertAdjacentHTML("beforeend", `
-    <button class="ask-mantosh-toggle" id="ask-mantosh-toggle" type="button" aria-controls="ask-mantosh-panel" aria-expanded="false">
+    <button class="ask-mantosh-toggle" id="ask-mantosh-toggle" type="button" aria-label="Ask Mantosh" aria-controls="ask-mantosh-panel" aria-expanded="false">
       <span class="ask-mantosh-toggle-icon" aria-hidden="true">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10a2 2 0 012 2v5a2 2 0 01-2 2h-3l-4 3v-3H7a2 2 0 01-2-2V9a2 2 0 012-2z"></path></svg>
       </span>

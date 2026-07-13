@@ -21,7 +21,7 @@ Mantosh built this website as a static engineering publication and evidence-back
 - GitHub Pages serves 19 SEO-configured HTML documents and the static interaction layer.
 - Git-tracked Markdown is the public knowledge source of truth.
 - A GitHub Actions workflow uses a short-lived OIDC identity to synchronize approved knowledge changes.
-- A Cloudflare Worker validates questions, applies mandatory rate limiting and D1 quotas, handles deterministic navigation, and coordinates retrieval.
+- A Cloudflare Worker validates questions, applies mandatory rate limiting and D1 quotas, handles deterministic greetings and navigation, and coordinates retrieval.
 - D1 FTS5/BM25 supports exact terminology; Vectorize supports semantic retrieval; reciprocal-rank fusion combines both result sets.
 - Workers AI receives only the selected public context and returns a structured response with approved source URLs.
 
@@ -31,9 +31,9 @@ Mantosh built this website as a static engineering publication and evidence-back
 
 The Worker does not answer from general model memory when retrieval has no sufficiently grounded public source. It returns a clear no-evidence response instead.
 
-### Deterministic navigation before inference
+### Deterministic conversation and navigation before inference
 
-Commands for Resume, Contact, named projects, and the latest article are routed directly without a generative model call. This reduces latency, cost, and ambiguity.
+Simple greetings, thanks, and farewells receive concise conversational replies without retrieval or AI. Commands for Resume, Contact, named projects, and the latest article are also routed directly without a generative model call. This reduces latency, cost, and ambiguity.
 
 ### Separate trust boundaries
 
@@ -41,13 +41,13 @@ The browser holds no provider or indexing secret. Visitor chat, knowledge indexi
 
 ### Automated release confidence
 
-Release gates check static generation, SEO, discoverability, internal links, accessibility semantics and preferences, documentation drift, content-lane inventory, and 38 Worker contract and security behaviors.
+Release gates check static generation, SEO, discoverability, internal links, accessibility semantics and preferences, documentation drift, content-lane inventory, and 45 Worker contract and security behaviors.
 
 ## Verified current scale
 
 - 19 SEO-configured HTML documents.
 - 13 public Ask Mantosh knowledge documents, including this source.
-- 38 Worker tests covering contracts, quotas, OIDC, retrieval, prompting, citation repair, subjective questions, explicit achievement gating, and failure paths.
+- 45 Worker tests covering contracts, deterministic social and achievement routing, quotas, OIDC, retrieval, prompting, citation repair, subjective questions, explicit achievement gating, and failure paths.
 
 ## Current limits
 

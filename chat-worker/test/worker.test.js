@@ -4,7 +4,7 @@ import { formatSuccess } from "../src/formatter.js";
 import { verifyGitHubOidcToken } from "../src/github-oidc.js";
 import { RecommendationEngine } from "../src/intelligence/index.js";
 import worker from "../src/index.js";
-import { buildPrompt, buildSystemPrompt, classifyQuestionIntent, expandRetrievalQuery, isSubjectiveProfileQuestion, scoreRetrievalConfidence } from "../src/prompt/index.js";
+import { buildPrompt, buildSystemPrompt, classifyQuestionIntent, conciseAchievementResponse, expandRetrievalQuery, isSubjectiveProfileQuestion, scoreRetrievalConfidence } from "../src/prompt/index.js";
 
 function testDatabase() {
   return {
@@ -14,6 +14,37 @@ function testDatabase() {
           all: async () => sql.includes("FROM chunks c")
             ? { results: [{ chunk_id: "photo-1", content: "PhotoSahi was built with browser-side image processing.", title: "PhotoSahi", slug: "photosahi", category: "project", tags: "[\"image-processing\"]", related_topics: "[\"privacy\"]", summary: "A browser-side image-processing project.", path: "knowledge/projects/photosahi.md", url: "/projects/photosahi.html" }] }
             : { results: [] },
+          first: async () => (sql.includes("ai_daily_usage") || sql.includes("ai_request_windows")) ? { request_count: 1 } : null,
+          run: async () => ({ success: true })
+        })
+      };
+    },
+    batch: async () => []
+  };
+}
+
+function gateDatabase() {
+  const row = {
+    chunk_id: "gate-1",
+    content: "Mantosh ranked in the top 1% nationally in GATE CS & IT in 2012 and 2013.",
+    title: "GATE CS & IT Top-1% Achievement and TUM Admission Context",
+    slug: "gate-cs-top-one-percent",
+    category: "experience",
+    tags: "[\"gate\",\"top-one-percent\"]",
+    related_topics: "[\"education\",\"tum\"]",
+    summary: "A résumé-backed GATE achievement and TUM admission context.",
+    path: "knowledge/experience/gate-cs-top-one-percent.md",
+    url: "/experience/#verified-highlights"
+  };
+  return {
+    prepare(sql) {
+      return {
+        bind: () => ({
+          all: async () => {
+            if (sql.includes("FROM chunks c")) return { results: [row] };
+            if (sql.includes("chunks_fts")) return { results: [{ chunk_id: row.chunk_id }] };
+            return { results: [] };
+          },
           first: async () => (sql.includes("ai_daily_usage") || sql.includes("ai_request_windows")) ? { request_count: 1 } : null,
           run: async () => ({ success: true })
         })
@@ -131,6 +162,51 @@ test("handles thanks and farewells without claiming missing knowledge", async ()
     assert.doesNotMatch(payload.answer, /haven't written/i);
     assert.deepEqual(payload.sources, []);
   }
+});
+
+test("answers a specific GATE-result question in one concise evidence-backed sentence", () => {
+  const source = { slug: "gate-cs-top-one-percent" };
+  const result = conciseAchievementResponse("What was Mantosh's GATE result?", [source]);
+  assert.equal(result.answer, "Mantosh ranked in the top 1% nationally in GATE Computer Science & Information Technology in both 2012 and 2013.");
+  assert.equal(result.source, source);
+  assert.equal(result.answer.split(/(?<=[.!?])\s+/).length, 1);
+});
+
+test("adds GATE or TUM context only when the visitor asks for it", () => {
+  const source = { slug: "gate-cs-top-one-percent" };
+  const exam = conciseAchievementResponse("Why is GATE prestigious?", [source]);
+  const admission = conciseAchievementResponse("How did GATE relate to Mantosh's TUM admission?", [source]);
+  assert.match(exam.answer, /prestigious national examination conducted by IISc and the IITs/i);
+  assert.match(admission.answer, /Mantosh says a GATE result formed part of his admission journey/i);
+  assert.match(admission.answer, /résumé confirms the completed degree/i);
+});
+
+test("keeps deterministic achievement replies explicitly requested and evidence-gated", () => {
+  const profileSource = { slug: "about-mantosh" };
+  assert.equal(
+    conciseAchievementResponse("What Intel awards did Mantosh receive?", [profileSource]).answer,
+    "Mantosh received two Intel Heroes of Tomorrow awards for outstanding engineering contributions."
+  );
+  assert.equal(conciseAchievementResponse("How can Mantosh help my team?", [profileSource]), null);
+  assert.equal(conciseAchievementResponse("What was Mantosh's GATE result?", []), null);
+});
+
+test("serves a concise GATE result without a generative AI call", async () => {
+  const gateEnv = {
+    ...env,
+    KNOWLEDGE_DB: gateDatabase(),
+    KNOWLEDGE_INDEX: { query: async () => ({ matches: [{ score: 0.92, metadata: { chunk_id: "gate-1" } }] }) },
+    AI: { run: async (model) => {
+      if (model.includes("bge-m3")) return { data: [[0.1, 0.2]] };
+      throw new Error("A specific achievement response must not call generative AI");
+    } }
+  };
+  const response = await worker.fetch(request({ question: "What was Mantosh's GATE result?" }), gateEnv);
+  const payload = await response.json();
+  assert.equal(response.status, 200);
+  assert.equal(payload.answer, "Mantosh ranked in the top 1% nationally in GATE Computer Science & Information Technology in both 2012 and 2013.");
+  assert.equal(payload.sources[0].slug, "gate-cs-top-one-percent");
+  assert.deepEqual(payload.followUpQuestions, []);
 });
 
 test("maps Workers AI quota exhaustion safely", async () => {
