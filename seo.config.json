@@ -20,7 +20,7 @@
     },
     "/systems/": {
       "title": "Engineering Projects | Mantosh Kumar",
-      "description": "Published engineering projects covering privacy-first browser processing and practical workflow automation.",
+      "description": "Published engineering projects covering platform engineering, grounded AI retrieval, privacy-first browser processing, automation, and practical decision tools.",
       "kind": "collection",
       "schemaType": "CollectionPage"
     },
@@ -118,6 +118,18 @@
       "description": "Accessibility features, known limitations, alternative résumé formats, and a direct way to report barriers on Mantosh Kumar's website.",
       "kind": "page",
       "schemaType": "WebPage"
+    },
+    "/projects/engineering-knowledge-system.html": {
+      "title": "Evidence-First Engineering Knowledge System | Mantosh Kumar",
+      "description": "Architecture case study for a production engineering publication with grounded AI retrieval, Cloudflare Workers, D1, Vectorize, and automated release gates.",
+      "kind": "project",
+      "entityName": "Evidence-First Engineering Knowledge System",
+      "dateModified": "2026-07-12",
+      "softwareApplication": true,
+      "applicationCategory": "DeveloperApplication",
+      "breadcrumbs": [
+        { "name": "Projects", "path": "/systems/" }
+      ]
     },
     "/projects/photosahi.html": {
       "title": "PhotoSahi: Privacy-First Browser Photo Processing | Mantosh Kumar",

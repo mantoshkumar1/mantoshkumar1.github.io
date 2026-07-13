@@ -14,8 +14,9 @@ with `_` are intentionally not indexed.
 
 ## Current public corpus
 
-As of 2026-07-12, the public index contains 12 source documents:
+As of 2026-07-12, the public index contains 13 source documents:
 
+- `Project: Evidence-First Engineering Knowledge System`
 - `Project: PhotoSahi`
 - `Project: Workflow Automation Toolkit`
 - `Project: GTT Trigger Price Calculator`

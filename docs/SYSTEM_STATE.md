@@ -17,8 +17,8 @@ Last verified Worker deployment: `2fdcb428-e8e8-4e4b-9dc4-209c4894c292`. The act
 
 ## Published inventory
 
-- Eighteen SEO-configured HTML documents: home, projects index, three project case studies, Insights index, six engineering articles and notes, experience, résumé, contact, a live Buttondown email subscription with RSS, accessibility statement, and custom 404.
-- 12 public Ask Mantosh documents: three project sources, six Insights sources, two résumé-backed experience and academic-achievement sources, and one evidence-backed profile and fit guide.
+- Nineteen SEO-configured HTML documents: home, projects index, four project case studies, Insights index, six engineering articles and notes, experience, résumé, contact, a live Buttondown email subscription with RSS, accessibility statement, and custom 404.
+- 13 public Ask Mantosh documents: four project sources, six Insights sources, two résumé-backed experience and academic-achievement sources, and one evidence-backed profile and fit guide.
 - One résumé PDF served for in-browser preview and explicit download.
 - Sitemap, RSS feed, `robots.txt`, `llms.txt`, JSON-LD, Open Graph, Twitter Card, manifest, icons, and a 1200×630 social image.
 - A visitor-controlled Auto, Light, Dark, Soft, and High contrast appearance setting that follows the operating system by default and persists explicit choices on the device.
@@ -99,7 +99,7 @@ The repository currently enforces:
 
 ## Known limits
 
-- Only 11 public knowledge documents are indexed; Ask Mantosh intentionally declines questions outside them.
+- Only 13 public knowledge documents are indexed; Ask Mantosh intentionally declines questions outside them.
 - Public evidence has no fabricated employer metrics or inferred organizational outcomes.
 - The Worker uses the Cloudflare free allocation and may return a clear 429 when safety or provider limits are reached.
 - There is no authenticated user account, durable personal profile, staging environment declared in this repository, formal accessibility conformance audit, or labeled offline retrieval-evaluation set.

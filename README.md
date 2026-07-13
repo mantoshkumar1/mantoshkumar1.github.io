@@ -6,7 +6,7 @@ Production source for [mantoshkumar1.github.io](https://mantoshkumar1.github.io/
 
 The repository contains two deployed surfaces:
 
-1. A static GitHub Pages site with eighteen SEO-configured HTML documents, project case studies, an engineering-note archive, newsletter information, accessible résumé alternatives, and contact flows.
+1. A static GitHub Pages site with nineteen SEO-configured HTML documents, project case studies, an engineering-note archive, newsletter information, accessible résumé alternatives, and contact flows.
 2. Ask Mantosh, a Cloudflare Worker that answers only from public Markdown under `knowledge/` using hybrid D1 FTS5 and Vectorize retrieval plus Workers AI.
 
 The current production inventory, data flow, deployment paths, controls, and known limits are maintained in [`docs/SYSTEM_STATE.md`](docs/SYSTEM_STATE.md). Start with the [`documentation map`](docs/README.md) for source authority and subsystem references.
@@ -15,6 +15,7 @@ The current production inventory, data flow, deployment paths, controls, and kno
 
 - `index.html` — positioning, selected systems, experience summary, and Ask Mantosh UI
 - `systems/index.html` — selected engineering projects
+- `projects/engineering-knowledge-system.html` — evidence-first publishing and grounded-AI platform case study
 - `projects/photosahi.html` — PhotoSahi architecture case study
 - `projects/workflow-automation-toolkit.html` — automation toolkit case study
 - `projects/gtt-price-calculator.html` — Indian stock-market GTT calculator case study

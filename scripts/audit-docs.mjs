@@ -68,6 +68,7 @@ requireText(state, `${publicDocuments} public Ask Mantosh documents`, "system st
 requireText(knowledgeReadme, `${publicDocuments} source documents`, "knowledge README");
 requireText(knowledgeReadme, "FAQ: About Mantosh and Where His Experience Can Help", "knowledge README");
 requireText(knowledgeReadme, "Experience: GATE CS & IT Top-1% Achievement and TUM Admission Context", "knowledge README");
+requireText(knowledgeReadme, "Project: Evidence-First Engineering Knowledge System", "knowledge README");
 
 for (const expected of ["15 distinct posts", "PhotoSahi Canada–India launch", "Memorable test cases", "Ledger-first blockchain evolution"]) {
   requireText(linkedInAudit, expected, "LinkedIn content audit");
