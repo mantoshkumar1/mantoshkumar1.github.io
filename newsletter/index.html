@@ -37,7 +37,7 @@
     <!-- seo:generated:end -->
 
 <title>Engineering Leverage Newsletter | Mantosh Kumar</title>
-    <link rel="stylesheet" href="../assets/css/style.css?v=20260712-19" />
+    <link rel="stylesheet" href="../assets/css/style.css?v=20260712-20" />
   </head>
   <body>
     <a class="skip-link" href="#main-content">Skip to main content</a>
@@ -85,7 +85,16 @@
 
           <section class="resume-section">
             <h2>Email subscription</h2>
-            <p>The email edition is being configured. Until the verified subscription form is connected, RSS is the reliable way to receive every new article.</p>
+            <p>Get an email only when a new engineering article is worth sharing.</p>
+            <form class="newsletter-form" action="https://buttondown.com/api/emails/embed-subscribe/mantoshkumar" method="post" target="_blank" rel="noopener">
+              <label for="newsletter-email">Email address</label>
+              <div class="newsletter-form-row">
+                <input id="newsletter-email" name="email" type="email" inputmode="email" autocomplete="email" placeholder="you@example.com" required />
+                <button class="button primary" type="submit">Subscribe</button>
+              </div>
+              <input name="embed" type="hidden" value="1" />
+              <p>Buttondown manages confirmation and delivery. No promotional noise, and every email includes an unsubscribe option.</p>
+            </form>
           </section>
 
           <aside class="inline-cta" aria-label="Discuss an engineering problem">

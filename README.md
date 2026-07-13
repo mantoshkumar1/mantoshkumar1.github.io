@@ -28,7 +28,7 @@ The current production inventory, data flow, deployment paths, controls, and kno
 - `experience/index.html` — résumé-verified experience and highlights
 - `resume/index.html` — résumé summary, browser preview, and PDF download
 - `contact/index.html` — prepared email, copy-email, LinkedIn, and GitHub actions
-- `newsletter/index.html` — newsletter promise, editorial standard, current RSS option, and future email-subscription location
+- `newsletter/index.html` — newsletter promise, editorial standard, RSS option, and Buttondown subscription form
 - `accessibility/index.html` — accessibility features, known limits, alternatives, and feedback path
 - `404.html` — custom not-found page
 

@@ -32,5 +32,9 @@ if (new Set(stylesheetVersions.values()).size !== 1) {
 for (const asset of ["favicon.svg", "favicon.ico", "assets/seo/social-default.png", "apple-touch-icon.png", "assets/icons/icon-192.png", "assets/icons/icon-512.png", "site.webmanifest", "sitemap.xml"]) {
   try { await access(join(root, asset)); } catch { console.error(`missing required asset: ${asset}`); failures += 1; }
 }
+const newsletterHtml = await readFile(join(root, "newsletter/index.html"), "utf8");
+if (!/action=["']https:\/\/buttondown\.com\/api\/emails\/embed-subscribe\/mantoshkumar["']/i.test(newsletterHtml)) { console.error("newsletter: missing verified Buttondown subscription endpoint"); failures += 1; }
+if (!/<input\b[^>]*name=["']email["'][^>]*type=["']email["'][^>]*required/i.test(newsletterHtml)) { console.error("newsletter: subscription requires a validated email field"); failures += 1; }
+if (!/name=["']embed["'][^>]*value=["']1["']/i.test(newsletterHtml)) { console.error("newsletter: missing Buttondown embed mode"); failures += 1; }
 if (failures) process.exit(1);
 console.log(`SEO audit passed for ${pages.length} indexable pages.`);
