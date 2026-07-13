@@ -33,8 +33,10 @@ for (const asset of ["favicon.svg", "favicon.ico", "assets/seo/social-default.pn
   try { await access(join(root, asset)); } catch { console.error(`missing required asset: ${asset}`); failures += 1; }
 }
 const newsletterHtml = await readFile(join(root, "newsletter/index.html"), "utf8");
-if (!/data-buttondown-status=["']review["']/i.test(newsletterHtml)) { console.error("newsletter: missing Buttondown review status"); failures += 1; }
-if (/action=["']https:\/\/buttondown\.com\/api\/emails\/embed-subscribe\/mantoshkumar["']/i.test(newsletterHtml)) { console.error("newsletter: must not collect subscribers while Buttondown is under review"); failures += 1; }
+if (!/data-buttondown-status=["']active["']/i.test(newsletterHtml)) { console.error("newsletter: missing active Buttondown status"); failures += 1; }
+if (!/action=["']https:\/\/buttondown\.com\/api\/emails\/embed-subscribe\/mantoshkumar["']/i.test(newsletterHtml)) { console.error("newsletter: missing Buttondown subscription endpoint"); failures += 1; }
+if (!/<input[^>]+type=["']email["'][^>]+name=["']email["'][^>]+required/i.test(newsletterHtml)) { console.error("newsletter: email input must be named and required"); failures += 1; }
+if (!/<input[^>]+type=["']hidden["'][^>]+name=["']embed["'][^>]+value=["']1["']/i.test(newsletterHtml)) { console.error("newsletter: missing Buttondown embed field"); failures += 1; }
 const stylesheet = await readFile(join(root, "assets/css/style.css"), "utf8");
 if (/contain-intrinsic-size:\s*auto\s+720px/i.test(stylesheet) || /\.section\s*\{[^}]*content-visibility:\s*auto/is.test(stylesheet)) {
   console.error("stylesheet: homepage sections must not reserve synthetic off-screen height");
