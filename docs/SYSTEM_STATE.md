@@ -17,8 +17,8 @@ Last verified Worker deployment: `defee067-2437-4d44-81f1-bf9ccd4e4094`. The act
 
 ## Published inventory
 
-- Nineteen SEO-configured HTML documents: home, projects index, four project case studies, Insights index, six engineering articles and notes, experience, résumé, contact, a live Buttondown email subscription with RSS, accessibility statement, and custom 404.
-- 13 public Ask Mantosh documents: four project sources, six Insights sources, two résumé-backed experience and academic-achievement sources, and one evidence-backed profile and fit guide.
+- SEO-configured public pages: home, projects index, five project case studies, Insights index, six engineering articles and notes, experience, résumé, contact, a live Buttondown email subscription with RSS, accessibility statement, and custom 404.
+- 14 public Ask Mantosh documents: five project sources, six Insights sources, two résumé-backed experience and academic-achievement sources, and one evidence-backed profile and fit guide.
 - One résumé PDF served for in-browser preview and explicit download.
 - Sitemap, RSS feed, `robots.txt`, `llms.txt`, JSON-LD, Open Graph, Twitter Card, manifest, icons, and a 1200×630 social image.
 - A visitor-controlled Auto, Light, Dark, Soft, and High contrast appearance setting. Dark is the first-visit default; explicit choices persist on the device, and Auto follows the operating system.
@@ -100,7 +100,7 @@ The repository currently enforces:
 
 ## Known limits
 
-- Only 13 public knowledge documents are indexed; outside deterministic greetings, courtesies, and navigation, Ask Mantosh intentionally declines questions they cannot support.
+- Only 14 public knowledge documents are indexed; outside deterministic greetings, courtesies, and navigation, Ask Mantosh intentionally declines questions they cannot support.
 - Public evidence has no fabricated employer metrics or inferred organizational outcomes.
 - The Worker uses the Cloudflare free allocation and may return a clear 429 when safety or provider limits are reached.
 - There is no authenticated user account, durable personal profile, staging environment declared in this repository, formal accessibility conformance audit, or labeled offline retrieval-evaluation set.

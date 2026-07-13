@@ -896,6 +896,59 @@ button.button {
   margin-bottom: 0.45rem;
 }
 
+.case-flow {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0.65rem;
+  padding: 0;
+  list-style: none;
+}
+
+.case-flow li {
+  position: relative;
+  display: grid;
+  align-content: start;
+  gap: 0.45rem;
+  min-width: 0;
+  padding: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: linear-gradient(145deg, rgba(59, 130, 246, 0.1), rgba(255, 255, 255, 0.018));
+}
+
+.case-flow li:not(:last-child)::after {
+  position: absolute;
+  top: 1.25rem;
+  right: -0.56rem;
+  z-index: 1;
+  color: var(--accent);
+  content: "→";
+  font-weight: 700;
+}
+
+.case-flow span {
+  display: grid;
+  width: 1.65rem;
+  height: 1.65rem;
+  place-items: center;
+  border: 1px solid color-mix(in srgb, var(--accent) 65%, transparent);
+  border-radius: 50%;
+  color: var(--accent);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.case-flow strong {
+  color: var(--text);
+  font-size: 0.92rem;
+}
+
+.case-flow small {
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
+
 .sr-only {
   position: absolute;
   width: 1px;
@@ -1247,6 +1300,27 @@ body.ask-mantosh-open {
 }
 
 @media (max-width: 900px) {
+  .case-flow {
+    grid-template-columns: 1fr;
+  }
+
+  .case-flow li {
+    grid-template-columns: auto 1fr;
+    align-items: start;
+  }
+
+  .case-flow li:not(:last-child)::after {
+    top: auto;
+    right: auto;
+    bottom: -0.62rem;
+    left: 1.5rem;
+    transform: rotate(90deg);
+  }
+
+  .case-flow small {
+    grid-column: 2;
+  }
+
   nav {
     display: flex;
     max-width: min(70vw, 34rem);

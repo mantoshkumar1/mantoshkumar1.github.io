@@ -179,6 +179,16 @@
         { "name": "Projects", "path": "/projects/" }
       ]
     },
+    "/projects/validation-platform-optical-networking.html": {
+      "title": "Validation Platform and Release Intelligence | Mantosh Kumar",
+      "description": "A public, evidence-bounded case study on reusable validation infrastructure, AI-assisted failure investigation, and release intelligence for optical networking.",
+      "kind": "project",
+      "entityName": "Validation Platform and Release Intelligence",
+      "dateModified": "2026-07-13",
+      "breadcrumbs": [
+        { "name": "Projects", "path": "/projects/" }
+      ]
+    },
     "/404.html": {
       "title": "Page Not Found | Mantosh Kumar",
       "description": "The requested page could not be found.",

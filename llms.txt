@@ -29,6 +29,7 @@ His résumé-backed capabilities include engineering platforms and automation, P
 - [PhotoSahi: privacy-first browser image processing case study](https://mantoshkumar1.github.io/projects/photosahi.html)
 - [Workflow Automation Toolkit case study](https://mantoshkumar1.github.io/projects/workflow-automation-toolkit.html)
 - [GTT Trigger Price Calculator case study](https://mantoshkumar1.github.io/projects/gtt-price-calculator.html)
+- [Validation Platform and Release Intelligence case study](https://mantoshkumar1.github.io/projects/validation-platform-optical-networking.html)
 
 ## Engineering insights
 

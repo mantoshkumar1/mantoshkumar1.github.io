@@ -18,7 +18,7 @@ Mantosh built this website as a static engineering publication and evidence-back
 
 ## Architecture
 
-- GitHub Pages serves 19 SEO-configured HTML documents and the static interaction layer.
+- GitHub Pages serves the SEO-configured public site and static interaction layer.
 - Git-tracked Markdown is the public knowledge source of truth.
 - A GitHub Actions workflow uses a short-lived OIDC identity to synchronize approved knowledge changes.
 - A Cloudflare Worker validates questions, applies mandatory rate limiting and D1 quotas, handles deterministic greetings and navigation, and coordinates retrieval.
@@ -41,13 +41,13 @@ The browser holds no provider or indexing secret. Visitor chat, knowledge indexi
 
 ### Automated release confidence
 
-Release gates check static generation, SEO, discoverability, internal links, accessibility semantics and preferences, documentation drift, content-lane inventory, and 45 Worker contract and security behaviors.
+Release gates check static generation, SEO, discoverability, internal links, accessibility semantics and preferences, documentation drift, content-lane inventory, and Worker contract and security behaviors.
 
-## Verified current scale
+## Verifiable implementation
 
-- 19 SEO-configured HTML documents.
-- 13 public Ask Mantosh knowledge documents, including this source.
-- 45 Worker tests covering contracts, deterministic social and achievement routing, quotas, OIDC, retrieval, prompting, citation repair, subjective questions, explicit achievement gating, and failure paths.
+- SEO-configured public pages and structured discoverability files.
+- A reviewed public Ask Mantosh knowledge corpus, including this source.
+- Automated tests covering contracts, deterministic social and achievement routing, quotas, OIDC, retrieval, prompting, citation repair, subjective questions, explicit achievement gating, and failure paths.
 
 ## Current limits
 
