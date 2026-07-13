@@ -46,7 +46,7 @@ if (/contain-intrinsic-size:\s*auto\s+720px/i.test(stylesheet) || /\.section\s*\
 const homeHtml = await readFile(join(root, "index.html"), "utf8");
 if (!/Aricent → Cisco → Intel → Siemens → KI Labs → Infinera → Nokia/.test(homeHtml)) { console.error("homepage: career chronology is missing or out of order"); failures += 1; }
 if (!/14\+ years • Toronto, Canada • Canadian citizen/.test(homeHtml)) { console.error("homepage: current location and Canadian citizenship signal is missing"); failures += 1; }
-if (!/DUBAI \/ UAE • STAFF \/ PRINCIPAL ROLES/.test(homeHtml)) { console.error("homepage: Dubai Staff/Principal opportunity target is missing"); failures += 1; }
+if (!/STAFF \/ PRINCIPAL ENGINEERING • PLATFORM &amp; AUTOMATION/.test(homeHtml)) { console.error("homepage: location-neutral Staff/Principal positioning is missing"); failures += 1; }
 for (const region of ["india", "germany", "canada"]) {
   if (!new RegExp(`href=["']experience/#${region}["']`, "i").test(homeHtml)) { console.error(`homepage: ${region} experience card must link to its regional detail`); failures += 1; }
 }
@@ -75,9 +75,12 @@ for (const region of ["india", "germany", "canada"]) {
   if (!new RegExp(`id=["']${region}["']`, "i").test(experienceHtml)) { console.error(`experience: missing ${region} regional anchor`); failures += 1; }
 }
 const contactHtml = await readFile(join(root, "contact/index.html"), "utf8");
-if (/senior or staff engineering role/i.test(contactHtml) || !/Staff or Principal Engineer role/.test(contactHtml) || !/Dubai and UAE opportunities/.test(contactHtml)) { console.error("contact: target role and Dubai/UAE positioning is stale"); failures += 1; }
-if (!/Current work authorization:<\/strong> Canada • United States • India/.test(contactHtml)) { console.error("contact: current work authorization is missing"); failures += 1; }
+if (/senior or staff engineering role/i.test(contactHtml) || !/Staff or Principal Engineer role/.test(contactHtml)) { console.error("contact: Staff/Principal positioning is stale"); failures += 1; }
 const resumeHtml = await readFile(join(root, "resume/index.html"), "utf8");
+for (const [page, html] of [["index.html", homeHtml], ["contact/index.html", contactHtml], ["resume/index.html", resumeHtml]]) {
+  if (/\b(?:Dubai|UAE|United Arab Emirates)\b/i.test(html)) { console.error(`${page}: public hiring copy must not expose private relocation targeting`); failures += 1; }
+}
+if (!/Current work authorization:<\/strong> Canada • United States • India/.test(contactHtml)) { console.error("contact: current work authorization is missing"); failures += 1; }
 if (!/Work authorization:<\/strong> Canada • United States • India/.test(resumeHtml)) { console.error("resume: current work authorization is missing"); failures += 1; }
 for (const page of ["index.html", "thinking/index.html"]) {
   const html = await readFile(join(root, page), "utf8");

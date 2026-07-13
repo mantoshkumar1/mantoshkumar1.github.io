@@ -2,7 +2,7 @@
 title: "About Mantosh and Where His Experience Can Help"
 slug: "about-mantosh"
 category: "faq"
-tags: [staff-software-engineer, principal-engineer, platform-engineering, automation, backend-systems, networking, operational-intelligence, hiring, achievements, awards, education, canadian-citizen, work-authorization, toronto, canada, united-states, india, dubai, uae]
+tags: [staff-software-engineer, principal-engineer, platform-engineering, automation, backend-systems, networking, operational-intelligence, hiring, achievements, awards, education, canadian-citizen, work-authorization, toronto, canada, united-states, india]
 summary: "A concise, evidence-backed guide to Mantosh Kumar's engineering background, strongest documented capability areas, and appropriate ways to assess fit for a role or project."
 last_updated: "2026-07-13"
 related_topics: [engineering-capabilities, workflow-automation, distributed-validation, developer-productivity, quality-analytics, academic-achievements, gate, technical-university-of-munich]
@@ -20,11 +20,11 @@ Mantosh Kumar is a Toronto-based Staff Software Engineer with more than 14 years
 
 Mantosh is based in Toronto, Canada, and is a Canadian citizen. He states that he is currently authorized to work in Canada, the United States, and India. These public profile facts are included to give recruiters and clients clear location and work-eligibility context.
 
-The specific legal basis, conditions, duration, and documentation for United States or India work authorization are not published. Employers should confirm role-specific details directly with Mantosh. No existing UAE work authorization is claimed.
+The specific legal basis, conditions, duration, and documentation for United States or India work authorization are not published. Employers should confirm role-specific details directly with Mantosh.
 
 ## Target roles and market
 
-Mantosh is seeking Staff Engineer or Principal Engineer opportunities rather than Senior Engineer roles. Dubai and the wider United Arab Emirates are his primary target market. Staff Software Engineer is his documented current title; Principal Engineer is a target level, not a claim that he already holds that title.
+Mantosh is open to Staff Engineer or Principal Engineer opportunities rather than Senior Engineer roles. Staff Software Engineer is his documented current title; Principal Engineer is a target level, not a claim that he already holds that title.
 
 ## Where his documented experience is most relevant
 
