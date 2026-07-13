@@ -300,8 +300,6 @@ nav .nav-cta:hover {
 
 .section {
   padding: var(--space-section) 0;
-  content-visibility: auto;
-  contain-intrinsic-size: auto 720px;
 }
 
 .alt-section {
@@ -1571,7 +1569,7 @@ nav .nav-cta:not([aria-current="page"]):focus-visible {
 }
 
 #home > .section {
-  padding-block: clamp(3.4rem, 5.8vw, 5rem);
+  padding-block: clamp(3rem, 4.8vw, 4.25rem);
 }
 
 #home > .section .section-title {
@@ -1753,7 +1751,7 @@ nav .nav-cta:not([aria-current="page"]):focus-visible {
 .page-shell {
   width: min(calc(100% - 2.5rem), 980px);
   max-width: none;
-  padding: clamp(3.8rem, 7vw, 6.5rem) 0 clamp(5rem, 9vw, 8rem);
+  padding: clamp(2.75rem, 5vw, 4.25rem) 0 clamp(3.5rem, 6vw, 5rem);
 }
 
 .reading-shell {
@@ -1782,7 +1780,7 @@ nav .nav-cta:not([aria-current="page"]):focus-visible {
 
 .resume-header {
   max-width: 760px;
-  margin-bottom: clamp(2rem, 5vw, 3.2rem);
+  margin-bottom: clamp(1.5rem, 3.5vw, 2.4rem);
 }
 
 .resume-header h1 {
@@ -1799,11 +1797,11 @@ nav .nav-cta:not([aria-current="page"]):focus-visible {
 }
 
 .resume-section {
-  margin-top: 2rem;
+  margin-top: clamp(1.25rem, 2.5vw, 1.75rem);
 }
 
 .case-study .resume-section {
-  padding-top: clamp(1.8rem, 4vw, 2.7rem);
+  padding-top: clamp(1.35rem, 2.7vw, 1.9rem);
 }
 
 .reading-page .resume-header {
@@ -1922,6 +1920,11 @@ nav .nav-cta:not([aria-current="page"]):focus-visible {
     width: min(calc(100% - 1.5rem), var(--max-width));
   }
 
+  .page-shell,
+  .reading-shell {
+    padding-block: 2rem 2.5rem;
+  }
+
   .nav-wrap {
     height: 62px;
   }
@@ -1939,7 +1942,7 @@ nav .nav-cta:not([aria-current="page"]):focus-visible {
   }
 
   .hero {
-    padding-top: 4rem;
+    padding: 3rem 0 2.75rem;
   }
 
   .hero h1 {
@@ -1961,7 +1964,24 @@ nav .nav-cta:not([aria-current="page"]):focus-visible {
   }
 
   #home > .section {
-    padding-block: 3.25rem;
+    padding-block: 2.75rem;
+  }
+
+  #home > .section .section-title {
+    margin-bottom: 1.25rem;
+  }
+
+  .card {
+    padding: 1.25rem;
+  }
+
+  .value-grid div,
+  .value-grid div:first-child {
+    padding-block: .8rem;
+  }
+
+  .footer {
+    padding-block: 2rem;
   }
 
   .resume-card,

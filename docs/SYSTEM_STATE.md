@@ -22,6 +22,7 @@ This document is the canonical description of what is deployed. Architecture pro
 - A visitor-controlled Auto, Light, Dark, Soft, and High contrast appearance setting that follows the operating system by default and persists explicit choices on the device.
 - English remains the authoritative content language. Pages expose standard language metadata and selectable text for browser translation; the site does not infer language from location or load a third-party translation widget.
 - Single-destination Insight cards expose the whole card as one link, while project cards preserve separate case-study, product, and source destinations. Long-form Insight pages use a compact reading rhythm distinct from broader landing-page spacing.
+- Page density is intentional: homepage sections render at their real height without synthetic off-screen placeholders; landing, case-study, article, and mobile shells use separate compact spacing scales so the next useful decision arrives sooner without reducing touch-target size.
 
 ## Visitor flows
 

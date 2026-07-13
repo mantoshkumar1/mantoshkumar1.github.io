@@ -35,6 +35,11 @@ for (const asset of ["favicon.svg", "favicon.ico", "assets/seo/social-default.pn
 const newsletterHtml = await readFile(join(root, "newsletter/index.html"), "utf8");
 if (!/data-buttondown-status=["']review["']/i.test(newsletterHtml)) { console.error("newsletter: missing Buttondown review status"); failures += 1; }
 if (/action=["']https:\/\/buttondown\.com\/api\/emails\/embed-subscribe\/mantoshkumar["']/i.test(newsletterHtml)) { console.error("newsletter: must not collect subscribers while Buttondown is under review"); failures += 1; }
+const stylesheet = await readFile(join(root, "assets/css/style.css"), "utf8");
+if (/contain-intrinsic-size:\s*auto\s+720px/i.test(stylesheet) || /\.section\s*\{[^}]*content-visibility:\s*auto/is.test(stylesheet)) {
+  console.error("stylesheet: homepage sections must not reserve synthetic off-screen height");
+  failures += 1;
+}
 const homeHtml = await readFile(join(root, "index.html"), "utf8");
 if (!/Aricent → Cisco → Intel → Siemens → KI Labs → Infinera → Nokia/.test(homeHtml)) { console.error("homepage: career chronology is missing or out of order"); failures += 1; }
 if (!/Joined Infinera in Canada; the role continues at Nokia after its 2025 acquisition of Infinera\./.test(homeHtml)) { console.error("homepage: Infinera-to-Nokia employment continuity needs an explicit explanation"); failures += 1; }
