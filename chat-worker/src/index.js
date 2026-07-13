@@ -6,7 +6,7 @@ import { handleIndexRequest } from "./indexer.js";
 import { AnalyticsService, ConfidenceScorer, MemoryManager, MetadataService, RecommendationEngine, SearchRouter } from "./intelligence/index.js";
 import { createResponse } from "./ai.js";
 import { enforceFreeUsageLimit, enforceStrictRequestLimit } from "./quota.js";
-import { buildPrompt, expandRetrievalQuery, formatError, formatResponse, isAnswerable, unavailableResponse } from "./prompt/index.js";
+import { buildPrompt, expandRetrievalQuery, formatError, formatResponse, isAnswerable, isSubjectiveProfileQuestion, unavailableResponse } from "./prompt/index.js";
 import { enforceRateLimit } from "./rate-limit.js";
 import { retrieveKnowledge } from "./retrieval.js";
 import { parseChatRequest } from "./validation.js";
@@ -124,13 +124,13 @@ export default {
       const streamMetadata = { sources: prompt.sources, recommendations: recommendations.all, relatedArticles: recommendations.articles, relatedProjects: recommendations.projects, relatedNotes: recommendations.notes, followUpQuestions, suggestedQuestions: followUpQuestions, confidence: retrieval.confidence, confidenceDetails, conversationId, cache: "miss" };
       if (wantsStream) {
         const response = await createResponse({ env, config, instructions: prompt.instructions, input: prompt.input });
-        const result = { ...formatResponse(response, { sources: prompt.sources, confidence: retrieval.confidence, maxAnswerChars: config.maxAnswerChars, recommendations, followUpQuestions, conversationId }), confidenceDetails, cache: "miss" };
+        const result = { ...formatResponse(response, { sources: prompt.sources, confidence: retrieval.confidence, maxAnswerChars: config.maxAnswerChars, recommendations, followUpQuestions, conversationId, subjectiveProfile: isSubjectiveProfileQuestion(question) }), confidenceDetails, cache: "miss" };
         analytics.trackInBackground(ctx, "knowledge_answer", retrieval.sources.map((source) => source.category).join(","));
         ctx?.waitUntil?.(memory.recordTurn({ conversationId, question, answer: result.answer, sources: result.sources }));
         return eventStream([{ type: "metadata", data: result }, { type: "response.output_text.delta", data: { delta: result.answer } }, { type: "done", data: {} }], origin);
       }
       const response = await createResponse({ env, config, instructions: prompt.instructions, input: prompt.input });
-      const result = { ...formatResponse(response, { sources: prompt.sources, confidence: retrieval.confidence, maxAnswerChars: config.maxAnswerChars, recommendations, followUpQuestions, conversationId }), confidenceDetails, cache: "miss" };
+      const result = { ...formatResponse(response, { sources: prompt.sources, confidence: retrieval.confidence, maxAnswerChars: config.maxAnswerChars, recommendations, followUpQuestions, conversationId, subjectiveProfile: isSubjectiveProfileQuestion(question) }), confidenceDetails, cache: "miss" };
       analytics.trackInBackground(ctx, "knowledge_answer", retrieval.sources.map((source) => source.category).join(","));
       ctx?.waitUntil?.(memory.recordTurn({ conversationId, question, answer: result.answer, sources: result.sources }));
       if (cacheKey) writeCachedJson("response", cacheKey, { ...result, conversationId: undefined, cache: undefined }, config.responseCacheTtlSeconds, ctx);

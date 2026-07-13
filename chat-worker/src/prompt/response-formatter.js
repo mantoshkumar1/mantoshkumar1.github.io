@@ -47,6 +47,14 @@ function normalizeGroundedAnswer(answer, followUpQuestions = []) {
   return normalized;
 }
 
+function addSubjectiveFraming(answer, subjectiveProfile) {
+  if (!subjectiveProfile || /\bsubjective\b/i.test(answer)) return answer;
+  const openingHeading = /^##\s+(?:In brief|Answer)\s*$/im;
+  return openingHeading.test(answer)
+    ? answer.replace(openingHeading, (heading) => `${heading}\nThat label is subjective. Here is what the published evidence supports.`)
+    : `## In brief\nThat label is subjective. Here is what the published evidence supports.\n\n${answer}`;
+}
+
 function canonicalizeSourceSection(answer, sources) {
   const sourceLines = sources
     .filter((source) => source.url)
@@ -83,11 +91,11 @@ function validateSafeModelOutput(answer, sources) {
   }
 }
 
-export function formatResponse(response, { sources, confidence, maxAnswerChars = 12_000, recommendations, followUpQuestions, conversationId, action = null }) {
+export function formatResponse(response, { sources, confidence, maxAnswerChars = 12_000, recommendations, followUpQuestions, conversationId, action = null, subjectiveProfile = false }) {
   const rawAnswer = extractOutputText(response);
   if (!rawAnswer) throw new AppError(500, "empty_model_response", "The AI service returned no answer.");
   const retrievedSources = deduplicateSources(sources);
-  const normalizedAnswer = normalizeGroundedAnswer(rawAnswer, followUpQuestions);
+  const normalizedAnswer = addSubjectiveFraming(normalizeGroundedAnswer(rawAnswer, followUpQuestions), subjectiveProfile);
   const canonicalSources = citedSources(normalizedAnswer, retrievedSources);
   const answer = canonicalizeSourceSection(normalizedAnswer, canonicalSources);
   if (answer.length > maxAnswerChars || /<\/?(?:system|instructions|retrieved_documents)>/i.test(answer)) {

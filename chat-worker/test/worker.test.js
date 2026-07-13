@@ -3,7 +3,7 @@ import test from "node:test";
 import { formatSuccess } from "../src/formatter.js";
 import { verifyGitHubOidcToken } from "../src/github-oidc.js";
 import worker from "../src/index.js";
-import { buildPrompt, buildSystemPrompt, classifyQuestionIntent, expandRetrievalQuery, scoreRetrievalConfidence } from "../src/prompt/index.js";
+import { buildPrompt, buildSystemPrompt, classifyQuestionIntent, expandRetrievalQuery, isSubjectiveProfileQuestion, scoreRetrievalConfidence } from "../src/prompt/index.js";
 
 function testDatabase() {
   return {
@@ -357,6 +357,8 @@ test("classifies visitor questions into profile, problem, and direct response mo
   assert.equal(classifyQuestionIntent("Is this engineer overrated?"), "profile");
   assert.equal(classifyQuestionIntent("We have a slow release workflow. What should we improve?"), "problem");
   assert.equal(classifyQuestionIntent("Why did PhotoSahi avoid a backend?"), "direct");
+  assert.equal(isSubjectiveProfileQuestion("This guy is genius?"), true);
+  assert.equal(isSubjectiveProfileQuestion("Tell me about his experience"), false);
 });
 
 test("expands only profile retrieval with verified capability vocabulary", () => {
@@ -425,12 +427,21 @@ test("adds a canonical source when a grounded answer omits its citation", () => 
 
 test("turns casual subjective praise into a readable evidence-backed response", () => {
   const result = formatSuccess(
-    { output_text: "## In brief\nGenius is subjective. The published record shows sustained engineering work across automation, backend systems, and networking.\n\n## Best fit\n- Platform and workflow automation\n- Backend engineering systems\n- Operational quality intelligence" },
-    [{ title: "About Mantosh", label: "FAQ: About Mantosh", category: "faq", url: "/experience/" }]
+    { output_text: "## In brief\nThe published record shows sustained engineering work across automation, backend systems, and networking.\n\n## Best fit\n- Platform and workflow automation\n- Backend engineering systems\n- Operational quality intelligence" },
+    [{ title: "About Mantosh", label: "FAQ: About Mantosh", category: "faq", url: "/experience/" }],
+    { subjectiveProfile: true }
   );
-  assert.match(result.answer, /Genius is subjective\./);
+  assert.match(result.answer, /That label is subjective\. Here is what the published evidence supports\./);
   assert.match(result.answer, /## Sources\n- \[FAQ: About Mantosh\]\(\/experience\/\)/);
   assert.doesNotMatch(result.answer, /without verifiable citations/i);
+});
+
+test("applies subjective framing through the public Worker contract", async () => {
+  const response = await worker.fetch(request({ question: "This guy is genius?" }), env);
+  assert.equal(response.status, 200);
+  const payload = await response.json();
+  assert.match(payload.answer, /That label is subjective\. Here is what the published evidence supports\./);
+  assert.equal(payload.success, true);
 });
 
 test("still rejects a model-authored link outside retrieved evidence", () => {

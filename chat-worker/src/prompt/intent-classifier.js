@@ -1,8 +1,10 @@
+const SUBJECTIVE_PROFILE_PATTERN = /\b(?:genius|brilliant|smart|impressive|exceptional|great engineer|good engineer|overrated)\b/i;
+
 const PROFILE_PATTERNS = [
   /\b(?:who is|tell me about|about)\s+(?:this (?:guy|person|engineer)|mantosh|him)\b/i,
   /\b(?:what does|what can|how can)\s+(?:mantosh|he|this (?:guy|person|engineer))\b/i,
   /\b(?:hire|hiring|contract|consultant|candidate|fit for|strengths|skills|experience)\b/i,
-  /\b(?:genius|brilliant|smart|impressive|exceptional|great engineer|good engineer|overrated)\b/i
+  SUBJECTIVE_PROFILE_PATTERN
 ];
 
 const PROBLEM_PATTERNS = [
@@ -16,6 +18,10 @@ export function classifyQuestionIntent(question) {
   if (PROFILE_PATTERNS.some((pattern) => pattern.test(value))) return "profile";
   if (PROBLEM_PATTERNS.some((pattern) => pattern.test(value))) return "problem";
   return "direct";
+}
+
+export function isSubjectiveProfileQuestion(question) {
+  return SUBJECTIVE_PROFILE_PATTERN.test(String(question || "").trim());
 }
 
 export function responseModeInstructions(intent) {
