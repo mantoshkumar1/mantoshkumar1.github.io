@@ -56,6 +56,11 @@ if (!client.includes("renderBasic(markdown, target)") || !client.includes("this.
 if (!client.includes('stripResponseSections(text) { return text.replace(/\\n*##\\s+(?:Sources|Follow-up Questions)')) failures.push("Ask Mantosh must remove source and follow-up payloads from the reading pane");
 if (!client.includes("Suggestions belong only to the empty welcome state") || !client.includes("this.view.setSuggestions([], (question) => this.ask(question));")) failures.push("Ask Mantosh must clear suggestion chips after every answer");
 if (/setSuggestions\(message\.followUps/.test(client)) failures.push("Ask Mantosh must not repopulate follow-up chips over the reading area");
+for (const historyFeature of ["ask-mantosh-conversation-v1", "window.sessionStorage.getItem", "window.sessionStorage.setItem", "conversationId", 'contentType.includes("application/json")']) {
+  if (!client.includes(historyFeature)) failures.push(`Ask Mantosh recovery flow missing ${historyFeature}`);
+}
+if (!/ask-mantosh-related-card[^`]*target=\\"_blank\\"|target=\\"_blank\\"[^`]*ask-mantosh-related-card/.test(client)) failures.push("Ask Mantosh related links must preserve the current conversation tab");
+if (!/message\.action\?\.type === "navigate"/.test(client)) failures.push("Ask Mantosh must render direct navigation responses without crashing");
 for (const themeFeature of ["mantosh-appearance", "appearance-select", "prefers-color-scheme: light", "localStorage.setItem", 'value="soft"', 'value="contrast"']) {
   if (!widget.includes(themeFeature)) failures.push(`appearance control missing ${themeFeature}`);
 }

@@ -85,16 +85,24 @@ class MarkdownService {
 class ChatApi {
   constructor(url) { this.url = url; }
 
-  async stream(question, signal, onEvent) {
+  async stream(question, conversationId, signal, onEvent) {
     if (!this.url) throw new Error("Ask Mantosh is not configured yet.");
     const response = await fetch(this.url, {
       method: "POST", signal,
       headers: { "Content-Type": "application/json", Accept: "text/event-stream" },
-      body: JSON.stringify({ question })
+      body: JSON.stringify({ question, conversationId })
     });
     if (!response.ok || !response.body) {
       const payload = await response.json().catch(() => ({}));
       throw new Error(payload.error?.message || "I couldn't answer that right now. Please try again.");
+    }
+    const contentType = response.headers.get("Content-Type") || "";
+    if (contentType.includes("application/json")) {
+      const payload = await response.json();
+      onEvent("metadata", payload);
+      if (payload.answer) onEvent("response.output_text.delta", { delta: payload.answer });
+      onEvent("done", {});
+      return;
     }
     const reader = response.body.pipeThrough(new TextDecoderStream()).getReader();
     let buffer = "";
@@ -175,14 +183,17 @@ class ConversationView {
   renderMeta(node, message) {
     node.querySelector(".ask-mantosh-answer")?.parentElement.querySelector(".ask-mantosh-response-meta")?.remove();
     const meta = document.createElement("div"); meta.className = "ask-mantosh-response-meta";
-    if (message.error) meta.innerHTML = `<div class=\"ask-mantosh-error\"><p>${message.error}</p><button type=\"button\" data-retry=\"${message.question}\">Try again</button></div>`;
+    if (message.error) meta.innerHTML = `<div class=\"ask-mantosh-error\"><p>${this.escape(message.error)}</p><button type=\"button\" data-retry=\"${this.escape(message.question)}\">Try again</button></div>`;
+    if (message.action?.type === "navigate" && message.action.url) {
+      meta.insertAdjacentHTML("beforeend", `<a class=\"button secondary\" href=\"${this.safeUrl(message.action.url)}\" target=\"_blank\" rel=\"noopener noreferrer\">Open ${this.escape(message.action.label || "page")} <span aria-hidden=\"true\">↗</span></a>`);
+    }
     if (message.sources?.length) {
-      const sourceList = message.sources.map((source) => `<a class=\"ask-mantosh-source\" href=\"${this.safeUrl(source.url)}\" data-summary=\"${this.escape(source.summary || "Published engineering knowledge") }\"><span>${this.escape(source.label)}</span></a>`).join("");
+      const sourceList = message.sources.map((source) => `<a class=\"ask-mantosh-source\" href=\"${this.safeUrl(source.url)}\" target=\"_blank\" rel=\"noopener noreferrer\" data-summary=\"${this.escape(source.summary || "Published engineering knowledge") }\"><span>${this.escape(source.label)}</span></a>`).join("");
       meta.insertAdjacentHTML("beforeend", `<section class=\"ask-mantosh-sources\"><h4>Sources</h4><div>${sourceList}</div></section>`);
       const groups = [["Related projects", ["project"]], ["Related articles", ["article"]], ["Related engineering notes", ["note"]]];
       groups.forEach(([title, categories]) => {
         const related = message.sources.filter((source) => categories.includes(source.category));
-        if (related.length) meta.insertAdjacentHTML("beforeend", `<section class=\"ask-mantosh-related\"><h4>${title}</h4><div class=\"ask-mantosh-related-grid\">${related.map((source) => `<a href=\"${this.safeUrl(source.url)}\" class=\"ask-mantosh-related-card\"><span>${this.escape(source.category)}</span><strong>${this.escape(source.title)}</strong><p>${this.escape(source.summary || "Open source")}</p></a>`).join("")}</div></section>`);
+        if (related.length) meta.insertAdjacentHTML("beforeend", `<section class=\"ask-mantosh-related\"><h4>${title}</h4><div class=\"ask-mantosh-related-grid\">${related.map((source) => `<a href=\"${this.safeUrl(source.url)}\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"ask-mantosh-related-card\"><span>${this.escape(source.category)}</span><strong>${this.escape(source.title)}</strong><p>${this.escape(source.summary || "Open source")}</p></a>`).join("")}</div></section>`);
       });
     }
     if (meta.childElementCount) node.append(meta);
@@ -209,8 +220,34 @@ class ConversationView {
 class AskMantoshApp {
   constructor(elements) {
     this.elements = elements; this.messages = []; this.id = 0; this.controller = null;
+    this.storageKey = "ask-mantosh-conversation-v1";
+    this.conversationId = this.newConversationId();
     this.view = new ConversationView({ ...elements, markdown: new MarkdownService() }); this.view.getMessage = (id) => this.messages.find((message) => String(message.id) === String(id));
     this.api = new ChatApi(elements.panel.dataset.apiUrl || window.ASK_MANTOSH_API_URL || "");
+  }
+  newConversationId() { return `web_${crypto.randomUUID().replaceAll("-", "_")}`; }
+  loadSession() {
+    try {
+      const snapshot = JSON.parse(window.sessionStorage.getItem(this.storageKey) || "null");
+      if (!snapshot || !Array.isArray(snapshot.messages)) return false;
+      if (/^[a-zA-Z0-9_-]{16,128}$/.test(snapshot.conversationId || "")) this.conversationId = snapshot.conversationId;
+      this.messages = snapshot.messages.slice(-20)
+        .filter((message) => message && ["user", "assistant"].includes(message.role) && typeof message.text === "string")
+        .map((message) => ({ ...message, sources: Array.isArray(message.sources) ? message.sources : [] }));
+      this.messages.forEach((message) => {
+        if (message.role === "assistant" && !message.text && !message.error) message.error = "The previous response was interrupted. Try again.";
+        this.view.add(message);
+        if (message.role === "assistant") this.view.updateAssistant(message);
+      });
+      this.id = this.messages.reduce((highest, message) => Math.max(highest, Number(message.id) || 0), 0);
+      return this.messages.length > 0;
+    } catch { return false; }
+  }
+  saveSession() {
+    try {
+      const messages = this.messages.slice(-20).map(({ id, role, text, question, sources, error, action }) => ({ id, role, text, question, sources, error, action }));
+      window.sessionStorage.setItem(this.storageKey, JSON.stringify({ conversationId: this.conversationId, messages }));
+    } catch { /* Chat remains usable when storage is unavailable. */ }
   }
   init() {
     const { toggle, close, backdrop, panel, form, input, send, suggestions } = this.elements;
@@ -220,7 +257,8 @@ class AskMantoshApp {
     input.addEventListener("input", () => this.resize()); input.addEventListener("keydown", (event) => { if (event.key === "Enter" && !event.shiftKey) { event.preventDefault(); this.ask(input.value); } });
     document.addEventListener("keydown", (event) => { if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") { event.preventDefault(); this.open(); } if (event.key === "Escape" && !panel.hidden) this.close(); });
     panel.addEventListener("keydown", (event) => this.trapFocus(event));
-    this.view.showEmpty((question) => this.ask(question)); this.resize();
+    if (!this.loadSession()) this.view.showEmpty((question) => this.ask(question));
+    this.resize();
   }
   open() { if (this.elements.panel.hidden) { this.previousFocus = document.activeElement; this.elements.panel.hidden = false; this.elements.backdrop.hidden = false; document.body.classList.add("ask-mantosh-open"); this.elements.toggle.setAttribute("aria-expanded", "true"); requestAnimationFrame(() => this.elements.input.focus()); } }
   close() { if (!this.elements.panel.hidden) { this.elements.panel.hidden = true; this.elements.backdrop.hidden = true; document.body.classList.remove("ask-mantosh-open"); this.elements.toggle.setAttribute("aria-expanded", "false"); this.previousFocus?.focus?.(); } }
@@ -233,7 +271,7 @@ class AskMantoshApp {
     if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
   }
   resize() { const { input, send } = this.elements; input.style.height = "auto"; input.style.height = `${Math.min(input.scrollHeight, 150)}px`; send.disabled = !input.value.trim(); }
-  add(role, text, extra = {}) { const message = { id: ++this.id, role, text, ...extra }; this.messages.push(message); this.view.add(message); return message; }
+  add(role, text, extra = {}) { const message = { id: ++this.id, role, text, ...extra }; this.messages.push(message); this.view.add(message); this.saveSession(); return message; }
   async ask(rawQuestion) {
     const question = rawQuestion.trim(); if (!question) return; this.open();
     if (this.controller) this.controller.abort();
@@ -243,10 +281,12 @@ class AskMantoshApp {
     const render = () => { frameId = 0; this.view.updateAssistant(assistant, { streaming: true }); };
     const cancelPendingRender = () => { if (frameId) { cancelAnimationFrame(frameId); frameId = 0; } };
     try {
-      await this.api.stream(question, controller.signal, (type, data) => {
+      await this.api.stream(question, this.conversationId, controller.signal, (type, data) => {
         if (type === "metadata") {
           assistant.sources = data.sources || [];
           assistant.followUps = data.followUpQuestions || data.suggestedQuestions || [];
+          assistant.action = data.action || null;
+          if (/^[a-zA-Z0-9_-]{16,128}$/.test(data.conversationId || "")) this.conversationId = data.conversationId;
         }
         if (type === "response.output_text.delta") { assistant.text += data.delta || ""; if (!frameId) frameId = requestAnimationFrame(render); }
         if (type === "error") throw new Error(data.message || "The response stream was interrupted.");
@@ -271,6 +311,7 @@ class AskMantoshApp {
     this.view.updateAssistant(message);
     // Keep the reading area clear after an answer. Suggestions belong only to the empty welcome state.
     this.view.setSuggestions([], (question) => this.ask(question));
+    this.saveSession();
     const announcement = message.error ? "Answer unavailable." : "Answer ready.";
     this.view.setStatus(announcement);
     window.setTimeout(() => { if (this.view.status.textContent === announcement) this.view.setStatus(""); }, 2500);

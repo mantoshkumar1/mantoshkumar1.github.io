@@ -76,6 +76,6 @@
     </section>`);
 
   const client = document.createElement("script");
-  client.src = "/assets/js/main.js?v=20260712-10";
+  client.src = "/assets/js/main.js?v=20260713-1";
   document.body.append(client);
 })();
