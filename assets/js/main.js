@@ -209,24 +209,25 @@ class AskMantoshApp {
         if (type === "error") throw new Error(data.message || "The response stream was interrupted.");
       });
       cancelPendingRender();
-      this.finish(assistant, this.controller === controller);
+      this.finish(assistant);
     } catch (error) {
       cancelPendingRender();
-      if (error.name === "AbortError") { assistant.text ||= "Response stopped."; this.finish(assistant, this.controller === controller); }
+      if (error.name === "AbortError") { assistant.text ||= "Response stopped."; this.finish(assistant); }
       else {
         assistant.error = error instanceof TypeError
           ? "Ask Mantosh couldn't be reached. Check your connection and try again."
           : (error.message || "I couldn't answer that right now. Please try again.");
-        this.finish(assistant, this.controller === controller);
+        this.finish(assistant);
       }
     } finally { if (this.controller === controller) { this.controller = null; } }
   }
-  finish(message, applyFollowUps = true) {
+  finish(message) {
     message.followUps = message.followUps?.length ? message.followUps : this.followUps(message.text);
     message.text = this.stripResponseSections(message.text);
     this.view.setStreaming(false);
     this.view.updateAssistant(message);
-    if (applyFollowUps) this.view.setSuggestions(message.followUps, (question) => this.ask(question));
+    // Keep the reading area clear after an answer. Suggestions belong only to the empty welcome state.
+    this.view.setSuggestions([], (question) => this.ask(question));
     const announcement = message.error ? "Answer unavailable." : "Answer ready.";
     this.view.setStatus(announcement);
     window.setTimeout(() => { if (this.view.status.textContent === announcement) this.view.setStatus(""); }, 2500);

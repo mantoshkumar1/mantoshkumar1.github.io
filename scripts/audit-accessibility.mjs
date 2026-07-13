@@ -43,6 +43,8 @@ const widget = await readFile(join(root, "assets/js/ask-mantosh-widget.js"), "ut
 const client = await readFile(join(root, "assets/js/main.js"), "utf8");
 if (!/role=["']dialog["']/.test(widget) || !/aria-modal=["']true["']/.test(widget)) failures.push("Ask Mantosh missing modal dialog semantics");
 if (!client.includes('setAttribute("aria-busy"') || !client.includes('setAttribute("aria-live"')) failures.push("Ask Mantosh missing quiet streaming announcements");
+if (!client.includes("Suggestions belong only to the empty welcome state") || !client.includes("this.view.setSuggestions([], (question) => this.ask(question));")) failures.push("Ask Mantosh must clear suggestion chips after every answer");
+if (/setSuggestions\(message\.followUps/.test(client)) failures.push("Ask Mantosh must not repopulate follow-up chips over the reading area");
 for (const themeFeature of ["mantosh-appearance", "appearance-select", "prefers-color-scheme: light", "localStorage.setItem"]) {
   if (!widget.includes(themeFeature)) failures.push(`appearance control missing ${themeFeature}`);
 }
