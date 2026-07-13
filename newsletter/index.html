@@ -75,9 +75,10 @@
           </form>
 
           <div class="resume-actions">
-            <a class="button primary" href="../feed.xml" type="application/rss+xml">Follow via RSS <span aria-hidden="true">→</span></a>
+            <button class="button secondary" id="copy-rss" type="button">Copy RSS link</button>
             <a class="button secondary" href="../thinking/">Read current insights <span aria-hidden="true">→</span></a>
           </div>
+          <p class="contact-copy-status" id="copy-rss-status" role="status" aria-live="polite"></p>
 
           <section class="resume-section">
             <h2>What you will receive</h2>
@@ -99,6 +100,24 @@
         </article>
       </div>
     </main>
+    <script>
+      const copyRssButton = document.querySelector("#copy-rss");
+      const copyRssStatus = document.querySelector("#copy-rss-status");
+      const rssFeedUrl = new URL("../feed.xml", window.location.href).href;
+
+      copyRssButton.addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText(rssFeedUrl);
+          copyRssButton.textContent = "RSS link copied";
+          copyRssStatus.textContent = "Paste the copied link into your RSS reader.";
+          window.setTimeout(() => {
+            copyRssButton.textContent = "Copy RSS link";
+          }, 1800);
+        } catch {
+          copyRssStatus.textContent = `Copy unavailable. Feed address: ${rssFeedUrl}`;
+        }
+      });
+    </script>
     <script src="/assets/js/ask-mantosh-widget.js?v=20260713-7"></script>
   </body>
 </html>

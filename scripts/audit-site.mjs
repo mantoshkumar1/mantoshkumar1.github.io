@@ -54,6 +54,9 @@ if (!/data-buttondown-status=["']active["']/i.test(newsletterHtml)) { console.er
 if (!/action=["']https:\/\/buttondown\.com\/api\/emails\/embed-subscribe\/mantoshkumar["']/i.test(newsletterHtml)) { console.error("newsletter: missing Buttondown subscription endpoint"); failures += 1; }
 if (!/<input[^>]+type=["']email["'][^>]+name=["']email["'][^>]+required/i.test(newsletterHtml)) { console.error("newsletter: email input must be named and required"); failures += 1; }
 if (!/<input[^>]+type=["']hidden["'][^>]+name=["']embed["'][^>]+value=["']1["']/i.test(newsletterHtml)) { console.error("newsletter: missing Buttondown embed field"); failures += 1; }
+if (/href=["'][^"']*feed\.xml["'][^>]*>\s*Follow via RSS/i.test(newsletterHtml)) { console.error("newsletter: RSS action must not open raw XML in the browser"); failures += 1; }
+if (!/<button[^>]+id=["']copy-rss["'][^>]+type=["']button["'][^>]*>Copy RSS link<\/button>/i.test(newsletterHtml)) { console.error("newsletter: missing independent copy-RSS action"); failures += 1; }
+if (!/id=["']copy-rss-status["'][^>]+role=["']status["'][^>]+aria-live=["']polite["']/i.test(newsletterHtml) || !/navigator\.clipboard\.writeText\(rssFeedUrl\)/.test(newsletterHtml)) { console.error("newsletter: RSS copy action needs accessible confirmation"); failures += 1; }
 const stylesheet = await readFile(join(root, "assets/css/style.css"), "utf8");
 if (/contain-intrinsic-size:\s*auto\s+720px/i.test(stylesheet) || /\.section\s*\{[^}]*content-visibility:\s*auto/is.test(stylesheet)) {
   console.error("stylesheet: homepage sections must not reserve synthetic off-screen height");
