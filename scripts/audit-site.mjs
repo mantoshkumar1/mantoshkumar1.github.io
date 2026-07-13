@@ -60,7 +60,8 @@ if (/contain-intrinsic-size:\s*auto\s+720px/i.test(stylesheet) || /\.section\s*\
   failures += 1;
 }
 const homeHtml = await readFile(join(root, "index.html"), "utf8");
-if (!/Aricent → Cisco → Intel → Siemens → KI Labs → Infinera → Nokia/.test(homeHtml)) { console.error("homepage: career chronology is missing or out of order"); failures += 1; }
+if (!/Aricent → Cisco → Intel → Siemens → KI Labs → Nokia/.test(homeHtml)) { console.error("homepage: career chronology is missing or out of order"); failures += 1; }
+if (/Infinera|acquisition/i.test(homeHtml)) { console.error("homepage: obsolete employer-transition story must stay removed"); failures += 1; }
 if (!/<strong>Staff Software Engineer<\/strong>\s*<span>Toronto<\/span>/.test(homeHtml)) { console.error("homepage: concise role and Toronto location signal is missing"); failures += 1; }
 if (/14\+ years • Toronto, Canada • Canadian citizen/.test(homeHtml)) { console.error("homepage: identity summary must stay concise"); failures += 1; }
 if (!/STAFF \/ PRINCIPAL ENGINEERING • PLATFORM &amp; AUTOMATION/.test(homeHtml)) { console.error("homepage: location-neutral Staff/Principal positioning is missing"); failures += 1; }
@@ -94,7 +95,8 @@ for (const [page, html] of [["systems/index.html", projectsHtml], ["projects/gtt
   if (!/href=["']https:\/\/gtt-calculator\.streamlit\.app\/["'][^>]*>[^<]*(?:Try|live product)/i.test(html)) { console.error(`${page}: GTT live product link is missing`); failures += 1; }
 }
 const experienceHtml = await readFile(join(root, "experience/index.html"), "utf8");
-if (!/Joined Infinera in Canada; the role continues at Nokia after Nokia completed its acquisition of Infinera in 2025\./.test(experienceHtml)) { console.error("experience: Infinera-to-Nokia employment continuity needs an explicit explanation"); failures += 1; }
+if (!/Nokia • Staff Software Engineer/.test(experienceHtml)) { console.error("experience: current Nokia role is missing"); failures += 1; }
+if (/Infinera|acquisition/i.test(experienceHtml)) { console.error("experience: obsolete employer-transition story must stay removed"); failures += 1; }
 if (!/Top 1% nationally in GATE CS &amp; IT, twice/.test(experienceHtml) || !/Technical University of Munich/.test(experienceHtml)) { console.error("experience: concise GATE top-1% result and TUM education must remain visible"); failures += 1; }
 if (/GATE is a prestigious national examination|About GATE/.test(experienceHtml)) { console.error("experience: detailed GATE context belongs in Ask Mantosh, not the scannable highlights list"); failures += 1; }
 if (!/href=["']https:\/\/www\.linkedin\.com\/in\/mantoshk\/details\/recommendations\/["'][^>]*>Read the recommendations on LinkedIn/i.test(experienceHtml)) { console.error("experience: recommendation link must open the dedicated LinkedIn recommendations page"); failures += 1; }
