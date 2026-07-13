@@ -219,7 +219,7 @@ class ConversationView {
 
 class AskMantoshApp {
   constructor(elements) {
-    this.elements = elements; this.messages = []; this.id = 0; this.controller = null;
+    this.elements = elements; this.messages = []; this.id = 0; this.controller = null; this.generation = 0;
     this.storageKey = "ask-mantosh-conversation-v1";
     this.conversationId = this.newConversationId();
     this.view = new ConversationView({ ...elements, markdown: new MarkdownService() }); this.view.getMessage = (id) => this.messages.find((message) => String(message.id) === String(id));
@@ -250,8 +250,8 @@ class AskMantoshApp {
     } catch { /* Chat remains usable when storage is unavailable. */ }
   }
   init() {
-    const { toggle, close, backdrop, panel, form, input, send, suggestions } = this.elements;
-    toggle.addEventListener("click", () => this.open()); close.addEventListener("click", () => this.close()); backdrop.addEventListener("click", () => this.close());
+    const { toggle, minimize, clear, backdrop, panel, form, input, send, suggestions } = this.elements;
+    toggle.addEventListener("click", () => this.open()); minimize.addEventListener("click", () => this.close()); clear.addEventListener("click", () => this.clearConversation()); backdrop.addEventListener("click", () => this.close());
     form.addEventListener("submit", (event) => { event.preventDefault(); this.ask(input.value); });
     suggestions.addEventListener("click", (event) => { const button = event.target.closest("[data-suggestion]"); if (button) this.ask(button.dataset.suggestion); });
     input.addEventListener("input", () => this.resize()); input.addEventListener("keydown", (event) => { if (event.key === "Enter" && !event.shiftKey) { event.preventDefault(); this.ask(input.value); } });
@@ -262,6 +262,14 @@ class AskMantoshApp {
   }
   open() { if (this.elements.panel.hidden) { this.previousFocus = document.activeElement; this.elements.panel.hidden = false; this.elements.backdrop.hidden = false; document.body.classList.add("ask-mantosh-open"); this.elements.toggle.setAttribute("aria-expanded", "true"); requestAnimationFrame(() => this.elements.input.focus()); } }
   close() { if (!this.elements.panel.hidden) { this.elements.panel.hidden = true; this.elements.backdrop.hidden = true; document.body.classList.remove("ask-mantosh-open"); this.elements.toggle.setAttribute("aria-expanded", "false"); this.previousFocus?.focus?.(); } }
+  clearConversation() {
+    if (this.messages.length && !window.confirm("Close Ask Mantosh and clear this conversation?")) return;
+    this.generation += 1;
+    this.controller?.abort(); this.controller = null; this.messages = []; this.id = 0; this.conversationId = this.newConversationId();
+    try { window.sessionStorage.removeItem(this.storageKey); } catch { /* The visible conversation can still be cleared. */ }
+    this.view.nodes.clear(); this.view.setStreaming(false); this.view.setStatus(""); this.view.showEmpty((question) => this.ask(question));
+    this.elements.input.value = ""; this.resize(); this.close();
+  }
   trapFocus(event) {
     if (event.key !== "Tab") return;
     const focusable = [...this.elements.panel.querySelectorAll("button:not([disabled]), a[href], textarea:not([disabled])")];
@@ -275,6 +283,7 @@ class AskMantoshApp {
   async ask(rawQuestion) {
     const question = rawQuestion.trim(); if (!question) return; this.open();
     if (this.controller) this.controller.abort();
+    const generation = this.generation;
     const user = this.add("user", question); const assistant = this.add("assistant", "", { question, sources: [] });
     this.elements.input.value = ""; this.resize(); this.view.setSuggestions([], () => this.ask()); this.view.setStreaming(true); this.view.setStatus("Searching published engineering knowledge…");
     const controller = new AbortController(); this.controller = controller; let frameId = 0;
@@ -282,6 +291,7 @@ class AskMantoshApp {
     const cancelPendingRender = () => { if (frameId) { cancelAnimationFrame(frameId); frameId = 0; } };
     try {
       await this.api.stream(question, this.conversationId, controller.signal, (type, data) => {
+        if (generation !== this.generation) return;
         if (type === "metadata") {
           assistant.sources = data.sources || [];
           assistant.followUps = data.followUpQuestions || data.suggestedQuestions || [];
@@ -295,6 +305,7 @@ class AskMantoshApp {
       this.finish(assistant);
     } catch (error) {
       cancelPendingRender();
+      if (generation !== this.generation) return;
       if (error.name === "AbortError") { assistant.text ||= "Response stopped."; this.finish(assistant); }
       else {
         assistant.error = error instanceof TypeError
@@ -323,7 +334,7 @@ class AskMantoshApp {
 const initializeAskMantosh = () => {
   document.querySelector("[data-year]")?.replaceChildren(String(new Date().getFullYear()));
   const byId = (id) => document.getElementById(id);
-  const elements = { toggle: byId("ask-mantosh-toggle"), close: byId("ask-mantosh-close"), backdrop: byId("ask-mantosh-backdrop"), panel: byId("ask-mantosh-panel"), form: byId("ask-mantosh-form"), input: byId("ask-mantosh-input"), send: byId("ask-mantosh-send"), messages: byId("ask-mantosh-messages"), suggestions: byId("ask-mantosh-suggestions"), jump: byId("ask-mantosh-jump"), status: byId("ask-mantosh-status") };
+  const elements = { toggle: byId("ask-mantosh-toggle"), minimize: byId("ask-mantosh-minimize"), clear: byId("ask-mantosh-clear"), backdrop: byId("ask-mantosh-backdrop"), panel: byId("ask-mantosh-panel"), form: byId("ask-mantosh-form"), input: byId("ask-mantosh-input"), send: byId("ask-mantosh-send"), messages: byId("ask-mantosh-messages"), suggestions: byId("ask-mantosh-suggestions"), jump: byId("ask-mantosh-jump"), status: byId("ask-mantosh-status") };
   if (Object.values(elements).every(Boolean)) {
     const app = new AskMantoshApp(elements);
     app.init();

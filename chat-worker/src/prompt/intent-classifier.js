@@ -31,8 +31,9 @@ export function responseModeInstructions(intent) {
     return [
       "Visitor intent: explicitly understand Mantosh's verified achievements, awards, education, or career story.",
       "Use these headings in this order: `## Highlights`, `## Context`, `## Sources`, `## Follow-up Questions`.",
-      "Use at most three concise highlight bullets. Explain context without hype, ranking inflation, or implying that an achievement proves role suitability.",
-      "Keep the answer body before Sources under 140 words. Include only achievements explicitly supported by retrieved documents."
+      "Use at most three concise highlight bullets. For a question about one achievement, use one direct highlight and at most one context sentence.",
+      "Explain context without hype, ranking inflation, or implying that an achievement proves role suitability. Explain GATE's prestige or exam administration only when the visitor explicitly asks what GATE is or why it matters.",
+      "Keep the answer body before Sources under 90 words. Include only achievements explicitly supported by retrieved documents."
     ].join("\n");
   }
   if (intent === "profile") {

@@ -2,7 +2,7 @@
 (() => {
   const themeKey = "mantosh-appearance";
   const supportedThemes = new Set(["auto", "light", "dark", "soft", "contrast"]);
-  let savedTheme = "auto";
+  let savedTheme = "dark";
   try {
     const storedTheme = window.localStorage.getItem(themeKey);
     if (supportedThemes.has(storedTheme)) savedTheme = storedTheme;
@@ -64,7 +64,10 @@
           <div class="ask-mantosh-identity"><span class="ask-mantosh-presence" aria-hidden="true"></span><div><p class="ask-mantosh-eyebrow">PUBLISHED KNOWLEDGE</p><h2 id="ask-mantosh-title">Ask Mantosh</h2></div></div>
           <p id="ask-mantosh-description">Evidence-backed answers from Mantosh's projects, experience, and engineering writing.</p>
         </div>
-        <button class="ask-mantosh-close" id="ask-mantosh-close" type="button" aria-label="Minimize Ask Mantosh; conversation will remain available" title="Minimize — conversation stays here"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 12h12"></path></svg></button>
+        <div class="ask-mantosh-header-actions">
+          <button class="ask-mantosh-close" id="ask-mantosh-minimize" type="button" aria-label="Minimize Ask Mantosh; conversation will remain available" title="Minimize — conversation stays here"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 12h12"></path></svg></button>
+          <button class="ask-mantosh-close ask-mantosh-clear" id="ask-mantosh-clear" type="button" aria-label="Close Ask Mantosh and clear conversation" title="Close and clear conversation"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M7 7l10 10M17 7L7 17"></path></svg></button>
+        </div>
       </div>
       <div class="ask-mantosh-body">
         <div class="ask-mantosh-conversation"><div class="ask-mantosh-messages" id="ask-mantosh-messages" role="log" aria-live="polite" aria-relevant="additions text" aria-label="Ask Mantosh conversation"></div><button class="ask-mantosh-jump" id="ask-mantosh-jump" type="button" hidden>Jump to latest</button></div>
@@ -76,6 +79,6 @@
     </section>`);
 
   const client = document.createElement("script");
-  client.src = "/assets/js/main.js?v=20260713-2";
+  client.src = "/assets/js/main.js?v=20260713-3";
   document.body.append(client);
 })();

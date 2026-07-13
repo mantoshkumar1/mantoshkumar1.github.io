@@ -995,6 +995,12 @@ body.ask-mantosh-open {
   line-height: 1.5;
 }
 
+.ask-mantosh-header-actions {
+  display: flex;
+  flex: 0 0 auto;
+  gap: .4rem;
+}
+
 .ask-mantosh-close {
   display: inline-flex;
   align-items: center;
@@ -1017,6 +1023,13 @@ body.ask-mantosh-open {
   background: rgba(59, 130, 246, 0.12);
   color: #fff;
   outline: none;
+}
+
+.ask-mantosh-clear:hover,
+.ask-mantosh-clear:focus-visible {
+  border-color: #f87171;
+  background: rgba(248, 113, 113, .12);
+  color: #fecaca;
 }
 
 .ask-mantosh-close svg {

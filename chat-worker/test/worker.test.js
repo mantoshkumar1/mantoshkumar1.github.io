@@ -385,8 +385,10 @@ test("gives explicit achievement questions a concise non-promotional response co
   assert.match(prompt.input, /<response_mode intent="achievement">/);
   assert.match(prompt.input, /## Highlights/);
   assert.match(prompt.input, /at most three concise highlight bullets/i);
+  assert.match(prompt.input, /one direct highlight and at most one context sentence/i);
+  assert.match(prompt.input, /prestige or exam administration only when the visitor explicitly asks/i);
   assert.match(prompt.input, /without hype/i);
-  assert.match(prompt.input, /under 140 words/i);
+  assert.match(prompt.input, /under 90 words/i);
   const followUps = new RecommendationEngine(null, {}).followUpQuestions({ sources: [], intent: "achievement" });
   assert.deepEqual(followUps, [
     "What was Mantosh's GATE result?",

@@ -51,7 +51,8 @@ for (const feature of ["prefers-color-scheme: light", "prefers-reduced-motion", 
 const widget = await readFile(join(root, "assets/js/ask-mantosh-widget.js"), "utf8");
 const client = await readFile(join(root, "assets/js/main.js"), "utf8");
 if (!/role=["']dialog["']/.test(widget) || !/aria-modal=["']true["']/.test(widget)) failures.push("Ask Mantosh missing modal dialog semantics");
-if (!/aria-label=["']Minimize Ask Mantosh; conversation will remain available["']/.test(widget) || /aria-label=["']Close Ask Mantosh["']/.test(widget)) failures.push("Ask Mantosh must present conversation-preserving minimization instead of destructive close semantics");
+if (!/id=["']ask-mantosh-minimize["'][^>]+aria-label=["']Minimize Ask Mantosh; conversation will remain available["']/.test(widget)) failures.push("Ask Mantosh needs an explicit conversation-preserving minimize control");
+if (!/id=["']ask-mantosh-clear["'][^>]+aria-label=["']Close Ask Mantosh and clear conversation["']/.test(widget)) failures.push("Ask Mantosh needs an explicit close-and-clear control");
 if (!client.includes('setAttribute("aria-busy"') || !client.includes('setAttribute("aria-live"')) failures.push("Ask Mantosh missing quiet streaming announcements");
 if (!client.includes("renderBasic(markdown, target)") || !client.includes("this.renderBasic(markdown, target);")) failures.push("Ask Mantosh missing immediate safe Markdown fallback");
 if (!client.includes('stripResponseSections(text) { return text.replace(/\\n*##\\s+(?:Sources|Follow-up Questions)')) failures.push("Ask Mantosh must remove source and follow-up payloads from the reading pane");
@@ -60,11 +61,15 @@ if (/setSuggestions\(message\.followUps/.test(client)) failures.push("Ask Mantos
 for (const historyFeature of ["ask-mantosh-conversation-v1", "window.sessionStorage.getItem", "window.sessionStorage.setItem", "conversationId", 'contentType.includes("application/json")']) {
   if (!client.includes(historyFeature)) failures.push(`Ask Mantosh recovery flow missing ${historyFeature}`);
 }
+for (const clearFeature of ["clearConversation()", "window.sessionStorage.removeItem", "this.view.nodes.clear()", "this.generation += 1", "window.confirm"]) {
+  if (!client.includes(clearFeature)) failures.push(`Ask Mantosh close-and-clear flow missing ${clearFeature}`);
+}
 if (!/ask-mantosh-related-card[^`]*target=\\"_blank\\"|target=\\"_blank\\"[^`]*ask-mantosh-related-card/.test(client)) failures.push("Ask Mantosh related links must preserve the current conversation tab");
 if (!/message\.action\?\.type === "navigate"/.test(client)) failures.push("Ask Mantosh must render direct navigation responses without crashing");
 for (const themeFeature of ["mantosh-appearance", "appearance-select", "prefers-color-scheme: light", "localStorage.setItem", 'value="soft"', 'value="contrast"']) {
   if (!widget.includes(themeFeature)) failures.push(`appearance control missing ${themeFeature}`);
 }
+if (!/let savedTheme = ["']dark["']/.test(widget)) failures.push("Dark must be the first-visit default appearance");
 if (!widget.includes('<option value="contrast">Contrast</option>')) failures.push("mobile appearance control needs a compact contrast label");
 for (const themeSelector of ['html[data-theme="soft"]', 'html[data-theme="contrast"]']) {
   if (!css.includes(themeSelector)) failures.push(`stylesheet missing ${themeSelector}`);
