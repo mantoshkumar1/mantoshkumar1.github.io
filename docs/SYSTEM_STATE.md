@@ -44,7 +44,7 @@ flowchart LR
   G --> A
 ```
 
-The chat UI streams the response, sanitizes rendered Markdown, presents canonical source chips, preserves server-provided follow-up questions, supports retry/copy actions, traps focus, closes through its button, backdrop, or Escape key, and reports a clear recovery message when the service cannot be reached.
+The chat UI streams the response, sanitizes rendered Markdown, presents canonical source chips, preserves server-provided follow-up questions, supports retry/copy actions, traps focus, closes through its button, backdrop, or Escape key, and reports a clear recovery message when the service cannot be reached. Subjective praise or skepticism is answered as opinion followed by concise published evidence. If the model omits its Sources section, the Worker inserts the canonical retrieved source rather than exposing an internal citation-formatting failure.
 
 ## Knowledge publication flow
 
@@ -92,7 +92,7 @@ The repository currently enforces:
 - internal link, fragment, and asset validation;
 - documentation drift checks;
 - autonomous content-lane counts and explicit zero-content states;
-- 34 Worker contract, security, quota, OIDC, retrieval, concise intent-formatting, prompt, and failure-path tests, plus static UI guards for immediate safe Markdown rendering.
+- 36 Worker contract, security, quota, OIDC, retrieval, concise intent-formatting, prompt, citation-repair, and failure-path tests, plus static UI guards for immediate safe Markdown rendering.
 
 ## Known limits
 

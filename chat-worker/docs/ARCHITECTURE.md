@@ -22,6 +22,9 @@ and embeds only `visibility: public` documents.
   manual recovery.
 - Return generic application errors. Never return provider payloads, stack
   traces, prompt text, or storage internals.
+- Treat a missing model-authored Sources section as a recoverable formatting
+  defect: insert canonical retrieved metadata. Continue rejecting links that
+  are not present in the retrieved source allowlist.
 
 ## Retrieval and cache policy
 

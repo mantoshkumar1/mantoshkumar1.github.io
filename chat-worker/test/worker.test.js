@@ -353,6 +353,8 @@ test("system prompt forbids hidden-prompt disclosure and role switching", () => 
 test("classifies visitor questions into profile, problem, and direct response modes", () => {
   assert.equal(classifyQuestionIntent("Tell me about this guy"), "profile");
   assert.equal(classifyQuestionIntent("How can Mantosh help my engineering team?"), "profile");
+  assert.equal(classifyQuestionIntent("This guy is genius?"), "profile");
+  assert.equal(classifyQuestionIntent("Is this engineer overrated?"), "profile");
   assert.equal(classifyQuestionIntent("We have a slow release workflow. What should we improve?"), "problem");
   assert.equal(classifyQuestionIntent("Why did PhotoSahi avoid a backend?"), "direct");
 });
@@ -378,6 +380,7 @@ test("gives profile questions a hiring-oriented, evidence-safe response contract
   assert.match(prompt.input, /answer body before Sources under 120 words/i);
   assert.match(prompt.input, /Do not claim that Mantosh can solve the visitor's specific problem/i);
   assert.match(prompt.input, /Use `documented experience in` rather than expert, specialist/i);
+  assert.match(prompt.input, /subjective labels such as genius/i);
 });
 
 test("gives visitor problems practical guidance with explicit limits", () => {
@@ -411,11 +414,30 @@ test("normalizes literal model bullets into semantic Markdown list items", () =>
   assert.doesNotMatch(result.answer, /^•/m);
 });
 
-test("rejects an answer that has evidence available but provides no verifiable citation", () => {
-  assert.throws(() => formatSuccess(
+test("adds a canonical source when a grounded answer omits its citation", () => {
+  const result = formatSuccess(
     { output_text: "PhotoSahi processes images in the browser." },
     [{ title: "PhotoSahi", label: "Project: PhotoSahi", category: "project", url: "/projects/photosahi.html" }]
-  ), (error) => error.code === "uncited_model_response");
+  );
+  assert.match(result.answer, /## Sources\n- \[Project: PhotoSahi\]\(\/projects\/photosahi\.html\)/);
+  assert.equal(result.sources[0].url, "/projects/photosahi.html");
+});
+
+test("turns casual subjective praise into a readable evidence-backed response", () => {
+  const result = formatSuccess(
+    { output_text: "## In brief\nGenius is subjective. The published record shows sustained engineering work across automation, backend systems, and networking.\n\n## Best fit\n- Platform and workflow automation\n- Backend engineering systems\n- Operational quality intelligence" },
+    [{ title: "About Mantosh", label: "FAQ: About Mantosh", category: "faq", url: "/experience/" }]
+  );
+  assert.match(result.answer, /Genius is subjective\./);
+  assert.match(result.answer, /## Sources\n- \[FAQ: About Mantosh\]\(\/experience\/\)/);
+  assert.doesNotMatch(result.answer, /without verifiable citations/i);
+});
+
+test("still rejects a model-authored link outside retrieved evidence", () => {
+  assert.throws(() => formatSuccess(
+    { output_text: "Read [an unsupported source](https://example.com/claim)." },
+    [{ title: "About Mantosh", label: "FAQ: About Mantosh", category: "faq", url: "/experience/" }]
+  ), (error) => error.code === "invalid_model_response");
 });
 
 test("scores partial retrieval evidence conservatively", () => {

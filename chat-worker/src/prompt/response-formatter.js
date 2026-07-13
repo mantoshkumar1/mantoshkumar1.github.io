@@ -54,7 +54,12 @@ function canonicalizeSourceSection(answer, sources) {
   if (!sourceLines.length) return answer;
   const sourcesSection = /^##\s+Sources\s*$[\s\S]*?(?=^##\s+Follow-up Questions\s*$|(?![\s\S]))/im;
   const canonical = `## Sources\n${sourceLines.join("\n")}\n\n`;
-  return sourcesSection.test(answer) ? answer.replace(sourcesSection, canonical) : answer;
+  if (sourcesSection.test(answer)) return answer.replace(sourcesSection, canonical);
+  if (sources.some((source) => source.url && answer.includes(`](${source.url})`))) return answer;
+  const followUpHeading = /^##\s+Follow-up Questions\s*$/im;
+  const followUp = followUpHeading.exec(answer);
+  if (followUp) return `${answer.slice(0, followUp.index).trimEnd()}\n\n${canonical}${answer.slice(followUp.index)}`;
+  return `${answer.trimEnd()}\n\n${canonical.trimEnd()}`;
 }
 
 function citedSources(answer, sources) {

@@ -10,11 +10,11 @@ incidental wording edits.
 | --- | --- |
 | `system-prompt.js` | Durable identity, evidence, citation, voice, and output rules. |
 | `prompt-builder.js` | Encodes the visitor question as data, selects a visitor-centered response mode, deduplicates chunks, and builds model input. |
-| `intent-classifier.js` | Deterministically selects profile, problem-guidance, or direct-answer formatting without weakening retrieval or evidence rules. |
+| `intent-classifier.js` | Deterministically selects profile, subjective-profile, problem-guidance, or direct-answer formatting without weakening retrieval or evidence rules. |
 | `guardrails.js` | XML escaping, answerability gating, and the canonical unavailable response. |
 | `confidence-scorer.js` | Conservative retrieval-evidence score: `high`, `medium`, or `low`. |
 | `citation-builder.js` | Canonical source labels, URLs, and deduplication. |
-| `response-formatter.js` | Stable response with sources, related content, follow-ups, and confidence. |
+| `response-formatter.js` | Stable response with canonical sources, related content, follow-ups, and confidence; safely repairs an omitted Sources section from retrieved metadata. |
 
 ## Prompt builder
 
@@ -29,7 +29,7 @@ The builder has five durable layers:
    and public URL; the final Sources section is deduplicated.
 5. **Response template** — a compact Markdown structure that omits unsupported
    sections, preserves technical categories, deduplicates sources, and ends with
-   exactly three evidence-grounded follow-up questions. Profile questions use a concise hiring-oriented structure, stated visitor problems receive practical but explicitly bounded guidance, and direct questions receive a compact answer rather than a generic report.
+   exactly three evidence-grounded follow-up questions. Profile questions use a concise hiring-oriented structure; subjective praise or skepticism is acknowledged as opinion and redirected to published evidence; stated visitor problems receive practical but explicitly bounded guidance; and direct questions receive a compact answer rather than a generic report.
 
 ## Hallucination prevention rules
 
@@ -43,6 +43,9 @@ The builder has five durable layers:
   response, not a qualified guess.
 - The Worker, not the model, returns the canonical structured source objects and
   their clickable URLs.
+- If a grounded model answer omits its Sources section, the Worker inserts the
+  canonical retrieved source instead of exposing an internal formatting error.
+  Unknown or unsafe URLs remain rejected.
 
 ## Confidence strategy
 
@@ -64,7 +67,8 @@ model certainty.
 ## Citation and follow-up strategy
 
 Each context document carries a source label and public URL. The model renders
-them as Markdown links; the Worker also returns the same URLs in `sources` for
+them as Markdown links; when it omits the section, the Worker inserts a canonical
+retrieved source. The Worker also returns the same URLs in `sources` for
 the frontend. Follow-up questions are generated deterministically from
 retrieved public metadata and returned in both `followUpQuestions` and the
 backward-compatible `suggestedQuestions` API field. The frontend preserves that
