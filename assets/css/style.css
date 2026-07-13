@@ -1570,6 +1570,14 @@ nav .nav-cta:not([aria-current="page"]):focus-visible {
   padding: clamp(4.5rem, 8vw, 7rem) 0;
 }
 
+#home > .section {
+  padding-block: clamp(3.4rem, 5.8vw, 5rem);
+}
+
+#home > .section .section-title {
+  margin-bottom: clamp(1.5rem, 3vw, 2.2rem);
+}
+
 .alt-section {
   border-top: 1px solid rgba(255,255,255,.045);
   border-bottom: 1px solid rgba(255,255,255,.035);
@@ -1682,6 +1690,30 @@ nav .nav-cta:not([aria-current="page"]):focus-visible {
   transform: translateY(-3px);
   border-color: rgba(112,171,255,.28);
   box-shadow: 0 20px 48px rgba(0,0,0,.16);
+}
+
+.timeline-link-card {
+  display: flex;
+  min-height: 160px;
+  flex-direction: column;
+  color: var(--text);
+}
+
+.timeline-link-card > span {
+  margin-top: auto;
+  padding-top: 1rem;
+  color: #82b6ff;
+  font-size: .88rem;
+  font-weight: 700;
+}
+
+.timeline-block[id] {
+  scroll-margin-top: 6rem;
+}
+
+.timeline-block[id]:target {
+  border-color: rgba(112,171,255,.55);
+  box-shadow: 0 0 0 3px rgba(74,139,244,.14), 0 20px 48px rgba(0,0,0,.16);
 }
 
 .conversion-card {
@@ -1892,6 +1924,10 @@ nav .nav-cta:not([aria-current="page"]):focus-visible {
 
   .section {
     padding-block: 4.25rem;
+  }
+
+  #home > .section {
+    padding-block: 3.25rem;
   }
 
   .resume-card,
