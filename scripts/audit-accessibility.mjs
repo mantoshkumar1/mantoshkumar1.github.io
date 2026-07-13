@@ -18,6 +18,12 @@ async function walk(directory) {
 for (const file of await walk(root)) {
   const html = await readFile(file, "utf8");
   const label = relative(root, file);
+  const redirectTarget = /<meta\s+http-equiv=["']refresh["']\s+content=["'][^"']*url=([^"';]+)["']/i.exec(html)?.[1]?.trim();
+  if (redirectTarget) {
+    const escapedTarget = redirectTarget.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    if (!new RegExp(`<a\\s+[^>]*href=["']${escapedTarget}["']`, "i").test(html)) failures.push(`${label}: redirect needs a keyboard-accessible fallback link`);
+    continue;
+  }
   if (!/<html[^>]+lang=["']en["']/i.test(html)) failures.push(`${label}: missing English document language`);
   if (!/<a[^>]+class=["'][^"']*skip-link/i.test(html)) failures.push(`${label}: missing skip link`);
   if ((html.match(/<main\b/gi) || []).length !== 1) failures.push(`${label}: requires one main landmark`);

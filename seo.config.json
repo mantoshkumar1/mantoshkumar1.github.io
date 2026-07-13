@@ -28,13 +28,15 @@
       "title": "Redirecting to Projects | Mantosh Kumar",
       "description": "Redirecting to the engineering projects archive.",
       "kind": "page",
-      "noindex": true
+      "noindex": true,
+      "canonicalPath": "/projects/"
     },
     "/insights/": {
       "title": "Redirecting to Insights | Mantosh Kumar",
       "description": "Redirecting to the engineering insights archive.",
       "kind": "page",
-      "noindex": true
+      "noindex": true,
+      "canonicalPath": "/thinking/"
     },
     "/thinking/": {
       "title": "Engineering Insights & Philosophy | Mantosh Kumar",

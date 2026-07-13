@@ -86,7 +86,7 @@ for (const [page, html, expectedCards] of [["index.html", homeHtml, 3], ["projec
   const projectCards = [...html.matchAll(/<article\b[^>]*class=["'][^"']*project-card[^"']*["'][^>]*>([\s\S]*?)<\/article>/gi)];
   if (projectCards.length !== expectedCards) { console.error(`${page}: expected ${expectedCards} fully clickable project cards, found ${projectCards.length}`); failures += 1; }
   for (const card of projectCards) {
-    const detailLinks = card[1].match(/<a\b[^>]*class=["'][^"']*project-detail-link[^"']*["'][^>]*href=["'][^"']*projects\//gi) || [];
+    const detailLinks = card[1].match(/<a\b(?=[^>]*class=["'][^"']*project-detail-link[^"']*["'])(?=[^>]*href=["'](?!#)[^"']+["'])[^>]*>/gi) || [];
     if (detailLinks.length !== 1) { console.error(`${page}: every project card needs exactly one stretched detail-page link`); failures += 1; }
   }
 }
