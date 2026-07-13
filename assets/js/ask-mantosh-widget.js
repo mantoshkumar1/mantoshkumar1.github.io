@@ -28,7 +28,7 @@
           <option value="light">Light</option>
           <option value="dark">Dark</option>
           <option value="soft">Soft</option>
-          <option value="contrast">High contrast</option>
+          <option value="contrast">Contrast</option>
         </select>
       </label>`);
     const select = document.getElementById("appearance-select");

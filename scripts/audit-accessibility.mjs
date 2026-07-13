@@ -65,11 +65,15 @@ if (!/message\.action\?\.type === "navigate"/.test(client)) failures.push("Ask M
 for (const themeFeature of ["mantosh-appearance", "appearance-select", "prefers-color-scheme: light", "localStorage.setItem", 'value="soft"', 'value="contrast"']) {
   if (!widget.includes(themeFeature)) failures.push(`appearance control missing ${themeFeature}`);
 }
+if (!widget.includes('<option value="contrast">Contrast</option>')) failures.push("mobile appearance control needs a compact contrast label");
 for (const themeSelector of ['html[data-theme="soft"]', 'html[data-theme="contrast"]']) {
   if (!css.includes(themeSelector)) failures.push(`stylesheet missing ${themeSelector}`);
 }
 for (const selector of ['html[data-theme="light"] .hero h1', 'html[data-theme="light"] .hero-description', 'html[data-theme="soft"] .hero h1', 'html[data-theme="soft"] .hero-description', 'html:not([data-theme]) .hero h1', 'html:not([data-theme]) .hero-description']) {
   if (!css.includes(selector)) failures.push(`appearance mode missing legible hero treatment: ${selector}`);
+}
+for (const mobileNavigationRule of ['nav > a[aria-current="page"]', 'nav > .appearance-control']) {
+  if (!css.includes(mobileNavigationRule)) failures.push(`mobile navigation must prioritize ${mobileNavigationRule}`);
 }
 
 if (failures.length) {

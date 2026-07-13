@@ -1970,6 +1970,14 @@ nav .nav-cta:not([aria-current="page"]):focus-visible {
     max-width: 66vw;
   }
 
+  nav > a[aria-current="page"] {
+    order: -2;
+  }
+
+  nav > .appearance-control {
+    order: -1;
+  }
+
   nav a {
     font-size: .8rem;
   }
@@ -2404,6 +2412,7 @@ html[data-theme="contrast"] .appearance-control select { border-color: #fff; bac
 
 @media (max-width: 640px) {
   .appearance-control select {
+    width: 7.25rem;
     min-width: 4.9rem;
     font-size: .8rem;
   }

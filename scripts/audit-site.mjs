@@ -1,4 +1,4 @@
-import { access, readFile } from "node:fs/promises";
+import { access, readFile, stat } from "node:fs/promises";
 import { join, resolve } from "node:path";
 
 const root = resolve(import.meta.dirname, "..");
@@ -16,6 +16,7 @@ for (const page of pages) {
   if ((html.match(/<h1\b/gi) || []).length !== 1) { console.error(`${page}: requires exactly one h1`); failures += 1; }
   if (!/class=["'][^"']*logo[^"']*["'][^>]+aria-label=["']Mantosh Kumar — Home["']/i.test(html)) { console.error(`${page}: logo must provide an explicit home affordance`); failures += 1; }
   if (!/ask-mantosh-widget\.js/i.test(html)) { console.error(`${page}: missing shared Ask Mantosh launcher`); failures += 1; }
+  if (/href=["']\.\.\/#systems["']/i.test(html)) { console.error(`${page}: Projects navigation must open the complete project catalog`); failures += 1; }
   if (/adapted from (?:a|the) public LinkedIn (?:post|reflection)/i.test(html)) { console.error(`${page}: LinkedIn provenance must identify Mantosh as the post author`); failures += 1; }
   if (/(?:All|Browse all|Inspect public) systems/i.test(html)) { console.error(`${page}: contains obsolete visitor-facing systems label`); failures += 1; }
   const version = /style\.css\?v=([\w-]+)/i.exec(html)?.[1];
@@ -30,9 +31,13 @@ if (new Set(stylesheetVersions.values()).size !== 1) {
   console.error(`stylesheet cache versions differ: ${[...stylesheetVersions].map(([page, version]) => `${page}=${version}`).join(", ")}`);
   failures += 1;
 }
-for (const asset of ["favicon.svg", "favicon.ico", "assets/seo/social-default.png", "apple-touch-icon.png", "assets/icons/icon-192.png", "assets/icons/icon-512.png", "site.webmanifest", "sitemap.xml"]) {
+for (const asset of ["favicon.svg", "favicon.ico", "assets/seo/social-default.jpg", "apple-touch-icon.png", "assets/icons/icon-192.png", "assets/icons/icon-512.png", "site.webmanifest", "sitemap.xml"]) {
   try { await access(join(root, asset)); } catch { console.error(`missing required asset: ${asset}`); failures += 1; }
 }
+try {
+  const socialImage = await stat(join(root, "assets/seo/social-default.jpg"));
+  if (socialImage.size > 200_000) { console.error("social preview image must remain below 200 KB"); failures += 1; }
+} catch { /* Missing asset is reported above. */ }
 const newsletterHtml = await readFile(join(root, "newsletter/index.html"), "utf8");
 if (!/data-buttondown-status=["']active["']/i.test(newsletterHtml)) { console.error("newsletter: missing active Buttondown status"); failures += 1; }
 if (!/action=["']https:\/\/buttondown\.com\/api\/emails\/embed-subscribe\/mantoshkumar["']/i.test(newsletterHtml)) { console.error("newsletter: missing Buttondown subscription endpoint"); failures += 1; }
