@@ -51,6 +51,12 @@ for (const region of ["india", "germany", "canada"]) {
 }
 if (/View (?:India|Germany|Canada) experience/i.test(homeHtml)) { console.error("homepage: regional cards must not repeat verbose link labels"); failures += 1; }
 if (/class=["'][^"']*section-link[^"']*["'][^>]*>\s*View Experience/i.test(homeHtml)) { console.error("homepage: redundant View Experience link must stay removed"); failures += 1; }
+if (!/href=["']systems\/["'][^>]*>View all projects/i.test(homeHtml)) { console.error("homepage: selected projects need a scalable route to the complete portfolio"); failures += 1; }
+const projectsHtml = await readFile(join(root, "systems/index.html"), "utf8");
+const gttHtml = await readFile(join(root, "projects/gtt-price-calculator.html"), "utf8");
+for (const [page, html] of [["systems/index.html", projectsHtml], ["projects/gtt-price-calculator.html", gttHtml]]) {
+  if (!/href=["']https:\/\/gtt-calculator\.streamlit\.app\/["'][^>]*>[^<]*(?:Try|live product)/i.test(html)) { console.error(`${page}: GTT live product link is missing`); failures += 1; }
+}
 const experienceHtml = await readFile(join(root, "experience/index.html"), "utf8");
 if (!/Joined Infinera in Canada; the role continues at Nokia after Nokia completed its acquisition of Infinera in 2025\./.test(experienceHtml)) { console.error("experience: Infinera-to-Nokia employment continuity needs an explicit explanation"); failures += 1; }
 if (!/Top 1% nationally in GATE Computer Science &amp; Information Technology, twice/.test(experienceHtml) || !/Technical University of Munich/.test(experienceHtml)) { console.error("experience: GATE top-1% result and TUM admission context must remain visible"); failures += 1; }

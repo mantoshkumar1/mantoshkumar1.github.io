@@ -63,7 +63,8 @@
             <h1>GTT Trigger Price Calculator</h1>
             <p>Enter a stock's current price to prepare candidate buy and sell trigger prices before placing a GTT order with your broker.</p>
             <div class="resume-actions">
-              <a class="button primary" href="https://github.com/mantoshkumar1/gtt-price-calculator" target="_blank" rel="noreferrer">Inspect source on GitHub <span aria-hidden="true">↗</span></a>
+              <a class="button primary" href="https://gtt-calculator.streamlit.app/" target="_blank" rel="noreferrer">Try the live product <span aria-hidden="true">↗</span></a>
+              <a class="button secondary" href="https://github.com/mantoshkumar1/gtt-price-calculator" target="_blank" rel="noreferrer">Inspect source <span aria-hidden="true">↗</span></a>
               <a class="button secondary" href="../systems/">All projects</a>
             </div>
           </header>
@@ -99,7 +100,7 @@
               <li>Broker rules and allowed tick sizes can change; the repository contains hard-coded assumptions rather than a versioned authoritative rules source.</li>
               <li>The public repository contains no automated tests, so boundary values and rounding behavior are not protected against regression.</li>
               <li><code>requirements.txt</code> names Streamlit without pinning a version, which weakens reproducibility.</li>
-              <li>The configured Streamlit URL redirected to an authentication flow during this review, so this page links to the inspectable source rather than promising an accessible live demo.</li>
+              <li>The hosted Streamlit app currently redirects through Streamlit authentication, so some visitors may be asked to sign in before using it.</li>
               <li>This utility is not financial advice and does not guarantee that a broker will accept a calculated value.</li>
             </ul>
             <p class="evidence-note"><strong>Evidence:</strong> public source, README, license, and repository metadata reviewed July 12, 2026. No claims are made about trading outcomes, usage, current broker-policy accuracy, or production scale.</p>
