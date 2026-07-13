@@ -68,6 +68,9 @@ for (const themeFeature of ["mantosh-appearance", "appearance-select", "prefers-
 for (const themeSelector of ['html[data-theme="soft"]', 'html[data-theme="contrast"]']) {
   if (!css.includes(themeSelector)) failures.push(`stylesheet missing ${themeSelector}`);
 }
+for (const selector of ['html[data-theme="light"] .hero h1', 'html[data-theme="light"] .hero-description', 'html[data-theme="soft"] .hero h1', 'html[data-theme="soft"] .hero-description', 'html:not([data-theme]) .hero h1', 'html:not([data-theme]) .hero-description']) {
+  if (!css.includes(selector)) failures.push(`appearance mode missing legible hero treatment: ${selector}`);
+}
 
 if (failures.length) {
   console.error(failures.join("\n"));

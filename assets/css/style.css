@@ -2246,6 +2246,9 @@ html[data-theme="light"] body {
 
 html[data-theme="light"] body::before { background-image: radial-gradient(rgba(15,23,42,.045) .6px, transparent .6px); }
 html[data-theme="light"] .navbar { background: rgba(247,248,251,.82); border-bottom-color: rgba(15,23,42,.1); box-shadow: 0 10px 35px rgba(30,41,59,.08); }
+html[data-theme="light"] .hero .eyebrow { color: var(--primary); }
+html[data-theme="light"] .hero h1 { color: var(--text); text-shadow: none; }
+html[data-theme="light"] .hero-description { color: var(--muted); }
 html[data-theme="light"] nav a:hover,
 html[data-theme="light"] nav a:focus-visible,
 html[data-theme="light"] nav a[aria-current="page"] { background: rgba(7,95,189,.1); }
@@ -2288,6 +2291,9 @@ html[data-theme="soft"] {
 html[data-theme="soft"] body { background: radial-gradient(circle at 12% 0%, rgba(180, 104, 41, .1), transparent 30rem), linear-gradient(180deg, #fffaf3 0%, var(--bg) 38rem, #eee5d8 100%); }
 html[data-theme="soft"] body::before { background-image: radial-gradient(rgba(64,50,35,.05) .6px, transparent .6px); }
 html[data-theme="soft"] .navbar { background: rgba(244,239,231,.86); border-bottom-color: rgba(64,50,35,.12); box-shadow: 0 10px 35px rgba(79,57,34,.08); }
+html[data-theme="soft"] .hero .eyebrow { color: var(--primary); }
+html[data-theme="soft"] .hero h1 { color: var(--text); text-shadow: none; }
+html[data-theme="soft"] .hero-description { color: var(--muted); }
 html[data-theme="soft"] nav a:hover,
 html[data-theme="soft"] nav a:focus-visible,
 html[data-theme="soft"] nav a[aria-current="page"] { background: rgba(138,75,22,.1); }
@@ -2368,6 +2374,9 @@ html[data-theme="contrast"] .appearance-control select { border-color: #fff; bac
   html:not([data-theme]) body { background: radial-gradient(circle at 12% 0%, rgba(37, 99, 235, .1), transparent 30rem), linear-gradient(180deg, #fbfcfe 0%, var(--bg) 38rem, #f1f4f8 100%); }
   html:not([data-theme]) body::before { background-image: radial-gradient(rgba(15,23,42,.045) .6px, transparent .6px); }
   html:not([data-theme]) .navbar { background: rgba(247,248,251,.82); border-bottom-color: rgba(15,23,42,.1); box-shadow: 0 10px 35px rgba(30,41,59,.08); }
+  html:not([data-theme]) .hero .eyebrow { color: var(--primary); }
+  html:not([data-theme]) .hero h1 { color: var(--text); text-shadow: none; }
+  html:not([data-theme]) .hero-description { color: var(--muted); }
   html:not([data-theme]) nav a:hover,
   html:not([data-theme]) nav a:focus-visible,
   html:not([data-theme]) nav a[aria-current="page"] { background: rgba(7,95,189,.1); }
