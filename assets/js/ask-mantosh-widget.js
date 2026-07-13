@@ -1,7 +1,7 @@
 /* Shared Ask Mantosh launcher. Injects the minimized widget on every public page. */
 (() => {
   const themeKey = "mantosh-appearance";
-  const supportedThemes = new Set(["auto", "light", "dark"]);
+  const supportedThemes = new Set(["auto", "light", "dark", "soft", "contrast"]);
   let savedTheme = "auto";
   try {
     const storedTheme = window.localStorage.getItem(themeKey);
@@ -11,7 +11,9 @@
   const applyTheme = (theme) => {
     if (theme === "auto") document.documentElement.removeAttribute("data-theme");
     else document.documentElement.dataset.theme = theme;
-    const themeColor = theme === "light" || (theme === "auto" && window.matchMedia("(prefers-color-scheme: light)").matches) ? "#f7f8fb" : "#05070a";
+    const themeColors = { light: "#f7f8fb", soft: "#f4efe7", contrast: "#000000", dark: "#05070a" };
+    const autoColor = window.matchMedia("(prefers-color-scheme: light)").matches ? themeColors.light : themeColors.dark;
+    const themeColor = theme === "auto" ? autoColor : themeColors[theme] || themeColors.dark;
     document.querySelector('meta[name="theme-color"]')?.setAttribute("content", themeColor);
   };
   applyTheme(savedTheme);
@@ -25,6 +27,8 @@
           <option value="auto">Auto</option>
           <option value="light">Light</option>
           <option value="dark">Dark</option>
+          <option value="soft">Soft</option>
+          <option value="contrast">High contrast</option>
         </select>
       </label>`);
     const select = document.getElementById("appearance-select");

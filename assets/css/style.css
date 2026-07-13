@@ -2183,6 +2183,86 @@ html[data-theme="light"] .ask-mantosh-source::after { background: #fff; }
 html[data-theme="light"] .ask-mantosh-jump { background: #e8f1fd; }
 html[data-theme="light"] .appearance-control select { color-scheme: light; }
 
+html[data-theme="soft"] {
+  color-scheme: light;
+  --bg: #f4efe7;
+  --surface: #fffaf2;
+  --surface-raised: rgba(255, 250, 242, .94);
+  --border: rgba(64, 50, 35, .18);
+  --border-strong: rgba(64, 50, 35, .3);
+  --text: #2a241d;
+  --muted: #665d52;
+  --primary: #8a4b16;
+  --primary-hover: #6f390d;
+  --shadow-card: 0 1px 0 rgba(255,255,255,.85) inset, 0 22px 60px rgba(79,57,34,.11);
+  --shadow-float: 0 1px 0 rgba(255,255,255,.9) inset, 0 20px 55px rgba(79,57,34,.16);
+}
+
+html[data-theme="soft"] body { background: radial-gradient(circle at 12% 0%, rgba(180, 104, 41, .1), transparent 30rem), linear-gradient(180deg, #fffaf3 0%, var(--bg) 38rem, #eee5d8 100%); }
+html[data-theme="soft"] body::before { background-image: radial-gradient(rgba(64,50,35,.05) .6px, transparent .6px); }
+html[data-theme="soft"] .navbar { background: rgba(244,239,231,.86); border-bottom-color: rgba(64,50,35,.12); box-shadow: 0 10px 35px rgba(79,57,34,.08); }
+html[data-theme="soft"] nav a:hover,
+html[data-theme="soft"] nav a:focus-visible,
+html[data-theme="soft"] nav a[aria-current="page"] { background: rgba(138,75,22,.1); }
+html[data-theme="soft"] nav .nav-cta:not([aria-current="page"]) { background: transparent; color: var(--muted); }
+html[data-theme="soft"] .secondary,
+html[data-theme="soft"] .card,
+html[data-theme="soft"] .resume-card,
+html[data-theme="soft"] .content-card,
+html[data-theme="soft"] .reference-card,
+html[data-theme="soft"] .technical-toolkit,
+html[data-theme="soft"] .contact-links a,
+html[data-theme="soft"] .ask-mantosh-related-card { background: rgba(255,250,242,.86); }
+html[data-theme="soft"] .value-strip { background: rgba(255,250,242,.5); }
+html[data-theme="soft"] .evidence-link,
+html[data-theme="soft"] .section-link,
+html[data-theme="soft"] .timeline-link-card > span,
+html[data-theme="soft"] .ask-mantosh-answer a,
+html[data-theme="soft"] .ask-mantosh-source { color: #7a3f12; }
+html[data-theme="soft"] .ask-mantosh-toggle,
+html[data-theme="soft"] .ask-mantosh-panel { background: rgba(255,250,242,.97); }
+html[data-theme="soft"] .ask-mantosh-answer pre { background: #eee5d8; }
+html[data-theme="soft"] .ask-mantosh-source::after { background: #fffaf2; }
+html[data-theme="soft"] .ask-mantosh-jump { background: #f0dfcc; }
+html[data-theme="soft"] .appearance-control select { color-scheme: light; }
+
+html[data-theme="contrast"] {
+  color-scheme: dark;
+  --bg: #000;
+  --surface: #050505;
+  --surface-raised: #080808;
+  --border: #f5f5f5;
+  --border-strong: #fff;
+  --text: #fff;
+  --muted: #e5e5e5;
+  --primary: #7dd3fc;
+  --primary-hover: #bae6fd;
+  --shadow-card: none;
+  --shadow-float: none;
+}
+
+html[data-theme="contrast"] body { background: #000; }
+html[data-theme="contrast"] body::before { display: none; }
+html[data-theme="contrast"] .navbar,
+html[data-theme="contrast"] .ask-mantosh-toggle,
+html[data-theme="contrast"] .ask-mantosh-panel { background: #000; border-color: #fff; box-shadow: none; }
+html[data-theme="contrast"] .card,
+html[data-theme="contrast"] .pillar,
+html[data-theme="contrast"] .timeline-block,
+html[data-theme="contrast"] .resume-card,
+html[data-theme="contrast"] .content-card,
+html[data-theme="contrast"] .reference-card,
+html[data-theme="contrast"] .technical-toolkit,
+html[data-theme="contrast"] .contact-links a,
+html[data-theme="contrast"] .conversion-card { background: #050505; border-color: #fff; box-shadow: none; }
+html[data-theme="contrast"] nav a[aria-current="page"] { background: #fff; color: #000; box-shadow: none; }
+html[data-theme="contrast"] nav a[aria-current="page"]::before { background: #000; }
+html[data-theme="contrast"] nav .nav-cta:not([aria-current="page"]) { border-color: #fff; color: #fff; }
+html[data-theme="contrast"] .button.primary { background: #fff; color: #000; }
+html[data-theme="contrast"] .button.secondary { border-color: #fff; background: #000; color: #fff; }
+html[data-theme="contrast"] :focus-visible { outline-color: #ffde59; }
+html[data-theme="contrast"] .appearance-control select { border-color: #fff; background: #000; color: #fff; }
+
 @media (prefers-color-scheme: light) {
   html:not([data-theme]) {
     color-scheme: light;

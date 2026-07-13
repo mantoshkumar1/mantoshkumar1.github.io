@@ -19,7 +19,8 @@ This document is the canonical description of what is deployed. Architecture pro
 - 11 public Ask Mantosh documents: three project sources, six Insights sources, one résumé-backed engineering-capabilities source, and one evidence-backed profile and fit guide.
 - One résumé PDF served for in-browser preview and explicit download.
 - Sitemap, RSS feed, `robots.txt`, `llms.txt`, JSON-LD, Open Graph, Twitter Card, manifest, icons, and a 1200×630 social image.
-- A visitor-controlled Auto, Light, and Dark appearance setting that follows the operating system by default and persists explicit choices on the device.
+- A visitor-controlled Auto, Light, Dark, Soft, and High contrast appearance setting that follows the operating system by default and persists explicit choices on the device.
+- English remains the authoritative content language. Pages expose standard language metadata and selectable text for browser translation; the site does not infer language from location or load a third-party translation widget.
 
 ## Visitor flows
 
