@@ -2,7 +2,7 @@ import { access, readFile, stat } from "node:fs/promises";
 import { join, resolve } from "node:path";
 
 const root = resolve(import.meta.dirname, "..");
-const pages = ["index.html", "projects/index.html", "thinking/index.html", "thinking/engineering-philosophy.html", "thinking/why-does-this-still-require-me.html", "thinking/release-reports-as-operational-history.html", "thinking/complexity-changes-address.html", "thinking/blockchain-without-a-master-branch.html", "thinking/ownership-before-escalation.html", "experience/index.html", "resume/index.html", "contact/index.html", "newsletter/index.html", "accessibility/index.html", "projects/engineering-knowledge-system.html", "projects/photosahi.html", "projects/workflow-automation-toolkit.html", "projects/gtt-price-calculator.html"];
+const pages = ["index.html", "projects/index.html", "thinking/index.html", "thinking/engineering-philosophy.html", "thinking/why-does-this-still-require-me.html", "thinking/release-reports-as-operational-history.html", "thinking/complexity-changes-address.html", "thinking/blockchain-without-a-master-branch.html", "thinking/ownership-before-escalation.html", "experience/index.html", "resume/index.html", "contact/index.html", "newsletter/index.html", "accessibility/index.html", "projects/engineering-knowledge-system.html", "projects/photosahi.html", "projects/workflow-automation-toolkit.html", "projects/gtt-price-calculator.html", "projects/validation-platform-optical-networking.html"];
 const requirements = [
   [/<meta\s+charset=/i, "charset"], [/<meta\s+name=["']viewport["']/i, "viewport"], [/<meta\s+name=["']description["']/i, "description"],
   [/<link\s+rel=["']canonical["']/i, "canonical"], [/<meta\s+name=["']robots["']/i, "robots"], [/<meta\s+property=["']og:title["']/i, "Open Graph"],
@@ -79,10 +79,13 @@ if (/<span>Experience\s*<span[^>]*>→<\/span><\/span>/i.test(homeHtml)) { conso
 if (/class=["'][^"']*section-link[^"']*["'][^>]*>\s*View Experience/i.test(homeHtml)) { console.error("homepage: redundant View Experience link must stay removed"); failures += 1; }
 if (!/href=["']projects\/["'][^>]*>View all projects/i.test(homeHtml)) { console.error("homepage: selected projects need a scalable route to the complete portfolio"); failures += 1; }
 if (!/class=["']value-strip["']/i.test(homeHtml)) { console.error("homepage: staff impact summary strip is missing"); failures += 1; }
+if (!/5 documented projects across platforms, automation, and applied engineering/.test(homeHtml)) { console.error("homepage: project evidence line is stale"); failures += 1; }
 if (!/href=["']resume\/Resume-MantoshKumar-MSc-CS\.pdf["'][^>]*>View résumé PDF/i.test(homeHtml)) { console.error("homepage: recruiter-facing résumé action is missing"); failures += 1; }
 const projectsHtml = await readFile(join(root, "projects/index.html"), "utf8");
 const knowledgeSystemHtml = await readFile(join(root, "projects/engineering-knowledge-system.html"), "utf8");
-for (const [page, html, expectedCards] of [["index.html", homeHtml, 3], ["projects/index.html", projectsHtml, 4]]) {
+const validationPlatformHtml = await readFile(join(root, "projects/validation-platform-optical-networking.html"), "utf8");
+const validationPlatformKnowledge = await readFile(join(root, "knowledge/projects/validation-platform-optical-networking.md"), "utf8");
+for (const [page, html, expectedCards] of [["index.html", homeHtml, 3], ["projects/index.html", projectsHtml, 5]]) {
   const projectCards = [...html.matchAll(/<article\b[^>]*class=["'][^"']*project-card[^"']*["'][^>]*>([\s\S]*?)<\/article>/gi)];
   if (projectCards.length !== expectedCards) { console.error(`${page}: expected ${expectedCards} fully clickable project cards, found ${projectCards.length}`); failures += 1; }
   for (const card of projectCards) {
@@ -90,6 +93,10 @@ for (const [page, html, expectedCards] of [["index.html", homeHtml, 3], ["projec
     if (detailLinks.length !== 1) { console.error(`${page}: every project card needs exactly one stretched detail-page link`); failures += 1; }
   }
 }
+if (!/<ol class=["']case-flow["'][^>]*aria-label=/i.test(validationPlatformHtml) || (validationPlatformHtml.match(/<li><span>[1-5]<\/span>/g) || []).length !== 5) { console.error("validation platform: architecture must present five accessible stages"); failures += 1; }
+const validationPlatformPublicContent = `${validationPlatformHtml}\n${validationPlatformKnowledge}`;
+if (/\bLLM\b|semi-annual|annual executive|weekly release-health|program leadership|pass, fail, unexecuted/i.test(validationPlatformPublicContent)) { console.error("validation platform: public case study exposes unsupported or internal specifics"); failures += 1; }
+if (!/No improvement percentage, employer scale, adoption claim, or customer outcome is asserted/.test(validationPlatformHtml)) { console.error("validation platform: evidence boundary is missing"); failures += 1; }
 if (!/\.project-detail-link::after\s*\{[^}]*position:\s*absolute;[^}]*inset:\s*0;/is.test(stylesheet)) { console.error("stylesheet: project detail links must cover their complete card"); failures += 1; }
 if (!/\.project-card \.card-links a:not\(\.project-detail-link\)\s*\{[^}]*position:\s*relative;[^}]*z-index:\s*1;/is.test(stylesheet)) { console.error("stylesheet: project secondary actions must remain independently clickable"); failures += 1; }
 for (const [selector, lines] of [["\\.card-kicker", 2], ["h3", 2], ["> p:not\\(\\.card-kicker\\)", 3]]) {

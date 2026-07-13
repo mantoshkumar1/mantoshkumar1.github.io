@@ -4,12 +4,24 @@
   <id>https://mantoshkumar1.github.io/</id>
   <link href="https://mantoshkumar1.github.io/" />
   <link href="https://mantoshkumar1.github.io/feed.xml" rel="self" type="application/atom+xml" />
-  <updated>2026-07-12T21:00:00Z</updated>
+  <updated>2026-07-13T12:00:00Z</updated>
   <author>
     <name>Mantosh Kumar</name>
     <email>mantoshk234@gmail.com</email>
   </author>
   <subtitle>Public engineering case studies, writing, and notes by Mantosh Kumar.</subtitle>
+  <entry>
+    <title>Validation Platform and Release Intelligence</title>
+    <id>https://mantoshkumar1.github.io/projects/validation-platform-optical-networking.html</id>
+    <link href="https://mantoshkumar1.github.io/projects/validation-platform-optical-networking.html" />
+    <published>2026-07-13T12:00:00Z</published>
+    <updated>2026-07-13T12:00:00Z</updated>
+    <author><name>Mantosh Kumar</name></author>
+    <category term="experience-case-study" label="Experience Case Study" />
+    <category term="platform-engineering" label="Platform Engineering" />
+    <category term="operational-intelligence" label="Operational Intelligence" />
+    <summary>A public, evidence-bounded case study on reusable validation infrastructure, AI-assisted failure investigation, and release intelligence for optical networking.</summary>
+  </entry>
   <entry>
     <title>Release Reports as Operational History</title>
     <id>https://mantoshkumar1.github.io/thinking/release-reports-as-operational-history.html</id>
