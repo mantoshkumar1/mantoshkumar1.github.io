@@ -14,7 +14,7 @@ with `_` are intentionally not indexed.
 
 ## Current public corpus
 
-As of 2026-07-12, the public index contains 11 source documents:
+As of 2026-07-12, the public index contains 12 source documents:
 
 - `Project: PhotoSahi`
 - `Project: Workflow Automation Toolkit`
@@ -26,6 +26,7 @@ As of 2026-07-12, the public index contains 11 source documents:
 - `Article: Blockchain Without a Master Branch`
 - `Note: Engineering Ownership Before Escalation`
 - `Experience: Engineering Capabilities and Technical Skills`
+- `Experience: GATE CS & IT Top-1% Achievement and TUM Admission Context`
 - `FAQ: About Mantosh and Where His Experience Can Help`
 
 Each source has one clear topic, a factual summary, retrieval tags, related
