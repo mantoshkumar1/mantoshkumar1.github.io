@@ -23,8 +23,8 @@ function cleanDescription(value) {
   return text.length <= 160 ? text : `${text.slice(0, 157).trimEnd()}…`;
 }
 
-function pathToRoute(file) {
-  const path = relative(SOURCE_ROOT, file).replaceAll("\\", "/");
+function pathToRoute(root, file) {
+  const path = relative(root, file).replaceAll("\\", "/");
   if (path === "index.html") return "/";
   if (path.endsWith("/index.html")) return `/${path.slice(0, -"index.html".length)}`;
   return `/${path}`;
@@ -225,7 +225,7 @@ export async function generateSeo(root = SOURCE_ROOT, configPath = CONFIG_PATH) 
   const files = await htmlFiles(root);
   const entries = [];
   for (const file of files) {
-    const route = pathToRoute(file);
+    const route = pathToRoute(root, file);
     let html = await readFile(file, "utf8");
     const page = metadataFromHtml(html, route, config);
     const url = routeToUrl(config.site, route);

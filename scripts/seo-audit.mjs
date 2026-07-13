@@ -1,7 +1,8 @@
 import { readdir, readFile } from "node:fs/promises";
-import { join, relative } from "node:path";
+import { join, relative, resolve } from "node:path";
 
-const root = new URL("..", import.meta.url).pathname;
+const repositoryRoot = new URL("..", import.meta.url).pathname;
+const root = resolve(process.env.SITE_ROOT || repositoryRoot);
 const required = [
   /<meta\s+charset=/i,
   /<meta\s+name=["']viewport["']/i,
@@ -28,6 +29,13 @@ async function walk(directory) {
 const files = (await walk(root)).filter((file) => file.endsWith(".html"));
 const failures = [];
 const origin = "https://mantoshkumar1.github.io";
+function routeFor(path) {
+  const normalized = path.replaceAll("\\", "/");
+  if (normalized === "index.html") return "/";
+  if (normalized.endsWith("/index.html")) return `/${normalized.slice(0, -"index.html".length)}`;
+  return `/${normalized}`;
+}
+
 for (const file of files) {
   const html = await readFile(file, "utf8");
   const path = relative(root, file);
@@ -45,6 +53,11 @@ for (const file of files) {
     if (!new RegExp(`<a\\s+[^>]*href=["']${redirectTarget.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}["']`, "i").test(html)) failures.push(`${path}: redirect needs a visible fallback link to ${redirectTarget}`);
     continue;
   }
+  const canonical = /<link\s+rel=["']canonical["']\s+href=["']([^"']+)["']/i.exec(html)?.[1];
+  const expectedCanonical = `${origin}${routeFor(path)}`;
+  if (canonical !== expectedCanonical) failures.push(`${path}: canonical must match ${expectedCanonical}`);
+  const openGraphUrl = /<meta\s+property=["']og:url["']\s+content=["']([^"']+)["']/i.exec(html)?.[1];
+  if (openGraphUrl !== expectedCanonical) failures.push(`${path}: Open Graph URL must match ${expectedCanonical}`);
   const headings = html.match(/<h1(?:\s[^>]*)?>/gi) || [];
   if (headings.length !== 1) failures.push(`${path}: expected exactly one h1, found ${headings.length}`);
   for (const image of html.matchAll(/<img\b[^>]*>/gi)) if (!/\balt=["'][^"']*["']/i.test(image[0])) failures.push(`${path}: image missing alt text`);
