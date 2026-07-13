@@ -24,8 +24,9 @@ for (const file of await walk(root)) {
   if (!/<main\b[^>]*tabindex=["']-1["']/i.test(html)) failures.push(`${label}: main landmark must accept skip-link focus`);
   if ((html.match(/<h1\b/gi) || []).length !== 1) failures.push(`${label}: requires one h1`);
   if (!/<nav[^>]+aria-label=/i.test(html)) failures.push(`${label}: navigation needs an accessible name`);
+  const primaryNavigation = /<nav\b[^>]*aria-label=["']Primary navigation["'][^>]*>([\s\S]*?)<\/nav>/i.exec(html)?.[1] || "";
+  if (!/<a\b[^>]*href=["'](?:\/|\.\/|\.\.\/)["'][^>]*>\s*Home\s*<\/a>/i.test(primaryNavigation)) failures.push(`${label}: primary navigation must include an explicit Home link`);
   if (!["404.html", "accessibility/index.html"].includes(label)) {
-    const primaryNavigation = /<nav\b[^>]*aria-label=["']Primary navigation["'][^>]*>([\s\S]*?)<\/nav>/i.exec(html)?.[1] || "";
     if (!/aria-current=["']page["']/i.test(primaryNavigation)) failures.push(`${label}: primary navigation must identify the current section`);
   }
   for (const match of html.matchAll(/<img\b[^>]*>/gi)) if (!/\balt=["'][^"']*["']/i.test(match[0])) failures.push(`${label}: image missing alt`);
