@@ -67,6 +67,7 @@ for (const page of pages.filter((entry) => entry.startsWith("thinking/") && entr
   const html = await readFile(join(root, page), "utf8");
   if (!/class=["'][^"']*page-shell[^"']*reading-shell[^"']*["']/i.test(html)) { console.error(`${page}: article needs compact reading-shell spacing`); failures += 1; }
   if (!/class=["'][^"']*case-study[^"']*reading-page[^"']*["']/i.test(html)) { console.error(`${page}: article needs compact reading-page spacing`); failures += 1; }
+  if (!/href=["']\.\.\/newsletter\/["'][^>]*>Get new insights by email/i.test(html)) { console.error(`${page}: article needs a closing newsletter action`); failures += 1; }
 }
 if (failures) process.exit(1);
 console.log(`SEO audit passed for ${pages.length} indexable pages.`);
