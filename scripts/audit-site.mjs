@@ -61,6 +61,16 @@ if (/class=["'][^"']*section-link[^"']*["'][^>]*>\s*View Experience/i.test(homeH
 if (!/href=["']systems\/["'][^>]*>View all projects/i.test(homeHtml)) { console.error("homepage: selected projects need a scalable route to the complete portfolio"); failures += 1; }
 const projectsHtml = await readFile(join(root, "systems/index.html"), "utf8");
 const knowledgeSystemHtml = await readFile(join(root, "projects/engineering-knowledge-system.html"), "utf8");
+for (const [page, html, expectedCards] of [["index.html", homeHtml, 3], ["systems/index.html", projectsHtml, 4]]) {
+  const projectCards = [...html.matchAll(/<article\b[^>]*class=["'][^"']*project-card[^"']*["'][^>]*>([\s\S]*?)<\/article>/gi)];
+  if (projectCards.length !== expectedCards) { console.error(`${page}: expected ${expectedCards} fully clickable project cards, found ${projectCards.length}`); failures += 1; }
+  for (const card of projectCards) {
+    const detailLinks = card[1].match(/<a\b[^>]*class=["'][^"']*project-detail-link[^"']*["'][^>]*href=["'][^"']*projects\//gi) || [];
+    if (detailLinks.length !== 1) { console.error(`${page}: every project card needs exactly one stretched detail-page link`); failures += 1; }
+  }
+}
+if (!/\.project-detail-link::after\s*\{[^}]*position:\s*absolute;[^}]*inset:\s*0;/is.test(stylesheet)) { console.error("stylesheet: project detail links must cover their complete card"); failures += 1; }
+if (!/\.project-card \.card-links a:not\(\.project-detail-link\)\s*\{[^}]*position:\s*relative;[^}]*z-index:\s*1;/is.test(stylesheet)) { console.error("stylesheet: project secondary actions must remain independently clickable"); failures += 1; }
 for (const [page, html] of [["index.html", homeHtml], ["systems/index.html", projectsHtml]]) {
   if (!/href=["']#ask-mantosh["'][^>]*>Try the live system/i.test(html)) { console.error(`${page}: knowledge-system project must open its live Ask Mantosh experience`); failures += 1; }
 }

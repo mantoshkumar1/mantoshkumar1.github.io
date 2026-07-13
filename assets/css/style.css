@@ -1671,6 +1671,32 @@ nav .nav-cta:not([aria-current="page"]):focus-visible {
   cursor: pointer;
 }
 
+.project-card {
+  position: relative;
+  cursor: pointer;
+}
+
+.project-detail-link::after {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  content: "";
+}
+
+.project-detail-link:focus-visible {
+  outline: none;
+}
+
+.project-detail-link:focus-visible::after {
+  outline: 3px solid #93c5fd;
+  outline-offset: 3px;
+}
+
+.project-card .card-links a:not(.project-detail-link) {
+  position: relative;
+  z-index: 1;
+}
+
 .insight-card > a:last-child::after {
   position: absolute;
   inset: 0;
