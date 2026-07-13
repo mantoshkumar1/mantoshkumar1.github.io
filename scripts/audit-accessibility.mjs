@@ -90,6 +90,7 @@ for (const themeSelector of ['html[data-theme="soft"]', 'html[data-theme="contra
 for (const selector of ['html[data-theme="light"] .hero h1', 'html[data-theme="light"] .hero-description', 'html[data-theme="soft"] .hero h1', 'html[data-theme="soft"] .hero-description', 'html:not([data-theme]) .hero h1', 'html:not([data-theme]) .hero-description']) {
   if (!css.includes(selector)) failures.push(`appearance mode missing legible hero treatment: ${selector}`);
 }
+if (!/\.button\.primary,\s*\.primary\s*\{[^}]*color:\s*#fff/is.test(css)) failures.push("primary actions need explicit white text over the blue gradient");
 if (!css.includes('nav:not(.mobile-nav-expanded) .appearance-control select')) failures.push("collapsed mobile navigation must keep the appearance control compact");
 
 if (failures.length) {
