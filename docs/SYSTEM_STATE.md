@@ -13,7 +13,7 @@ This document is the canonical description of what is deployed. Architecture pro
 | Health | `https://ask-mantosh.mantoshk234.workers.dev/health` | Unauthenticated service health without configuration details |
 | Knowledge indexing | `POST /internal/index` | GitHub OIDC or manual recovery token only; intentionally unavailable to browsers through CORS |
 
-Last verified Worker deployment: `8f2b418b-06aa-4e93-9dd0-04c43bd64480`. The active answer-policy cache namespace is `visitor-intent-v16`.
+Last verified Worker deployment: `22786bb9-a4e5-4a25-89ba-8f22009a9bdb`. The active answer-policy cache namespace is `visitor-intent-v16`.
 
 ## Published inventory
 
