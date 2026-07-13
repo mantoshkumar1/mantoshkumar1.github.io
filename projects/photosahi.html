@@ -223,17 +223,8 @@
         </section>
 
         <section class="content-card section-block" aria-labelledby="problem-title">
-          <h2 id="problem-title">Problem</h2>
-          <p>
-            Creating passport and visa photos is frustrating. Most online tools require users to upload sensitive images to remote servers, which creates privacy concerns and leaves too much room for error. Official photo requirements are also difficult to satisfy without a clear, guided workflow.
-          </p>
-        </section>
-
-        <section class="content-card section-block" aria-labelledby="solution-title">
-          <h2 id="solution-title">Solution</h2>
-          <p>
-            PhotoSahi was built to remove that friction. The experience runs completely in the browser, uses HTML5 Canvas for local processing, and requires no backend. Photos are processed locally, never uploaded, and the workflow is optimized for passport and visa photo preparation.
-          </p>
+          <h2 id="problem-title">Problem and approach</h2>
+          <p>Official photo requirements vary, while many tools ask people to upload sensitive images. PhotoSahi uses HTML5 Canvas to crop, resize, adjust, and export photos locally in the browser—without a backend or mandatory upload.</p>
         </section>
 
         <section class="content-card section-block" aria-labelledby="architecture-title">
@@ -253,95 +244,29 @@
           </div>
         </section>
 
-        <section class="content-card section-block" aria-labelledby="highlights-title">
-          <h2 id="highlights-title">Technical Highlights</h2>
-          <div class="feature-grid">
-            <article class="feature">
-              <h3>Client-side Processing</h3>
-              <p>Image transformations happen locally in the browser, which keeps the experience fast and responsive.</p>
-            </article>
-            <article class="feature">
-              <h3>Privacy First</h3>
-              <p>Nothing needs to be uploaded to a remote service, which makes the workflow more trustworthy.</p>
-            </article>
-            <article class="feature">
-              <h3>Zero Backend Cost</h3>
-              <p>By avoiding server-side image handling, the system remains simple and inexpensive to operate.</p>
-            </article>
-            <article class="feature">
-              <h3>Fast Image Processing</h3>
-              <p>The use of canvas primitives keeps transformations lightweight for the end user.</p>
-            </article>
-            <article class="feature">
-              <h3>Responsive UI</h3>
-              <p>The interface was designed to work smoothly across desktop and mobile environments.</p>
-            </article>
-            <article class="feature">
-              <h3>Open Source</h3>
-              <p>The project is intended to be approachable and transparent for learning and reuse.</p>
-            </article>
-          </div>
-        </section>
-
         <section class="content-card section-block" aria-labelledby="decisions-title">
           <h2 id="decisions-title">Engineering Decisions</h2>
           <div class="decision-grid">
             <article class="decision">
-              <h3>Why browser-only?</h3>
-              <p>It allows the tool to be simple, immediate, and private without introducing operational complexity.</p>
-            </article>
-            <article class="decision">
-              <h3>Why no backend?</h3>
-              <p>A backend would add latency, cost, and trust concerns that were not necessary for the core use case.</p>
+              <h3>Browser-only processing</h3>
+              <p>Local canvas operations avoid mandatory uploads, backend latency, server cost, and an unnecessary trust boundary.</p>
             </article>
             <article class="decision">
               <h3>Performance</h3>
-              <p>The implementation focuses on efficient canvas operations and careful image handling to stay responsive.</p>
+              <p>Canvas operations keep common transformations immediate across desktop and mobile browsers.</p>
             </article>
             <article class="decision">
               <h3>Privacy and trade-offs</h3>
-              <p>Keeping everything local improves privacy, but it also means the browser must handle more of the complexity and resource use.</p>
+              <p>Local processing improves privacy, but device capability and browser compatibility become product constraints.</p>
             </article>
           </div>
-        </section>
-
-        <section class="content-card section-block" aria-labelledby="lessons-title">
-          <h2 id="lessons-title">Lessons Learned</h2>
-          <ul>
-            <li>Image processing requires careful attention to quality, cropping, and edge cases.</li>
-            <li>The Canvas API is powerful, but browser compatibility and performance must be considered from the beginning.</li>
-            <li>User experience matters as much as technical correctness when the task is highly procedural.</li>
-            <li>Small workflow improvements can make a big difference for users preparing official documents.</li>
-          </ul>
-        </section>
-
-        <section class="content-card section-block" aria-labelledby="future-title">
-          <h2 id="future-title">Future Improvements</h2>
-          <ul>
-            <li>More precise compliance presets for different countries and document types.</li>
-            <li>Improved background adjustment controls and previewing.</li>
-            <li>Better accessibility and guidance for first-time users.</li>
-            <li>Additional export options and better image quality tuning.</li>
-          </ul>
-        </section>
-
-        <section class="content-card section-block" aria-labelledby="links-title">
-          <h2 id="links-title">Links</h2>
-          <div class="link-list">
-            <a class="button primary" href="https://mantoshkumar1.github.io/photosahi/" target="_blank" rel="noreferrer">Live Demo</a>
-            <a class="button secondary" href="https://github.com/mantoshkumar1/photosahi" target="_blank" rel="noreferrer">GitHub Repository</a>
-            <a class="button secondary" href="../systems/">Browse all projects</a>
-          </div>
+          <p class="evidence-note"><strong>Next improvements:</strong> verify more document presets, refine background controls and previews, and improve first-use guidance.</p>
         </section>
       </div>
     </main>
 
     <footer class="footer">
       <div class="container footer-wrap">
-        <div>
-          <p class="eyebrow">Next step</p>
-          <h2>Have a workflow or platform problem worth simplifying?</h2>
-        </div>
         <div class="footer-links">
           <a href="../resume/">Resume</a>
           <a href="https://github.com/mantoshkumar1?tab=repositories" target="_blank" rel="noreferrer">GitHub repositories</a>
