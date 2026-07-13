@@ -32,19 +32,12 @@
       "canonicalPath": "/projects/"
     },
     "/insights/": {
-      "title": "Redirecting to Insights | Mantosh Kumar",
-      "description": "Redirecting to the engineering insights archive.",
-      "kind": "page",
-      "noindex": true,
-      "canonicalPath": "/thinking/"
-    },
-    "/thinking/": {
       "title": "Engineering Insights & Philosophy | Mantosh Kumar",
       "description": "Engineering philosophy and reviewed field notes from Mantosh Kumar about leverage, system design, automation, and operational judgment.",
       "kind": "collection",
       "schemaType": "CollectionPage"
     },
-    "/thinking/engineering-philosophy.html": {
+    "/insights/engineering-philosophy.html": {
       "title": "Engineering Philosophy: Build Leverage, Not Just Software | Mantosh Kumar",
       "description": "Four principles for choosing engineering interventions: start with the bottleneck, systematize repetition, preserve judgment, and keep evidence close to claims.",
       "kind": "article",
@@ -52,10 +45,10 @@
       "datePublished": "2026-07-12",
       "dateModified": "2026-07-12",
       "breadcrumbs": [
-        { "name": "Insights", "path": "/thinking/" }
+        { "name": "Insights", "path": "/insights/" }
       ]
     },
-    "/thinking/why-does-this-still-require-me.html": {
+    "/insights/why-does-this-still-require-me.html": {
       "title": "Why Does This Still Require Me? | Mantosh Kumar",
       "description": "A practical engineering heuristic for recognizing repeated work that should become a system, delegated responsibility, or automated workflow.",
       "kind": "article",
@@ -63,44 +56,93 @@
       "datePublished": "2026-07-12",
       "dateModified": "2026-07-12",
       "breadcrumbs": [
-        { "name": "Insights", "path": "/thinking/" }
+        { "name": "Insights", "path": "/insights/" }
       ]
     },
-    "/thinking/release-reports-as-operational-history.html": {
+    "/insights/release-reports-as-operational-history.html": {
       "title": "Release Reports as Operational History | Mantosh Kumar",
       "description": "How comparable release-health reports can reveal longer-term engineering patterns while AI assistance remains accountable to human judgment.",
       "kind": "article",
       "schemaType": "TechArticle",
       "datePublished": "2026-07-12",
       "dateModified": "2026-07-12",
-      "breadcrumbs": [{ "name": "Insights", "path": "/thinking/" }]
+      "breadcrumbs": [{ "name": "Insights", "path": "/insights/" }]
     },
-    "/thinking/complexity-changes-address.html": {
+    "/insights/complexity-changes-address.html": {
       "title": "In Distributed Systems, Complexity Changes Address | Mantosh Kumar",
       "description": "A system-design heuristic for tracking the failure modes and operational responsibilities that an architectural simplification moves elsewhere.",
       "kind": "article",
       "schemaType": "TechArticle",
       "datePublished": "2026-07-12",
       "dateModified": "2026-07-12",
-      "breadcrumbs": [{ "name": "Insights", "path": "/thinking/" }]
+      "breadcrumbs": [{ "name": "Insights", "path": "/insights/" }]
     },
-    "/thinking/blockchain-without-a-master-branch.html": {
+    "/insights/blockchain-without-a-master-branch.html": {
       "title": "Blockchain Without a Master Branch | Mantosh Kumar",
       "description": "A limited Git analogy for understanding blockchain as a distributed shared-history problem without a central source of truth.",
       "kind": "article",
       "schemaType": "TechArticle",
       "datePublished": "2026-07-12",
       "dateModified": "2026-07-12",
-      "breadcrumbs": [{ "name": "Insights", "path": "/thinking/" }]
+      "breadcrumbs": [{ "name": "Insights", "path": "/insights/" }]
     },
-    "/thinking/ownership-before-escalation.html": {
+    "/insights/ownership-before-escalation.html": {
       "title": "Engineering Ownership Before Escalation | Mantosh Kumar",
       "description": "A practical communication standard for making material engineering issues, risks, and next actions visible before someone has to ask.",
       "kind": "article",
       "schemaType": "TechArticle",
       "datePublished": "2026-07-12",
       "dateModified": "2026-07-12",
-      "breadcrumbs": [{ "name": "Insights", "path": "/thinking/" }]
+      "breadcrumbs": [{ "name": "Insights", "path": "/insights/" }]
+    },
+    "/thinking/": {
+      "title": "Redirecting to Insights | Mantosh Kumar",
+      "description": "Redirecting to the engineering insights archive.",
+      "kind": "page",
+      "noindex": true,
+      "canonicalPath": "/insights/"
+    },
+    "/thinking/engineering-philosophy.html": {
+      "title": "Redirecting to Insights | Mantosh Kumar",
+      "description": "Redirecting to the engineering insights archive.",
+      "kind": "page",
+      "noindex": true,
+      "canonicalPath": "/insights/engineering-philosophy.html"
+    },
+    "/thinking/why-does-this-still-require-me.html": {
+      "title": "Redirecting to Insights | Mantosh Kumar",
+      "description": "Redirecting to the engineering insights archive.",
+      "kind": "page",
+      "noindex": true,
+      "canonicalPath": "/insights/why-does-this-still-require-me.html"
+    },
+    "/thinking/release-reports-as-operational-history.html": {
+      "title": "Redirecting to Insights | Mantosh Kumar",
+      "description": "Redirecting to the engineering insights archive.",
+      "kind": "page",
+      "noindex": true,
+      "canonicalPath": "/insights/release-reports-as-operational-history.html"
+    },
+    "/thinking/complexity-changes-address.html": {
+      "title": "Redirecting to Insights | Mantosh Kumar",
+      "description": "Redirecting to the engineering insights archive.",
+      "kind": "page",
+      "noindex": true,
+      "canonicalPath": "/insights/complexity-changes-address.html"
+    },
+    "/thinking/blockchain-without-a-master-branch.html": {
+      "title": "Redirecting to Insights | Mantosh Kumar",
+      "description": "Redirecting to the engineering insights archive.",
+      "kind": "page",
+      "noindex": true,
+      "canonicalPath": "/insights/blockchain-without-a-master-branch.html"
+    },
+    "/thinking/ownership-before-escalation.html": {
+      "title": "Redirecting to Insights | Mantosh Kumar",
+      "description": "Redirecting to the engineering insights archive.",
+      "kind": "page",
+      "noindex": true,
+      "canonicalPath": "/insights/ownership-before-escalation.html"
     },
     "/experience/": {
       "title": "Engineering Experience & Technical Skills | Mantosh Kumar",
@@ -125,7 +167,7 @@
       "description": "Follow concise, evidence-backed engineering notes from Mantosh Kumar about platform engineering, automation, backend systems, and operational intelligence.",
       "kind": "page",
       "schemaType": "WebPage",
-      "breadcrumbs": [{ "name": "Insights", "path": "/thinking/" }]
+      "breadcrumbs": [{ "name": "Insights", "path": "/insights/" }]
     },
     "/accessibility/": {
       "title": "Accessibility | Mantosh Kumar",

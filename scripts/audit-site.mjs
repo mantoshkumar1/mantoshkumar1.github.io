@@ -2,7 +2,7 @@ import { access, readFile, stat } from "node:fs/promises";
 import { join, resolve } from "node:path";
 
 const root = resolve(import.meta.dirname, "..");
-const pages = ["index.html", "projects/index.html", "thinking/index.html", "thinking/engineering-philosophy.html", "thinking/why-does-this-still-require-me.html", "thinking/release-reports-as-operational-history.html", "thinking/complexity-changes-address.html", "thinking/blockchain-without-a-master-branch.html", "thinking/ownership-before-escalation.html", "experience/index.html", "resume/index.html", "contact/index.html", "newsletter/index.html", "accessibility/index.html", "projects/engineering-knowledge-system.html", "projects/photosahi.html", "projects/workflow-automation-toolkit.html", "projects/gtt-price-calculator.html", "projects/validation-platform-optical-networking.html"];
+const pages = ["index.html", "projects/index.html", "insights/index.html", "insights/engineering-philosophy.html", "insights/why-does-this-still-require-me.html", "insights/release-reports-as-operational-history.html", "insights/complexity-changes-address.html", "insights/blockchain-without-a-master-branch.html", "insights/ownership-before-escalation.html", "experience/index.html", "resume/index.html", "contact/index.html", "newsletter/index.html", "accessibility/index.html", "projects/engineering-knowledge-system.html", "projects/photosahi.html", "projects/workflow-automation-toolkit.html", "projects/gtt-price-calculator.html", "projects/validation-platform-optical-networking.html"];
 const requirements = [
   [/<meta\s+charset=/i, "charset"], [/<meta\s+name=["']viewport["']/i, "viewport"], [/<meta\s+name=["']description["']/i, "description"],
   [/<link\s+rel=["']canonical["']/i, "canonical"], [/<meta\s+name=["']robots["']/i, "robots"], [/<meta\s+property=["']og:title["']/i, "Open Graph"],
@@ -81,6 +81,8 @@ if (!/href=["']projects\/["'][^>]*>View all projects/i.test(homeHtml)) { console
 if (!/class=["']value-strip["']/i.test(homeHtml)) { console.error("homepage: staff impact summary strip is missing"); failures += 1; }
 if (!/5 documented projects across platforms, automation, and applied engineering/.test(homeHtml)) { console.error("homepage: project evidence line is stale"); failures += 1; }
 if (!/href=["']resume\/Resume-MantoshKumar-MSc-CS\.pdf["'][^>]*>View résumé PDF/i.test(homeHtml)) { console.error("homepage: recruiter-facing résumé action is missing"); failures += 1; }
+if (!/<div class=["']hero-buttons["']>[\s\S]*>Discuss a role[\s\S]*<\/div>\s*<nav class=["']hero-discovery["'][^>]*>[\s\S]*href=["']insights\/["'][^>]*>Read insights[\s\S]*href=["']newsletter\/["'][^>]*>Join the newsletter[\s\S]*<\/nav>/i.test(homeHtml)) { console.error("homepage: insights and newsletter need a visible secondary discovery row after recruiter actions"); failures += 1; }
+if (!/\.hero-discovery\s*\{[^}]*display:\s*flex;[^}]*margin-bottom:/is.test(stylesheet)) { console.error("stylesheet: homepage discovery links need a compact horizontal treatment"); failures += 1; }
 const projectsHtml = await readFile(join(root, "projects/index.html"), "utf8");
 const knowledgeSystemHtml = await readFile(join(root, "projects/engineering-knowledge-system.html"), "utf8");
 const validationPlatformHtml = await readFile(join(root, "projects/validation-platform-optical-networking.html"), "utf8");
@@ -155,14 +157,14 @@ for (const [page, html] of [["index.html", homeHtml], ["contact/index.html", con
 if (!/<strong>Canadian citizen<\/strong> • Work authorization: Canada • United States • India/.test(contactHtml)) { console.error("contact: citizenship or current work authorization is missing"); failures += 1; }
 if (!/Toronto-based Canadian citizen/.test(resumeHtml) || !/Work authorization:<\/strong> Canada • United States • India/.test(resumeHtml)) { console.error("resume: citizenship or current work authorization is missing"); failures += 1; }
 if (!/Top 1% nationally in GATE CS &amp; IT, twice/.test(resumeHtml) || !/href=["']\.\.\/experience\/#verified-highlights["'][^>]*>View full experience and capabilities/i.test(resumeHtml)) { console.error("resume: verified highlights and experience bridge are missing"); failures += 1; }
-for (const page of ["index.html", "thinking/index.html"]) {
+for (const page of ["index.html", "insights/index.html"]) {
   const html = await readFile(join(root, page), "utf8");
   for (const card of html.matchAll(/<article\b[^>]*class=["'][^"']*insight-card[^"']*["'][^>]*>([\s\S]*?)<\/article>/gi)) {
     const links = card[1].match(/<a\b[^>]*href=/gi) || [];
     if (links.length !== 1) { console.error(`${page}: every full-card insight must have exactly one destination`); failures += 1; }
   }
 }
-for (const page of pages.filter((entry) => entry.startsWith("thinking/") && entry !== "thinking/index.html")) {
+for (const page of pages.filter((entry) => entry.startsWith("insights/") && entry !== "insights/index.html")) {
   const html = await readFile(join(root, page), "utf8");
   if (!/class=["'][^"']*page-shell[^"']*reading-shell[^"']*["']/i.test(html)) { console.error(`${page}: article needs compact reading-shell spacing`); failures += 1; }
   if (!/class=["'][^"']*case-study[^"']*reading-page[^"']*["']/i.test(html)) { console.error(`${page}: article needs compact reading-page spacing`); failures += 1; }

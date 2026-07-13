@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- seo:generated:start -->
+    <meta name="description" content="A limited Git analogy for understanding blockchain as a distributed shared-history problem without a central source of truth." />
+    <meta name="author" content="Mantosh Kumar" />
+    <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1" />
+    <meta name="theme-color" content="#060b12" />
+    <meta name="application-name" content="Mantosh Kumar" />
+    <meta name="apple-mobile-web-app-title" content="Mantosh Kumar" />
+    <link rel="canonical" href="https://mantoshkumar1.github.io/insights/blockchain-without-a-master-branch.html" />
+    <link rel="alternate" type="application/rss+xml" title="Mantosh Kumar — Engineering Writing and Systems" href="https://mantoshkumar1.github.io/feed.xml" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta property="og:locale" content="en_CA" />
+    <meta property="og:title" content="Blockchain Without a Master Branch | Mantosh Kumar" />
+    <meta property="og:description" content="A limited Git analogy for understanding blockchain as a distributed shared-history problem without a central source of truth." />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://mantoshkumar1.github.io/insights/blockchain-without-a-master-branch.html" />
+    <meta property="og:site_name" content="Mantosh Kumar" />
+    <meta property="og:image" content="https://mantoshkumar1.github.io/assets/seo/social-default.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Blockchain Without a Master Branch | Mantosh Kumar" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Blockchain Without a Master Branch | Mantosh Kumar" />
+    <meta name="twitter:description" content="A limited Git analogy for understanding blockchain as a distributed shared-history problem without a central source of truth." />
+    <meta name="twitter:image" content="https://mantoshkumar1.github.io/assets/seo/social-default.jpg" />
+    <meta name="twitter:image:alt" content="Blockchain Without a Master Branch | Mantosh Kumar" />
+    <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","@id":"https://mantoshkumar1.github.io/insights/blockchain-without-a-master-branch.html#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://mantoshkumar1.github.io"},{"@type":"ListItem","position":2,"name":"Insights","item":"https://mantoshkumar1.github.io/insights/"},{"@type":"ListItem","position":3,"name":"Blockchain Without a Master Branch","item":"https://mantoshkumar1.github.io/insights/blockchain-without-a-master-branch.html"}]},{"@id":"https://mantoshkumar1.github.io/insights/blockchain-without-a-master-branch.html#webpage","@type":"TechArticle","name":"Blockchain Without a Master Branch | Mantosh Kumar","description":"A limited Git analogy for understanding blockchain as a distributed shared-history problem without a central source of truth.","url":"https://mantoshkumar1.github.io/insights/blockchain-without-a-master-branch.html","inLanguage":"en","isPartOf":{"@id":"https://mantoshkumar1.github.io/#website"},"breadcrumb":{"@id":"https://mantoshkumar1.github.io/insights/blockchain-without-a-master-branch.html#breadcrumb"},"headline":"Blockchain Without a Master Branch","author":{"@type":"Person","name":"Mantosh Kumar","url":"https://mantoshkumar1.github.io"},"datePublished":"2026-07-12","dateModified":"2026-07-12"}]}</script>
+    <script defer data-domain="mantoshkumar1.github.io" src="https://plausible.io/js/script.js"></script>
+    <script defer src="/assets/js/ai-referral-analytics.js"></script>
+    <!-- seo:generated:end -->
+
+<!-- seo:page {"datePublished":"2026-07-12","dateModified":"2026-07-13"} -->
+    <title>Blockchain Without a Master Branch | Mantosh Kumar</title>
+    <link rel="stylesheet" href="../assets/css/style.css?v=20260713-15" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+    <header class="navbar"><div class="container nav-wrap"><a class="logo" href="../" aria-label="Mantosh Kumar — Home" title="Go to homepage">Mantosh Kumar</a><nav aria-label="Primary navigation">
+          <a href="../">Home</a><a href="../projects/">Projects</a><a href="../insights/" aria-current="page">Insights</a><a href="../experience/">Experience</a><a href="../resume/">Resume</a><a class="nav-cta" href="../contact/">Work with me</a></nav></div></header>
+    <main class="page-shell reading-shell" id="main-content" tabindex="-1"><div class="container"><article class="resume-card case-study reading-page">
+      <header class="resume-header"><p class="eyebrow">Distributed systems • 5 minute read</p><h1>What if Git had no master branch?</h1><p>A limited analogy for seeing blockchain as a shared-history problem rather than only as digital money.</p></header>
+      <section class="resume-section"><h2>The question that connected the concepts</h2><p>Developers can work on independent copies of a repository, create divergent branches, and later reconcile changes against an accepted source of truth. Now remove the central repository, the accepted branch, and the person or organization authorized to decide which history is correct.</p><p>How do independent machines agree on a shared sequence of events when communication is delayed, participants can disagree, and no central authority settles the dispute?</p></section>
+      <section class="resume-section"><h2>What the analogy helps explain</h2><ul class="case-study-list"><li><strong>Replication:</strong> multiple participants retain their own view of shared history.</li><li><strong>Divergence:</strong> participants may temporarily see different valid-looking histories.</li><li><strong>Consensus:</strong> the network needs rules for converging on an accepted history.</li><li><strong>Forks:</strong> competing histories can exist until one gains acceptance under those rules.</li><li><strong>Trust:</strong> agreement must not depend on one privileged repository owner.</li></ul></section>
+      <section class="resume-section"><h2>Where the analogy stops</h2><p>Git does not by itself solve decentralized consensus. It does not supply economic incentives, adversarial-resistance rules, probabilistic finality, or a mechanism for selecting one history without trusted maintainers. The analogy is a doorway into the problem, not an implementation model.</p></section>
+      <section class="resume-section"><h2>The reusable lesson</h2><p>Understanding sometimes comes from changing the frame rather than collecting more terminology. A familiar model can expose the missing constraint—here, the absence of a trusted source of truth—and give new information a place to fit.</p></section>
+      <section class="resume-section"><h2>Evidence boundary</h2><p>This article develops my personal learning analogy from my public LinkedIn post. It does not claim blockchain implementation experience, protocol authorship, investment expertise, or that Git and blockchain provide equivalent guarantees.</p><div class="resume-actions"><a class="button primary" href="../newsletter/">Get new insights by email <span aria-hidden="true">→</span></a><a class="button secondary" href="complexity-changes-address.html">Read the trade-off heuristic <span aria-hidden="true">→</span></a><a class="button secondary" href="https://www.linkedin.com/posts/mantoshk_distributedsystems-softwareengineering-activity-7472837635892502529-D4Lq" target="_blank" rel="noreferrer">Original LinkedIn post <span aria-hidden="true">↗</span></a></div></section>
+    </article></div></main><script src="/assets/js/ask-mantosh-widget.js?v=20260713-10"></script>
+  </body>
+</html>

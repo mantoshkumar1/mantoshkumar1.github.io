@@ -51,7 +51,7 @@ consent work. Plausible is the better default for a fast engineering portfolio.
 ## Ongoing publishing
 
 Copy `templates/article.html` for every new engineering article or note. Prefer
-directory URLs such as `/thinking/article-slug/`, replace the visible title and
+directory URLs such as `/insights/article-slug/`, replace the visible title and
 summary with factual content, and push to `main`. The Pages workflow generates
 the canonical URL, metadata, Open Graph and Twitter cards, JSON-LD, RSS link,
 and sitemap entry automatically. Use the optional `seo:page` comment only for

@@ -7,7 +7,7 @@ summary: "One concise, factual description of what this document establishes."
 last_updated: "YYYY-MM-DD"
 related_topics: [developer-productivity, distributed-systems]
 visibility: "public"
-url: "/thinking/document-title/"
+url: "/insights/document-title/"
 ---
 
 # Document title

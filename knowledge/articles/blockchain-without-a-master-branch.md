@@ -7,7 +7,7 @@ summary: "A limited Git analogy for understanding blockchain as a shared-history
 last_updated: "2026-07-13"
 related_topics: ["forks", "decentralization", "adversarial-systems", "mental-models"]
 visibility: "public"
-url: "/thinking/blockchain-without-a-master-branch.html"
+url: "/insights/blockchain-without-a-master-branch.html"
 ---
 
 # Blockchain Without a Master Branch

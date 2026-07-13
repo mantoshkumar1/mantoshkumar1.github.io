@@ -195,6 +195,26 @@ test("handles thanks and farewells without claiming missing knowledge", async ()
   }
 });
 
+test("handles lightweight banter without retrieval or unsupported claims", async () => {
+  const socialEnv = {
+    ...env,
+    AI: { run: async () => { throw new Error("No AI call is expected for lightweight banter"); } },
+    KNOWLEDGE_INDEX: { query: async () => { throw new Error("No retrieval is expected for lightweight banter"); } }
+  };
+  for (const [question, expected] of [
+    ["How are you?", /Running smoothly/i],
+    ["Tell me a joke", /repeated manual task/i],
+    ["Are you dumb?", /Fair challenge/i],
+    ["What can you do?", /evidence-based guide/i]
+  ]) {
+    const response = await worker.fetch(request({ question }), socialEnv);
+    const payload = await response.json();
+    assert.equal(response.status, 200);
+    assert.match(payload.answer, expected);
+    assert.deepEqual(payload.sources, []);
+  }
+});
+
 test("answers natural broad-profile wording from published engineering evidence", async () => {
   const profileEnv = {
     ...env,
@@ -298,7 +318,7 @@ test("does not call Workers AI generation when retrieval finds no published know
     return { data: [[0.1, 0.2]] };
   } };
   const response = await worker.fetch(request({ question: "zzzxqv" }), noMatchEnv);
-  assert.equal((await response.json()).answer, "I haven't written about this topic yet.");
+  assert.equal((await response.json()).answer, "I can't support that from Mantosh's published work. Ask me about his experience, projects, engineering approach, or fit for your problem.");
 });
 
 test("exposes an unauthenticated health endpoint without configuration details", async () => {

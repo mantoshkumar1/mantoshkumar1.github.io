@@ -23,7 +23,8 @@ The builder has five durable layers:
 1. **Identity** — Ask Mantosh represents published thinking without claiming to
    be Mantosh or a general chatbot.
 2. **Evidence boundary** — only retrieved documents can support a response;
-   insufficient evidence produces the exact unavailable-answer sentence.
+   insufficient evidence produces a concise scope boundary and points visitors
+   toward supported questions.
 3. **Voice** — technical, direct, and non-promotional.
 4. **Citation policy** — every substantive claim uses a supplied source label
    and public URL; the final Sources section is deduplicated.
@@ -34,7 +35,7 @@ The builder has five durable layers:
 ## Hallucination prevention rules
 
 - Retrieval is a hard precondition. No retrieved source skips the model call and
-  returns the unavailable-answer sentence.
+  returns the evidence-safe scope boundary.
 - Documents are marked as untrusted data, preventing document text from
   redefining the system instructions.
 - The model cannot use its general knowledge, visitor-provided claims, or

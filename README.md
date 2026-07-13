@@ -20,13 +20,13 @@ The current production inventory, data flow, deployment paths, controls, and kno
 - `projects/workflow-automation-toolkit.html` — automation toolkit case study
 - `projects/gtt-price-calculator.html` — Indian stock-market GTT calculator case study
 - `projects/validation-platform-optical-networking.html` — public, evidence-bounded case study on validation platform and release intelligence
-- `thinking/index.html` — engineering Insights archive
-- `thinking/engineering-philosophy.html` — evidence-bounded engineering philosophy
-- `thinking/why-does-this-still-require-me.html` — engineering-leverage note
-- `thinking/release-reports-as-operational-history.html` — operational-history and AI-assisted analysis note
-- `thinking/complexity-changes-address.html` — distributed-systems trade-off note
-- `thinking/blockchain-without-a-master-branch.html` — distributed shared-history analogy
-- `thinking/ownership-before-escalation.html` — proactive engineering-ownership note
+- `insights/index.html` — engineering Insights archive (canonical URL `/insights/`; legacy `/thinking/` URLs redirect here)
+- `insights/engineering-philosophy.html` — evidence-bounded engineering philosophy
+- `insights/why-does-this-still-require-me.html` — engineering-leverage note
+- `insights/release-reports-as-operational-history.html` — operational-history and AI-assisted analysis note
+- `insights/complexity-changes-address.html` — distributed-systems trade-off note
+- `insights/blockchain-without-a-master-branch.html` — distributed shared-history analogy
+- `insights/ownership-before-escalation.html` — proactive engineering-ownership note
 - `experience/index.html` — résumé-verified experience and highlights
 - `resume/index.html` — résumé summary, browser preview, and PDF download
 - `contact/index.html` — prepared email, copy-email, LinkedIn, and GitHub actions
@@ -54,11 +54,20 @@ From the repository root:
 python3 -m http.server 8000
 ```
 
+On Windows, `python3` may be unavailable; use `python -m http.server 8000` instead.
+
 Open `http://127.0.0.1:8000/`. Ask Mantosh accepts the production GitHub Pages origin only, so a local page will show the explicit connection-recovery state rather than bypass production CORS.
 
 ## Release verification
 
 Run the same deterministic gates used by CI:
+
+```bash
+npm run verify
+git diff --check
+```
+
+Or run each step individually:
 
 ```bash
 node scripts/generate-seo.mjs

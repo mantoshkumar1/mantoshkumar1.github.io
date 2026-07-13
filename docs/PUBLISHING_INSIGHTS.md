@@ -1,12 +1,12 @@
 # Publishing an engineering insight
 
-Insights are published under the stable `/thinking/` URL space and presented to visitors as **Insights**. Use this workflow for engineering philosophy, architecture notes, field notes, and technical articles that meet the evidence standard.
+Insights are published under the stable `/insights/` URL space and presented to visitors as **Insights**. Use this workflow for engineering philosophy, architecture notes, field notes, and technical articles that meet the evidence standard.
 
 ## Publication pair
 
 Every publishable insight has two coordinated files:
 
-1. `thinking/<slug>.html` — the human-readable article with navigation, evidence boundary, and canonical metadata.
+1. `insights/<slug>.html` — the human-readable article with navigation, evidence boundary, and canonical metadata.
 2. `knowledge/articles/<slug>.md` or `knowledge/notes/<slug>.md` — the concise retrieval source Ask Mantosh may quote.
 
 The website page can explain and structure the idea. The knowledge document must remain independently understandable, factual, and safe to retrieve without surrounding context.

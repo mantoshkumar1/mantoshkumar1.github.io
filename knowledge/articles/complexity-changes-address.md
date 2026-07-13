@@ -7,7 +7,7 @@ summary: "A system-design heuristic for identifying the failure modes and operat
 last_updated: "2026-07-13"
 related_topics: ["eventual-consistency", "partial-failure", "idempotency", "recovery"]
 visibility: "public"
-url: "/thinking/complexity-changes-address.html"
+url: "/insights/complexity-changes-address.html"
 ---
 
 # In Distributed Systems, Complexity Changes Address

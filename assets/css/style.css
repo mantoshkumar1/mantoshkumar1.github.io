@@ -159,7 +159,34 @@ nav .nav-cta:hover {
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
+  margin-bottom: 0.9rem;
+}
+
+.hero-discovery {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.45rem 1.1rem;
   margin-bottom: 2.4rem;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.hero-discovery > span {
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.hero-discovery a {
+  color: #82b6ff;
+  font-weight: 650;
+}
+
+.hero-discovery a:hover,
+.hero-discovery a:focus-visible {
+  color: #c9ddff;
 }
 
 .button {
@@ -2578,6 +2605,7 @@ html[data-theme="light"] .navbar { background: rgba(247,248,251,.82); border-bot
 html[data-theme="light"] .hero .eyebrow { color: var(--primary); }
 html[data-theme="light"] .hero h1 { color: var(--text); text-shadow: none; }
 html[data-theme="light"] .hero-description { color: var(--muted); }
+html[data-theme="light"] .hero-discovery a { color: #075fbd; }
 html[data-theme="light"] nav a:hover,
 html[data-theme="light"] nav a:focus-visible,
 html[data-theme="light"] nav a[aria-current="page"] { background: rgba(7,95,189,.1); }
@@ -2623,6 +2651,7 @@ html[data-theme="soft"] .navbar { background: rgba(244,239,231,.86); border-bott
 html[data-theme="soft"] .hero .eyebrow { color: var(--primary); }
 html[data-theme="soft"] .hero h1 { color: var(--text); text-shadow: none; }
 html[data-theme="soft"] .hero-description { color: var(--muted); }
+html[data-theme="soft"] .hero-discovery a { color: #7a3f10; }
 html[data-theme="soft"] nav a:hover,
 html[data-theme="soft"] nav a:focus-visible,
 html[data-theme="soft"] nav a[aria-current="page"] { background: rgba(138,75,22,.1); }
@@ -2706,6 +2735,7 @@ html[data-theme="contrast"] .appearance-control select { border-color: #fff; bac
   html:not([data-theme]) .hero .eyebrow { color: var(--primary); }
   html:not([data-theme]) .hero h1 { color: var(--text); text-shadow: none; }
   html:not([data-theme]) .hero-description { color: var(--muted); }
+  html:not([data-theme]) .hero-discovery a { color: #075fbd; }
   html:not([data-theme]) nav a:hover,
   html:not([data-theme]) nav a:focus-visible,
   html:not([data-theme]) nav a[aria-current="page"] { background: rgba(7,95,189,.1); }
