@@ -23,6 +23,42 @@ const SOCIAL_RESPONSES = [
     pattern: /^(?:bye|goodbye|see you|good night)[!.?\s]*$/i,
     answer: "Goodbye! Come back anytime.",
     followUpQuestions: []
+  },
+  {
+    pattern: /^(?:how are you|how(?:'s| is) it going|what(?:'s| is) up)[!.?\s]*$/i,
+    answer: "Running smoothly—and ready to talk engineering. What are you curious about?",
+    followUpQuestions: [
+      "What kind of engineering work does Mantosh do?",
+      "Which project should I look at first?",
+      "How could Mantosh help with my engineering problem?"
+    ]
+  },
+  {
+    pattern: /^(?:who are you|what can you do|help me|help)[!.?\s]*$/i,
+    answer: "I'm the evidence-based guide to Mantosh's published work. I can explain his experience, projects, engineering decisions, and where that experience may fit your problem.",
+    followUpQuestions: [
+      "Tell me about Mantosh in brief.",
+      "Which projects best demonstrate his work?",
+      "How could Mantosh help my engineering team?"
+    ]
+  },
+  {
+    pattern: /^(?:tell me (?:a|an) (?:joke|engineering joke)|make me laugh|i(?:'m| am) bored)[!.?\s]*$/i,
+    answer: "A repeated manual task walked into a platform. It never had to walk in again. Want the serious version? Ask why repeated human work is an engineering smell.",
+    followUpQuestions: [
+      "Why is repeated human work an engineering smell?",
+      "How does Mantosh approach automation?",
+      "Which project best shows that approach?"
+    ]
+  },
+  {
+    pattern: /^(?:(?:are you|you(?:'re| are)) (?:dumb|stupid|useless)|this is nonsense)[!.?\s]*$/i,
+    answer: "Fair challenge. Give me a specific question about Mantosh's work or an engineering problem, and I'll answer from the published evidence—or say clearly when I cannot.",
+    followUpQuestions: [
+      "What kind of engineer is Mantosh?",
+      "What has Mantosh built?",
+      "How could his experience help my team?"
+    ]
   }
 ];
 

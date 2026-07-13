@@ -20,7 +20,7 @@ His résumé-backed capabilities include engineering platforms and automation, P
 - [Engineering experience timeline](https://mantoshkumar1.github.io/experience/)
 - [Resume](https://mantoshkumar1.github.io/resume/)
 - [Contact Mantosh Kumar](https://mantoshkumar1.github.io/contact/)
-- [Engineering insights and philosophy](https://mantoshkumar1.github.io/thinking/)
+- [Engineering insights and philosophy](https://mantoshkumar1.github.io/insights/)
 - [Insights alias](https://mantoshkumar1.github.io/insights/)
 
 ## Featured projects
@@ -33,12 +33,12 @@ His résumé-backed capabilities include engineering platforms and automation, P
 
 ## Engineering insights
 
-- [Engineering Philosophy: Build Leverage, Not Just Software](https://mantoshkumar1.github.io/thinking/engineering-philosophy.html)
-- [Why Does This Still Require Me?](https://mantoshkumar1.github.io/thinking/why-does-this-still-require-me.html)
-- [Release Reports as Operational History](https://mantoshkumar1.github.io/thinking/release-reports-as-operational-history.html)
-- [In Distributed Systems, Complexity Changes Address](https://mantoshkumar1.github.io/thinking/complexity-changes-address.html)
-- [Blockchain Without a Master Branch](https://mantoshkumar1.github.io/thinking/blockchain-without-a-master-branch.html)
-- [Engineering Ownership Before Escalation](https://mantoshkumar1.github.io/thinking/ownership-before-escalation.html)
+- [Engineering Philosophy: Build Leverage, Not Just Software](https://mantoshkumar1.github.io/insights/engineering-philosophy.html)
+- [Why Does This Still Require Me?](https://mantoshkumar1.github.io/insights/why-does-this-still-require-me.html)
+- [Release Reports as Operational History](https://mantoshkumar1.github.io/insights/release-reports-as-operational-history.html)
+- [In Distributed Systems, Complexity Changes Address](https://mantoshkumar1.github.io/insights/complexity-changes-address.html)
+- [Blockchain Without a Master Branch](https://mantoshkumar1.github.io/insights/blockchain-without-a-master-branch.html)
+- [Engineering Ownership Before Escalation](https://mantoshkumar1.github.io/insights/ownership-before-escalation.html)
 
 ## Ask Mantosh
 

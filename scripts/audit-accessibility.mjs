@@ -17,7 +17,7 @@ async function walk(directory) {
 
 for (const file of await walk(root)) {
   const html = await readFile(file, "utf8");
-  const label = relative(root, file);
+  const label = relative(root, file).replaceAll("\\", "/");
   const redirectTarget = /<meta\s+http-equiv=["']refresh["']\s+content=["'][^"']*url=([^"';]+)["']/i.exec(html)?.[1]?.trim();
   if (redirectTarget) {
     const escapedTarget = redirectTarget.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");

@@ -41,6 +41,7 @@ Every request takes this path before a Workers AI generation call:
 1. Validate or create a client-held `conversationId`.
 2. Load the bounded session memory and expand retrieval only with the most recent visitor topic.
 3. Route deterministic commands such as `Resume`, `Contact`, `Show PhotoSahi`, and `Latest article` directly to a page. These return `action: { type: "navigate", ... }` and do not call the AI model.
+   Greetings, courtesies, capability questions, and a small set of harmless banter also receive deterministic replies so the assistant stays human without becoming an ungrounded general chatbot.
 4. Use hybrid retrieval for questions that need an answer, then calculate retrieval evidence confidence.
 5. Build metadata-only recommendations and three follow-up questions from public tags and related topics. This requires no generative call.
 6. Cache eligible first-turn responses by normalized question and knowledge version. Multi-turn responses are never shared through this cache.

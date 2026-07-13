@@ -7,12 +7,12 @@
     },
     {
       "id": "insights",
-      "page": "thinking/index.html",
+      "page": "insights/index.html",
       "categories": ["article", "note"]
     },
     {
       "id": "reliability-observability",
-      "page": "thinking/index.html",
+      "page": "insights/index.html",
       "categories": ["article", "note"],
       "tagsAny": ["reliability", "observability"]
     },

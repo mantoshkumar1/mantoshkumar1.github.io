@@ -7,7 +7,7 @@ summary: "Four principles Mantosh Kumar uses to frame engineering work: start wi
 last_updated: "2026-07-12"
 related_topics: [workflow-design, developer-productivity, system-ownership, evidence-based-engineering]
 visibility: "public"
-url: "/thinking/engineering-philosophy.html"
+url: "/insights/engineering-philosophy.html"
 ---
 
 # Engineering Philosophy: Build Leverage, Not Just Software

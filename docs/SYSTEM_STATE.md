@@ -13,7 +13,7 @@ This document is the canonical description of what is deployed. Architecture pro
 | Health | `https://ask-mantosh.mantoshk234.workers.dev/health` | Unauthenticated service health without configuration details |
 | Knowledge indexing | `POST /internal/index` | GitHub OIDC or manual recovery token only; intentionally unavailable to browsers through CORS |
 
-Last verified Worker deployment: `defee067-2437-4d44-81f1-bf9ccd4e4094`. The active answer-policy cache namespace is `visitor-intent-v14`.
+Last verified Worker deployment: `defee067-2437-4d44-81f1-bf9ccd4e4094`. The active answer-policy cache namespace is `visitor-intent-v15`.
 
 ## Published inventory
 
@@ -36,7 +36,7 @@ flowchart LR
   H --> C["Prepared email, copy address, LinkedIn, GitHub"]
   H --> A["Ask Mantosh panel"]
   A --> W["Cloudflare Worker"]
-  W --> S["Deterministic greetings and courtesies"]
+  W --> S["Deterministic greetings, courtesies, and light banter"]
   W --> N["Deterministic navigation"]
   W --> Q["Validated knowledge question"]
   Q --> D["D1 FTS5"]
@@ -48,7 +48,7 @@ flowchart LR
   G --> A
 ```
 
-The chat UI streams the response, sanitizes rendered Markdown, presents canonical source chips, preserves server-provided follow-up questions, supports retry/copy actions, traps focus, minimizes without losing the session, and provides an explicit close-and-clear action. Simple greetings, thanks, and farewells receive deterministic conversational replies without retrieval or AI use. Natural profile wording—including questions about what kind of person or engineer Mantosh is—routes to the published professional profile and technical evidence without inferring private personality. Subjective praise or skepticism is answered as opinion followed by concise published evidence. If the model omits its Sources section, the Worker inserts the canonical retrieved source rather than exposing an internal citation-formatting failure.
+The chat UI streams the response, sanitizes rendered Markdown, presents canonical source chips, preserves server-provided follow-up questions, supports retry/copy actions, traps focus, minimizes without losing the session, and provides an explicit close-and-clear action. Simple greetings, thanks, farewells, capability questions, and bounded light banter receive deterministic conversational replies without retrieval or AI use. Natural profile wording—including questions about what kind of person or engineer Mantosh is—routes to the published professional profile and technical evidence without inferring private personality. Subjective praise or skepticism is answered as opinion followed by concise published evidence. Unsupported topics receive a helpful scope boundary instead of implying that Mantosh personally has not written about them. If the model omits its Sources section, the Worker inserts the canonical retrieved source rather than exposing an internal citation-formatting failure.
 
 ## Knowledge publication flow
 
@@ -73,7 +73,7 @@ The committed production configuration uses:
 - 50 AI-bearing requests per UTC day through D1;
 - six retained conversation turns and a 24-hour session TTL.
 
-Cloudflare Cache API stores eligible embeddings, retrieval candidates, and first-turn answers for 15, 5, and 10 minutes respectively. The optional `CACHE_VERSION` KV binding is not configured in the committed production file, so knowledge-index invalidation currently relies on TTL expiry and the fallback version. Answer-policy changes explicitly advance `ANSWER_POLICY_VERSION`—currently `visitor-intent-v14`—to avoid serving a response cached under an older formatter or prompt contract. This is an explicit known limitation, not an undocumented guarantee.
+Cloudflare Cache API stores eligible embeddings, retrieval candidates, and first-turn answers for 15, 5, and 10 minutes respectively. The optional `CACHE_VERSION` KV binding is not configured in the committed production file, so knowledge-index invalidation currently relies on TTL expiry and the fallback version. Answer-policy changes explicitly advance `ANSWER_POLICY_VERSION`—currently `visitor-intent-v15`—to avoid serving a response cached under an older formatter or prompt contract. This is an explicit known limitation, not an undocumented guarantee.
 
 ## Security and privacy controls
 
@@ -96,11 +96,11 @@ The repository currently enforces:
 - internal link, fragment, and asset validation;
 - documentation drift checks;
 - autonomous content-lane counts and explicit zero-content states;
-- 46 Worker contract, deterministic social and achievement routing, natural profile-language routing, security, quota, OIDC, retrieval, concise intent-formatting, prompt, citation-repair, and failure-path tests, plus static UI guards for immediate safe Markdown rendering.
+- 47 Worker contract, deterministic social, light-banter, and achievement routing, natural profile-language routing, security, quota, OIDC, retrieval, concise intent-formatting, prompt, citation-repair, and failure-path tests, plus static UI guards for immediate safe Markdown rendering.
 
 ## Known limits
 
-- Only 14 public knowledge documents are indexed; outside deterministic greetings, courtesies, and navigation, Ask Mantosh intentionally declines questions they cannot support.
+- Only 14 public knowledge documents are indexed; outside deterministic greetings, courtesies, light banter, and navigation, Ask Mantosh keeps answers within published evidence and clearly redirects unsupported topics.
 - Public evidence has no fabricated employer metrics or inferred organizational outcomes.
 - The Worker uses the Cloudflare free allocation and may return a clear 429 when safety or provider limits are reached.
 - There is no authenticated user account, durable personal profile, staging environment declared in this repository, formal accessibility conformance audit, or labeled offline retrieval-evaluation set.

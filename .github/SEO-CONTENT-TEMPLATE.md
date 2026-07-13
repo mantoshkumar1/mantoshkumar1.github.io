@@ -1,6 +1,6 @@
 # Publishing a future engineering page
 
-Create a directory URL, such as `thinking/release-health/index.html`, by copying
+Create a directory URL, such as `insights/release-health/index.html`, by copying
 `templates/article.html`. Replace the visible title, summary, page type, and
 article body with factual, evidence-backed content.
 
@@ -22,6 +22,6 @@ route and add explicit metadata only when `SoftwareApplication` is truthful:
 <!-- seo:page {"entityName":"Project name","softwareApplication":true,"applicationCategory":"UtilitiesApplication"} -->
 ```
 
-The generator infers `TechArticle` for pages under `thinking/`, `articles/`, and
+The generator infers `TechArticle` for pages under `insights/`, `articles/`, and
 `notes/`; it infers `Project` for pages under `projects/`. Do not claim software
 application, dates, metrics, or outcomes that the visible page cannot support.

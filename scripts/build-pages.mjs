@@ -6,7 +6,7 @@ const source = resolve(process.cwd());
 const output = join(source, "dist");
 const excluded = new Set([
   ".DS_Store", ".git", ".github", ".gitignore", "AGENTS.md", "README.md", "VISION.md",
-  "_config.yml", "chat-worker", "dist", "docs", "knowledge", "node_modules", "plan", "scripts", "templates"
+  "_config.yml", "chat-worker", "dist", "docs", "knowledge", "node_modules", "package.json", "plan", "scripts", "templates"
 ]);
 const privateAssetPaths = [
   "assets/.DS_Store",

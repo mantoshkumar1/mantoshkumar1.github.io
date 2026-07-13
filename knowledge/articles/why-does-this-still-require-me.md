@@ -7,7 +7,7 @@ summary: "A personal engineering heuristic for recognizing repeated work that sh
 last_updated: "2026-07-13"
 related_topics: [engineering-leverage, workflow-design, operational-ownership]
 visibility: "public"
-url: "/thinking/why-does-this-still-require-me.html"
+url: "/insights/why-does-this-still-require-me.html"
 ---
 
 # Why Does This Still Require Me?

@@ -7,7 +7,7 @@ summary: "A personal communication standard for making material engineering issu
 last_updated: "2026-07-13"
 related_topics: ["escalation", "decision-making", "accountability", "status-communication"]
 visibility: "public"
-url: "/thinking/ownership-before-escalation.html"
+url: "/insights/ownership-before-escalation.html"
 ---
 
 # Engineering Ownership Before Escalation

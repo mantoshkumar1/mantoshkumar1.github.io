@@ -1,5 +1,6 @@
 import { readFile, readdir, writeFile } from "node:fs/promises";
 import { resolve, relative, dirname, extname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 
 const SOURCE_ROOT = resolve(process.env.SITE_ROOT || process.cwd());
 const CONFIG_PATH = resolve(process.env.SEO_CONFIG || join(SOURCE_ROOT, "seo.config.json"));
@@ -194,7 +195,7 @@ function metadataFromHtml(html, route, config) {
   const firstParagraph = html.match(/<h1[^>]*>[\s\S]*?<\/h1>[\s\S]*?<p[^>]*>([\s\S]*?)<\/p>/i)?.[1];
   const title = override.title || stripHtml(currentTitle || heading || config.site.name);
   const description = override.description || cleanDescription(firstParagraph || config.site.description);
-  const inferredKind = route.startsWith("/thinking/") && route !== "/thinking/"
+  const inferredKind = route.startsWith("/insights/") && route !== "/insights/"
     ? "article"
     : route.startsWith("/articles/") || route.startsWith("/notes/")
       ? "article"
@@ -246,7 +247,7 @@ export async function generateSeo(root = SOURCE_ROOT, configPath = CONFIG_PATH) 
   return entries;
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (process.argv[1] && fileURLToPath(import.meta.url) === resolve(process.argv[1])) {
   const entries = await generateSeo();
   console.log(`Generated SEO metadata and sitemap for ${entries.length} pages.`);
 }

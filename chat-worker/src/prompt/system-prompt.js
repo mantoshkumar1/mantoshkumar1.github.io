@@ -1,4 +1,4 @@
-export const NO_KNOWLEDGE_ANSWER = "I haven't written about this topic yet.";
+export const NO_KNOWLEDGE_ANSWER = "I can't support that from Mantosh's published work. Ask me about his experience, projects, engineering approach, or fit for your problem.";
 
 export const RESPONSE_SECTIONS = Object.freeze(["Answer", "In brief", "Highlights", "Context", "What matters", "Sources", "Follow-up Questions"]);
 

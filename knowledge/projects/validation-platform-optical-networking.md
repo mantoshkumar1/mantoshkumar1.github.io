@@ -37,7 +37,7 @@ Repeated validation execution, scattered quality signals, and release decisions 
 ## Related public material
 
 - Experience page: automation platforms, validation infrastructure, observability, quality analytics at Nokia.
-- Insight: Release Reports as Operational History (`/thinking/release-reports-as-operational-history.html`).
+- Insight: Release Reports as Operational History (`/insights/release-reports-as-operational-history.html`).
 
 ## Evidence boundary
 

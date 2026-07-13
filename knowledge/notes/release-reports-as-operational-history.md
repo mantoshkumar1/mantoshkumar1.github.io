@@ -7,7 +7,7 @@ summary: "A framework for using comparable release-health reports as longitudina
 last_updated: "2026-07-13"
 related_topics: ["failure-analysis", "release-health", "trend-analysis", "data-provenance"]
 visibility: "public"
-url: "/thinking/release-reports-as-operational-history.html"
+url: "/insights/release-reports-as-operational-history.html"
 ---
 
 # Release Reports as Operational History

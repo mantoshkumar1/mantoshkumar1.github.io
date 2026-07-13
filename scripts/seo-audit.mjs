@@ -1,8 +1,7 @@
 import { readdir, readFile } from "node:fs/promises";
 import { join, relative, resolve } from "node:path";
 
-const repositoryRoot = new URL("..", import.meta.url).pathname;
-const root = resolve(process.env.SITE_ROOT || repositoryRoot);
+const root = resolve(process.env.SITE_ROOT || join(import.meta.dirname, ".."));
 const required = [
   /<meta\s+charset=/i,
   /<meta\s+name=["']viewport["']/i,
