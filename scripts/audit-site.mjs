@@ -63,6 +63,7 @@ const homeHtml = await readFile(join(root, "index.html"), "utf8");
 if (!/Aricent → Cisco → Intel → Siemens → KI Labs → Nokia/.test(homeHtml)) { console.error("homepage: career chronology is missing or out of order"); failures += 1; }
 if (/Infinera|acquisition/i.test(homeHtml)) { console.error("homepage: obsolete employer-transition story must stay removed"); failures += 1; }
 if (!/<strong>Staff Software Engineer<\/strong>\s*<span>Toronto<\/span>/.test(homeHtml)) { console.error("homepage: concise role and Toronto location signal is missing"); failures += 1; }
+if (!/<strong>Canadian citizen<\/strong>\s*<span>Work authorization: Canada • United States • India<\/span>/.test(homeHtml)) { console.error("homepage: citizenship or work authorization signal is missing"); failures += 1; }
 if (/14\+ years • Toronto, Canada • Canadian citizen/.test(homeHtml)) { console.error("homepage: identity summary must stay concise"); failures += 1; }
 if (!/STAFF \/ PRINCIPAL ENGINEERING • PLATFORM &amp; AUTOMATION/.test(homeHtml)) { console.error("homepage: location-neutral Staff/Principal positioning is missing"); failures += 1; }
 for (const region of ["india", "germany", "canada"]) {
