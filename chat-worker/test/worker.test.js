@@ -205,7 +205,8 @@ test("handles lightweight banter without retrieval or unsupported claims", async
     ["How are you?", /Running smoothly/i],
     ["Tell me a joke", /repeated manual task/i],
     ["Are you dumb?", /Fair challenge/i],
-    ["What can you do?", /evidence-based guide/i]
+    ["What can you do?", /evidence-based guide/i],
+    ["zzzxqv", /couldn't make sense/i]
   ]) {
     const response = await worker.fetch(request({ question }), socialEnv);
     const payload = await response.json();
@@ -317,7 +318,7 @@ test("does not call Workers AI generation when retrieval finds no published know
     assert.match(model, /bge-m3/);
     return { data: [[0.1, 0.2]] };
   } };
-  const response = await worker.fetch(request({ question: "zzzxqv" }), noMatchEnv);
+  const response = await worker.fetch(request({ question: "What is the weather on Mars?" }), noMatchEnv);
   assert.equal((await response.json()).answer, "I can't support that from Mantosh's published work. Ask me about his experience, projects, engineering approach, or fit for your problem.");
 });
 
@@ -689,6 +690,8 @@ test("still rejects a model-authored link outside retrieved evidence", () => {
 
 test("scores partial retrieval evidence conservatively", () => {
   assert.equal(scoreRetrievalConfidence({ bestSemanticScore: 0, lexicalMatchCount: 0, sourceCount: 0 }), "low");
-  assert.equal(scoreRetrievalConfidence({ bestSemanticScore: 0.3, lexicalMatchCount: 0, sourceCount: 1 }), "medium");
+  assert.equal(scoreRetrievalConfidence({ bestSemanticScore: 0.3, lexicalMatchCount: 0, sourceCount: 1 }), "low");
+  assert.equal(scoreRetrievalConfidence({ bestSemanticScore: 0.42, lexicalMatchCount: 0, sourceCount: 1 }), "medium");
+  assert.equal(scoreRetrievalConfidence({ bestSemanticScore: 0.3, lexicalMatchCount: 1, sourceCount: 1 }), "medium");
   assert.equal(scoreRetrievalConfidence({ bestSemanticScore: 0.8, lexicalMatchCount: 1, sourceCount: 1 }), "high");
 });

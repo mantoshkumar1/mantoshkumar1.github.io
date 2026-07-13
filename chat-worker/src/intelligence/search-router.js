@@ -64,6 +64,22 @@ const SOCIAL_RESPONSES = [
 
 function normalize(value) { return value.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim(); }
 
+function isLowInformationQuestion(value) {
+  const normalized = normalize(value);
+  const tokens = normalized.split(" ").filter(Boolean);
+  if (tokens.length !== 1) return false;
+  return /(.)\1{2}/i.test(normalized) || (normalized.length >= 5 && !/[aeiou]/i.test(normalized) && value !== value.toUpperCase());
+}
+
+const CLARIFY_RESPONSE = {
+  answer: "I couldn't make sense of that one—my circuits may be innocent this time. Try a few more words, or ask about Mantosh's work, projects, or an engineering problem.",
+  followUpQuestions: [
+    "What kind of engineering work does Mantosh do?",
+    "Which projects best demonstrate his work?",
+    "How could Mantosh help with my engineering problem?"
+  ]
+};
+
 export class SearchRouter {
   constructor(metadataService) { this.metadataService = metadataService; }
 
@@ -71,6 +87,7 @@ export class SearchRouter {
     const trimmed = question.trim();
     const social = SOCIAL_RESPONSES.find((response) => response.pattern.test(trimmed));
     if (social) return { kind: "social", response: social };
+    if (isLowInformationQuestion(trimmed)) return { kind: "social", response: CLARIFY_RESPONSE };
 
     const direct = STATIC_DESTINATIONS.find((destination) => destination.pattern.test(trimmed));
     if (direct) return { kind: "navigate", destination: direct };
