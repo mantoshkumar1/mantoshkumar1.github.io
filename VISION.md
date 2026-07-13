@@ -3,6 +3,8 @@
 ## Goal
 Create a permanent home for Mantosh Kumar's engineering work that demonstrates how he thinks, what he builds, and the impact of that work.
 
+The primary commercial objective is to attract Staff Engineer and Principal Engineer opportunities from companies and recruiters in Dubai and the wider UAE. Staff Software Engineer remains Mantosh's documented current title; Principal Engineer is a target level. Engineering contracts remain a secondary path.
+
 ## Success Criteria
 A visitor should be able to understand within two minutes:
 - Who Mantosh is.
@@ -10,6 +12,7 @@ A visitor should be able to understand within two minutes:
 - What systems he has built.
 - How he thinks.
 - How to contact him.
+- That he is targeting Staff or Principal Engineer opportunities, primarily in Dubai and the UAE.
 
 ## Core Principles
 - Keep the platform intentionally simple.

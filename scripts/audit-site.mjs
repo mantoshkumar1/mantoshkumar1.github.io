@@ -45,6 +45,7 @@ if (/contain-intrinsic-size:\s*auto\s+720px/i.test(stylesheet) || /\.section\s*\
 const homeHtml = await readFile(join(root, "index.html"), "utf8");
 if (!/Aricent → Cisco → Intel → Siemens → KI Labs → Infinera → Nokia/.test(homeHtml)) { console.error("homepage: career chronology is missing or out of order"); failures += 1; }
 if (!/14\+ years • Toronto, Canada • Canadian citizen/.test(homeHtml)) { console.error("homepage: current location and Canadian citizenship signal is missing"); failures += 1; }
+if (!/DUBAI \/ UAE • STAFF \/ PRINCIPAL ROLES/.test(homeHtml)) { console.error("homepage: Dubai Staff/Principal opportunity target is missing"); failures += 1; }
 for (const region of ["india", "germany", "canada"]) {
   if (!new RegExp(`href=["']experience/#${region}["']`, "i").test(homeHtml)) { console.error(`homepage: ${region} experience card must link to its regional detail`); failures += 1; }
 }
@@ -57,6 +58,8 @@ if (!/href=["']https:\/\/www\.linkedin\.com\/in\/mantoshk\/details\/recommendati
 for (const region of ["india", "germany", "canada"]) {
   if (!new RegExp(`id=["']${region}["']`, "i").test(experienceHtml)) { console.error(`experience: missing ${region} regional anchor`); failures += 1; }
 }
+const contactHtml = await readFile(join(root, "contact/index.html"), "utf8");
+if (/senior or staff engineering role/i.test(contactHtml) || !/Staff or Principal Engineer role/.test(contactHtml) || !/Dubai and UAE opportunities/.test(contactHtml)) { console.error("contact: target role and Dubai/UAE positioning is stale"); failures += 1; }
 for (const page of ["index.html", "thinking/index.html"]) {
   const html = await readFile(join(root, page), "utf8");
   for (const card of html.matchAll(/<article\b[^>]*class=["'][^"']*insight-card[^"']*["'][^>]*>([\s\S]*?)<\/article>/gi)) {

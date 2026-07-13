@@ -15,7 +15,7 @@
   "pages": {
     "/": {
       "title": "Mantosh Kumar | Platform Engineering, Automation & AI Systems",
-      "description": "Staff Software Engineer Mantosh Kumar turns engineering friction into platform foundations, practical automation, and clearer operational decisions.",
+      "description": "Staff Software Engineer Mantosh Kumar is targeting Staff and Principal Engineer opportunities in Dubai and the UAE across platforms, automation, backend systems, and operational intelligence.",
       "kind": "home"
     },
     "/systems/": {
@@ -95,14 +95,14 @@
       "schemaType": "CollectionPage"
     },
     "/resume/": {
-      "title": "Staff Software Engineer Resume | Mantosh Kumar",
-      "description": "Resume for Toronto-based Staff Software Engineer Mantosh Kumar, with 14+ years across platform engineering, automation, backend systems, networking, and operational intelligence.",
+      "title": "Staff & Principal Engineer Resume | Mantosh Kumar",
+      "description": "Resume for Staff Software Engineer Mantosh Kumar, targeting Staff and Principal Engineer opportunities in Dubai and the UAE with 14+ years across platforms, automation, backend systems, and networking.",
       "kind": "page",
       "schemaType": "ProfilePage"
     },
     "/contact/": {
-      "title": "Contact Mantosh Kumar | Staff Software Engineer",
-      "description": "Discuss a senior engineering role, contract, or platform, automation, backend, and operational intelligence project with Mantosh Kumar.",
+      "title": "Contact Mantosh Kumar | Staff & Principal Engineer Roles",
+      "description": "Discuss Staff or Principal Engineer opportunities in Dubai and the UAE, or platform, automation, backend, and operational intelligence contracts with Mantosh Kumar.",
       "kind": "page",
       "schemaType": "ContactPage"
     },

@@ -2,7 +2,7 @@
 title: "About Mantosh and Where His Experience Can Help"
 slug: "about-mantosh"
 category: "faq"
-tags: [staff-software-engineer, platform-engineering, automation, backend-systems, networking, operational-intelligence, hiring, canadian-citizen, toronto, canada]
+tags: [staff-software-engineer, principal-engineer, platform-engineering, automation, backend-systems, networking, operational-intelligence, hiring, canadian-citizen, toronto, canada, dubai, uae]
 summary: "A concise, evidence-backed guide to Mantosh Kumar's engineering background, strongest documented capability areas, and appropriate ways to assess fit for a role or project."
 last_updated: "2026-07-12"
 related_topics: [engineering-capabilities, workflow-automation, distributed-validation, developer-productivity, quality-analytics]
@@ -19,6 +19,10 @@ Mantosh Kumar is a Toronto-based Staff Software Engineer with more than 14 years
 ## Location and citizenship
 
 Mantosh is based in Toronto, Canada, and is a Canadian citizen. This public profile fact is included to give recruiters and clients clear location and Canadian work-eligibility context. It does not state availability, willingness to relocate, or eligibility in any other country.
+
+## Target roles and market
+
+Mantosh is seeking Staff Engineer or Principal Engineer opportunities rather than Senior Engineer roles. Dubai and the wider United Arab Emirates are his primary target market. Staff Software Engineer is his documented current title; Principal Engineer is a target level, not a claim that he already holds that title.
 
 ## Where his documented experience is most relevant
 
