@@ -36,6 +36,13 @@ for (const file of await walk(root)) {
 }
 
 try { await access(join(root, "accessibility", "index.html")); } catch { failures.push("missing accessibility statement"); }
+const accessibilityPage = await readFile(join(root, "accessibility", "index.html"), "utf8");
+if (!/id=["']copy-email["']/.test(accessibilityPage) || !/aria-live=["']polite["']/.test(accessibilityPage)) failures.push("accessibility statement needs a copy-email fallback with an announced status");
+if (/résumé PDF is not currently tagged/i.test(accessibilityPage)) failures.push("accessibility statement contains implementation detail instead of visitor guidance");
+const contactPage = await readFile(join(root, "contact", "index.html"), "utf8");
+if (/href=["']\.\.\/accessibility\//i.test(contactPage)) failures.push("contact page must not duplicate the global accessibility link");
+const homePage = await readFile(join(root, "index.html"), "utf8");
+if (!/<footer[\s\S]*href=["']accessibility\//i.test(homePage)) failures.push("homepage footer must expose the accessibility statement");
 const css = await readFile(join(root, "assets/css/style.css"), "utf8");
 for (const feature of ["prefers-color-scheme: light", "prefers-reduced-motion", "prefers-contrast: more", "prefers-reduced-transparency: reduce", "forced-colors: active", ":focus-visible"]) {
   if (!css.includes(feature)) failures.push(`stylesheet missing ${feature}`);

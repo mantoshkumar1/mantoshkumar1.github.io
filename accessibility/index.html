@@ -37,7 +37,7 @@
     <!-- seo:generated:end -->
 
 <title>Accessibility | Mantosh Kumar</title>
-    <link rel="stylesheet" href="../assets/css/style.css?v=20260712-26" />
+    <link rel="stylesheet" href="../assets/css/style.css?v=20260712-27" />
   </head>
   <body>
     <a class="skip-link" href="#main-content">Skip to main content</a>
@@ -47,11 +47,26 @@
           <a href="../">Home</a><a href="../systems/">Projects</a><a href="../thinking/">Insights</a><a href="../experience/">Experience</a><a href="../resume/">Resume</a><a class="nav-cta" href="../contact/">Work with me</a></nav>
     </div></header>
     <main class="page-shell" id="main-content" tabindex="-1"><div class="container"><article class="resume-card case-study">
-      <header class="resume-header"><p class="eyebrow">Accessibility</p><h1>Built to work for more people</h1><p>Use this website with a keyboard, screen reader, zoom, reduced motion, or your preferred contrast and color settings.</p></header>
-      <section class="resume-section"><h2>What is supported</h2><ul class="case-study-list"><li>Clear headings, landmarks, page titles, skip links, visible keyboard focus, and no pointer-only actions.</li><li>Responsive layouts that reflow without horizontal page scrolling.</li><li>Auto, Light, Dark, Soft, and High contrast appearances, alongside system accessibility preferences.</li><li>Keyboard and screen-reader support in Ask Mantosh, including focus management and completion announcements.</li></ul></section>
-      <section class="resume-section"><h2>Known limits</h2><ul class="case-study-list"><li>The résumé PDF is not currently tagged; use the <a href="../resume/">HTML résumé</a> or <a href="../experience/">experience page</a> instead.</li><li>English is the authoritative version. Browser translation can be used without sending content through a website translation widget.</li></ul></section>
-      <section class="resume-section"><h2>Found a barrier?</h2><p>Tell me which page you were using and what prevented you from completing your task.</p><div class="resume-actions"><a class="button primary" href="mailto:mantoshk234@gmail.com?subject=Website%20accessibility%20issue">Email Mantosh <span aria-hidden="true">→</span></a><a class="button secondary" href="../contact/">Other contact options</a></div></section>
+      <header class="resume-header"><p class="eyebrow">Accessibility</p><h1>Built to work for more people</h1><p>Keyboard, screen-reader, zoom, reduced-motion, contrast, and responsive-layout support are built in.</p></header>
+      <section class="resume-section"><h2>What you can expect</h2><ul class="case-study-list"><li>Clear structure, visible keyboard focus, and no pointer-only actions.</li><li>Auto, Light, Dark, Soft, and High contrast appearances.</li><li>Accessible navigation and focus management in Ask Mantosh.</li></ul></section>
+      <section class="resume-section"><h2>Found a barrier?</h2><p>Tell me the page and what prevented you from completing your task.</p><div class="resume-actions contact-primary-actions"><a class="button primary" href="mailto:mantoshk234@gmail.com?subject=Website%20accessibility%20issue">Email Mantosh <span aria-hidden="true">→</span></a><button class="button secondary" id="copy-email" type="button">Copy email</button></div><p class="contact-copy-status" id="copy-email-status" role="status" aria-live="polite"></p></section>
     </article></div></main>
+    <script>
+      const copyEmailButton = document.querySelector("#copy-email");
+      const copyEmailStatus = document.querySelector("#copy-email-status");
+      const emailAddress = "mantoshk234@gmail.com";
+
+      copyEmailButton.addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText(emailAddress);
+          copyEmailButton.textContent = "Copied";
+          copyEmailStatus.textContent = `Copied: ${emailAddress}`;
+          window.setTimeout(() => { copyEmailButton.textContent = "Copy email"; }, 1800);
+        } catch {
+          copyEmailStatus.textContent = `Could not copy. Email ${emailAddress} directly.`;
+        }
+      });
+    </script>
     <script src="/assets/js/ask-mantosh-widget.js?v=20260712-7"></script>
   </body>
 </html>
