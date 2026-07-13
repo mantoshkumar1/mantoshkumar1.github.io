@@ -38,5 +38,7 @@ if (/action=["']https:\/\/buttondown\.com\/api\/emails\/embed-subscribe\/mantosh
 const homeHtml = await readFile(join(root, "index.html"), "utf8");
 if (!/Aricent → Cisco → Intel → Siemens → KI Labs → Infinera → Nokia/.test(homeHtml)) { console.error("homepage: career chronology is missing or out of order"); failures += 1; }
 if (!/Infinera later became part of Nokia\./.test(homeHtml)) { console.error("homepage: Infinera-to-Nokia continuity needs an explicit explanation"); failures += 1; }
+const experienceHtml = await readFile(join(root, "experience/index.html"), "utf8");
+if (!/href=["']https:\/\/www\.linkedin\.com\/in\/mantoshk\/details\/recommendations\/["'][^>]*>Read the recommendations on LinkedIn/i.test(experienceHtml)) { console.error("experience: recommendation link must open the dedicated LinkedIn recommendations page"); failures += 1; }
 if (failures) process.exit(1);
 console.log(`SEO audit passed for ${pages.length} indexable pages.`);
