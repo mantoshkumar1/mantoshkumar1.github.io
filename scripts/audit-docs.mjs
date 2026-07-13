@@ -8,12 +8,17 @@ const requireText = (content, expected, label) => {
   if (!content.includes(expected)) failures.push(`${label}: missing ${expected}`);
 };
 
-const [readme, state, docsIndex, workerReadme, workerDocsIndex, wrangler, widget, deployWorkflow, seoWorkflow] = await Promise.all([
+const [readme, state, docsIndex, linkedInAudit, knowledgeReadme, workerReadme, workerDocsIndex, maintenance, troubleshooting, workerSource, wrangler, widget, deployWorkflow, seoWorkflow] = await Promise.all([
   read("README.md"),
   read("docs/SYSTEM_STATE.md"),
   read("docs/README.md"),
+  read("docs/LINKEDIN_CONTENT_AUDIT.md"),
+  read("knowledge/README.md"),
   read("chat-worker/README.md"),
   read("chat-worker/docs/README.md"),
+  read("chat-worker/docs/MAINTENANCE.md"),
+  read("chat-worker/docs/TROUBLESHOOTING.md"),
+  read("chat-worker/src/index.js"),
   read("chat-worker/wrangler.toml"),
   read("assets/js/ask-mantosh-widget.js"),
   read(".github/workflows/deploy-pages.yml"),
@@ -60,6 +65,17 @@ for (const directory of knowledgeDirectories) {
   }
 }
 requireText(state, `${publicDocuments} public Ask Mantosh documents`, "system state");
+requireText(knowledgeReadme, `${publicDocuments} source documents`, "knowledge README");
+requireText(knowledgeReadme, "FAQ: About Mantosh and Where His Experience Can Help", "knowledge README");
+
+for (const expected of ["15 distinct posts", "PhotoSahi Canada–India launch", "Memorable test cases", "Ledger-first blockchain evolution"]) {
+  requireText(linkedInAudit, expected, "LinkedIn content audit");
+}
+
+const answerPolicy = workerSource.match(/const ANSWER_POLICY_VERSION = "([^"]+)";/)?.[1];
+if (!answerPolicy) failures.push("Worker source: ANSWER_POLICY_VERSION could not be determined");
+else requireText(state, answerPolicy, "system state");
+requireText(state, "Last verified Worker deployment:", "system state");
 
 const workerTests = await read("chat-worker/test/worker.test.js");
 const testCount = (workerTests.match(/\btest\s*\(/g) || []).length;
@@ -80,6 +96,8 @@ for (const [workflow, label] of [[deployWorkflow, "Pages workflow"], [seoWorkflo
   requireText(workflow, "node scripts/audit-content-sections.mjs", label);
   requireText(workflow, "node scripts/audit-accessibility.mjs", label);
 }
+requireText(readme, "node scripts/audit-accessibility.mjs", "README release gates");
+requireText(workerReadme, "mandatory Cloudflare Rate Limiting binding", "Worker README");
 
 const stalePatterns = [
   [/YOUR-WORKER\.workers\.dev/g, "placeholder Worker URL"],
@@ -89,6 +107,8 @@ const stalePatterns = [
 ];
 const maintainedDocs = [readme, state, workerReadme, await read("chat-worker/docs/ARCHITECTURE.md"), await read("chat-worker/docs/ASK_MANTOSH_SYSTEM_PROMPT.md"), await read("chat-worker/docs/SECURITY.md")].join("\n");
 for (const [pattern, label] of stalePatterns) if (pattern.test(maintainedDocs)) failures.push(`documentation contains ${label}`);
+if (maintenance.includes("Exercise a staging rollback and run accessibility checks on the chat panel.")) failures.push("maintenance runbook assumes a staging environment that does not exist");
+if (troubleshooting.includes("Use the request ID returned in the response header")) failures.push("troubleshooting guide claims an inactive request-ID response header");
 
 if (failures.length) {
   failures.forEach((failure) => console.error(failure));

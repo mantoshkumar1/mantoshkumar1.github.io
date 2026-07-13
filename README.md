@@ -65,6 +65,7 @@ node scripts/audit-site.mjs
 node scripts/validate-discoverability.mjs
 node scripts/seo-audit.mjs
 node scripts/audit-links.mjs
+node scripts/audit-accessibility.mjs
 node scripts/audit-docs.mjs
 node scripts/audit-content-sections.mjs
 npm test --prefix chat-worker

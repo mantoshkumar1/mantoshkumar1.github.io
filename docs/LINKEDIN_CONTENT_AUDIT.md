@@ -4,7 +4,7 @@ Last reviewed: 2026-07-12
 
 ## Scope and boundary
 
-This audit covers every distinct post exposed by Mantosh Kumar's public LinkedIn profile and search-indexed public history during the review: 12 posts. LinkedIn's authenticated **All activity** route was unavailable, so private, deleted, unindexed, or login-only history is not claimed as reviewed.
+The reviewed set contains 15 distinct posts: 12 exposed by Mantosh Kumar's public LinkedIn profile and search-indexed history during the initial review, plus three posts Mantosh supplied directly afterward. LinkedIn's authenticated **All activity** route was unavailable, so private, deleted, unindexed, login-only, or otherwise unprovided history is not claimed as reviewed.
 
 Publication decisions optimize for hiring and contract credibility. A post enters the website only when it adds durable engineering judgment and stands without invented employer details, outcomes, or metrics.
 
@@ -24,6 +24,9 @@ Publication decisions optimize for hiring and contract credibility. A post enter
 | Ownership before escalation | 84 | Approved with evidence boundary | New engineering-leadership note |
 | Why does this still require me? | 88 | Already published | Existing article retained and strengthened |
 | Holiday and personal message | 10 | Not recommended | Outside the engineering mission |
+| PhotoSahi Canada–India launch | 91 | Approved with claim tightening | Strengthen the existing PhotoSahi case study; verify presets and avoid guaranteed compliance or absolute privacy claims |
+| Memorable test cases | 44 | Not recommended in current form | Save as a seed until one safe test-design example establishes the invariant, oracle, and failure revealed |
+| Ledger-first blockchain evolution | 33 | Not recommended | Keep out of the website; historical, security, immutability, governance, and trust claims require substantial correction |
 
 ## Published sources
 
@@ -32,6 +35,7 @@ Publication decisions optimize for hiring and contract credibility. A post enter
 - [Complexity-changes-address post](https://www.linkedin.com/posts/mantoshk_distributedsystems-systemdesign-softwareengineering-activity-7476620368380633090-upgr)
 - [Blockchain-through-Git post](https://www.linkedin.com/posts/mantoshk_distributedsystems-softwareengineering-activity-7472837635892502529-D4Lq)
 - Ownership and the existing leverage reflection were recovered from search-indexed profile activity; stable post URLs were not exposed in the accessible profile surface.
+- The PhotoSahi launch, memorable-test reflection, and ledger-first blockchain post were supplied directly in conversation; stable LinkedIn post URLs were not provided.
 
 ## Re-review rule
 

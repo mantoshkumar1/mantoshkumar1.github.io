@@ -10,7 +10,10 @@
 | `500 embedding_*` | Semantic retrieval unavailable | Check embedding key, model, and provider status; never answer from model memory. |
 | No-answer response | No sufficiently grounded result | Verify document visibility, index workflow, vector dimensions, and D1 FTS row. |
 | Source URL missing | Invalid metadata/indexing | Fix the Markdown front matter and reindex. |
-| Stale answer | Versioned cache not invalidated | Verify the index workflow bumped knowledge version; purge only as an emergency. |
+| Knowledge answer remains stale after sync | `CACHE_VERSION` KV is not configured, so the Cache API can retain an eligible first-turn answer for up to 10 minutes | Confirm the index workflow completed, verify D1 and Vectorize contain the new document, and allow the TTL to expire; purge only as an emergency. |
+| Prompt or formatter change is not visible | Response cache still uses the previous answer-policy namespace | Increment `ANSWER_POLICY_VERSION`, run tests, redeploy, and record the deployed version in the canonical system state. |
 
-Use the request ID returned in the response header to correlate Worker logs and
-metrics. It is safe to share with operators because it contains no visitor data.
+The current public handler does not emit a request-ID response header. Correlate
+an incident with the recorded Worker deployment version, UTC timestamp, route,
+status code, and aggregate metric. `src/observability.js` is not wired into the
+active handler; do not document its request-ID helper as a production feature.

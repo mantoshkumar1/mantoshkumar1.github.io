@@ -25,7 +25,7 @@ Successful responses always have this shape:
 - `src/indexer.js`: authenticated, idempotent document indexing; it is callable only by GitHub Actions and never by the browser.
 - `src/prompt.js`: evidence-only answer policy and citation-ready document construction.
 - `src/formatter.js`: the stable public response contract.
-- `src/rate-limit.js`: calls a Cloudflare Rate Limiting binding when one is configured.
+- `src/rate-limit.js`: enforces the mandatory Cloudflare Rate Limiting binding and fails closed when it is missing or unavailable.
 
 The Worker reads the managed Cloudflare `AI` binding from its environment. No OpenAI API key or external model-provider credential is used.
 
@@ -65,7 +65,7 @@ npx wrangler secret put INDEXER_TOKEN
 npm run deploy
 ```
 
-`wrangler.toml` already contains the production Worker name, exact GitHub Pages origin, D1 binding, Vectorize binding, Workers AI binding, and mandatory rate-limiter binding. Running `npm run deploy` updates that production Worker. Review the diff and run tests before deploying; do not treat this command as a preview deployment.
+`wrangler.toml` already contains the production Worker name, exact GitHub Pages origin, D1 binding, Vectorize binding, Workers AI binding, and mandatory rate-limiter binding. Running `npm run deploy` updates that production Worker. Review the diff, run tests, and validate the bundle with `npx wrangler deploy --dry-run` before deploying; do not treat the production command as a preview deployment. After deployment, record the immutable Worker version in [`../docs/SYSTEM_STATE.md`](../docs/SYSTEM_STATE.md) and run the documented production smoke tests.
 
 For local development, create an untracked `.dev.vars` file:
 

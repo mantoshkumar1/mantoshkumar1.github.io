@@ -18,9 +18,12 @@
 
 ## Monthly
 
-- Rotate the index token if it is shared with a departing contributor.
+- Review access to the recovery index token. Rotate it after suspected disclosure
+  or when a contributor who could access it departs.
 - Check Cloudflare Workers AI model, quota, and rate-limit change notices.
-- Exercise a staging rollback and run accessibility checks on the chat panel.
+- Run production `/health`, grounded-answer, and no-evidence smoke tests, then run
+  the automated accessibility audit. Exercise rollback only after an isolated
+  staging environment exists.
 
 ## Data lifecycle
 

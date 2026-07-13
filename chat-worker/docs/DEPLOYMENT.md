@@ -10,12 +10,18 @@ production knowledge storage. Set production origins explicitly.
 ## Worker release sequence
 
 1. Run unit tests and prompt-injection fixtures.
-2. Apply additive D1 migrations required by the release.
-3. Deploy with Wrangler and run `/health`, a grounded-answer smoke test, an
+2. When prompts, formatting, or answer policy change, increment
+   `ANSWER_POLICY_VERSION` so eligible cached responses cannot retain the old
+   behavior.
+3. Apply additive D1 migrations required by the release.
+4. Validate the bundle with `npx wrangler deploy --dry-run`, deploy with Wrangler,
+   and run `/health`, a grounded-answer smoke test, an
    unrelated-question test, and an SSE stream test.
-4. If a separate staging environment exists, promote the tested immutable
+5. Record the immutable production Worker version in
+   [`../../docs/SYSTEM_STATE.md`](../../docs/SYSTEM_STATE.md).
+6. If a separate staging environment exists, promote the tested immutable
    version rather than rebuilding it.
-5. Run a full knowledge sync only when schema or indexing behavior requires it;
+7. Run a full knowledge sync only when schema or indexing behavior requires it;
    normal Markdown changes use the automatic changed-file workflow.
 
 The Worker must expose `GET /health` with no sensitive configuration detail.
