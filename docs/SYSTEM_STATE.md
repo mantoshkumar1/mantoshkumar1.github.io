@@ -15,7 +15,7 @@ This document is the canonical description of what is deployed. Architecture pro
 
 ## Published inventory
 
-- Eighteen SEO-configured HTML documents: home, projects index, three project case studies, Insights index, six engineering articles and notes, experience, résumé, contact, newsletter subscription, accessibility statement, and custom 404.
+- Eighteen SEO-configured HTML documents: home, projects index, three project case studies, Insights index, six engineering articles and notes, experience, résumé, contact, newsletter information with RSS and pending email activation, accessibility statement, and custom 404.
 - 11 public Ask Mantosh documents: three project sources, six Insights sources, one résumé-backed engineering-capabilities source, and one evidence-backed profile and fit guide.
 - One résumé PDF served for in-browser preview and explicit download.
 - Sitemap, RSS feed, `robots.txt`, `llms.txt`, JSON-LD, Open Graph, Twitter Card, manifest, icons, and a 1200×630 social image.

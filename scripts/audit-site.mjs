@@ -33,8 +33,7 @@ for (const asset of ["favicon.svg", "favicon.ico", "assets/seo/social-default.pn
   try { await access(join(root, asset)); } catch { console.error(`missing required asset: ${asset}`); failures += 1; }
 }
 const newsletterHtml = await readFile(join(root, "newsletter/index.html"), "utf8");
-if (!/action=["']https:\/\/buttondown\.com\/api\/emails\/embed-subscribe\/mantoshkumar["']/i.test(newsletterHtml)) { console.error("newsletter: missing verified Buttondown subscription endpoint"); failures += 1; }
-if (!/<input\b[^>]*name=["']email["'][^>]*type=["']email["'][^>]*required/i.test(newsletterHtml)) { console.error("newsletter: subscription requires a validated email field"); failures += 1; }
-if (!/name=["']embed["'][^>]*value=["']1["']/i.test(newsletterHtml)) { console.error("newsletter: missing Buttondown embed mode"); failures += 1; }
+if (!/data-buttondown-status=["']review["']/i.test(newsletterHtml)) { console.error("newsletter: missing Buttondown review status"); failures += 1; }
+if (/action=["']https:\/\/buttondown\.com\/api\/emails\/embed-subscribe\/mantoshkumar["']/i.test(newsletterHtml)) { console.error("newsletter: must not collect subscribers while Buttondown is under review"); failures += 1; }
 if (failures) process.exit(1);
 console.log(`SEO audit passed for ${pages.length} indexable pages.`);

@@ -85,16 +85,10 @@
 
           <section class="resume-section">
             <h2>Email subscription</h2>
-            <p>Get an email only when a new engineering article is worth sharing.</p>
-            <form class="newsletter-form" action="https://buttondown.com/api/emails/embed-subscribe/mantoshkumar" method="post" target="_blank" rel="noopener">
-              <label for="newsletter-email">Email address</label>
-              <div class="newsletter-form-row">
-                <input id="newsletter-email" name="email" type="email" inputmode="email" autocomplete="email" placeholder="you@example.com" required />
-                <button class="button primary" type="submit">Subscribe</button>
-              </div>
-              <input name="embed" type="hidden" value="1" />
-              <p>Buttondown manages confirmation and delivery. No promotional noise, and every email includes an unsubscribe option.</p>
-            </form>
+            <div class="empty-state" data-buttondown-status="review" role="status">
+              <strong>Email subscriptions are being activated.</strong>
+              <p>The provider is completing its standard sender review. RSS is available now, and the email form will appear here after activation.</p>
+            </div>
           </section>
 
           <aside class="inline-cta" aria-label="Discuss an engineering problem">
