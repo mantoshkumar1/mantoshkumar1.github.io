@@ -21,6 +21,7 @@ This document is the canonical description of what is deployed. Architecture pro
 - Sitemap, RSS feed, `robots.txt`, `llms.txt`, JSON-LD, Open Graph, Twitter Card, manifest, icons, and a 1200×630 social image.
 - A visitor-controlled Auto, Light, Dark, Soft, and High contrast appearance setting that follows the operating system by default and persists explicit choices on the device.
 - English remains the authoritative content language. Pages expose standard language metadata and selectable text for browser translation; the site does not infer language from location or load a third-party translation widget.
+- Single-destination Insight cards expose the whole card as one link, while project cards preserve separate case-study, product, and source destinations. Long-form Insight pages use a compact reading rhythm distinct from broader landing-page spacing.
 
 ## Visitor flows
 

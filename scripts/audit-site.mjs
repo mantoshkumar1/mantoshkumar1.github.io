@@ -47,5 +47,17 @@ if (!/href=["']https:\/\/www\.linkedin\.com\/in\/mantoshk\/details\/recommendati
 for (const region of ["india", "germany", "canada"]) {
   if (!new RegExp(`id=["']${region}["']`, "i").test(experienceHtml)) { console.error(`experience: missing ${region} regional anchor`); failures += 1; }
 }
+for (const page of ["index.html", "thinking/index.html"]) {
+  const html = await readFile(join(root, page), "utf8");
+  for (const card of html.matchAll(/<article\b[^>]*class=["'][^"']*insight-card[^"']*["'][^>]*>([\s\S]*?)<\/article>/gi)) {
+    const links = card[1].match(/<a\b[^>]*href=/gi) || [];
+    if (links.length !== 1) { console.error(`${page}: every full-card insight must have exactly one destination`); failures += 1; }
+  }
+}
+for (const page of pages.filter((entry) => entry.startsWith("thinking/") && entry !== "thinking/index.html")) {
+  const html = await readFile(join(root, page), "utf8");
+  if (!/class=["'][^"']*page-shell[^"']*reading-shell[^"']*["']/i.test(html)) { console.error(`${page}: article needs compact reading-shell spacing`); failures += 1; }
+  if (!/class=["'][^"']*case-study[^"']*reading-page[^"']*["']/i.test(html)) { console.error(`${page}: article needs compact reading-page spacing`); failures += 1; }
+}
 if (failures) process.exit(1);
 console.log(`SEO audit passed for ${pages.length} indexable pages.`);
