@@ -10,6 +10,7 @@ const requirements = [
 ];
 let failures = 0;
 const stylesheetVersions = new Map();
+const widgetVersions = new Map();
 for (const page of pages) {
   const html = await readFile(join(root, page), "utf8");
   for (const [pattern, name] of requirements) if (!pattern.test(html)) { console.error(`${page}: missing ${name}`); failures += 1; }
@@ -22,13 +23,23 @@ for (const page of pages) {
   const version = /style\.css\?v=([\w-]+)/i.exec(html)?.[1];
   if (!version) { console.error(`${page}: missing versioned stylesheet`); failures += 1; }
   else stylesheetVersions.set(page, version);
+  const widgetVersion = /ask-mantosh-widget\.js\?v=([\w-]+)/i.exec(html)?.[1];
+  if (!widgetVersion) { console.error(`${page}: missing versioned Ask Mantosh widget`); failures += 1; }
+  else widgetVersions.set(page, widgetVersion);
 }
 const notFoundHtml = await readFile(join(root, "404.html"), "utf8");
 const notFoundVersion = /style\.css\?v=([\w-]+)/i.exec(notFoundHtml)?.[1];
 if (!notFoundVersion) { console.error("404.html: missing versioned stylesheet"); failures += 1; }
 else stylesheetVersions.set("404.html", notFoundVersion);
+const notFoundWidgetVersion = /ask-mantosh-widget\.js\?v=([\w-]+)/i.exec(notFoundHtml)?.[1];
+if (!notFoundWidgetVersion) { console.error("404.html: missing versioned Ask Mantosh widget"); failures += 1; }
+else widgetVersions.set("404.html", notFoundWidgetVersion);
 if (new Set(stylesheetVersions.values()).size !== 1) {
   console.error(`stylesheet cache versions differ: ${[...stylesheetVersions].map(([page, version]) => `${page}=${version}`).join(", ")}`);
+  failures += 1;
+}
+if (new Set(widgetVersions.values()).size !== 1) {
+  console.error(`Ask Mantosh widget cache versions differ: ${[...widgetVersions].map(([page, version]) => `${page}=${version}`).join(", ")}`);
   failures += 1;
 }
 for (const asset of ["favicon.svg", "favicon.ico", "assets/seo/social-default.jpg", "apple-touch-icon.png", "assets/icons/icon-192.png", "assets/icons/icon-512.png", "site.webmanifest", "sitemap.xml"]) {

@@ -1398,6 +1398,7 @@ p, li {
 }
 
 .nav-wrap {
+  position: relative;
   height: 68px;
 }
 
@@ -1457,6 +1458,10 @@ nav .nav-cta:not([aria-current="page"]):focus-visible {
   color: var(--text);
   border-color: rgba(91,157,255,.8);
   background: rgba(91,157,255,.1);
+}
+
+.mobile-nav-toggle {
+  display: none;
 }
 
 .hero {
@@ -2006,15 +2011,99 @@ nav .nav-cta:not([aria-current="page"]):focus-visible {
   }
 
   nav {
-    max-width: 66vw;
+    max-width: calc(100% - 5.5rem);
+    overflow: visible;
+    scrollbar-width: none;
   }
 
-  nav > a[aria-current="page"] {
+  nav:not(.mobile-nav-expanded) > a {
+    display: none;
+  }
+
+  .mobile-nav-toggle {
+    display: inline-flex;
+    min-height: 44px;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    padding: .45rem .72rem;
+    border: 1px solid rgba(107, 166, 255, .42);
+    border-radius: 999px;
+    background: rgba(74, 139, 244, .13);
+    color: var(--text);
+    font: inherit;
+    font-size: .8rem;
+    font-weight: 700;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+
+  nav:not(.mobile-nav-expanded) .mobile-nav-toggle[data-has-current="true"]::before {
+    width: .38rem;
+    height: .38rem;
+    margin-right: .42rem;
+    border-radius: 999px;
+    background: var(--primary);
+    content: "";
+  }
+
+  nav:not(.mobile-nav-expanded) .appearance-control select {
+    width: 3.35rem;
+    min-width: 3.35rem;
+    padding-inline: 1.55rem .55rem;
+    color: transparent;
+  }
+
+  nav.mobile-nav-expanded {
+    position: absolute;
+    top: calc(100% + .5rem);
+    right: 0;
+    left: 0;
+    z-index: 10;
+    display: grid;
+    max-width: none;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: .45rem;
+    padding: .7rem;
+    overflow: visible;
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    background: var(--surface);
+    box-shadow: var(--shadow-float);
+    backdrop-filter: saturate(145%) blur(22px);
+    -webkit-backdrop-filter: saturate(145%) blur(22px);
+  }
+
+  nav.mobile-nav-expanded > a {
+    display: flex;
+    min-height: 44px;
+    align-items: center;
+    justify-content: center;
+    margin-left: 0;
+    text-align: center;
+  }
+
+  nav.mobile-nav-expanded .mobile-nav-toggle,
+  nav.mobile-nav-expanded .appearance-control {
+    width: 100%;
+  }
+
+  nav.mobile-nav-expanded .mobile-nav-toggle {
     order: -2;
   }
 
-  nav > .appearance-control {
+  nav.mobile-nav-expanded .appearance-control {
     order: -1;
+  }
+
+  nav.mobile-nav-expanded .appearance-control select {
+    width: 100%;
+    color: var(--text);
+  }
+
+  .appearance-control option {
+    background: var(--surface);
+    color: var(--text);
   }
 
   nav a {
@@ -2064,6 +2153,13 @@ nav .nav-cta:not([aria-current="page"]):focus-visible {
     padding-block: 2rem;
   }
 
+  .ask-mantosh-toggle {
+    width: 3.25rem;
+    height: 3.25rem;
+    padding: 0;
+    justify-content: center;
+  }
+
   .resume-card,
   .not-found-card {
     border-radius: 24px;
@@ -2071,6 +2167,13 @@ nav .nav-cta:not([aria-current="page"]):focus-visible {
 
   .ask-mantosh-panel {
     border-radius: 22px;
+  }
+}
+
+@media (max-width: 360px) {
+  .ask-mantosh-toggle {
+    width: 3rem;
+    height: 3rem;
   }
 }
 
@@ -2451,8 +2554,7 @@ html[data-theme="contrast"] .appearance-control select { border-color: #fff; bac
 
 @media (max-width: 640px) {
   .appearance-control select {
-    width: 7.25rem;
-    min-width: 4.9rem;
+    min-width: 3.35rem;
     font-size: .8rem;
   }
 }

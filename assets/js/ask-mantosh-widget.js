@@ -43,6 +43,46 @@
     });
   }
 
+  if (navigation && !document.getElementById("mobile-nav-toggle")) {
+    navigation.id ||= "primary-navigation";
+    const currentPage = navigation.querySelector('[aria-current="page"]')?.textContent.trim() || "";
+    const closedLabel = currentPage || "Menu";
+    const menuButton = document.createElement("button");
+    menuButton.className = "mobile-nav-toggle";
+    menuButton.id = "mobile-nav-toggle";
+    menuButton.type = "button";
+    menuButton.dataset.hasCurrent = currentPage ? "true" : "false";
+    menuButton.setAttribute("aria-controls", navigation.id);
+    menuButton.setAttribute("aria-expanded", "false");
+    menuButton.setAttribute("aria-label", currentPage ? `Open navigation. Current page: ${currentPage}` : "Open navigation");
+    menuButton.textContent = `${closedLabel} ▾`;
+    navigation.insertBefore(menuButton, navigation.querySelector(".appearance-control"));
+
+    const setNavigationOpen = (open) => {
+      navigation.classList.toggle("mobile-nav-expanded", open);
+      menuButton.setAttribute("aria-expanded", String(open));
+      menuButton.setAttribute("aria-label", open ? "Close navigation" : (currentPage ? `Open navigation. Current page: ${currentPage}` : "Open navigation"));
+      menuButton.textContent = open ? "Close" : `${closedLabel} ▾`;
+    };
+
+    menuButton.addEventListener("click", () => setNavigationOpen(!navigation.classList.contains("mobile-nav-expanded")));
+    navigation.addEventListener("click", (event) => {
+      if (event.target.closest("a")) setNavigationOpen(false);
+    });
+    document.addEventListener("click", (event) => {
+      if (!navigation.contains(event.target)) setNavigationOpen(false);
+    });
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && navigation.classList.contains("mobile-nav-expanded")) {
+        setNavigationOpen(false);
+        menuButton.focus();
+      }
+    });
+    window.matchMedia("(min-width: 641px)").addEventListener?.("change", (event) => {
+      if (event.matches) setNavigationOpen(false);
+    });
+  }
+
   document.querySelector(".skip-link")?.addEventListener("click", (event) => {
     const target = document.querySelector(event.currentTarget.getAttribute("href"));
     window.setTimeout(() => target?.focus(), 0);
