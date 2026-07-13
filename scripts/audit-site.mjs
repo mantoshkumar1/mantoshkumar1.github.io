@@ -55,6 +55,13 @@ if (/<span>Experience\s*<span[^>]*>→<\/span><\/span>/i.test(homeHtml)) { conso
 if (/class=["'][^"']*section-link[^"']*["'][^>]*>\s*View Experience/i.test(homeHtml)) { console.error("homepage: redundant View Experience link must stay removed"); failures += 1; }
 if (!/href=["']systems\/["'][^>]*>View all projects/i.test(homeHtml)) { console.error("homepage: selected projects need a scalable route to the complete portfolio"); failures += 1; }
 const projectsHtml = await readFile(join(root, "systems/index.html"), "utf8");
+const knowledgeSystemHtml = await readFile(join(root, "projects/engineering-knowledge-system.html"), "utf8");
+for (const [page, html] of [["index.html", homeHtml], ["systems/index.html", projectsHtml]]) {
+  if (!/href=["']#ask-mantosh["'][^>]*>Try the live system/i.test(html)) { console.error(`${page}: knowledge-system project must open its live Ask Mantosh experience`); failures += 1; }
+}
+if (!/href=["']#ask-mantosh["'][^>]*>Try Ask Mantosh/i.test(knowledgeSystemHtml)) { console.error("projects/engineering-knowledge-system.html: primary action must demonstrate Ask Mantosh instead of reloading the website"); failures += 1; }
+const askMantoshClient = await readFile(join(root, "assets/js/main.js"), "utf8");
+if (!/window\.location\.hash === ["']#ask-mantosh["']/.test(askMantoshClient) || !/a\[href=["']#ask-mantosh/.test(askMantoshClient)) { console.error("Ask Mantosh: live-system deep link must open the assistant on click and direct arrival"); failures += 1; }
 const gttHtml = await readFile(join(root, "projects/gtt-price-calculator.html"), "utf8");
 for (const [page, html] of [["systems/index.html", projectsHtml], ["projects/gtt-price-calculator.html", gttHtml]]) {
   if (!/href=["']https:\/\/gtt-calculator\.streamlit\.app\/["'][^>]*>[^<]*(?:Try|live product)/i.test(html)) { console.error(`${page}: GTT live product link is missing`); failures += 1; }

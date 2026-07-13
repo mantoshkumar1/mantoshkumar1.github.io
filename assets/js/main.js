@@ -324,7 +324,17 @@ const initializeAskMantosh = () => {
   document.querySelector("[data-year]")?.replaceChildren(String(new Date().getFullYear()));
   const byId = (id) => document.getElementById(id);
   const elements = { toggle: byId("ask-mantosh-toggle"), close: byId("ask-mantosh-close"), backdrop: byId("ask-mantosh-backdrop"), panel: byId("ask-mantosh-panel"), form: byId("ask-mantosh-form"), input: byId("ask-mantosh-input"), send: byId("ask-mantosh-send"), messages: byId("ask-mantosh-messages"), suggestions: byId("ask-mantosh-suggestions"), jump: byId("ask-mantosh-jump"), status: byId("ask-mantosh-status") };
-  if (Object.values(elements).every(Boolean)) new AskMantoshApp(elements).init();
+  if (Object.values(elements).every(Boolean)) {
+    const app = new AskMantoshApp(elements);
+    app.init();
+    document.addEventListener("click", (event) => {
+      const trigger = event.target.closest('a[href="#ask-mantosh"], [data-open-ask-mantosh]');
+      if (!trigger) return;
+      event.preventDefault();
+      app.open();
+    });
+    if (window.location.hash === "#ask-mantosh") app.open();
+  }
 };
 
 if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", initializeAskMantosh);
