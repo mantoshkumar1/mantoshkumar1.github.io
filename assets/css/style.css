@@ -1432,17 +1432,20 @@ nav a[aria-current="page"]::before {
   vertical-align: .08em;
 }
 
-nav .nav-cta {
+nav .nav-cta:not([aria-current="page"]) {
   margin-left: .35rem;
   padding: .5rem .9rem;
-  border-color: rgba(91,157,255,.45);
-  background: rgba(91,157,255,.15);
-  box-shadow: 0 1px 0 rgba(255,255,255,.08) inset;
+  border-color: rgba(148,163,184,.35);
+  background: transparent;
+  color: var(--muted);
+  box-shadow: none;
 }
 
-nav .nav-cta:hover {
+nav .nav-cta:not([aria-current="page"]):hover,
+nav .nav-cta:not([aria-current="page"]):focus-visible {
+  color: var(--text);
   border-color: rgba(91,157,255,.8);
-  background: rgba(91,157,255,.24);
+  background: rgba(91,157,255,.1);
 }
 
 .hero {
@@ -2123,7 +2126,7 @@ html[data-theme="light"] .navbar { background: rgba(247,248,251,.82); border-bot
 html[data-theme="light"] nav a:hover,
 html[data-theme="light"] nav a:focus-visible,
 html[data-theme="light"] nav a[aria-current="page"] { background: rgba(7,95,189,.1); }
-html[data-theme="light"] nav .nav-cta { background: rgba(7,95,189,.1); color: #0b315d; }
+html[data-theme="light"] nav .nav-cta:not([aria-current="page"]) { background: transparent; color: var(--muted); }
 html[data-theme="light"] .secondary,
 html[data-theme="light"] .card,
 html[data-theme="light"] .resume-card,
@@ -2166,7 +2169,7 @@ html[data-theme="light"] .appearance-control select { color-scheme: light; }
   html:not([data-theme]) nav a:hover,
   html:not([data-theme]) nav a:focus-visible,
   html:not([data-theme]) nav a[aria-current="page"] { background: rgba(7,95,189,.1); }
-  html:not([data-theme]) nav .nav-cta { background: rgba(7,95,189,.1); color: #0b315d; }
+  html:not([data-theme]) nav .nav-cta:not([aria-current="page"]) { background: transparent; color: var(--muted); }
   html:not([data-theme]) .secondary,
   html:not([data-theme]) .card,
   html:not([data-theme]) .resume-card,
