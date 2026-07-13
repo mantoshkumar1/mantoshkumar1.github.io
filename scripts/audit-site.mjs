@@ -84,6 +84,28 @@ for (const [page, html, expectedCards] of [["index.html", homeHtml, 3], ["system
 }
 if (!/\.project-detail-link::after\s*\{[^}]*position:\s*absolute;[^}]*inset:\s*0;/is.test(stylesheet)) { console.error("stylesheet: project detail links must cover their complete card"); failures += 1; }
 if (!/\.project-card \.card-links a:not\(\.project-detail-link\)\s*\{[^}]*position:\s*relative;[^}]*z-index:\s*1;/is.test(stylesheet)) { console.error("stylesheet: project secondary actions must remain independently clickable"); failures += 1; }
+for (const [selector, lines] of [["\\.card-kicker", 2], ["h3", 2], ["> p:not\\(\\.card-kicker\\)", 3]]) {
+  const clampPattern = new RegExp(`#systems \\.project-card ${selector}\\s*\\{[^}]*-webkit-line-clamp:\\s*${lines}`, "is");
+  if (!clampPattern.test(stylesheet)) { console.error(`homepage: project ${selector} must be clamped to ${lines} lines`); failures += 1; }
+}
+if (!/#systems \.project-card \.tech\s*\{[^}]*flex-wrap:\s*nowrap/is.test(stylesheet) || !/#systems \.project-card \.tech span\s*\{[^}]*font-size:\s*\.68rem;[^}]*white-space:\s*nowrap/is.test(stylesheet)) {
+  console.error("homepage: project technology tags must share one compact, single-line treatment");
+  failures += 1;
+}
+for (const card of homeHtml.matchAll(/<article\b[^>]*class=["'][^"']*project-card[^"']*["'][^>]*>([\s\S]*?)<\/article>/gi)) {
+  const content = card[1];
+  const liveAction = content.search(/>Try (?:the )?live (?:system|product)/i);
+  const caseStudyAction = content.search(/>See (?:architecture|decisions)/i);
+  const sourceAction = content.search(/>Inspect the source/i);
+  if (caseStudyAction < 0 || (liveAction >= 0 && liveAction > caseStudyAction) || (sourceAction >= 0 && sourceAction < caseStudyAction)) {
+    console.error("homepage: project actions must be ordered live product, case study, then source");
+    failures += 1;
+  }
+  if ((content.match(/<div class=["']tech["']>[\s\S]*?<span>/gi) || []).length !== 1 || (content.match(/<span>[^<]+<\/span>/gi) || []).length !== 3) {
+    console.error("homepage: every selected project must present exactly three technology tags");
+    failures += 1;
+  }
+}
 for (const [page, html] of [["index.html", homeHtml], ["systems/index.html", projectsHtml]]) {
   if (!/href=["']#ask-mantosh["'][^>]*>Try the live system/i.test(html)) { console.error(`${page}: knowledge-system project must open its live Ask Mantosh experience`); failures += 1; }
 }

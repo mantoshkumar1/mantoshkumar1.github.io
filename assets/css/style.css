@@ -1618,6 +1618,45 @@ nav .nav-cta:not([aria-current="page"]):focus-visible {
   padding-top: 0;
 }
 
+/* Keep the homepage project comparison compact and consistently scannable. */
+#systems .project-card .card-kicker,
+#systems .project-card h3,
+#systems .project-card > p:not(.card-kicker) {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+}
+
+#systems .project-card .card-kicker {
+  line-height: 1.35;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+
+#systems .project-card h3 {
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+
+#systems .project-card > p:not(.card-kicker) {
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+}
+
+#systems .project-card .tech {
+  max-width: 100%;
+  flex-wrap: nowrap;
+  gap: .3rem;
+}
+
+#systems .project-card .tech span {
+  flex: 0 0 auto;
+  padding: .28rem .42rem;
+  font-size: .68rem;
+  letter-spacing: 0;
+  white-space: nowrap;
+}
+
 .alt-section {
   border-top: 1px solid rgba(255,255,255,.045);
   border-bottom: 1px solid rgba(255,255,255,.035);
@@ -2171,6 +2210,15 @@ nav .nav-cta:not([aria-current="page"]):focus-visible {
 }
 
 @media (max-width: 360px) {
+  #systems .project-card .tech {
+    gap: .2rem;
+  }
+
+  #systems .project-card .tech span {
+    padding-inline: .32rem;
+    font-size: .65rem;
+  }
+
   .ask-mantosh-toggle {
     width: 3rem;
     height: 3rem;
