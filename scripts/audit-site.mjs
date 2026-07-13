@@ -109,8 +109,8 @@ const resumeHtml = await readFile(join(root, "resume/index.html"), "utf8");
 for (const [page, html] of [["index.html", homeHtml], ["contact/index.html", contactHtml], ["resume/index.html", resumeHtml]]) {
   if (/\b(?:Dubai|UAE|United Arab Emirates)\b/i.test(html)) { console.error(`${page}: public hiring copy must not expose private relocation targeting`); failures += 1; }
 }
-if (!/Current work authorization:<\/strong> Canada • United States • India/.test(contactHtml)) { console.error("contact: current work authorization is missing"); failures += 1; }
-if (!/Work authorization:<\/strong> Canada • United States • India/.test(resumeHtml)) { console.error("resume: current work authorization is missing"); failures += 1; }
+if (!/<strong>Canadian citizen<\/strong> • Work authorization: Canada • United States • India/.test(contactHtml)) { console.error("contact: citizenship or current work authorization is missing"); failures += 1; }
+if (!/Toronto-based Canadian citizen/.test(resumeHtml) || !/Work authorization:<\/strong> Canada • United States • India/.test(resumeHtml)) { console.error("resume: citizenship or current work authorization is missing"); failures += 1; }
 for (const page of ["index.html", "thinking/index.html"]) {
   const html = await readFile(join(root, page), "utf8");
   for (const card of html.matchAll(/<article\b[^>]*class=["'][^"']*insight-card[^"']*["'][^>]*>([\s\S]*?)<\/article>/gi)) {
