@@ -4,7 +4,7 @@ slug: "complexity-changes-address"
 category: "article"
 tags: ["distributed-systems", "system-design", "failure-paths", "architecture-trade-offs"]
 summary: "A system-design heuristic for identifying the failure modes and operational responsibilities that an architectural simplification moves elsewhere."
-last_updated: "2026-07-12"
+last_updated: "2026-07-13"
 related_topics: ["eventual-consistency", "partial-failure", "idempotency", "recovery"]
 visibility: "public"
 url: "/thinking/complexity-changes-address.html"
@@ -29,4 +29,4 @@ A happy path demonstrates capability. A failure path reveals operational charact
 
 ## Evidence boundary
 
-This personal system-design heuristic is adapted from a public LinkedIn post. It excludes claims about a specific production incident, employer architecture, or measured outcome.
+This personal system-design heuristic is adapted from Mantosh Kumar's public LinkedIn post. It excludes claims about a specific production incident, employer architecture, or measured outcome.

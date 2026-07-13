@@ -4,7 +4,7 @@ slug: "engineering-capabilities"
 category: "experience"
 tags: [platform-engineering, automation, python, backend-systems, networking, observability, engineering-intelligence]
 summary: "Résumé-backed capability groups and technical skills developed across Mantosh Kumar's engineering roles in Canada, Germany, and India."
-last_updated: "2026-07-12"
+last_updated: "2026-07-13"
 related_topics: [workflow-automation, distributed-validation, backend-development, sdn-nfv, quality-analytics]
 visibility: "public"
 url: "/experience/"
@@ -38,4 +38,4 @@ In the role that began at Infinera and continues at Nokia following the 2025 acq
 
 ## Evidence boundary
 
-These capability groups are derived from Mantosh Kumar's published résumé and cross-checked against his public LinkedIn positioning. Technology names establish documented use, not a proficiency level, certification, or current recency guarantee. This document excludes inferred employer scale, undisclosed outcomes, and skills not supported by those public sources.
+These capability groups are derived from Mantosh Kumar's published résumé and cross-checked against his public LinkedIn profile. Technology names establish documented use, not a proficiency level, certification, or current recency guarantee. This document excludes inferred employer scale, undisclosed outcomes, and skills not supported by those public sources.

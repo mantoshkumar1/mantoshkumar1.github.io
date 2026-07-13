@@ -4,7 +4,7 @@ slug: "why-does-this-still-require-me"
 category: "article"
 tags: [platform-engineering, automation, delegation, ai-assisted-engineering, developer-productivity]
 summary: "A personal engineering heuristic for recognizing repeated work that should become a system, delegated responsibility, or automated workflow."
-last_updated: "2026-07-12"
+last_updated: "2026-07-13"
 related_topics: [engineering-leverage, workflow-design, operational-ownership]
 visibility: "public"
 url: "/thinking/why-does-this-still-require-me.html"
@@ -43,4 +43,4 @@ Not every documented task deserves automation, and not every automation deserves
 
 ## Evidence boundary
 
-This document records Mantosh Kumar's personal engineering heuristic, adapted from his public LinkedIn reflection. It does not establish claims about a specific employer, system, adoption level, or measured outcome.
+This document records Mantosh Kumar's personal engineering heuristic, adapted from Mantosh Kumar's public LinkedIn post. It does not establish claims about a specific employer, system, adoption level, or measured outcome.

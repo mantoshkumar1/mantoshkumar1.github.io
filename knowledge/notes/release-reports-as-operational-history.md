@@ -4,7 +4,7 @@ slug: "release-reports-as-operational-history"
 category: "note"
 tags: ["reliability", "observability", "release-engineering", "operational-intelligence", "ai-assisted-engineering"]
 summary: "A framework for using comparable release-health reports as longitudinal operational history while keeping engineering judgment accountable."
-last_updated: "2026-07-12"
+last_updated: "2026-07-13"
 related_topics: ["failure-analysis", "release-health", "trend-analysis", "data-provenance"]
 visibility: "public"
 url: "/thinking/release-reports-as-operational-history.html"
@@ -30,4 +30,4 @@ AI-assisted analysis can summarize repeated language, group similar failures, an
 
 ## Evidence boundary
 
-This first-person framework is adapted from a public LinkedIn reflection. It excludes claims about a specific deployment, model, employer outcome, adoption level, or measured improvement.
+This first-person framework is adapted from Mantosh Kumar's public LinkedIn post. It excludes claims about a specific deployment, model, employer outcome, adoption level, or measured improvement.

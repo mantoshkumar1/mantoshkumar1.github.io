@@ -4,7 +4,7 @@ slug: "blockchain-without-a-master-branch"
 category: "article"
 tags: ["distributed-systems", "blockchain", "consensus", "replication", "shared-history"]
 summary: "A limited Git analogy for understanding blockchain as a shared-history problem without a central source of truth."
-last_updated: "2026-07-12"
+last_updated: "2026-07-13"
 related_topics: ["forks", "decentralization", "adversarial-systems", "mental-models"]
 visibility: "public"
 url: "/thinking/blockchain-without-a-master-branch.html"
@@ -29,4 +29,4 @@ Git does not provide decentralized consensus, economic incentives, adversarial r
 
 ## Evidence boundary
 
-This personal learning analogy is adapted from a public LinkedIn reflection. It excludes claims about blockchain implementation experience, protocol authorship, investment expertise, or equivalent guarantees between Git and blockchain.
+This personal learning analogy is adapted from Mantosh Kumar's public LinkedIn post. It excludes claims about blockchain implementation experience, protocol authorship, investment expertise, or equivalent guarantees between Git and blockchain.

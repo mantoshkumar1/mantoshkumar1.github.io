@@ -1,5 +1,5 @@
 import { access, readFile, readdir } from "node:fs/promises";
-import { dirname, join, resolve } from "node:path";
+import { dirname, join, relative, resolve } from "node:path";
 
 const root = resolve(import.meta.dirname, "..");
 const read = (path) => readFile(join(root, path), "utf8");
@@ -85,6 +85,7 @@ requireText(state, `${testCount} Worker contract`, "system state");
 
 for (const file of await markdownFiles(root)) {
   const content = await readFile(file, "utf8");
+  if (/adapted from (?:a|the) public LinkedIn (?:post|reflection)/i.test(content)) failures.push(`${relative(root, file)}: LinkedIn provenance must identify Mantosh as the post author`);
   for (const match of content.matchAll(/\[[^\]]+\]\(([^)]+)\)/g)) {
     const target = match[1].trim().replace(/^<|>$/g, "").split("#", 1)[0];
     if (!target || /^(?:https?:|mailto:)/i.test(target)) continue;

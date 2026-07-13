@@ -4,7 +4,7 @@ slug: "ownership-before-escalation"
 category: "note"
 tags: ["engineering-leadership", "ownership", "risk-communication", "stakeholder-communication"]
 summary: "A personal communication standard for making material engineering issues, risks, and next actions visible before someone has to ask."
-last_updated: "2026-07-12"
+last_updated: "2026-07-13"
 related_topics: ["escalation", "decision-making", "accountability", "status-communication"]
 visibility: "public"
 url: "/thinking/ownership-before-escalation.html"
@@ -29,4 +29,4 @@ Communicate when information changes a decision, threatens an agreed outcome, cr
 
 ## Evidence boundary
 
-This personal working standard is adapted from a public LinkedIn reflection. It excludes claims about a specific employer policy, incident outcome, or measured organizational impact.
+This personal working standard is adapted from Mantosh Kumar's public LinkedIn post. It excludes claims about a specific employer policy, incident outcome, or measured organizational impact.
