@@ -1,4 +1,4 @@
-import { cp, mkdir, readdir, rm, unlink } from "node:fs/promises";
+import { cp, mkdir, readdir, rm, unlink, writeFile } from "node:fs/promises";
 import { resolve, join } from "node:path";
 import { generateSeo } from "./generate-seo.mjs";
 
@@ -25,4 +25,5 @@ for (const entry of await readdir(source)) {
 for (const path of privateAssetPaths) await rm(join(output, path), { recursive: true, force: true });
 await generateSeo(output, join(source, "seo.config.json"));
 await unlink(join(output, "seo.config.json"));
+await writeFile(join(output, ".nojekyll"), "");
 console.log("Built static GitHub Pages artifact in dist/.");

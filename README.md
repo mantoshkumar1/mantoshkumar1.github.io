@@ -14,7 +14,7 @@ The current production inventory, data flow, deployment paths, controls, and kno
 ## Public content
 
 - `index.html` — positioning, selected systems, experience summary, and Ask Mantosh UI
-- `systems/index.html` — selected engineering projects
+- `projects/index.html` — selected engineering projects
 - `projects/engineering-knowledge-system.html` — evidence-first publishing and grounded-AI platform case study
 - `projects/photosahi.html` — PhotoSahi architecture case study
 - `projects/workflow-automation-toolkit.html` — automation toolkit case study
@@ -64,6 +64,7 @@ node scripts/generate-seo.mjs
 node scripts/build-pages.mjs
 node scripts/audit-site.mjs
 node scripts/validate-discoverability.mjs
+node scripts/validate-xml-feeds.mjs
 node scripts/seo-audit.mjs
 node scripts/audit-links.mjs
 node scripts/audit-accessibility.mjs

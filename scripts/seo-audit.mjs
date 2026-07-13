@@ -27,6 +27,7 @@ async function walk(directory) {
 
 const files = (await walk(root)).filter((file) => file.endsWith(".html"));
 const failures = [];
+const origin = "https://mantoshkumar1.github.io";
 for (const file of files) {
   const html = await readFile(file, "utf8");
   const path = relative(root, file);
@@ -35,6 +36,15 @@ for (const file of files) {
     continue;
   }
   for (const pattern of required) if (!pattern.test(html)) failures.push(`${path}: missing ${pattern}`);
+  const redirectTarget = /<meta\s+http-equiv=["']refresh["']\s+content=["'][^"']*url=([^"';]+)["']/i.exec(html)?.[1]?.trim();
+  const isNoindexRedirect = Boolean(redirectTarget && /<meta\s+name=["']robots["']\s+content=["']noindex,?\s*follow["']/i.test(html));
+  if (isNoindexRedirect) {
+    const canonical = /<link\s+rel=["']canonical["']\s+href=["']([^"']+)["']/i.exec(html)?.[1];
+    const expectedCanonical = new URL(redirectTarget, origin).href;
+    if (canonical !== expectedCanonical) failures.push(`${path}: redirect canonical must match ${expectedCanonical}`);
+    if (!new RegExp(`<a\\s+[^>]*href=["']${redirectTarget.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}["']`, "i").test(html)) failures.push(`${path}: redirect needs a visible fallback link to ${redirectTarget}`);
+    continue;
+  }
   const headings = html.match(/<h1(?:\s[^>]*)?>/gi) || [];
   if (headings.length !== 1) failures.push(`${path}: expected exactly one h1, found ${headings.length}`);
   for (const image of html.matchAll(/<img\b[^>]*>/gi)) if (!/\balt=["'][^"']*["']/i.test(image[0])) failures.push(`${path}: image missing alt text`);

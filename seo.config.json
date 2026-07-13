@@ -18,11 +18,25 @@
       "description": "Staff Software Engineer Mantosh Kumar builds platforms, automation, backend systems, and operational intelligence and is open to Staff and Principal Engineer opportunities.",
       "kind": "home"
     },
-    "/systems/": {
+    "/projects/": {
       "title": "Engineering Projects | Mantosh Kumar",
       "description": "Published engineering projects covering platform engineering, grounded AI retrieval, privacy-first browser processing, automation, and practical decision tools.",
       "kind": "collection",
       "schemaType": "CollectionPage"
+    },
+    "/systems/": {
+      "title": "Redirecting to Projects | Mantosh Kumar",
+      "description": "Redirecting to the engineering projects archive.",
+      "kind": "page",
+      "noindex": true,
+      "canonicalPath": "/projects/"
+    },
+    "/insights/": {
+      "title": "Redirecting to Insights | Mantosh Kumar",
+      "description": "Redirecting to the engineering insights archive.",
+      "kind": "page",
+      "noindex": true,
+      "canonicalPath": "/thinking/"
     },
     "/thinking/": {
       "title": "Engineering Insights & Philosophy | Mantosh Kumar",
@@ -128,7 +142,7 @@
       "softwareApplication": true,
       "applicationCategory": "DeveloperApplication",
       "breadcrumbs": [
-        { "name": "Projects", "path": "/systems/" }
+        { "name": "Projects", "path": "/projects/" }
       ]
     },
     "/projects/photosahi.html": {
@@ -140,7 +154,7 @@
       "softwareApplication": true,
       "applicationCategory": "UtilitiesApplication",
       "breadcrumbs": [
-        { "name": "Projects", "path": "/systems/" }
+        { "name": "Projects", "path": "/projects/" }
       ]
     },
     "/projects/workflow-automation-toolkit.html": {
@@ -150,7 +164,7 @@
       "entityName": "Workflow Automation Toolkit",
       "dateModified": "2026-07-12",
       "breadcrumbs": [
-        { "name": "Projects", "path": "/systems/" }
+        { "name": "Projects", "path": "/projects/" }
       ]
     },
     "/projects/gtt-price-calculator.html": {
@@ -162,7 +176,7 @@
       "softwareApplication": true,
       "applicationCategory": "FinanceApplication",
       "breadcrumbs": [
-        { "name": "Projects", "path": "/systems/" }
+        { "name": "Projects", "path": "/projects/" }
       ]
     },
     "/404.html": {

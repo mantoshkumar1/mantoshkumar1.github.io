@@ -3,7 +3,7 @@ import { resolve } from "node:path";
 
 const root = resolve(import.meta.dirname, "..");
 const origin = "https://mantoshkumar1.github.io";
-const pages = ["index.html", "systems/index.html", "thinking/index.html", "thinking/engineering-philosophy.html", "thinking/why-does-this-still-require-me.html", "experience/index.html", "resume/index.html", "contact/index.html", "projects/photosahi.html", "projects/workflow-automation-toolkit.html", "projects/gtt-price-calculator.html"];
+const pages = ["index.html", "projects/index.html", "thinking/index.html", "thinking/engineering-philosophy.html", "thinking/why-does-this-still-require-me.html", "experience/index.html", "resume/index.html", "contact/index.html", "projects/photosahi.html", "projects/workflow-automation-toolkit.html", "projects/gtt-price-calculator.html"];
 let failures = 0;
 
 function check(condition, message) {
@@ -32,7 +32,8 @@ for (const page of pages) {
 }
 
 const sitemap = await readFile(`${root}/sitemap.xml`, "utf8");
-check(sitemap.includes(`${origin}/thinking/`), "published Thinking archive must appear in sitemap.xml");
+check(sitemap.includes(`${origin}/projects/`), "published Projects archive must appear in sitemap.xml");
+check(sitemap.includes(`${origin}/thinking/`), "published Insights archive must appear in sitemap.xml");
 check(sitemap.includes(`${origin}/thinking/engineering-philosophy.html`), "published engineering philosophy must appear in sitemap.xml");
 check(sitemap.includes(`${origin}/thinking/why-does-this-still-require-me.html`), "published engineering note must appear in sitemap.xml");
 

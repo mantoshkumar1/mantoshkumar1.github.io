@@ -130,7 +130,7 @@ function schemaFor({ site, page, url, route }) {
   return { "@context": "https://schema.org", "@graph": graph };
 }
 
-function generatedHead({ site, page, url, route }) {
+function generatedHead({ site, page, url, route, canonicalUrl = url }) {
   const image = routeToUrl(site, page.image || site.socialImage);
   const schema = schemaFor({ site, page, url, route });
   const analytics = site.analytics?.provider === "plausible"
@@ -143,7 +143,7 @@ function generatedHead({ site, page, url, route }) {
     <meta name="theme-color" content="${escapeHtml(site.themeColor)}" />
     <meta name="application-name" content="${escapeHtml(site.name)}" />
     <meta name="apple-mobile-web-app-title" content="${escapeHtml(site.name)}" />
-    <link rel="canonical" href="${escapeHtml(url)}" />
+    <link rel="canonical" href="${escapeHtml(canonicalUrl)}" />
     <link rel="alternate" type="application/rss+xml" title="${escapeHtml(site.name)} — Engineering Writing and Systems" href="${escapeHtml(routeToUrl(site, "/feed.xml"))}" />
     <link rel="manifest" href="/site.webmanifest" />
     <link rel="icon" href="/favicon.ico" sizes="any" />
@@ -153,7 +153,7 @@ function generatedHead({ site, page, url, route }) {
     <meta property="og:title" content="${escapeHtml(page.title)}" />
     <meta property="og:description" content="${escapeHtml(page.description)}" />
     <meta property="og:type" content="${page.kind === "article" ? "article" : "website"}" />
-    <meta property="og:url" content="${escapeHtml(url)}" />
+    <meta property="og:url" content="${escapeHtml(canonicalUrl)}" />
     <meta property="og:site_name" content="${escapeHtml(site.name)}" />
     <meta property="og:image" content="${escapeHtml(image)}" />
     <meta property="og:image:width" content="1200" />
@@ -229,10 +229,11 @@ export async function generateSeo(root = SOURCE_ROOT, configPath = CONFIG_PATH) 
     let html = await readFile(file, "utf8");
     const page = metadataFromHtml(html, route, config);
     const url = routeToUrl(config.site, route);
+    const canonicalUrl = page.canonicalPath ? routeToUrl(config.site, page.canonicalPath) : url;
     html = removeOldSeo(html);
     html = html.replace(/<html\b([^>]*)>/i, (_match, attrs) => `<html${attrs.replace(/\s+lang=["'][^"']*["']/i, "")} lang="${config.site.language}">`);
     html = html.replace(/<title>[\s\S]*?<\/title>/i, `<title>${escapeHtml(page.title)}</title>`);
-    const block = generatedHead({ site: config.site, page, url, route });
+    const block = generatedHead({ site: config.site, page, url, route, canonicalUrl });
     const headerPreamble = /(<meta\s+charset=["'][^"']+["']\s*\/?>(?:\s|\n)*<meta\s+name=["']viewport["'][^>]*>)/i;
     html = headerPreamble.test(html)
       ? html.replace(headerPreamble, `$1\n    ${block}`)

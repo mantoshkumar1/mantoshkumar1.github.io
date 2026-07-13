@@ -1,8 +1,8 @@
 {
   "sections": [
     {
-      "id": "systems",
-      "page": "systems/index.html",
+      "id": "projects",
+      "page": "projects/index.html",
       "categories": ["project"]
     },
     {

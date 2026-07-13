@@ -2,7 +2,7 @@ import { access, readFile, stat } from "node:fs/promises";
 import { join, resolve } from "node:path";
 
 const root = resolve(import.meta.dirname, "..");
-const pages = ["index.html", "systems/index.html", "thinking/index.html", "thinking/engineering-philosophy.html", "thinking/why-does-this-still-require-me.html", "thinking/release-reports-as-operational-history.html", "thinking/complexity-changes-address.html", "thinking/blockchain-without-a-master-branch.html", "thinking/ownership-before-escalation.html", "experience/index.html", "resume/index.html", "contact/index.html", "newsletter/index.html", "accessibility/index.html", "projects/engineering-knowledge-system.html", "projects/photosahi.html", "projects/workflow-automation-toolkit.html", "projects/gtt-price-calculator.html"];
+const pages = ["index.html", "projects/index.html", "thinking/index.html", "thinking/engineering-philosophy.html", "thinking/why-does-this-still-require-me.html", "thinking/release-reports-as-operational-history.html", "thinking/complexity-changes-address.html", "thinking/blockchain-without-a-master-branch.html", "thinking/ownership-before-escalation.html", "experience/index.html", "resume/index.html", "contact/index.html", "newsletter/index.html", "accessibility/index.html", "projects/engineering-knowledge-system.html", "projects/photosahi.html", "projects/workflow-automation-toolkit.html", "projects/gtt-price-calculator.html"];
 const requirements = [
   [/<meta\s+charset=/i, "charset"], [/<meta\s+name=["']viewport["']/i, "viewport"], [/<meta\s+name=["']description["']/i, "description"],
   [/<link\s+rel=["']canonical["']/i, "canonical"], [/<meta\s+name=["']robots["']/i, "robots"], [/<meta\s+property=["']og:title["']/i, "Open Graph"],
@@ -77,14 +77,16 @@ for (const region of ["india", "germany", "canada"]) {
 if (/View (?:India|Germany|Canada) experience/i.test(homeHtml)) { console.error("homepage: regional cards must not repeat verbose link labels"); failures += 1; }
 if (/<span>Experience\s*<span[^>]*>→<\/span><\/span>/i.test(homeHtml)) { console.error("homepage: regional cards must not repeat a redundant Experience tag"); failures += 1; }
 if (/class=["'][^"']*section-link[^"']*["'][^>]*>\s*View Experience/i.test(homeHtml)) { console.error("homepage: redundant View Experience link must stay removed"); failures += 1; }
-if (!/href=["']systems\/["'][^>]*>View all projects/i.test(homeHtml)) { console.error("homepage: selected projects need a scalable route to the complete portfolio"); failures += 1; }
-const projectsHtml = await readFile(join(root, "systems/index.html"), "utf8");
+if (!/href=["']projects\/["'][^>]*>View all projects/i.test(homeHtml)) { console.error("homepage: selected projects need a scalable route to the complete portfolio"); failures += 1; }
+if (!/class=["']value-strip["']/i.test(homeHtml)) { console.error("homepage: staff impact summary strip is missing"); failures += 1; }
+if (!/href=["']resume\/Resume-MantoshKumar-MSc-CS\.pdf["'][^>]*>View résumé PDF/i.test(homeHtml)) { console.error("homepage: recruiter-facing résumé action is missing"); failures += 1; }
+const projectsHtml = await readFile(join(root, "projects/index.html"), "utf8");
 const knowledgeSystemHtml = await readFile(join(root, "projects/engineering-knowledge-system.html"), "utf8");
-for (const [page, html, expectedCards] of [["index.html", homeHtml, 3], ["systems/index.html", projectsHtml, 4]]) {
+for (const [page, html, expectedCards] of [["index.html", homeHtml, 3], ["projects/index.html", projectsHtml, 4]]) {
   const projectCards = [...html.matchAll(/<article\b[^>]*class=["'][^"']*project-card[^"']*["'][^>]*>([\s\S]*?)<\/article>/gi)];
   if (projectCards.length !== expectedCards) { console.error(`${page}: expected ${expectedCards} fully clickable project cards, found ${projectCards.length}`); failures += 1; }
   for (const card of projectCards) {
-    const detailLinks = card[1].match(/<a\b[^>]*class=["'][^"']*project-detail-link[^"']*["'][^>]*href=["'][^"']*projects\//gi) || [];
+    const detailLinks = card[1].match(/<a\b(?=[^>]*class=["'][^"']*project-detail-link[^"']*["'])(?=[^>]*href=["'](?!#)[^"']+["'])[^>]*>/gi) || [];
     if (detailLinks.length !== 1) { console.error(`${page}: every project card needs exactly one stretched detail-page link`); failures += 1; }
   }
 }
@@ -112,14 +114,14 @@ for (const card of homeHtml.matchAll(/<article\b[^>]*class=["'][^"']*project-car
     failures += 1;
   }
 }
-for (const [page, html] of [["index.html", homeHtml], ["systems/index.html", projectsHtml]]) {
+for (const [page, html] of [["index.html", homeHtml], ["projects/index.html", projectsHtml]]) {
   if (!/href=["']#ask-mantosh["'][^>]*>Try the live system/i.test(html)) { console.error(`${page}: knowledge-system project must open its live Ask Mantosh experience`); failures += 1; }
 }
 if (!/href=["']#ask-mantosh["'][^>]*>Try Ask Mantosh/i.test(knowledgeSystemHtml)) { console.error("projects/engineering-knowledge-system.html: primary action must demonstrate Ask Mantosh instead of reloading the website"); failures += 1; }
 const askMantoshClient = await readFile(join(root, "assets/js/main.js"), "utf8");
 if (!/window\.location\.hash === ["']#ask-mantosh["']/.test(askMantoshClient) || !/a\[href=["']#ask-mantosh/.test(askMantoshClient)) { console.error("Ask Mantosh: live-system deep link must open the assistant on click and direct arrival"); failures += 1; }
 const gttHtml = await readFile(join(root, "projects/gtt-price-calculator.html"), "utf8");
-for (const [page, html] of [["systems/index.html", projectsHtml], ["projects/gtt-price-calculator.html", gttHtml]]) {
+for (const [page, html] of [["projects/index.html", projectsHtml], ["projects/gtt-price-calculator.html", gttHtml]]) {
   if (!/href=["']https:\/\/gtt-calculator\.streamlit\.app\/["'][^>]*>[^<]*(?:Try|live product)/i.test(html)) { console.error(`${page}: GTT live product link is missing`); failures += 1; }
 }
 const photoSahiHtml = await readFile(join(root, "projects/photosahi.html"), "utf8");
@@ -144,6 +146,7 @@ for (const [page, html] of [["index.html", homeHtml], ["contact/index.html", con
 }
 if (!/<strong>Canadian citizen<\/strong> • Work authorization: Canada • United States • India/.test(contactHtml)) { console.error("contact: citizenship or current work authorization is missing"); failures += 1; }
 if (!/Toronto-based Canadian citizen/.test(resumeHtml) || !/Work authorization:<\/strong> Canada • United States • India/.test(resumeHtml)) { console.error("resume: citizenship or current work authorization is missing"); failures += 1; }
+if (!/Top 1% nationally in GATE CS &amp; IT, twice/.test(resumeHtml) || !/href=["']\.\.\/experience\/#verified-highlights["'][^>]*>View full experience and capabilities/i.test(resumeHtml)) { console.error("resume: verified highlights and experience bridge are missing"); failures += 1; }
 for (const page of ["index.html", "thinking/index.html"]) {
   const html = await readFile(join(root, page), "utf8");
   for (const card of html.matchAll(/<article\b[^>]*class=["'][^"']*insight-card[^"']*["'][^>]*>([\s\S]*?)<\/article>/gi)) {
