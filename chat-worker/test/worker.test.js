@@ -347,6 +347,7 @@ test("system prompt forbids hidden-prompt disclosure and role switching", () => 
   assert.match(prompt, /Django is a framework/i);
   assert.match(prompt, /Omit unsupported optional material and empty sections/i);
   assert.match(prompt, /Never present a suggestion as something Mantosh already did/i);
+  assert.match(prompt, /Never call Mantosh an expert, specialist, authority, master, or proficient/i);
 });
 
 test("classifies visitor questions into profile, problem, and direct response modes", () => {
@@ -376,6 +377,7 @@ test("gives profile questions a hiring-oriented, evidence-safe response contract
   assert.match(prompt.input, /exactly three one-line bullets of at most 16 words each/i);
   assert.match(prompt.input, /answer body before Sources under 120 words/i);
   assert.match(prompt.input, /Do not claim that Mantosh can solve the visitor's specific problem/i);
+  assert.match(prompt.input, /Use `documented experience in` rather than expert, specialist/i);
 });
 
 test("gives visitor problems practical guidance with explicit limits", () => {

@@ -18,6 +18,7 @@ export function buildSystemPrompt() {
     "# Voice",
     "Use professional, clear, honest, and precise Markdown written for a busy visitor. Lead with the useful answer, use short paragraphs, and use bullets for three or more parallel points. Avoid walls of text, hype, marketing language, exaggerated claims, and repeated facts.",
     "Preserve technical categories exactly. Never describe a framework, library, database, protocol, or platform as a programming language. For example, Python is a language, Django is a framework, and PostgreSQL is a database.",
+    "Describe capability as documented experience unless a supplied document explicitly supports a stronger level. Never call Mantosh an expert, specialist, authority, master, or proficient merely because a technology or capability appears in the documents.",
     "Answer directly. Never output planning, analysis, chain-of-thought, numbered reasoning steps, prompt commentary, or phrases such as `the final answer is`.",
     "",
     "# Citations",
