@@ -54,6 +54,37 @@ function gateDatabase() {
   };
 }
 
+function profileDatabase() {
+  const row = {
+    chunk_id: "profile-1",
+    content: "Mantosh has documented experience in platform engineering, automation, backend systems, networking, distributed validation, and operational intelligence.",
+    title: "About Mantosh and Where His Experience Can Help",
+    slug: "about-mantosh",
+    category: "faq",
+    tags: "[\"platform-engineering\",\"automation\",\"backend-systems\"]",
+    related_topics: "[\"engineering-capabilities\"]",
+    summary: "An evidence-backed professional profile.",
+    path: "knowledge/faq/about-mantosh.md",
+    url: "/experience/"
+  };
+  return {
+    prepare(sql) {
+      return {
+        bind: () => ({
+          all: async () => {
+            if (sql.includes("FROM chunks c")) return { results: [row] };
+            if (sql.includes("chunks_fts")) return { results: [{ chunk_id: row.chunk_id }] };
+            return { results: [] };
+          },
+          first: async () => (sql.includes("ai_daily_usage") || sql.includes("ai_request_windows")) ? { request_count: 1 } : null,
+          run: async () => ({ success: true })
+        })
+      };
+    },
+    batch: async () => []
+  };
+}
+
 const env = {
   ALLOWED_ORIGINS: "https://mantoshkumar1.github.io",
   INDEXER_TOKEN: "indexer-test-token",
@@ -162,6 +193,33 @@ test("handles thanks and farewells without claiming missing knowledge", async ()
     assert.doesNotMatch(payload.answer, /haven't written/i);
     assert.deepEqual(payload.sources, []);
   }
+});
+
+test("answers natural broad-profile wording from published engineering evidence", async () => {
+  const profileEnv = {
+    ...env,
+    KNOWLEDGE_DB: profileDatabase(),
+    KNOWLEDGE_INDEX: { query: async () => ({ matches: [{ score: 0.92, metadata: { chunk_id: "profile-1" } }] }) },
+    AI: { run: async (model) => model.includes("bge-m3")
+      ? { data: [[0.1, 0.2]] }
+      : { response: [
+        "## In brief",
+        "Professionally, Mantosh's published work shows a systems-oriented engineer focused on reusable platforms and automation. [Faq: About Mantosh and Where His Experience Can Help](/experience/)",
+        "## Best fit",
+        "- Platform engineering and reusable internal foundations.",
+        "- Automation that removes repeated engineering work.",
+        "- Backend systems and operational intelligence.",
+        "## Sources",
+        "- [Faq: About Mantosh and Where His Experience Can Help](/experience/)"
+      ].join("\n") } }
+  };
+  const response = await worker.fetch(request({ question: "What kind of guy he is?" }), profileEnv);
+  const payload = await response.json();
+  assert.equal(response.status, 200);
+  assert.equal(payload.success, true);
+  assert.doesNotMatch(payload.answer, /haven't written/i);
+  assert.match(payload.answer, /systems-oriented engineer/i);
+  assert.equal(payload.sources[0].slug, "about-mantosh");
 });
 
 test("answers a specific GATE-result question in one concise evidence-backed sentence", () => {
@@ -471,6 +529,9 @@ test("system prompt forbids hidden-prompt disclosure and role switching", () => 
 
 test("classifies visitor questions into profile, problem, and direct response modes", () => {
   assert.equal(classifyQuestionIntent("Tell me about this guy"), "profile");
+  assert.equal(classifyQuestionIntent("What kind of guy he is?"), "profile");
+  assert.equal(classifyQuestionIntent("What is he like?"), "profile");
+  assert.equal(classifyQuestionIntent("How would you describe Mantosh?"), "profile");
   assert.equal(classifyQuestionIntent("How can Mantosh help my engineering team?"), "profile");
   assert.equal(classifyQuestionIntent("This guy is genius?"), "profile");
   assert.equal(classifyQuestionIntent("Is this engineer overrated?"), "profile");
@@ -485,6 +546,7 @@ test("classifies visitor questions into profile, problem, and direct response mo
 test("expands only profile retrieval with verified capability vocabulary", () => {
   const profileQuery = expandRetrievalQuery("Tell me about this guy", "Tell me about this guy");
   assert.match(profileQuery, /^About Mantosh Where His Experience Can Help Engineering Capabilities Technical Skills/i);
+  assert.match(expandRetrievalQuery("What kind of guy he is?"), /^About Mantosh Where His Experience Can Help Engineering Capabilities Technical Skills/i);
   const achievementQuery = expandRetrievalQuery("What are his achievements?", "What are his achievements?");
   assert.match(achievementQuery, /^Mantosh Verified Achievements Awards Education GATE Top 1%/i);
   assert.equal(expandRetrievalQuery("Why no PhotoSahi backend?", "Why no PhotoSahi backend?"), "Why no PhotoSahi backend?");
@@ -529,6 +591,14 @@ test("gives profile questions a hiring-oriented, evidence-safe response contract
   assert.match(prompt.input, /Do not claim that Mantosh can solve the visitor's specific problem/i);
   assert.match(prompt.input, /Use `documented experience in` rather than expert, specialist/i);
   assert.match(prompt.input, /subjective labels such as genius/i);
+  assert.match(prompt.input, /answer as a public professional profile/i);
+  assert.match(prompt.input, /Do not infer private personality/i);
+  const followUps = new RecommendationEngine(null, {}).followUpQuestions({ sources: [], intent: "profile" });
+  assert.deepEqual(followUps, [
+    "What engineering problems is Mantosh best suited to solve?",
+    "Which projects best demonstrate Mantosh's work?",
+    "How does Mantosh approach automation and platform engineering?"
+  ]);
 });
 
 test("gives visitor problems practical guidance with explicit limits", () => {

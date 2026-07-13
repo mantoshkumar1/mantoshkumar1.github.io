@@ -29,6 +29,13 @@ export class RecommendationEngine {
         "Which engineering awards has Mantosh received?"
       ];
     }
+    if (intent === "profile") {
+      return [
+        "What engineering problems is Mantosh best suited to solve?",
+        "Which projects best demonstrate Mantosh's work?",
+        "How does Mantosh approach automation and platform engineering?"
+      ];
+    }
     const candidates = [];
     for (const source of sources) {
       let tags = Array.isArray(source.tags) ? source.tags : [];

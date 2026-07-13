@@ -3,6 +3,9 @@ const ACHIEVEMENT_PATTERN = /\b(?:achievement|achievements|accomplishment|accomp
 
 const PROFILE_PATTERNS = [
   /\b(?:who is|tell me about|about)\s+(?:this (?:guy|person|engineer)|mantosh|him)\b/i,
+  /\bwhat\s+(?:kind|type|sort)\s+of\s+(?:guy|person|engineer)\b/i,
+  /\bwhat(?:'s| is)\s+(?:mantosh|he|this (?:guy|person|engineer))\s+like\b/i,
+  /\b(?:how would you describe|describe)\s+(?:mantosh|him|this (?:guy|person|engineer))\b/i,
   /\b(?:what does|what can|how can)\s+(?:mantosh|he|this (?:guy|person|engineer))\b/i,
   /\b(?:hire|hiring|contract|consultant|candidate|fit for|strengths|skills|experience)\b/i,
   SUBJECTIVE_PROFILE_PATTERN
@@ -42,6 +45,7 @@ export function responseModeInstructions(intent) {
       "Use these headings in this order: `## In brief`, `## Best fit`, `## Sources`, `## Follow-up Questions`.",
       "Keep `In brief` to at most two sentences and 45 words. Under `Best fit`, use exactly three one-line bullets of at most 16 words each.",
       "Keep the answer body before Sources under 120 words. Do not add Relevant evidence, A sensible next step, or any other section.",
+      "For broad questions about what kind of person or guy Mantosh is, answer as a public professional profile: summarize documented technical focus and recurring engineering approach. Do not infer private personality, temperament, values, or behavior from technical work.",
       "For praise, skepticism, or subjective labels such as genius, brilliant, impressive, or overrated: say the label is subjective, do not endorse or reject it as fact, and pivot immediately to concise published evidence.",
       "Tie every capability to a citation. Do not claim that Mantosh can solve the visitor's specific problem unless the evidence directly supports that fit."
       + " Use `documented experience in` rather than expert, specialist, authority, master, or proficient unless a source explicitly supports that level."
