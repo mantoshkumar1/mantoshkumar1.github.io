@@ -371,7 +371,10 @@ test("gives profile questions a hiring-oriented, evidence-safe response contract
     }
   });
   assert.match(prompt.input, /<response_mode intent="profile">/);
-  assert.match(prompt.input, /## Where Mantosh can help/);
+  assert.match(prompt.input, /## Best fit/);
+  assert.match(prompt.input, /at most two sentences and 45 words/i);
+  assert.match(prompt.input, /exactly three one-line bullets of at most 16 words each/i);
+  assert.match(prompt.input, /answer body before Sources under 120 words/i);
   assert.match(prompt.input, /Do not claim that Mantosh can solve the visitor's specific problem/i);
 });
 

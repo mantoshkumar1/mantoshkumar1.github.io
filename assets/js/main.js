@@ -8,6 +8,46 @@ const EMPTY_QUESTIONS = [
 class MarkdownService {
   constructor() { this.loader = null; }
 
+  appendInline(target, text) {
+    const linkPattern = /\[([^\]]+)\]\(([^)\s]+)\)/g;
+    let cursor = 0;
+    for (const match of text.matchAll(linkPattern)) {
+      target.append(document.createTextNode(text.slice(cursor, match.index)));
+      try {
+        const url = new URL(match[2], window.location.origin);
+        if (url.origin !== window.location.origin && url.protocol !== "https:") throw new Error("Unsupported link");
+        const link = document.createElement("a");
+        link.href = url.href; link.textContent = match[1];
+        if (url.origin !== window.location.origin) { link.target = "_blank"; link.rel = "noopener noreferrer"; }
+        target.append(link);
+      } catch { target.append(document.createTextNode(match[1])); }
+      cursor = match.index + match[0].length;
+    }
+    target.append(document.createTextNode(text.slice(cursor)));
+  }
+
+  renderBasic(markdown, target) {
+    target.replaceChildren();
+    let list = null;
+    for (const rawLine of markdown.split("\n")) {
+      const line = rawLine.trim();
+      if (!line) { list = null; continue; }
+      const heading = /^(#{1,4})\s+(.+)$/.exec(line);
+      if (heading) {
+        list = null;
+        const node = document.createElement(heading[1].length <= 2 ? "h2" : "h3");
+        this.appendInline(node, heading[2]); target.append(node); continue;
+      }
+      const bullet = /^(?:[-*]|\d+[.)])\s+(.+)$/.exec(line);
+      if (bullet) {
+        if (!list) { list = document.createElement("ul"); target.append(list); }
+        const item = document.createElement("li"); this.appendInline(item, bullet[1]); list.append(item); continue;
+      }
+      list = null;
+      const paragraph = document.createElement("p"); this.appendInline(paragraph, line); target.append(paragraph);
+    }
+  }
+
   async load() {
     if (!this.loader) {
       this.loader = Promise.all([
@@ -24,7 +64,10 @@ class MarkdownService {
   }
 
   async render(markdown, target) {
-    const { marked, sanitize, highlight } = await this.load();
+    this.renderBasic(markdown, target);
+    let tools;
+    try { tools = await this.load(); } catch { return; }
+    const { marked, sanitize, highlight } = tools;
     target.innerHTML = sanitize(marked.parse(markdown, { gfm: true, breaks: true }));
     target.querySelectorAll("a").forEach((link) => { link.target = "_blank"; link.rel = "noopener noreferrer"; });
     target.querySelectorAll("pre code").forEach((code) => {
@@ -232,7 +275,7 @@ class AskMantoshApp {
     this.view.setStatus(announcement);
     window.setTimeout(() => { if (this.view.status.textContent === announcement) this.view.setStatus(""); }, 2500);
   }
-  stripResponseSections(text) { return text.replace(/^##\s+(Sources|Follow-up Questions)\s*$[\s\S]*?(?=^##\s+|$)/gim, "").trim(); }
+  stripResponseSections(text) { return text.replace(/\n*##\s+(?:Sources|Follow-up Questions)\s*\n[\s\S]*$/i, "").trim(); }
   followUps(text) { const match = /^##\s+Follow-up Questions\s*$([\s\S]*?)(?=^##\s+|$)/im.exec(text); return match ? match[1].split("\n").map((line) => line.replace(/^\s*(?:[-*]|\d+[.)])\s+/, "").trim()).filter((line) => line.endsWith("?")).slice(0, 3) : []; }
 }
 

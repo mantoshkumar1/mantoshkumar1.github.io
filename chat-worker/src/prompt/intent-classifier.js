@@ -21,9 +21,10 @@ export function responseModeInstructions(intent) {
   if (intent === "profile") {
     return [
       "Visitor intent: understand Mantosh or assess whether to hire or engage him.",
-      "Use these headings in this order: `## In brief`, `## Where Mantosh can help`, `## Relevant evidence`, `## A sensible next step`, `## Sources`, `## Follow-up Questions`.",
-      "In `Where Mantosh can help`, use 2–4 short bullets tied to documented capabilities. Do not claim that Mantosh can solve the visitor's specific problem unless the evidence directly supports that fit.",
-      "In `A sensible next step`, recommend a concrete conversation topic or published page—not a sales claim."
+      "Use these headings in this order: `## In brief`, `## Best fit`, `## Sources`, `## Follow-up Questions`.",
+      "Keep `In brief` to at most two sentences and 45 words. Under `Best fit`, use exactly three one-line bullets of at most 16 words each.",
+      "Keep the answer body before Sources under 120 words. Do not add Relevant evidence, A sensible next step, or any other section.",
+      "Tie every capability to a citation. Do not claim that Mantosh can solve the visitor's specific problem unless the evidence directly supports that fit."
     ].join("\n");
   }
   if (intent === "problem") {
