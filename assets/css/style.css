@@ -1449,8 +1449,8 @@ nav .nav-cta:not([aria-current="page"]):focus-visible {
 .hero {
   position: relative;
   isolation: isolate;
-  min-height: min(720px, calc(100svh - 68px));
-  padding: clamp(4.5rem, 9vw, 7.5rem) 0 clamp(4rem, 8vw, 6.5rem);
+  min-height: auto;
+  padding: clamp(3.5rem, 6vw, 5rem) 0 clamp(2.75rem, 4.5vw, 3.75rem);
   overflow: hidden;
 }
 
@@ -1569,11 +1569,28 @@ nav .nav-cta:not([aria-current="page"]):focus-visible {
 }
 
 #home > .section {
-  padding-block: clamp(3rem, 4.8vw, 4.25rem);
+  padding-block: clamp(1.5rem, 2.5vw, 2.25rem);
 }
 
 #home > .section .section-title {
-  margin-bottom: clamp(1.5rem, 3vw, 2.2rem);
+  margin-bottom: clamp(1.15rem, 2vw, 1.6rem);
+}
+
+#home .cards {
+  gap: .9rem;
+}
+
+#home .card {
+  padding: 1.3rem;
+}
+
+#home .card p,
+#home .tech {
+  margin-bottom: .75rem;
+}
+
+#home .resume-actions {
+  margin-block: .75rem 0;
 }
 
 .alt-section {
@@ -1942,7 +1959,7 @@ nav .nav-cta:not([aria-current="page"]):focus-visible {
   }
 
   .hero {
-    padding: 3rem 0 2.75rem;
+    padding: 2.5rem 0 2rem;
   }
 
   .hero h1 {
@@ -1964,11 +1981,11 @@ nav .nav-cta:not([aria-current="page"]):focus-visible {
   }
 
   #home > .section {
-    padding-block: 2.75rem;
+    padding-block: 1.25rem;
   }
 
   #home > .section .section-title {
-    margin-bottom: 1.25rem;
+    margin-bottom: 1rem;
   }
 
   .card {
