@@ -106,6 +106,13 @@
       "kind": "page",
       "schemaType": "ContactPage"
     },
+    "/newsletter/": {
+      "title": "Engineering Leverage Newsletter | Mantosh Kumar",
+      "description": "Follow concise, evidence-backed engineering notes from Mantosh Kumar about platform engineering, automation, backend systems, and operational intelligence.",
+      "kind": "page",
+      "schemaType": "WebPage",
+      "breadcrumbs": [{ "name": "Insights", "path": "/thinking/" }]
+    },
     "/accessibility/": {
       "title": "Accessibility | Mantosh Kumar",
       "description": "Accessibility features, known limitations, alternative résumé formats, and a direct way to report barriers on Mantosh Kumar's website.",
