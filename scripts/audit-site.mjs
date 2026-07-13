@@ -50,6 +50,7 @@ for (const region of ["india", "germany", "canada"]) {
   if (!new RegExp(`href=["']experience/#${region}["']`, "i").test(homeHtml)) { console.error(`homepage: ${region} experience card must link to its regional detail`); failures += 1; }
 }
 if (/View (?:India|Germany|Canada) experience/i.test(homeHtml)) { console.error("homepage: regional cards must not repeat verbose link labels"); failures += 1; }
+if (/<span>Experience\s*<span[^>]*>→<\/span><\/span>/i.test(homeHtml)) { console.error("homepage: regional cards must not repeat a redundant Experience tag"); failures += 1; }
 if (/class=["'][^"']*section-link[^"']*["'][^>]*>\s*View Experience/i.test(homeHtml)) { console.error("homepage: redundant View Experience link must stay removed"); failures += 1; }
 if (!/href=["']systems\/["'][^>]*>View all projects/i.test(homeHtml)) { console.error("homepage: selected projects need a scalable route to the complete portfolio"); failures += 1; }
 const projectsHtml = await readFile(join(root, "systems/index.html"), "utf8");
