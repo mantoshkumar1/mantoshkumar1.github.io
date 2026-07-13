@@ -31,6 +31,7 @@ for (const file of await walk(root)) {
   }
   for (const match of html.matchAll(/<img\b[^>]*>/gi)) if (!/\balt=["'][^"']*["']/i.test(match[0])) failures.push(`${label}: image missing alt`);
   for (const match of html.matchAll(/<a\b[^>]*target=["']_blank["'][^>]*>/gi)) if (!/\brel=["'][^"']*noreferrer/i.test(match[0])) failures.push(`${label}: new-tab link missing noreferrer`);
+  for (const match of html.matchAll(/<form\b[^>]*target=["']_blank["'][^>]*>/gi)) if (!/\brel=["'][^"']*noopener/i.test(match[0])) failures.push(`${label}: new-tab form missing noopener`);
   for (const match of html.matchAll(/<button\b[^>]*>/gi)) if (!/\btype=["'](?:button|submit)["']/i.test(match[0])) failures.push(`${label}: button missing explicit type`);
   if (/<(?:audio|video)\b/i.test(html) && !/<track\b/i.test(html)) failures.push(`${label}: time-based media missing a track`);
 }
