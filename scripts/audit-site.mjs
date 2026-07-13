@@ -60,6 +60,9 @@ for (const region of ["india", "germany", "canada"]) {
 }
 const contactHtml = await readFile(join(root, "contact/index.html"), "utf8");
 if (/senior or staff engineering role/i.test(contactHtml) || !/Staff or Principal Engineer role/.test(contactHtml) || !/Dubai and UAE opportunities/.test(contactHtml)) { console.error("contact: target role and Dubai/UAE positioning is stale"); failures += 1; }
+if (!/Current work authorization:<\/strong> Canada • United States • India/.test(contactHtml)) { console.error("contact: current work authorization is missing"); failures += 1; }
+const resumeHtml = await readFile(join(root, "resume/index.html"), "utf8");
+if (!/Work authorization:<\/strong> Canada • United States • India/.test(resumeHtml)) { console.error("resume: current work authorization is missing"); failures += 1; }
 for (const page of ["index.html", "thinking/index.html"]) {
   const html = await readFile(join(root, page), "utf8");
   for (const card of html.matchAll(/<article\b[^>]*class=["'][^"']*insight-card[^"']*["'][^>]*>([\s\S]*?)<\/article>/gi)) {
