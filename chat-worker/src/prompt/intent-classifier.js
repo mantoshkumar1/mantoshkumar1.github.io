@@ -1,4 +1,5 @@
 const SUBJECTIVE_PROFILE_PATTERN = /\b(?:genius|brilliant|smart|impressive|exceptional|great engineer|good engineer|overrated)\b/i;
+const ACHIEVEMENT_PATTERN = /\b(?:achievement|achievements|accomplishment|accomplishments|award|awards|recognition|honou?rs?|career story|his story|journey|education|academic|gate|heroes of tomorrow)\b/i;
 
 const PROFILE_PATTERNS = [
   /\b(?:who is|tell me about|about)\s+(?:this (?:guy|person|engineer)|mantosh|him)\b/i,
@@ -15,6 +16,7 @@ const PROBLEM_PATTERNS = [
 
 export function classifyQuestionIntent(question) {
   const value = String(question || "").trim();
+  if (ACHIEVEMENT_PATTERN.test(value)) return "achievement";
   if (PROFILE_PATTERNS.some((pattern) => pattern.test(value))) return "profile";
   if (PROBLEM_PATTERNS.some((pattern) => pattern.test(value))) return "problem";
   return "direct";
@@ -25,6 +27,14 @@ export function isSubjectiveProfileQuestion(question) {
 }
 
 export function responseModeInstructions(intent) {
+  if (intent === "achievement") {
+    return [
+      "Visitor intent: explicitly understand Mantosh's verified achievements, awards, education, or career story.",
+      "Use these headings in this order: `## Highlights`, `## Context`, `## Sources`, `## Follow-up Questions`.",
+      "Use at most three concise highlight bullets. Explain context without hype, ranking inflation, or implying that an achievement proves role suitability.",
+      "Keep the answer body before Sources under 140 words. Include only achievements explicitly supported by retrieved documents."
+    ].join("\n");
+  }
   if (intent === "profile") {
     return [
       "Visitor intent: understand Mantosh or assess whether to hire or engage him.",
@@ -52,6 +62,8 @@ export function responseModeInstructions(intent) {
 }
 
 export function expandRetrievalQuery(question, conversationQuery = question) {
-  if (classifyQuestionIntent(question) !== "profile") return conversationQuery;
+  const intent = classifyQuestionIntent(question);
+  if (intent === "achievement") return `Mantosh Verified Achievements Awards Education GATE Top 1% Technical University of Munich Heroes of Tomorrow ${conversationQuery}`;
+  if (intent !== "profile") return conversationQuery;
   return `About Mantosh Where His Experience Can Help Engineering Capabilities Technical Skills ${conversationQuery}`;
 }

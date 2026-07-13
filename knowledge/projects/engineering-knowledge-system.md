@@ -4,7 +4,7 @@ slug: "engineering-knowledge-system"
 category: "project"
 tags: [platform-engineering, retrieval-augmented-generation, cloudflare-workers, d1, vectorize, workers-ai, github-actions, accessibility, security, developer-experience]
 summary: "A production engineering publication and grounded assistant built with GitHub Pages, Cloudflare Workers, hybrid D1 and Vectorize retrieval, evidence-only generation, and automated release gates."
-last_updated: "2026-07-12"
+last_updated: "2026-07-13"
 related_topics: [ask-mantosh, knowledge-systems, hybrid-retrieval, ci-cd, trust-boundaries]
 visibility: "public"
 url: "/projects/engineering-knowledge-system.html"
@@ -41,13 +41,13 @@ The browser holds no provider or indexing secret. Visitor chat, knowledge indexi
 
 ### Automated release confidence
 
-Release gates check static generation, SEO, discoverability, internal links, accessibility semantics and preferences, documentation drift, content-lane inventory, and 37 Worker contract and security behaviors.
+Release gates check static generation, SEO, discoverability, internal links, accessibility semantics and preferences, documentation drift, content-lane inventory, and 38 Worker contract and security behaviors.
 
 ## Verified current scale
 
 - 19 SEO-configured HTML documents.
 - 13 public Ask Mantosh knowledge documents, including this source.
-- 37 Worker tests covering contracts, quotas, OIDC, retrieval, prompting, citation repair, subjective questions, and failure paths.
+- 38 Worker tests covering contracts, quotas, OIDC, retrieval, prompting, citation repair, subjective questions, explicit achievement gating, and failure paths.
 
 ## Current limits
 

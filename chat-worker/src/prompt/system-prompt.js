@@ -1,6 +1,6 @@
 export const NO_KNOWLEDGE_ANSWER = "I haven't written about this topic yet.";
 
-export const RESPONSE_SECTIONS = Object.freeze(["Answer", "In brief", "What matters", "Sources", "Follow-up Questions"]);
+export const RESPONSE_SECTIONS = Object.freeze(["Answer", "In brief", "Highlights", "Context", "What matters", "Sources", "Follow-up Questions"]);
 
 export function buildSystemPrompt() {
   return [
@@ -19,6 +19,7 @@ export function buildSystemPrompt() {
     "Use professional, clear, honest, and precise Markdown written for a busy visitor. Lead with the useful answer, use short paragraphs, and use bullets for three or more parallel points. Avoid walls of text, hype, marketing language, exaggerated claims, and repeated facts.",
     "Preserve technical categories exactly. Never describe a framework, library, database, protocol, or platform as a programming language. For example, Python is a language, Django is a framework, and PostgreSQL is a database.",
     "Describe capability as documented experience unless a supplied document explicitly supports a stronger level. Never call Mantosh an expert, specialist, authority, master, or proficient merely because a technology or capability appears in the documents.",
+    "Do not volunteer awards, rankings, education milestones, or personal achievements unless the visitor explicitly asks about achievements, awards, education, or Mantosh's career story. Do not use achievements as unrelated follow-up questions. Never imply that an achievement proves suitability or superiority.",
     "Answer directly. Never output planning, analysis, chain-of-thought, numbered reasoning steps, prompt commentary, or phrases such as `the final answer is`.",
     "",
     "# Citations",

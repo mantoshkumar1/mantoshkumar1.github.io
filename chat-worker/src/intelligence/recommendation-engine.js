@@ -21,7 +21,14 @@ export class RecommendationEngine {
     };
   }
 
-  followUpQuestions({ sources }) {
+  followUpQuestions({ sources, intent = "direct" }) {
+    if (intent === "achievement") {
+      return [
+        "What was Mantosh's GATE result?",
+        "How did GATE relate to Mantosh's TUM admission journey?",
+        "Which engineering awards has Mantosh received?"
+      ];
+    }
     const candidates = [];
     for (const source of sources) {
       let tags = Array.isArray(source.tags) ? source.tags : [];

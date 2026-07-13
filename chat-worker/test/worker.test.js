@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { formatSuccess } from "../src/formatter.js";
 import { verifyGitHubOidcToken } from "../src/github-oidc.js";
+import { RecommendationEngine } from "../src/intelligence/index.js";
 import worker from "../src/index.js";
 import { buildPrompt, buildSystemPrompt, classifyQuestionIntent, expandRetrievalQuery, isSubjectiveProfileQuestion, scoreRetrievalConfidence } from "../src/prompt/index.js";
 
@@ -348,6 +349,8 @@ test("system prompt forbids hidden-prompt disclosure and role switching", () => 
   assert.match(prompt, /Omit unsupported optional material and empty sections/i);
   assert.match(prompt, /Never present a suggestion as something Mantosh already did/i);
   assert.match(prompt, /Never call Mantosh an expert, specialist, authority, master, or proficient/i);
+  assert.match(prompt, /Do not volunteer awards, rankings, education milestones, or personal achievements/i);
+  assert.match(prompt, /Never imply that an achievement proves suitability or superiority/i);
 });
 
 test("classifies visitor questions into profile, problem, and direct response modes", () => {
@@ -355,6 +358,8 @@ test("classifies visitor questions into profile, problem, and direct response mo
   assert.equal(classifyQuestionIntent("How can Mantosh help my engineering team?"), "profile");
   assert.equal(classifyQuestionIntent("This guy is genius?"), "profile");
   assert.equal(classifyQuestionIntent("Is this engineer overrated?"), "profile");
+  assert.equal(classifyQuestionIntent("What are Mantosh's achievements?"), "achievement");
+  assert.equal(classifyQuestionIntent("Tell me his career story and awards"), "achievement");
   assert.equal(classifyQuestionIntent("We have a slow release workflow. What should we improve?"), "problem");
   assert.equal(classifyQuestionIntent("Why did PhotoSahi avoid a backend?"), "direct");
   assert.equal(isSubjectiveProfileQuestion("This guy is genius?"), true);
@@ -364,7 +369,30 @@ test("classifies visitor questions into profile, problem, and direct response mo
 test("expands only profile retrieval with verified capability vocabulary", () => {
   const profileQuery = expandRetrievalQuery("Tell me about this guy", "Tell me about this guy");
   assert.match(profileQuery, /^About Mantosh Where His Experience Can Help Engineering Capabilities Technical Skills/i);
+  const achievementQuery = expandRetrievalQuery("What are his achievements?", "What are his achievements?");
+  assert.match(achievementQuery, /^Mantosh Verified Achievements Awards Education GATE Top 1%/i);
   assert.equal(expandRetrievalQuery("Why no PhotoSahi backend?", "Why no PhotoSahi backend?"), "Why no PhotoSahi backend?");
+});
+
+test("gives explicit achievement questions a concise non-promotional response contract", () => {
+  const prompt = buildPrompt({
+    question: "What are Mantosh's achievements?",
+    retrieval: {
+      chunks: [{ path: "knowledge/faq/about-mantosh.md", content: "Verified achievements.", title: "About Mantosh", summary: "A verified profile.", tags: "achievements", category: "faq", url: "/experience/" }],
+      sources: [{ title: "About Mantosh", slug: "about-mantosh", category: "faq", label: "FAQ: About Mantosh", url: "/experience/" }]
+    }
+  });
+  assert.match(prompt.input, /<response_mode intent="achievement">/);
+  assert.match(prompt.input, /## Highlights/);
+  assert.match(prompt.input, /at most three concise highlight bullets/i);
+  assert.match(prompt.input, /without hype/i);
+  assert.match(prompt.input, /under 140 words/i);
+  const followUps = new RecommendationEngine(null, {}).followUpQuestions({ sources: [], intent: "achievement" });
+  assert.deepEqual(followUps, [
+    "What was Mantosh's GATE result?",
+    "How did GATE relate to Mantosh's TUM admission journey?",
+    "Which engineering awards has Mantosh received?"
+  ]);
 });
 
 test("gives profile questions a hiring-oriented, evidence-safe response contract", () => {

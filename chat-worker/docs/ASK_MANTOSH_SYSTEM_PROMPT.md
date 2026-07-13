@@ -10,7 +10,7 @@ incidental wording edits.
 | --- | --- |
 | `system-prompt.js` | Durable identity, evidence, citation, voice, and output rules. |
 | `prompt-builder.js` | Encodes the visitor question as data, selects a visitor-centered response mode, deduplicates chunks, and builds model input. |
-| `intent-classifier.js` | Deterministically selects profile, subjective-profile, problem-guidance, or direct-answer formatting without weakening retrieval or evidence rules. |
+| `intent-classifier.js` | Deterministically selects achievement, profile, subjective-profile, problem-guidance, or direct-answer formatting without weakening retrieval or evidence rules. |
 | `guardrails.js` | XML escaping, answerability gating, and the canonical unavailable response. |
 | `confidence-scorer.js` | Conservative retrieval-evidence score: `high`, `medium`, or `low`. |
 | `citation-builder.js` | Canonical source labels, URLs, and deduplication. |
@@ -29,7 +29,7 @@ The builder has five durable layers:
    and public URL; the final Sources section is deduplicated.
 5. **Response template** — a compact Markdown structure that omits unsupported
    sections, preserves technical categories, deduplicates sources, and ends with
-   exactly three evidence-grounded follow-up questions. Profile questions use a concise hiring-oriented structure; subjective praise or skepticism is acknowledged as opinion and redirected to published evidence; stated visitor problems receive practical but explicitly bounded guidance; and direct questions receive a compact answer rather than a generic report.
+   exactly three evidence-grounded follow-up questions. Explicit achievement, award, education, or career-story questions use a concise verified-highlights structure; those facts are not volunteered in unrelated answers. Profile questions use a concise hiring-oriented structure; subjective praise or skepticism is acknowledged as opinion and redirected to published evidence; stated visitor problems receive practical but explicitly bounded guidance; and direct questions receive a compact answer rather than a generic report.
 
 ## Hallucination prevention rules
 

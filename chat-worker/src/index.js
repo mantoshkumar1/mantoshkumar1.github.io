@@ -6,12 +6,12 @@ import { handleIndexRequest } from "./indexer.js";
 import { AnalyticsService, ConfidenceScorer, MemoryManager, MetadataService, RecommendationEngine, SearchRouter } from "./intelligence/index.js";
 import { createResponse } from "./ai.js";
 import { enforceFreeUsageLimit, enforceStrictRequestLimit } from "./quota.js";
-import { buildPrompt, expandRetrievalQuery, formatError, formatResponse, isAnswerable, isSubjectiveProfileQuestion, unavailableResponse } from "./prompt/index.js";
+import { buildPrompt, classifyQuestionIntent, expandRetrievalQuery, formatError, formatResponse, isAnswerable, isSubjectiveProfileQuestion, unavailableResponse } from "./prompt/index.js";
 import { enforceRateLimit } from "./rate-limit.js";
 import { retrieveKnowledge } from "./retrieval.js";
 import { parseChatRequest } from "./validation.js";
 
-const ANSWER_POLICY_VERSION = "visitor-intent-v8";
+const ANSWER_POLICY_VERSION = "visitor-intent-v10";
 
 function json(body, status, origin, extraHeaders = {}) {
   const headers = corsHeaders(origin);
@@ -105,10 +105,11 @@ export default {
 
       await enforceFreeUsageLimit(env, config);
       const retrievalQuery = expandRetrievalQuery(question, memory.buildRetrievalQuery(question, conversation));
+      const intent = classifyQuestionIntent(question);
       const retrieval = await retrieveKnowledge(retrievalQuery, env, config);
       const recommendationEngine = new RecommendationEngine(metadataService, config);
       const recommendations = await recommendationEngine.recommend({ sources: retrieval.sources });
-      const followUpQuestions = recommendationEngine.followUpQuestions({ sources: retrieval.sources });
+      const followUpQuestions = recommendationEngine.followUpQuestions({ sources: retrieval.sources, intent });
       const confidenceDetails = new ConfidenceScorer().score(retrieval);
       analytics.trackInBackground(ctx, retrieval.sources.length ? "knowledge_search" : "knowledge_gap", question);
 

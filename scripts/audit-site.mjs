@@ -60,7 +60,8 @@ for (const [page, html] of [["systems/index.html", projectsHtml], ["projects/gtt
 }
 const experienceHtml = await readFile(join(root, "experience/index.html"), "utf8");
 if (!/Joined Infinera in Canada; the role continues at Nokia after Nokia completed its acquisition of Infinera in 2025\./.test(experienceHtml)) { console.error("experience: Infinera-to-Nokia employment continuity needs an explicit explanation"); failures += 1; }
-if (!/Top 1% nationally in GATE Computer Science &amp; Information Technology, twice/.test(experienceHtml) || !/Technical University of Munich/.test(experienceHtml)) { console.error("experience: GATE top-1% result and TUM admission context must remain visible"); failures += 1; }
+if (!/Top 1% nationally in GATE CS &amp; IT, twice/.test(experienceHtml) || !/Technical University of Munich/.test(experienceHtml)) { console.error("experience: concise GATE top-1% result and TUM education must remain visible"); failures += 1; }
+if (/GATE is a prestigious national examination|About GATE/.test(experienceHtml)) { console.error("experience: detailed GATE context belongs in Ask Mantosh, not the scannable highlights list"); failures += 1; }
 if (!/href=["']https:\/\/www\.linkedin\.com\/in\/mantoshk\/details\/recommendations\/["'][^>]*>Read the recommendations on LinkedIn/i.test(experienceHtml)) { console.error("experience: recommendation link must open the dedicated LinkedIn recommendations page"); failures += 1; }
 for (const region of ["india", "germany", "canada"]) {
   if (!new RegExp(`id=["']${region}["']`, "i").test(experienceHtml)) { console.error(`experience: missing ${region} regional anchor`); failures += 1; }
