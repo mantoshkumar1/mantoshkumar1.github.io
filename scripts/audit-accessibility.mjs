@@ -51,6 +51,7 @@ for (const feature of ["prefers-color-scheme: light", "prefers-reduced-motion", 
 const widget = await readFile(join(root, "assets/js/ask-mantosh-widget.js"), "utf8");
 const client = await readFile(join(root, "assets/js/main.js"), "utf8");
 if (!/role=["']dialog["']/.test(widget) || !/aria-modal=["']true["']/.test(widget)) failures.push("Ask Mantosh missing modal dialog semantics");
+if (!/aria-label=["']Minimize Ask Mantosh; conversation will remain available["']/.test(widget) || /aria-label=["']Close Ask Mantosh["']/.test(widget)) failures.push("Ask Mantosh must present conversation-preserving minimization instead of destructive close semantics");
 if (!client.includes('setAttribute("aria-busy"') || !client.includes('setAttribute("aria-live"')) failures.push("Ask Mantosh missing quiet streaming announcements");
 if (!client.includes("renderBasic(markdown, target)") || !client.includes("this.renderBasic(markdown, target);")) failures.push("Ask Mantosh missing immediate safe Markdown fallback");
 if (!client.includes('stripResponseSections(text) { return text.replace(/\\n*##\\s+(?:Sources|Follow-up Questions)')) failures.push("Ask Mantosh must remove source and follow-up payloads from the reading pane");

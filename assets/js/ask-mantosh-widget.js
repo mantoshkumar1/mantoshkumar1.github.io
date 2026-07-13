@@ -64,7 +64,7 @@
           <div class="ask-mantosh-identity"><span class="ask-mantosh-presence" aria-hidden="true"></span><div><p class="ask-mantosh-eyebrow">PUBLISHED KNOWLEDGE</p><h2 id="ask-mantosh-title">Ask Mantosh</h2></div></div>
           <p id="ask-mantosh-description">Evidence-backed answers from Mantosh's projects, experience, and engineering writing.</p>
         </div>
-        <button class="ask-mantosh-close" id="ask-mantosh-close" type="button" aria-label="Close Ask Mantosh"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18"></path><path d="M6 6l12 12"></path></svg></button>
+        <button class="ask-mantosh-close" id="ask-mantosh-close" type="button" aria-label="Minimize Ask Mantosh; conversation will remain available" title="Minimize — conversation stays here"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 12h12"></path></svg></button>
       </div>
       <div class="ask-mantosh-body">
         <div class="ask-mantosh-conversation"><div class="ask-mantosh-messages" id="ask-mantosh-messages" role="log" aria-live="polite" aria-relevant="additions text" aria-label="Ask Mantosh conversation"></div><button class="ask-mantosh-jump" id="ask-mantosh-jump" type="button" hidden>Jump to latest</button></div>
