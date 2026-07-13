@@ -25,6 +25,7 @@ function extractFollowUpQuestions(answer) {
 function normalizeGroundedAnswer(answer, followUpQuestions = []) {
   const answerBlock = /<answer>\s*([\s\S]*?)\s*<\/answer>/i.exec(answer);
   let normalized = (answerBlock ? answerBlock[1] : answer).trim();
+  normalized = normalized.replace(/^[•▪◦]\s+/gm, "- ");
   const sectionNames = ["Answer", "Summary", "In brief", "Best fit", "Where Mantosh can help", "Relevant evidence", "A sensible next step", "What matters", "How Mantosh's experience applies", "Practical next steps", "Limits", "Detailed Explanation", "Engineering Decisions", "Trade-offs", "Lessons Learned", "Related Articles", "Related Projects", "Sources", "Follow-up Questions"];
   for (const section of sectionNames) {
     normalized = normalized.replace(new RegExp(`^#{0,2}\\s*${section}\\s*$`, "gim"), `## ${section}`);

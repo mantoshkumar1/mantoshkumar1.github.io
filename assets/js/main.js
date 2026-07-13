@@ -38,7 +38,7 @@ class MarkdownService {
         const node = document.createElement(heading[1].length <= 2 ? "h2" : "h3");
         this.appendInline(node, heading[2]); target.append(node); continue;
       }
-      const bullet = /^(?:[-*]|\d+[.)])\s+(.+)$/.exec(line);
+      const bullet = /^(?:[-*•]|\d+[.)])\s+(.+)$/.exec(line);
       if (bullet) {
         if (!list) { list = document.createElement("ul"); target.append(list); }
         const item = document.createElement("li"); this.appendInline(item, bullet[1]); list.append(item); continue;

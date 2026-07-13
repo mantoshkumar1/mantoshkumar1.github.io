@@ -396,6 +396,19 @@ test("wraps an unformatted grounded model answer in a readable heading", () => {
   assert.equal(result.answer, "## Answer\nA concise grounded answer.");
 });
 
+test("normalizes literal model bullets into semantic Markdown list items", () => {
+  const result = formatSuccess({ output_text: [
+    "## In brief",
+    "Concise profile.",
+    "## Best fit",
+    "• Platform engineering",
+    "• Workflow automation",
+    "• Backend systems"
+  ].join("\n") }, []);
+  assert.equal((result.answer.match(/^- /gm) || []).length, 3);
+  assert.doesNotMatch(result.answer, /^•/m);
+});
+
 test("rejects an answer that has evidence available but provides no verifiable citation", () => {
   assert.throws(() => formatSuccess(
     { output_text: "PhotoSahi processes images in the browser." },
