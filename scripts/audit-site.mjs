@@ -119,6 +119,11 @@ const gttHtml = await readFile(join(root, "projects/gtt-price-calculator.html"),
 for (const [page, html] of [["systems/index.html", projectsHtml], ["projects/gtt-price-calculator.html", gttHtml]]) {
   if (!/href=["']https:\/\/gtt-calculator\.streamlit\.app\/["'][^>]*>[^<]*(?:Try|live product)/i.test(html)) { console.error(`${page}: GTT live product link is missing`); failures += 1; }
 }
+const photoSahiHtml = await readFile(join(root, "projects/photosahi.html"), "utf8");
+if ((photoSahiHtml.match(/class=["'][^"']*flow-step[^"']*["']/gi) || []).length !== 4) { console.error("projects/photosahi.html: architecture must present four visitor-readable stages"); failures += 1; }
+if (!/<ol class=["']architecture-flow["'][^>]*aria-label=/i.test(photoSahiHtml)) { console.error("projects/photosahi.html: architecture flow must use an accessible ordered sequence"); failures += 1; }
+if (!/Your photo stays on this device/.test(photoSahiHtml) || !/image never needs to cross a network boundary/.test(photoSahiHtml)) { console.error("projects/photosahi.html: architecture must make the local privacy boundary explicit"); failures += 1; }
+if ((photoSahiHtml.match(/href=["']https:\/\/mantoshkumar1\.github\.io\/photosahi\/["']/gi) || []).length !== 1) { console.error("projects/photosahi.html: live product action must appear exactly once"); failures += 1; }
 const experienceHtml = await readFile(join(root, "experience/index.html"), "utf8");
 if (!/Nokia • Staff Software Engineer/.test(experienceHtml)) { console.error("experience: current Nokia role is missing"); failures += 1; }
 if (/Infinera|acquisition/i.test(experienceHtml)) { console.error("experience: obsolete employer-transition story must stay removed"); failures += 1; }

@@ -4,7 +4,7 @@ slug: "photosahi"
 category: "project"
 tags: [browser-side-processing, privacy, html5-canvas, image-processing]
 summary: "A privacy-first passport and visa photo generator that processes images entirely in the browser."
-last_updated: "2026-07-11"
+last_updated: "2026-07-13"
 related_topics: [client-side-architecture, privacy, performance]
 visibility: "public"
 url: "/projects/photosahi.html"
@@ -17,9 +17,10 @@ of preparing official photos. Many online tools require sensitive image uploads
 to remote servers and leave users without a clear guided workflow.
 
 The product runs completely in the browser and uses HTML5 Canvas for local
-image processing. The processing flow is: input image, canvas processing, crop,
-resize, background adjustment, and export. Photos are processed locally and are
-not uploaded to a backend.
+image processing. A user chooses a photo from their device, the browser crops,
+resizes, and adjusts it, the selected photo preset is applied, and the result is
+downloaded directly. Photos are processed locally and are not uploaded to a
+backend.
 
 ## Why there is no backend
 
