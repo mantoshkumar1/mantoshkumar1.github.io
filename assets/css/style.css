@@ -1581,6 +1581,7 @@ nav .nav-cta:not([aria-current="page"]):focus-visible {
 }
 
 #home .card {
+  min-height: 0;
   padding: 1.3rem;
 }
 
@@ -1591,6 +1592,12 @@ nav .nav-cta:not([aria-current="page"]):focus-visible {
 
 #home .resume-actions {
   margin-block: .75rem 0;
+}
+
+#home .card-links,
+#home .card > a:last-child {
+  margin-top: .55rem;
+  padding-top: 0;
 }
 
 .alt-section {
@@ -1730,14 +1737,14 @@ nav .nav-cta:not([aria-current="page"]):focus-visible {
 
 .timeline-link-card {
   display: flex;
-  min-height: 160px;
+  min-height: 0;
   flex-direction: column;
   color: var(--text);
 }
 
 .timeline-link-card > span {
-  margin-top: auto;
-  padding-top: 1rem;
+  margin-top: .55rem;
+  padding-top: 0;
   color: #82b6ff;
   font-size: .88rem;
   font-weight: 700;

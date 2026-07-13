@@ -44,12 +44,13 @@ if (/contain-intrinsic-size:\s*auto\s+720px/i.test(stylesheet) || /\.section\s*\
 }
 const homeHtml = await readFile(join(root, "index.html"), "utf8");
 if (!/Aricent → Cisco → Intel → Siemens → KI Labs → Infinera → Nokia/.test(homeHtml)) { console.error("homepage: career chronology is missing or out of order"); failures += 1; }
-if (!/Joined Infinera in Canada; the role continues at Nokia after its 2025 acquisition of Infinera\./.test(homeHtml)) { console.error("homepage: Infinera-to-Nokia employment continuity needs an explicit explanation"); failures += 1; }
 for (const region of ["india", "germany", "canada"]) {
   if (!new RegExp(`href=["']experience/#${region}["']`, "i").test(homeHtml)) { console.error(`homepage: ${region} experience card must link to its regional detail`); failures += 1; }
 }
+if (/View (?:India|Germany|Canada) experience/i.test(homeHtml)) { console.error("homepage: regional cards must not repeat verbose link labels"); failures += 1; }
 if (/class=["'][^"']*section-link[^"']*["'][^>]*>\s*View Experience/i.test(homeHtml)) { console.error("homepage: redundant View Experience link must stay removed"); failures += 1; }
 const experienceHtml = await readFile(join(root, "experience/index.html"), "utf8");
+if (!/Joined Infinera in Canada; the role continues at Nokia after Nokia completed its acquisition of Infinera in 2025\./.test(experienceHtml)) { console.error("experience: Infinera-to-Nokia employment continuity needs an explicit explanation"); failures += 1; }
 if (!/href=["']https:\/\/www\.linkedin\.com\/in\/mantoshk\/details\/recommendations\/["'][^>]*>Read the recommendations on LinkedIn/i.test(experienceHtml)) { console.error("experience: recommendation link must open the dedicated LinkedIn recommendations page"); failures += 1; }
 for (const region of ["india", "germany", "canada"]) {
   if (!new RegExp(`id=["']${region}["']`, "i").test(experienceHtml)) { console.error(`experience: missing ${region} regional anchor`); failures += 1; }
