@@ -280,16 +280,33 @@ nav .nav-cta:hover {
   font-size: 0.9rem;
 }
 
-.reference-summary {
+.reference-quote {
+  margin: 0;
+  padding-left: 1rem;
+  border-left: 3px solid rgba(77, 163, 255, 0.5);
+}
+
+.reference-quote p {
   margin: 0;
   color: var(--text);
   font-size: 1.02rem;
   line-height: 1.55;
 }
 
-.reference-summary + span {
-  display: block;
+.reference-quote footer {
+  display: grid;
+  gap: 0.1rem;
   margin-top: 0.75rem;
+}
+
+.reference-quote footer strong {
+  color: var(--text);
+  font-size: 0.9rem;
+}
+
+.reference-quote footer span {
+  color: var(--muted);
+  font-size: 0.82rem;
 }
 
 .value-strip {
