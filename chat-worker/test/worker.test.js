@@ -93,9 +93,49 @@ test("routes direct navigation without calling Workers AI", async () => {
   assert.equal(payload.confidence, "high");
 });
 
+test("answers greetings conversationally without retrieval or Workers AI", async () => {
+  const socialEnv = {
+    ...env,
+    AI: { run: async () => { throw new Error("No AI call is expected for a greeting"); } },
+    KNOWLEDGE_INDEX: { query: async () => { throw new Error("No retrieval is expected for a greeting"); } }
+  };
+  const response = await worker.fetch(request({ question: "hi", conversationId: "session_greeting_123" }), socialEnv);
+  const payload = await response.json();
+  assert.equal(response.status, 200);
+  assert.match(payload.answer, /^Hi!/);
+  assert.doesNotMatch(payload.answer, /haven't written/i);
+  assert.deepEqual(payload.sources, []);
+  assert.equal(payload.followUpQuestions.length, 3);
+  assert.equal(payload.conversationId, "session_greeting_123");
+});
+
+test("streams greetings through the widget contract without retrieval", async () => {
+  const socialEnv = {
+    ...env,
+    AI: { run: async () => { throw new Error("No AI call is expected for a greeting"); } },
+    KNOWLEDGE_INDEX: { query: async () => { throw new Error("No retrieval is expected for a greeting"); } }
+  };
+  const response = await worker.fetch(request({ question: "Hello there" }, { headers: { Accept: "text/event-stream" } }), socialEnv);
+  const body = await response.text();
+  assert.equal(response.headers.get("Content-Type"), "text/event-stream; charset=utf-8");
+  assert.match(body, /event: metadata/);
+  assert.match(body, /Hi!/);
+  assert.match(body, /event: done/);
+});
+
+test("handles thanks and farewells without claiming missing knowledge", async () => {
+  for (const [question, expected] of [["Thank you", "You're welcome"], ["Goodbye", "Goodbye!"]]) {
+    const response = await worker.fetch(request({ question }), env);
+    const payload = await response.json();
+    assert.match(payload.answer, new RegExp(`^${expected.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`));
+    assert.doesNotMatch(payload.answer, /haven't written/i);
+    assert.deepEqual(payload.sources, []);
+  }
+});
+
 test("maps Workers AI quota exhaustion safely", async () => {
   const rateLimitedEnv = { ...env, AI: { run: async (model) => model.includes("bge-m3") ? { data: [[0.1, 0.2]] } : Promise.reject({ code: 429 }) } };
-  const response = await worker.fetch(request({ question: "Hello" }), rateLimitedEnv);
+  const response = await worker.fetch(request({ question: "What is PhotoSahi?" }), rateLimitedEnv);
   assert.equal(response.status, 429);
   assert.equal((await response.json()).error.code, "workers_ai_quota_exhausted");
 });
@@ -112,7 +152,7 @@ test("returns frontend-compatible SSE events with source metadata", async (t) =>
 
 test("handles a Workers AI timeout", async () => {
   const timedOutEnv = { ...env, AI: { run: async () => new Promise(() => {}) } };
-  const response = await worker.fetch(request({ question: "Hello" }), { ...timedOutEnv, AI_TIMEOUT_MS: "1" });
+  const response = await worker.fetch(request({ question: "What is PhotoSahi?" }), { ...timedOutEnv, AI_TIMEOUT_MS: "1" });
   assert.equal(response.status, 500);
   assert.equal((await response.json()).error.code, "embedding_timeout");
 });

@@ -11,7 +11,7 @@ import { enforceRateLimit } from "./rate-limit.js";
 import { retrieveKnowledge } from "./retrieval.js";
 import { parseChatRequest } from "./validation.js";
 
-const ANSWER_POLICY_VERSION = "visitor-intent-v10";
+const ANSWER_POLICY_VERSION = "visitor-intent-v11";
 
 function json(body, status, origin, extraHeaders = {}) {
   const headers = corsHeaders(origin);
@@ -45,6 +45,14 @@ function navigationResponse(destination, conversationId) {
     answer: `Opening ${destination.label}.`, sources: [], relatedArticles: [], relatedProjects: [], relatedNotes: [], recommendations: [],
     followUpQuestions: [], suggestedQuestions: [], confidence: "high", conversationId,
     action: { type: "navigate", destinationType, ...target }, success: true
+  };
+}
+
+function socialResponse(response, conversationId) {
+  return {
+    answer: response.answer, sources: [], relatedArticles: [], relatedProjects: [], relatedNotes: [], recommendations: [],
+    followUpQuestions: response.followUpQuestions, suggestedQuestions: response.followUpQuestions, confidence: "high",
+    conversationId, success: true
   };
 }
 
@@ -84,6 +92,15 @@ export default {
       const memory = new MemoryManager(env.KNOWLEDGE_DB, config);
       const conversation = await memory.load(conversationId);
       const route = await new SearchRouter(metadataService).route(question);
+      const wantsStream = request.headers.get("Accept")?.includes("text/event-stream");
+      if (route.kind === "social") {
+        const result = socialResponse(route.response, conversationId);
+        analytics.trackInBackground(ctx, "conversation", question.toLowerCase());
+        ctx?.waitUntil?.(memory.recordTurn({ conversationId, question, answer: result.answer, sources: [] }));
+        return wantsStream
+          ? eventStream([{ type: "metadata", data: result }, { type: "response.output_text.delta", data: { delta: result.answer } }, { type: "done", data: {} }], origin)
+          : json(result, 200, origin);
+      }
       if (route.kind === "navigate") {
         const result = navigationResponse(route.destination, conversationId);
         analytics.trackInBackground(ctx, route.destination.type === "project" ? "project_view" : "navigation", route.destination.id || route.destination.type);
@@ -91,7 +108,6 @@ export default {
         return json(result, 200, origin);
       }
 
-      const wantsStream = request.headers.get("Accept")?.includes("text/event-stream");
       const cacheable = !wantsStream && conversation.messages.length === 0 && !conversation.summary && isCacheableQuestion(question);
       const version = cacheable ? await knowledgeVersion(env, config.cacheVersion) : null;
       const cacheKey = cacheable ? await fingerprint(`${ANSWER_POLICY_VERSION}:${version}:${question}`) : null;
