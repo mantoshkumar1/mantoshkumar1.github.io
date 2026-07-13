@@ -2,7 +2,7 @@
 title: "About Mantosh and Where His Experience Can Help"
 slug: "about-mantosh"
 category: "faq"
-tags: [staff-software-engineer, platform-engineering, automation, backend-systems, networking, operational-intelligence, hiring]
+tags: [staff-software-engineer, platform-engineering, automation, backend-systems, networking, operational-intelligence, hiring, canadian-citizen, toronto, canada]
 summary: "A concise, evidence-backed guide to Mantosh Kumar's engineering background, strongest documented capability areas, and appropriate ways to assess fit for a role or project."
 last_updated: "2026-07-12"
 related_topics: [engineering-capabilities, workflow-automation, distributed-validation, developer-productivity, quality-analytics]
@@ -15,6 +15,10 @@ url: "/experience/"
 ## In brief
 
 Mantosh Kumar is a Toronto-based Staff Software Engineer with more than 14 years of documented experience across platform engineering, engineering automation, backend systems, networking, distributed validation, and operational intelligence. His published Experience page records engineering roles at Infinera (now Nokia), KI Labs, Intel, Siemens, Cisco, and Aricent in Canada, Germany, and India. Mantosh joined Infinera in Canada, and the role continues at Nokia following Nokia's 2025 acquisition of Infinera.
+
+## Location and citizenship
+
+Mantosh is based in Toronto, Canada, and is a Canadian citizen. This public profile fact is included to give recruiters and clients clear location and Canadian work-eligibility context. It does not state availability, willingness to relocate, or eligibility in any other country.
 
 ## Where his documented experience is most relevant
 
@@ -34,4 +38,4 @@ These published materials can show relevant background and engineering judgment,
 
 ## Evidence boundary
 
-This profile is derived from Mantosh's published résumé and Experience page. Employer scale, confidential work, undisclosed metrics, availability, and guaranteed project outcomes are excluded.
+This profile is derived from Mantosh's published résumé and Experience page. The Canadian-citizenship statement is a firsthand fact Mantosh explicitly supplied for publication. Employer scale, confidential work, undisclosed metrics, availability, relocation preferences, and guaranteed project outcomes are excluded.
