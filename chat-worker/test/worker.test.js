@@ -26,7 +26,7 @@ function testDatabase() {
 function gateDatabase() {
   const row = {
     chunk_id: "gate-1",
-    content: "Mantosh ranked in the top 1% nationally in GATE CS & IT in 2012 and 2013.",
+    content: "Mantosh ranked in the top 1% in India's GATE CS & IT examination in 2012 and 2013.",
     title: "GATE CS & IT Top-1% Achievement and TUM Admission Context",
     slug: "gate-cs-top-one-percent",
     category: "experience",
@@ -246,7 +246,7 @@ test("answers natural broad-profile wording from published engineering evidence"
 test("answers a specific GATE-result question in one concise evidence-backed sentence", () => {
   const source = { slug: "gate-cs-top-one-percent" };
   const result = conciseAchievementResponse("What was Mantosh's GATE result?", [source]);
-  assert.equal(result.answer, "Mantosh ranked in the top 1% nationally in GATE Computer Science & Information Technology in both 2012 and 2013.");
+  assert.equal(result.answer, "Mantosh ranked in the top 1% in India's GATE Computer Science & Information Technology examination in both 2012 and 2013.");
   assert.equal(result.source, source);
   assert.equal(result.answer.split(/(?<=[.!?])\s+/).length, 1);
 });
@@ -283,7 +283,7 @@ test("serves a concise GATE result without a generative AI call", async () => {
   const response = await worker.fetch(request({ question: "What was Mantosh's GATE result?" }), gateEnv);
   const payload = await response.json();
   assert.equal(response.status, 200);
-  assert.equal(payload.answer, "Mantosh ranked in the top 1% nationally in GATE Computer Science & Information Technology in both 2012 and 2013.");
+  assert.equal(payload.answer, "Mantosh ranked in the top 1% in India's GATE Computer Science & Information Technology examination in both 2012 and 2013.");
   assert.equal(payload.sources[0].slug, "gate-cs-top-one-percent");
   assert.deepEqual(payload.followUpQuestions, []);
 });

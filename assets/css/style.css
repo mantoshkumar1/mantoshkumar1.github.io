@@ -1766,6 +1766,14 @@ nav .nav-cta:not([aria-current="page"]):focus-visible {
   gap: .9rem;
 }
 
+/* Turn an odd final card into an intentional feature at the two-column breakpoint. */
+@media (min-width: 641px) and (max-width: 939px) {
+  #home #systems .cards > .project-card:last-child:nth-child(odd),
+  #home #insights .cards > .insight-card:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+  }
+}
+
 #home .card {
   min-height: 0;
   padding: 1.3rem;
@@ -2761,12 +2769,7 @@ html[data-theme="contrast"] nav .nav-cta:not([aria-current="page"]) { border-col
 html[data-theme="contrast"] .button.primary { background: #fff; color: #000; }
 html[data-theme="contrast"] .button.secondary { border-color: #fff; background: #000; color: #fff; }
 html[data-theme="contrast"] .hero::after {
-  background: radial-gradient(circle, transparent 58%, rgba(255,255,255,.75) 59%, rgba(255,255,255,.75) 60%, transparent 61%);
-  filter: none;
-  opacity: .3;
-  animation: none;
-  transform: none;
-  will-change: auto;
+  display: none;
 }
 html[data-theme="contrast"] :focus-visible { outline-color: #ffde59; }
 html[data-theme="contrast"] .appearance-control select { border-color: #fff; background: #000; color: #fff; }
@@ -2836,53 +2839,35 @@ html[data-theme="contrast"] .appearance-control select { border-color: #fff; bac
 }
 
 .resume-resource-actions {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  max-width: 680px;
-  gap: .7rem;
-  margin-top: -.55rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .65rem 1.15rem;
+  margin: -.55rem 0 1rem;
 }
 
 .resume-resource-link {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  justify-content: space-between;
-  min-height: 54px;
-  padding: .75rem 1rem;
-  border: 1px solid var(--border-strong);
-  border-radius: 16px;
-  background: var(--surface-raised);
-  box-shadow: 0 1px 0 rgba(255,255,255,.12) inset, 0 10px 24px rgba(0,0,0,.1);
-  color: var(--text);
-  font-weight: 700;
-  transition: transform .2s var(--ease-out), border-color .2s ease, box-shadow .2s ease;
-}
-
-.resume-resource-link.download {
-  border-color: color-mix(in srgb, var(--primary) 65%, var(--border));
-  background: color-mix(in srgb, var(--primary) 13%, var(--surface-raised));
+  gap: .28rem;
+  color: var(--muted);
+  font-size: .9rem;
+  font-weight: 650;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: .25em;
+  transition: color .18s ease, text-decoration-color .18s ease;
 }
 
 .resume-resource-link:hover,
 .resume-resource-link:focus-visible {
-  border-color: var(--primary);
-  box-shadow: 0 1px 0 rgba(255,255,255,.16) inset, 0 14px 30px rgba(0,0,0,.16);
-  transform: translateY(-2px);
+  color: var(--text);
+  text-decoration-color: var(--primary);
 }
 
 .resume-resource-link span[aria-hidden="true"] {
   color: var(--primary);
-  font-size: 1.05rem;
-}
-
-@media (max-width: 640px) {
-  .resume-resource-actions {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .resume-resource-link.download {
-    grid-column: 1 / -1;
-  }
+  font-size: .92rem;
 }
 
 .newsletter-form {

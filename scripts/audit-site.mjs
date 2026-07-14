@@ -72,10 +72,10 @@ if (/contain-intrinsic-size:\s*auto\s+720px/i.test(stylesheet) || /\.section\s*\
   failures += 1;
 }
 const homeHtml = await readFile(join(root, "index.html"), "utf8");
-if (!/<h1 aria-label=["']Turn engineering friction into reusable systems\.["']>\s*<span class=["']hero-title-line["'][^>]*>Turn engineering<\/span>\s*<span class=["']hero-title-line["'][^>]*>friction<\/span>\s*<span class=["']hero-title-line["'][^>]*>into reusable systems\.<\/span>\s*<\/h1>/i.test(homeHtml)) { console.error("homepage: hero title must preserve its intentional three-line rhythm"); failures += 1; }
+if (!/<h1 aria-label=["']Turn engineering friction into reusable systems["']>\s*<span class=["']hero-title-line["'][^>]*>Turn engineering<\/span>\s*<span class=["']hero-title-line["'][^>]*>friction<\/span>\s*<span class=["']hero-title-line["'][^>]*>into reusable systems<\/span>\s*<\/h1>/i.test(homeHtml)) { console.error("homepage: hero title must preserve its intentional three-line rhythm"); failures += 1; }
 if (!/\.hero-title-line\s*\{[^}]*display:\s*block;[^}]*white-space:\s*nowrap/is.test(stylesheet)) { console.error("stylesheet: hero title lines must remain explicit and unbroken"); failures += 1; }
 if (!/\.hero::after\s*\{[^}]*pointer-events:\s*none;[^}]*animation:\s*hero-orb-breathe\s+11s/is.test(stylesheet) || !/@keyframes\s+hero-orb-breathe\s*\{[\s\S]*?opacity:[\s\S]*?transform:/is.test(stylesheet)) { console.error("stylesheet: hero orb needs a slow, non-interactive transform-and-opacity evolution"); failures += 1; }
-if (!/@media\s*\(prefers-reduced-motion:\s*reduce\)[\s\S]*?\.hero::after\s*\{[^}]*animation:\s*none\s*!important/is.test(stylesheet) || !/html\[data-theme=["']contrast["']\]\s+\.hero::after\s*\{[^}]*animation:\s*none/is.test(stylesheet)) { console.error("stylesheet: hero orb needs static reduced-motion and contrast treatments"); failures += 1; }
+if (!/@media\s*\(prefers-reduced-motion:\s*reduce\)[\s\S]*?\.hero::after\s*\{[^}]*animation:\s*none\s*!important/is.test(stylesheet) || !/html\[data-theme=["']contrast["']\]\s+\.hero::after\s*\{[^}]*display:\s*none/is.test(stylesheet)) { console.error("stylesheet: hero orb needs a static reduced-motion treatment and must be suppressed in contrast mode"); failures += 1; }
 if (!/Aricent → Cisco → Intel → Siemens → KI Labs → Nokia/.test(homeHtml)) { console.error("homepage: career chronology is missing or out of order"); failures += 1; }
 if (/Infinera|acquisition/i.test(homeHtml)) { console.error("homepage: obsolete employer-transition story must stay removed"); failures += 1; }
 if (!/<strong>Staff Software Engineer<\/strong>\s*<span>Toronto<\/span>/.test(homeHtml)) { console.error("homepage: concise role and Toronto location signal is missing"); failures += 1; }
@@ -94,6 +94,7 @@ if (!/5 documented projects across platforms, automation, and applied engineerin
 if (!/href=["']resume\/Resume-MantoshKumar-MSc-CS\.pdf["'][^>]*>View résumé PDF/i.test(homeHtml)) { console.error("homepage: recruiter-facing résumé action is missing"); failures += 1; }
 if (!/<div class=["']hero-buttons["']>[\s\S]*>Discuss a role[\s\S]*<\/div>\s*<nav class=["']hero-discovery["'][^>]*>[\s\S]*href=["']insights\/["'][^>]*>Read insights[\s\S]*href=["']newsletter\/["'][^>]*>Join the newsletter[\s\S]*<\/nav>/i.test(homeHtml)) { console.error("homepage: insights and newsletter need a visible secondary discovery row after recruiter actions"); failures += 1; }
 if (!/\.hero-discovery\s*\{[^}]*display:\s*flex;[^}]*margin-bottom:/is.test(stylesheet)) { console.error("stylesheet: homepage discovery links need a compact horizontal treatment"); failures += 1; }
+if (!/@media\s*\(min-width:\s*641px\)\s*and\s*\(max-width:\s*939px\)[\s\S]*?#home #systems \.cards > \.project-card:last-child:nth-child\(odd\),[\s\S]*?#home #insights \.cards > \.insight-card:last-child:nth-child\(odd\)\s*\{[^}]*grid-column:\s*1\s*\/\s*-1/is.test(stylesheet)) { console.error("stylesheet: odd homepage project and insight cards must fill the intermediate two-column row"); failures += 1; }
 const projectsHtml = await readFile(join(root, "projects/index.html"), "utf8");
 const knowledgeSystemHtml = await readFile(join(root, "projects/engineering-knowledge-system.html"), "utf8");
 const validationPlatformHtml = await readFile(join(root, "projects/validation-platform-optical-networking.html"), "utf8");
@@ -165,7 +166,7 @@ if ((photoSahiHtml.match(/href=["']https:\/\/mantoshkumar1\.github\.io\/photosah
 const experienceHtml = await readFile(join(root, "experience/index.html"), "utf8");
 if (!/Nokia • Staff Software Engineer/.test(experienceHtml)) { console.error("experience: current Nokia role is missing"); failures += 1; }
 if (/Infinera|acquisition/i.test(experienceHtml)) { console.error("experience: obsolete employer-transition story must stay removed"); failures += 1; }
-if (!/Top 1% nationally in GATE CS &amp; IT, twice/.test(experienceHtml) || !/Technical University of Munich/.test(experienceHtml)) { console.error("experience: concise GATE top-1% result and TUM education must remain visible"); failures += 1; }
+if (!/Ranked in the top 1% in India’s GATE Computer Science &amp; IT examination/.test(experienceHtml) || !/Technical University of Munich/.test(experienceHtml)) { console.error("experience: concise GATE top-1% result and TUM education must remain visible"); failures += 1; }
 if (/GATE is a prestigious national examination|About GATE/.test(experienceHtml)) { console.error("experience: detailed GATE context belongs in Ask Mantosh, not the scannable highlights list"); failures += 1; }
 if (!/href=["']https:\/\/www\.linkedin\.com\/in\/mantoshk\/details\/recommendations\/["'][^>]*>Read the recommendations on LinkedIn/i.test(experienceHtml)) { console.error("experience: recommendation link must open the dedicated LinkedIn recommendations page"); failures += 1; }
 if ((experienceHtml.match(/<blockquote class=["']reference-quote["']>/g) || []).length !== 2 || !/Mustafa Furkan Kaptan/.test(experienceHtml) || !/Itzhak Mordehay/.test(experienceHtml) || !/Short excerpts from public LinkedIn recommendations/.test(experienceHtml)) { console.error("experience: verified LinkedIn pull-quotes and attribution are missing"); failures += 1; }
@@ -179,11 +180,11 @@ for (const [page, html] of [["index.html", homeHtml], ["contact/index.html", con
   if (/\b(?:Dubai|UAE|United Arab Emirates)\b/i.test(html)) { console.error(`${page}: public hiring copy must not expose private relocation targeting`); failures += 1; }
 }
 if (!/<strong>Canadian citizen<\/strong> • Work authorization: Canada • United States • India/.test(contactHtml)) { console.error("contact: citizenship or current work authorization is missing"); failures += 1; }
-if (!/Toronto-based Canadian citizen/.test(resumeHtml) || !/Work authorization:<\/strong> Canada • United States • India/.test(resumeHtml)) { console.error("resume: citizenship or current work authorization is missing"); failures += 1; }
-if (!/Top 1% nationally in GATE CS &amp; IT, twice/.test(resumeHtml) || !/href=["']\.\.\/experience\/#verified-highlights["'][^>]*>View full experience and capabilities/i.test(resumeHtml)) { console.error("resume: verified highlights and experience bridge are missing"); failures += 1; }
-if (/<strong>Top 1% nationally in GATE CS &amp; IT, twice<\/strong>/.test(resumeHtml)) { console.error("resume: GATE result should read as evidence without promotional emphasis"); failures += 1; }
+if (!/Toronto-based Staff Software Engineer/.test(resumeHtml) || !/Work authorization:<\/strong> Canada • United States • India/.test(resumeHtml)) { console.error("resume: location, role, or current work authorization is missing"); failures += 1; }
+if (!/Ranked in the top 1% in India’s GATE Computer Science &amp; IT examination/.test(resumeHtml) || !/href=["']\.\.\/experience\/#verified-highlights["'][^>]*>View full experience and capabilities/i.test(resumeHtml)) { console.error("resume: verified highlights and experience bridge are missing"); failures += 1; }
+if (/<strong>Ranked in the top 1% in India’s GATE Computer Science &amp; IT examination<\/strong>/.test(resumeHtml)) { console.error("resume: GATE result should read as evidence without promotional emphasis"); failures += 1; }
 const resumeResourceActions = resumeHtml.match(/<div class=["']resume-resource-actions["'][^>]*role=["']group["'][^>]*aria-label=["']Résumé resources["'][^>]*>([\s\S]*?)<\/div>/i)?.[1] || "";
-if ((resumeResourceActions.match(/class=["'][^"']*resume-resource-link[^"']*["']/gi) || []).length !== 3 || !/>\s*<span>Download PDF<\/span>/i.test(resumeResourceActions) || !/>\s*<span>LinkedIn<\/span>/i.test(resumeResourceActions) || !/>\s*<span>GitHub<\/span>/i.test(resumeResourceActions)) {
+if ((resumeResourceActions.match(/class=["'][^"']*resume-resource-link[^"']*["']/gi) || []).length !== 3 || !/>\s*<span>Download résumé<\/span>/i.test(resumeResourceActions) || !/>\s*<span>LinkedIn<\/span>/i.test(resumeResourceActions) || !/>\s*<span>GitHub<\/span>/i.test(resumeResourceActions)) {
   console.error("resume: PDF, LinkedIn, and GitHub must remain prominent resource actions");
   failures += 1;
 }

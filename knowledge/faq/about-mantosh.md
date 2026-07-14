@@ -38,7 +38,7 @@ Mantosh is open to Staff Engineer or Principal Engineer opportunities rather tha
 
 - M.Sc. in Computer Science from the Technical University of Munich, with thesis work in software-defined networking and network-functions virtualization.
 - Two Intel Heroes of Tomorrow awards for outstanding engineering contributions.
-- Top 1% nationally in GATE Computer Science and Information Technology in both 2012 and 2013. Mantosh states that a GATE result formed part of his admission journey to the TUM master's program.
+- Ranked in the top 1% in India's GATE Computer Science and Information Technology examination in both 2012 and 2013. Mantosh states that a GATE result formed part of his admission journey to the TUM master's program.
 
 These facts are available when a visitor explicitly asks about Mantosh's achievements, awards, education, or career story. They should not be inserted into unrelated answers or presented as proof of suitability for a role.
 

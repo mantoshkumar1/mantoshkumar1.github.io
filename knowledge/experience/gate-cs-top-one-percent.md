@@ -3,8 +3,8 @@ title: "GATE CS & IT Top-1% Achievement and TUM Admission Context"
 slug: "gate-cs-top-one-percent"
 category: "experience"
 tags: [gate, gate-cs-it, computer-science, top-one-percent, academic-achievement, technical-university-of-munich, graduate-admission]
-summary: "Mantosh Kumar ranked in the top 1% nationally in GATE Computer Science and Information Technology in both 2012 and 2013 and used a GATE result as part of his admission journey to TUM."
-last_updated: "2026-07-12"
+summary: "Mantosh Kumar ranked in the top 1% in India's GATE Computer Science and Information Technology examination in both 2012 and 2013 and used a GATE result as part of his admission journey to TUM."
+last_updated: "2026-07-13"
 related_topics: [education, academic-achievements, computer-science, tum]
 visibility: "public"
 url: "/experience/#verified-highlights"
@@ -14,7 +14,7 @@ url: "/experience/#verified-highlights"
 
 ## Result
 
-Mantosh Kumar ranked in the top 1% nationally in the Graduate Aptitude Test in Engineering paper for Computer Science and Information Technology (GATE CS & IT) in both 2012 and 2013.
+Mantosh Kumar ranked in the top 1% in India's Graduate Aptitude Test in Engineering paper for Computer Science and Information Technology (GATE CS & IT) in both 2012 and 2013.
 
 ## Why the result is notable
 

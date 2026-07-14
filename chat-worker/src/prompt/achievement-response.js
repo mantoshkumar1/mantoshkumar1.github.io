@@ -25,7 +25,7 @@ export function conciseAchievementResponse(question, sources = []) {
       };
     }
     return {
-      answer: "Mantosh ranked in the top 1% nationally in GATE Computer Science & Information Technology in both 2012 and 2013.",
+      answer: "Mantosh ranked in the top 1% in India's GATE Computer Science & Information Technology examination in both 2012 and 2013.",
       source
     };
   }
