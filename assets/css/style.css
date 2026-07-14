@@ -2253,21 +2253,12 @@ main.project-shell > .container > .section-block {
   .section > .container,
   .case-study .resume-section,
   .capability-section {
-    animation: premium-reveal linear both;
+    animation: premium-fade-reveal linear both;
     animation-timeline: view();
     animation-range: entry 0% entry 24%;
   }
 
-  @keyframes premium-reveal {
-    from { opacity: .15; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  #home > .section > .container {
-    animation-name: homepage-fade-reveal;
-  }
-
-  @keyframes homepage-fade-reveal {
+  @keyframes premium-fade-reveal {
     from { opacity: .15; }
     to { opacity: 1; }
   }
