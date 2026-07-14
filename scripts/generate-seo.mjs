@@ -221,6 +221,55 @@ function sitemap(site, entries) {
   return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`;
 }
 
+function atomTimestamp(value) {
+  if (!value) return null;
+  const timestamp = /^\d{4}-\d{2}-\d{2}$/.test(value) ? `${value}T12:00:00Z` : value;
+  if (Number.isNaN(Date.parse(timestamp))) throw new Error(`Invalid feed date: ${value}`);
+  return new Date(timestamp).toISOString().replace(".000Z", "Z");
+}
+
+function atomFeed(site, entries) {
+  const publications = entries.filter(({ page }) => !page.noindex && ["article", "project"].includes(page.kind));
+  const undated = publications.filter(({ page }) => !(page.datePublished || page.dateModified));
+  if (undated.length) throw new Error(`Feed publications need datePublished or dateModified: ${undated.map(({ route }) => route).join(", ")}`);
+  const items = publications
+    .map(({ page, url }) => {
+      const published = atomTimestamp(page.datePublished || page.dateModified);
+      const updated = atomTimestamp(page.dateModified || page.datePublished);
+      return { page, url, published, updated };
+    })
+    .sort((left, right) => right.published.localeCompare(left.published) || left.url.localeCompare(right.url));
+  if (!items.length) throw new Error("Feed generation requires at least one dated article or project.");
+  const updated = items.reduce((latest, item) => item.updated > latest ? item.updated : latest, items[0].updated);
+  const body = items.map(({ page, url, published, updated: itemUpdated }) => {
+    const title = page.title.replace(/\s*\|\s*Mantosh Kumar$/i, "");
+    const category = page.kind === "article" ? "engineering-insight" : "project-case-study";
+    return `  <entry>
+    <title>${escapeHtml(title)}</title>
+    <id>${escapeHtml(url)}</id>
+    <link href="${escapeHtml(url)}" />
+    <published>${published}</published>
+    <updated>${itemUpdated}</updated>
+    <author><name>${escapeHtml(site.author)}</name></author>
+    <category term="${category}" />
+    <summary>${escapeHtml(page.description)}</summary>
+  </entry>`;
+  }).join("\n");
+  const home = site.url.replace(/\/$/, "");
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>${escapeHtml(site.name)} — Engineering Writing and Systems</title>
+  <id>${escapeHtml(`${home}/`)}</id>
+  <link href="${escapeHtml(`${home}/`)}" />
+  <link href="${escapeHtml(`${home}/feed.xml`)}" rel="self" type="application/atom+xml" />
+  <updated>${updated}</updated>
+  <author><name>${escapeHtml(site.author)}</name></author>
+  <subtitle>${escapeHtml(site.description)}</subtitle>
+${body}
+</feed>
+`;
+}
+
 export async function generateSeo(root = SOURCE_ROOT, configPath = CONFIG_PATH) {
   const config = JSON.parse(await readFile(configPath, "utf8"));
   const files = await htmlFiles(root);
@@ -241,13 +290,14 @@ export async function generateSeo(root = SOURCE_ROOT, configPath = CONFIG_PATH) 
       : html.replace(/<head>/i, `<head>\n    <meta charset="UTF-8" />\n    <meta name="viewport" content="width=device-width, initial-scale=1.0" />\n    ${block}`);
     html = html.replace(/[\t ]+$/gm, "");
     await writeFile(file, html);
-    entries.push({ page, url });
+    entries.push({ page, route, url });
   }
   await writeFile(join(root, "sitemap.xml"), sitemap(config.site, entries));
+  await writeFile(join(root, "feed.xml"), atomFeed(config.site, entries));
   return entries;
 }
 
 if (process.argv[1] && fileURLToPath(import.meta.url) === resolve(process.argv[1])) {
   const entries = await generateSeo();
-  console.log(`Generated SEO metadata and sitemap for ${entries.length} pages.`);
+  console.log(`Generated SEO metadata, sitemap, and feed for ${entries.length} pages.`);
 }

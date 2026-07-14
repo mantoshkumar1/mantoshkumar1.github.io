@@ -5,11 +5,28 @@
   <link href="https://mantoshkumar1.github.io/" />
   <link href="https://mantoshkumar1.github.io/feed.xml" rel="self" type="application/atom+xml" />
   <updated>2026-07-13T12:00:00Z</updated>
-  <author>
-    <name>Mantosh Kumar</name>
-    <email>mantoshk234@gmail.com</email>
-  </author>
-  <subtitle>Public engineering case studies, writing, and notes by Mantosh Kumar.</subtitle>
+  <author><name>Mantosh Kumar</name></author>
+  <subtitle>Platform engineering, automation, backend systems, and operational intelligence.</subtitle>
+  <entry>
+    <title>Evidence-First Engineering Knowledge System</title>
+    <id>https://mantoshkumar1.github.io/projects/engineering-knowledge-system.html</id>
+    <link href="https://mantoshkumar1.github.io/projects/engineering-knowledge-system.html" />
+    <published>2026-07-13T12:00:00Z</published>
+    <updated>2026-07-13T12:00:00Z</updated>
+    <author><name>Mantosh Kumar</name></author>
+    <category term="project-case-study" />
+    <summary>Architecture case study for a production engineering publication with grounded AI retrieval, Cloudflare Workers, D1, Vectorize, and automated release gates.</summary>
+  </entry>
+  <entry>
+    <title>PhotoSahi: Privacy-First Browser Photo Processing</title>
+    <id>https://mantoshkumar1.github.io/projects/photosahi.html</id>
+    <link href="https://mantoshkumar1.github.io/projects/photosahi.html" />
+    <published>2026-07-13T12:00:00Z</published>
+    <updated>2026-07-13T12:00:00Z</updated>
+    <author><name>Mantosh Kumar</name></author>
+    <category term="project-case-study" />
+    <summary>PhotoSahi is a privacy-first passport and visa photo generator that processes images locally in the browser with HTML5 Canvas.</summary>
+  </entry>
   <entry>
     <title>Validation Platform and Release Intelligence</title>
     <id>https://mantoshkumar1.github.io/projects/validation-platform-optical-networking.html</id>
@@ -17,101 +34,87 @@
     <published>2026-07-13T12:00:00Z</published>
     <updated>2026-07-13T12:00:00Z</updated>
     <author><name>Mantosh Kumar</name></author>
-    <category term="experience-case-study" label="Experience Case Study" />
-    <category term="platform-engineering" label="Platform Engineering" />
-    <category term="operational-intelligence" label="Operational Intelligence" />
+    <category term="project-case-study" />
     <summary>A public, evidence-bounded case study on reusable validation infrastructure, AI-assisted failure investigation, and release intelligence for optical networking.</summary>
-  </entry>
-  <entry>
-    <title>Release Reports as Operational History</title>
-    <id>https://mantoshkumar1.github.io/insights/release-reports-as-operational-history.html</id>
-    <link href="https://mantoshkumar1.github.io/insights/release-reports-as-operational-history.html" />
-    <published>2026-07-12T23:30:00Z</published><updated>2026-07-12T23:30:00Z</updated>
-    <author><name>Mantosh Kumar</name></author><category term="operational-intelligence" label="Operational Intelligence" />
-    <summary>How comparable release-health reports can reveal longer-term patterns while AI assistance remains accountable to engineering judgment.</summary>
-  </entry>
-  <entry>
-    <title>In Distributed Systems, Complexity Changes Address</title>
-    <id>https://mantoshkumar1.github.io/insights/complexity-changes-address.html</id>
-    <link href="https://mantoshkumar1.github.io/insights/complexity-changes-address.html" />
-    <published>2026-07-12T23:30:00Z</published><updated>2026-07-12T23:30:00Z</updated>
-    <author><name>Mantosh Kumar</name></author><category term="distributed-systems" label="Distributed Systems" />
-    <summary>A system-design heuristic for tracking displaced failure modes and operational responsibilities.</summary>
   </entry>
   <entry>
     <title>Blockchain Without a Master Branch</title>
     <id>https://mantoshkumar1.github.io/insights/blockchain-without-a-master-branch.html</id>
     <link href="https://mantoshkumar1.github.io/insights/blockchain-without-a-master-branch.html" />
-    <published>2026-07-12T23:30:00Z</published><updated>2026-07-12T23:30:00Z</updated>
-    <author><name>Mantosh Kumar</name></author><category term="distributed-systems" label="Distributed Systems" />
-    <summary>A limited Git analogy for understanding blockchain as a distributed shared-history problem.</summary>
-  </entry>
-  <entry>
-    <title>Engineering Ownership Before Escalation</title>
-    <id>https://mantoshkumar1.github.io/insights/ownership-before-escalation.html</id>
-    <link href="https://mantoshkumar1.github.io/insights/ownership-before-escalation.html" />
-    <published>2026-07-12T23:30:00Z</published><updated>2026-07-12T23:30:00Z</updated>
-    <author><name>Mantosh Kumar</name></author><category term="engineering-leadership" label="Engineering Leadership" />
-    <summary>A practical standard for making material engineering risk visible before someone has to ask.</summary>
-  </entry>
-  <entry>
-    <title>GTT Trigger Price Calculator</title>
-    <id>https://mantoshkumar1.github.io/projects/gtt-price-calculator.html</id>
-    <link href="https://mantoshkumar1.github.io/projects/gtt-price-calculator.html" />
-    <published>2026-07-12T23:00:00Z</published>
-    <updated>2026-07-12T23:00:00Z</updated>
+    <published>2026-07-12T12:00:00Z</published>
+    <updated>2026-07-12T12:00:00Z</updated>
     <author><name>Mantosh Kumar</name></author>
-    <category term="project-case-study" label="Project Case Study" />
-    <category term="python" label="Python" />
-    <category term="streamlit" label="Streamlit" />
-    <summary>A Python and Streamlit utility for explicit trigger-distance, rounding, and order-size calculations, with documented rule-freshness limits.</summary>
+    <category term="engineering-insight" />
+    <summary>A limited Git analogy for understanding blockchain as a distributed shared-history problem without a central source of truth.</summary>
+  </entry>
+  <entry>
+    <title>In Distributed Systems, Complexity Changes Address</title>
+    <id>https://mantoshkumar1.github.io/insights/complexity-changes-address.html</id>
+    <link href="https://mantoshkumar1.github.io/insights/complexity-changes-address.html" />
+    <published>2026-07-12T12:00:00Z</published>
+    <updated>2026-07-12T12:00:00Z</updated>
+    <author><name>Mantosh Kumar</name></author>
+    <category term="engineering-insight" />
+    <summary>A system-design heuristic for tracking the failure modes and operational responsibilities that an architectural simplification moves elsewhere.</summary>
   </entry>
   <entry>
     <title>Engineering Philosophy: Build Leverage, Not Just Software</title>
     <id>https://mantoshkumar1.github.io/insights/engineering-philosophy.html</id>
     <link href="https://mantoshkumar1.github.io/insights/engineering-philosophy.html" />
-    <published>2026-07-12T22:00:00Z</published>
-    <updated>2026-07-12T22:00:00Z</updated>
+    <published>2026-07-12T12:00:00Z</published>
+    <updated>2026-07-12T12:00:00Z</updated>
     <author><name>Mantosh Kumar</name></author>
-    <category term="engineering-philosophy" label="Engineering Philosophy" />
-    <category term="engineering-leverage" label="Engineering Leverage" />
-    <category term="system-design" label="System Design" />
+    <category term="engineering-insight" />
     <summary>Four principles for choosing engineering interventions: start with the bottleneck, systematize repetition, preserve judgment, and keep evidence close to claims.</summary>
+  </entry>
+  <entry>
+    <title>Engineering Ownership Before Escalation</title>
+    <id>https://mantoshkumar1.github.io/insights/ownership-before-escalation.html</id>
+    <link href="https://mantoshkumar1.github.io/insights/ownership-before-escalation.html" />
+    <published>2026-07-12T12:00:00Z</published>
+    <updated>2026-07-12T12:00:00Z</updated>
+    <author><name>Mantosh Kumar</name></author>
+    <category term="engineering-insight" />
+    <summary>A practical communication standard for making material engineering issues, risks, and next actions visible before someone has to ask.</summary>
+  </entry>
+  <entry>
+    <title>Release Reports as Operational History</title>
+    <id>https://mantoshkumar1.github.io/insights/release-reports-as-operational-history.html</id>
+    <link href="https://mantoshkumar1.github.io/insights/release-reports-as-operational-history.html" />
+    <published>2026-07-12T12:00:00Z</published>
+    <updated>2026-07-12T12:00:00Z</updated>
+    <author><name>Mantosh Kumar</name></author>
+    <category term="engineering-insight" />
+    <summary>How comparable release-health reports can reveal longer-term engineering patterns while AI assistance remains accountable to human judgment.</summary>
   </entry>
   <entry>
     <title>Why Does This Still Require Me?</title>
     <id>https://mantoshkumar1.github.io/insights/why-does-this-still-require-me.html</id>
     <link href="https://mantoshkumar1.github.io/insights/why-does-this-still-require-me.html" />
-    <published>2026-07-12T21:00:00Z</published>
-    <updated>2026-07-12T21:00:00Z</updated>
+    <published>2026-07-12T12:00:00Z</published>
+    <updated>2026-07-12T12:00:00Z</updated>
     <author><name>Mantosh Kumar</name></author>
-    <category term="engineering-note" label="Engineering Note" />
-    <category term="engineering-leverage" label="Engineering Leverage" />
-    <category term="automation" label="Automation" />
-    <summary>A practical test for recognizing repeated work that should become a system, delegated responsibility, or automated workflow.</summary>
+    <category term="engineering-insight" />
+    <summary>A practical engineering heuristic for recognizing repeated work that should become a system, delegated responsibility, or automated workflow.</summary>
   </entry>
   <entry>
-    <title>PhotoSahi: Privacy-First Browser Image Processing</title>
-    <id>https://mantoshkumar1.github.io/projects/photosahi.html</id>
-    <link href="https://mantoshkumar1.github.io/projects/photosahi.html" />
-    <published>2026-07-11T00:00:00Z</published>
-    <updated>2026-07-11T00:00:00Z</updated>
+    <title>GTT Price Calculator for Indian Stock Orders</title>
+    <id>https://mantoshkumar1.github.io/projects/gtt-price-calculator.html</id>
+    <link href="https://mantoshkumar1.github.io/projects/gtt-price-calculator.html" />
+    <published>2026-07-12T12:00:00Z</published>
+    <updated>2026-07-12T12:00:00Z</updated>
     <author><name>Mantosh Kumar</name></author>
-    <category term="project-case-study" label="Project Case Study" />
-    <category term="browser-side-image-processing" label="Browser-side image processing" />
-    <category term="privacy" label="Privacy" />
-    <summary>How PhotoSahi uses local HTML5 Canvas processing for passport and visa photo preparation without a backend.</summary>
+    <category term="project-case-study" />
+    <summary>A simple helper for preparing candidate buy and sell trigger prices for GTT orders in the Indian stock market.</summary>
   </entry>
   <entry>
     <title>Workflow Automation Toolkit</title>
     <id>https://mantoshkumar1.github.io/projects/workflow-automation-toolkit.html</id>
     <link href="https://mantoshkumar1.github.io/projects/workflow-automation-toolkit.html" />
-    <published>2026-07-12T00:00:00Z</published>
-    <updated>2026-07-12T00:00:00Z</updated>
+    <published>2026-07-12T12:00:00Z</published>
+    <updated>2026-07-12T12:00:00Z</updated>
     <author><name>Mantosh Kumar</name></author>
-    <category term="project-case-study" label="Project Case Study" />
-    <category term="python" label="Python" />
-    <category term="workflow-automation" label="Workflow Automation" />
-    <summary>Local Python command-line utilities for repetitive PDF, image, and file-processing tasks.</summary>
+    <category term="project-case-study" />
+    <summary>A case study of local Python command-line utilities for repetitive PDF, image, and file-processing tasks.</summary>
   </entry>
 </feed>

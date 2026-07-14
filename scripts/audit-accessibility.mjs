@@ -32,7 +32,9 @@ for (const file of await walk(root)) {
   if (!/<nav[^>]+aria-label=/i.test(html)) failures.push(`${label}: navigation needs an accessible name`);
   const primaryNavigation = /<nav\b[^>]*aria-label=["']Primary navigation["'][^>]*>([\s\S]*?)<\/nav>/i.exec(html)?.[1] || "";
   if (!/<a\b[^>]*href=["'](?:\/|\.\/|\.\.\/)["'][^>]*>\s*Home\s*<\/a>/i.test(primaryNavigation)) failures.push(`${label}: primary navigation must include an explicit Home link`);
-  if (!["404.html", "accessibility/index.html"].includes(label)) {
+  // Standalone utility pages can be clearly identified by their H1 without falsely
+  // marking a related primary-navigation destination as the current page.
+  if (!["404.html", "accessibility/index.html", "newsletter/index.html"].includes(label)) {
     if (!/aria-current=["']page["']/i.test(primaryNavigation)) failures.push(`${label}: primary navigation must identify the current section`);
   }
   for (const match of html.matchAll(/<img\b[^>]*>/gi)) if (!/\balt=["'][^"']*["']/i.test(match[0])) failures.push(`${label}: image missing alt`);
