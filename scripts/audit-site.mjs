@@ -67,6 +67,18 @@ if (/href=["'][^"']*feed\.xml["'][^>]*>\s*Follow via RSS/i.test(newsletterHtml))
 if (!/<button[^>]+id=["']copy-rss["'][^>]+type=["']button["'][^>]*>Copy RSS link<\/button>/i.test(newsletterHtml)) { console.error("newsletter: missing independent copy-RSS action"); failures += 1; }
 if (!/id=["']copy-rss-status["'][^>]+role=["']status["'][^>]+aria-live=["']polite["']/i.test(newsletterHtml) || !/navigator\.clipboard\.writeText\(rssFeedUrl\)/.test(newsletterHtml)) { console.error("newsletter: RSS copy action needs accessible confirmation"); failures += 1; }
 const stylesheet = await readFile(join(root, "assets/css/style.css"), "utf8");
+if (!/\.page-shell\s*\{[^}]*padding:\s*clamp\(1\.75rem,\s*3vw,\s*2\.5rem\)\s+0\s+clamp\(2\.25rem,\s*3\.5vw,\s*3\.25rem\)/is.test(stylesheet) || !/@media\s*\(max-width:\s*640px\)[\s\S]*?\.page-shell\s*\{[^}]*padding-block:\s*1\.25rem\s+1\.5rem/is.test(stylesheet)) {
+  console.error("stylesheet: internal page shells must retain the compact responsive rhythm");
+  failures += 1;
+}
+if (!/\.reading-page \.resume-section\s*\{[^}]*margin-top:\s*clamp\(\.9rem,\s*1\.6vw,\s*1\.2rem\);[^}]*padding-top:\s*clamp\(1rem,\s*1\.8vw,\s*1\.35rem\)/is.test(stylesheet)) {
+  console.error("stylesheet: long-form articles must use compact but readable section transitions");
+  failures += 1;
+}
+if (!/main\.project-shell\s*\{[^}]*padding-block:\s*clamp\(1\.75rem,\s*3vw,\s*2\.5rem\)\s+clamp\(2\.25rem,\s*3\.5vw,\s*3\.25rem\)/is.test(stylesheet) || !/main\.project-shell\s*>\s*\.container\s*>\s*\.section-block\s*\{[^}]*margin-top:\s*1rem/is.test(stylesheet)) {
+  console.error("stylesheet: standalone project pages must share the compact internal-page rhythm");
+  failures += 1;
+}
 if (!/\.contact-links a\s*\{[^}]*color:\s*var\(--primary\);/is.test(stylesheet) || /\.contact-links a\s*\{[^}]*color:\s*#b8d7ff/is.test(stylesheet)) {
   console.error("stylesheet: contact profile links must use the theme-aware accent color");
   failures += 1;
@@ -197,7 +209,7 @@ for (const [page, html] of [["index.html", homeHtml], ["contact/index.html", con
 }
 if (!/<strong>Canadian citizen<\/strong> • Work authorization: Canada • United States • India/.test(contactHtml)) { console.error("contact: citizenship or current work authorization is missing"); failures += 1; }
 if (!/Toronto-based Staff Software Engineer/.test(resumeHtml) || !/Work authorization:<\/strong> Canada • United States • India/.test(resumeHtml)) { console.error("resume: location, role, or current work authorization is missing"); failures += 1; }
-if (!/Ranked in the top 1% in India’s GATE Computer Science &amp; IT examination/.test(resumeHtml) || !/href=["']\.\.\/experience\/#verified-highlights["'][^>]*>View full experience and capabilities/i.test(resumeHtml)) { console.error("resume: verified highlights and experience bridge are missing"); failures += 1; }
+if (!/Ranked in the top 1% in India’s GATE Computer Science &amp; IT examination/.test(resumeHtml) || !/href=["']\.\.\/experience\/["'][^>]*>View full experience and capabilities/i.test(resumeHtml)) { console.error("resume: verified highlights and full-experience bridge are missing"); failures += 1; }
 if (/<strong>Ranked in the top 1% in India’s GATE Computer Science &amp; IT examination<\/strong>/.test(resumeHtml)) { console.error("resume: GATE result should read as evidence without promotional emphasis"); failures += 1; }
 const resumeResourceActions = resumeHtml.match(/<div class=["']resume-resource-actions["'][^>]*role=["']group["'][^>]*aria-label=["']Résumé resources["'][^>]*>([\s\S]*?)<\/div>/i)?.[1] || "";
 if ((resumeResourceActions.match(/class=["'][^"']*resume-resource-link[^"']*["']/gi) || []).length !== 3 || !/>\s*<span>Download résumé<\/span>/i.test(resumeResourceActions) || !/>\s*<span>LinkedIn<\/span>/i.test(resumeResourceActions) || !/>\s*<span>GitHub<\/span>/i.test(resumeResourceActions)) {
