@@ -882,6 +882,15 @@ button.button {
   font-size: 1.17rem;
 }
 
+.resume-section h2.resume-section-label {
+  margin-bottom: 0.75rem;
+  color: var(--primary);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
 .resume-list {
   display: grid;
   gap: 0.8rem;
