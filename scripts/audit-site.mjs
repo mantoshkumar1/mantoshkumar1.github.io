@@ -124,17 +124,23 @@ for (const card of homeHtml.matchAll(/<article\b[^>]*class=["'][^"']*project-car
     console.error("homepage: project actions must be ordered live product, case study, then source");
     failures += 1;
   }
+  if (liveAction >= 0 && sourceAction >= 0) {
+    console.error("homepage: live project cards should defer source links to their detail pages");
+    failures += 1;
+  }
   if ((content.match(/<div class=["']tech["']>[\s\S]*?<span>/gi) || []).length !== 1 || (content.match(/<span>[^<]+<\/span>/gi) || []).length !== 3) {
     console.error("homepage: every selected project must present exactly three technology tags");
     failures += 1;
   }
 }
-const photoSahiHomeCard = [...homeHtml.matchAll(/<article\b[^>]*class=["'][^"']*project-card[^"']*["'][^>]*>([\s\S]*?)<\/article>/gi)]
-  .map((match) => match[1])
-  .find((card) => /<h3>PhotoSahi<\/h3>/i.test(card)) || "";
-if (!/<a\b(?=[^>]*href=["']https:\/\/github\.com\/mantoshkumar1\/photosahi["'])(?=[^>]*target=["']_blank["'])(?=[^>]*rel=["']noreferrer["'])[^>]*>\s*Inspect the source/i.test(photoSahiHomeCard)) {
-  console.error("homepage: PhotoSahi needs a direct source-code action");
-  failures += 1;
+for (const [page, html, repository] of [
+  ["projects/engineering-knowledge-system.html", knowledgeSystemHtml, "https://github.com/mantoshkumar1/mantoshkumar1.github.io"],
+  ["projects/photosahi.html", await readFile(join(root, "projects/photosahi.html"), "utf8"), "https://github.com/mantoshkumar1/photosahi"],
+]) {
+  if (!html.includes(`href="${repository}"`)) {
+    console.error(`${page}: project detail page must retain its source repository`);
+    failures += 1;
+  }
 }
 for (const [page, html] of [["index.html", homeHtml], ["projects/index.html", projectsHtml]]) {
   if (!/href=["']#ask-mantosh["'][^>]*>Try the live system/i.test(html)) { console.error(`${page}: knowledge-system project must open its live Ask Mantosh experience`); failures += 1; }
