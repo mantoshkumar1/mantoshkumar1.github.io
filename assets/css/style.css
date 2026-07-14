@@ -495,6 +495,15 @@ nav .nav-cta:hover {
   font-weight: 700;
 }
 
+.inline-cta-actions {
+  display: flex;
+  flex: 0 0 auto;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.65rem 1.1rem;
+}
+
 .philosophy-grid {
   display: grid;
   grid-template-columns: 1.15fr 0.85fr;
@@ -1415,6 +1424,11 @@ body.ask-mantosh-open {
   .inline-cta {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .inline-cta-actions {
+    justify-content: flex-start;
+    width: 100%;
   }
 
   .resume-card,
