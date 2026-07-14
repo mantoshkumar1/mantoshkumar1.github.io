@@ -1789,6 +1789,10 @@ nav .nav-cta:not([aria-current="page"]):focus-visible {
   margin-block: .75rem 0;
 }
 
+#home .insight-discovery-actions .section-link {
+  margin-top: 0;
+}
+
 #home .card-links,
 #home .card > a:last-child {
   margin-top: .55rem;
@@ -2270,6 +2274,27 @@ main.project-shell > .container > .section-block {
 
   .page-shell {
     padding-block: 1.25rem 1.5rem;
+  }
+
+  #home .insight-discovery-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: .65rem;
+    width: 100%;
+    margin-block: .65rem 0;
+  }
+
+  #home .insight-discovery-actions .section-link {
+    justify-content: center;
+    min-height: 44px;
+    padding: .65rem .7rem;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    font-size: .9rem;
+    line-height: 1.15;
+    text-align: center;
+    text-decoration: none;
+    white-space: nowrap;
   }
 
   .reading-shell {
