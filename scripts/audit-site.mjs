@@ -75,6 +75,10 @@ if (!/\.navbar nav:not\(\.mobile-nav-expanded\)\s*>\s*a\s*\{[^}]*display:\s*none
   console.error("stylesheet: mobile link hiding must be scoped to the header navigation");
   failures += 1;
 }
+if (stylesheet.includes("\n  nav {\n    display: flex;\n    max-width:") || stylesheet.includes("\n  nav {\n    max-width:") || stylesheet.includes("\n  nav a {")) {
+  console.error("stylesheet: responsive header sizing must not constrain content navigation");
+  failures += 1;
+}
 if (/contain-intrinsic-size:\s*auto\s+720px/i.test(stylesheet) || /\.section\s*\{[^}]*content-visibility:\s*auto/is.test(stylesheet)) {
   console.error("stylesheet: homepage sections must not reserve synthetic off-screen height");
   failures += 1;
@@ -101,7 +105,9 @@ if (!/class=["']value-strip["']/i.test(homeHtml)) { console.error("homepage: sta
 if (!/5 documented projects across platforms, automation, and applied engineering/.test(homeHtml)) { console.error("homepage: project evidence line is stale"); failures += 1; }
 if (!/href=["']resume\/Resume-MantoshKumar-MSc-CS\.pdf["'][^>]*>View résumé PDF/i.test(homeHtml)) { console.error("homepage: recruiter-facing résumé action is missing"); failures += 1; }
 if (!/<div class=["']hero-buttons["']>[\s\S]*>Discuss a role[\s\S]*<\/div>\s*<nav class=["']hero-discovery["'][^>]*>[\s\S]*href=["']insights\/["'][^>]*>Read insights[\s\S]*href=["']newsletter\/["'][^>]*>Join the newsletter[\s\S]*<\/nav>/i.test(homeHtml)) { console.error("homepage: insights and newsletter need a visible secondary discovery row after recruiter actions"); failures += 1; }
+if (!/\.hero-content\s*\{[^}]*width:\s*100%;[^}]*max-width:\s*900px/is.test(stylesheet)) { console.error("stylesheet: homepage hero content must use the available responsive width"); failures += 1; }
 if (!/\.hero-discovery\s*\{[^}]*display:\s*flex;[^}]*margin-bottom:/is.test(stylesheet)) { console.error("stylesheet: homepage discovery links need a compact horizontal treatment"); failures += 1; }
+if (!/@media\s*\(max-width:\s*640px\)[\s\S]*?\.hero-discovery\s*\{[^}]*width:\s*100%;[^}]*flex-wrap:\s*nowrap;[^}]*margin-bottom:\s*1\.25rem/is.test(stylesheet) || !/@media\s*\(max-width:\s*640px\)[\s\S]*?\.hero-discovery\s*>\s*span\s*\{[^}]*display:\s*none/is.test(stylesheet)) { console.error("stylesheet: mobile insight and newsletter links must share one compact row"); failures += 1; }
 if (!/@media\s*\(min-width:\s*641px\)\s*and\s*\(max-width:\s*939px\)[\s\S]*?#home #systems \.cards > \.project-card:last-child:nth-child\(odd\),[\s\S]*?#home #insights \.cards > \.insight-card:last-child:nth-child\(odd\)\s*\{[^}]*grid-column:\s*1\s*\/\s*-1/is.test(stylesheet)) { console.error("stylesheet: odd homepage project and insight cards must fill the intermediate two-column row"); failures += 1; }
 const projectsHtml = await readFile(join(root, "projects/index.html"), "utf8");
 const knowledgeSystemHtml = await readFile(join(root, "projects/engineering-knowledge-system.html"), "utf8");
