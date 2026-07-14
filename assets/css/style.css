@@ -1624,7 +1624,7 @@ nav .nav-cta:not([aria-current="page"]):focus-visible {
   position: relative;
   isolation: isolate;
   min-height: auto;
-  padding: clamp(3.5rem, 6vw, 5rem) 0 clamp(.75rem, 1.5vw, 1.25rem);
+  padding: clamp(3rem, 4.5vw, 4rem) 0 clamp(.75rem, 1.5vw, 1.25rem);
   overflow: hidden;
 }
 
@@ -2429,7 +2429,7 @@ main.project-shell > .container > .section-block {
   }
 
   .hero {
-    padding: 2.5rem 0 .75rem;
+    padding: 2rem 0 .75rem;
   }
 
   .hero h1 {
@@ -2990,6 +2990,15 @@ html[data-theme="contrast"] .appearance-control select { border-color: #fff; bac
   color: var(--muted);
   font-size: .8rem;
   line-height: 1.55;
+}
+
+.newsletter-assurance {
+  padding-inline-start: 1rem;
+}
+
+.newsletter-context-link {
+  width: fit-content;
+  margin-top: .55rem;
 }
 
 @media (max-width: 420px) {

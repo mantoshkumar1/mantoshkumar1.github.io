@@ -38,7 +38,7 @@
 
 <title>Engineering Leverage Newsletter | Mantosh Kumar</title>
     <script src="../assets/js/theme-init.js?v=20260713-1"></script>
-    <link rel="stylesheet" href="../assets/css/style.css?v=20260713-25" />
+    <link rel="stylesheet" href="../assets/css/style.css?v=20260714-2" />
   </head>
   <body>
     <a class="skip-link" href="#main-content">Skip to main content</a>
@@ -48,7 +48,7 @@
         <nav aria-label="Primary navigation">
           <a href="../">Home</a>
           <a href="../projects/">Projects</a>
-          <a href="../insights/" aria-current="page">Insights</a>
+          <a href="../insights/">Insights</a>
           <a href="../experience/">Experience</a>
           <a href="../resume/">Resume</a>
           <a class="nav-cta" href="../contact/">Work with me</a>
@@ -63,6 +63,7 @@
             <p class="eyebrow">Newsletter</p>
             <h1>Engineering Leverage by Mantosh</h1>
             <p>Concise, evidence-backed notes on platform engineering, automation, backend systems, operational intelligence, and turning repeated work into reusable systems.</p>
+            <a class="evidence-link newsletter-context-link" href="../insights/">Read current insights <span aria-hidden="true">→</span></a>
           </header>
 
           <form action="https://buttondown.com/api/emails/embed-subscribe/mantoshkumar" method="post" target="_blank" rel="noopener noreferrer" class="newsletter-form" data-buttondown-status="active">
@@ -72,14 +73,8 @@
               <button class="button primary" type="submit">Subscribe</button>
             </div>
             <input type="hidden" name="embed" value="1" />
-            <p>Buttondown sends the confirmation email and manages unsubscribe requests.</p>
+            <p class="newsletter-assurance">Free to join. Unsubscribe anytime.</p>
           </form>
-
-          <div class="resume-actions">
-            <button class="button secondary" id="copy-rss" type="button">Copy RSS link</button>
-            <a class="button secondary" href="../insights/">Read current insights <span aria-hidden="true">→</span></a>
-          </div>
-          <p class="contact-copy-status" id="copy-rss-status" role="status" aria-live="polite"></p>
 
           <section class="resume-section">
             <h2>What you will receive</h2>
@@ -101,24 +96,6 @@
         </article>
       </div>
     </main>
-    <script>
-      const copyRssButton = document.querySelector("#copy-rss");
-      const copyRssStatus = document.querySelector("#copy-rss-status");
-      const rssFeedUrl = new URL("../feed.xml", window.location.href).href;
-
-      copyRssButton.addEventListener("click", async () => {
-        try {
-          await navigator.clipboard.writeText(rssFeedUrl);
-          copyRssButton.textContent = "RSS link copied";
-          copyRssStatus.textContent = "Paste the copied link into your RSS reader.";
-          window.setTimeout(() => {
-            copyRssButton.textContent = "Copy RSS link";
-          }, 1800);
-        } catch {
-          copyRssStatus.textContent = `Copy unavailable. Feed address: ${rssFeedUrl}`;
-        }
-      });
-    </script>
     <script src="/assets/js/ask-mantosh-widget.js?v=20260713-11"></script>
   </body>
 </html>

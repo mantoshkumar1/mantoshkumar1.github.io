@@ -35,7 +35,7 @@ Never infer employer results, adoption, scale, incidents, or metrics. Put future
 
 1. Create the HTML page from `templates/article.html` and add an explicit evidence-boundary section.
 2. Create the paired Markdown document from `knowledge/_template.md`; choose `article` or `note`, set its canonical `url`, and keep `visibility: draft` during review.
-3. Add the page to `seo.config.json`, the Insights index, the homepage when featured, `feed.xml`, and `llms.txt`.
+3. Add the dated page to `seo.config.json`, the Insights index, the homepage when featured, and `llms.txt`. `scripts/generate-seo.mjs` adds every dated article or project to `feed.xml` automatically.
 4. Add the page to `scripts/audit-site.mjs` and `scripts/validate-discoverability.mjs`.
 5. Review every claim, then set the knowledge document to `visibility: public`.
 6. Run the complete release gates documented in the root README.
@@ -68,3 +68,4 @@ An insight is complete only when:
 - unsupported claims are excluded rather than softened with marketing language;
 - documentation and automated audits pass.
 - every configured publication lane contains real public content or an explicit evidence-first empty state.
+- `feed.xml` is regenerated from dated `article` and `project` entries in `seo.config.json` during verification and deployment; never edit it by hand.

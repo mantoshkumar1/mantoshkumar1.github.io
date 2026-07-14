@@ -44,7 +44,7 @@ The current production inventory, data flow, deployment paths, controls, and kno
 
 New philosophy, notes, and articles follow [`docs/PUBLISHING_INSIGHTS.md`](docs/PUBLISHING_INSIGHTS.md), which keeps the readable page and Ask Mantosh retrieval source synchronized.
 
-`dist/` is generated and intentionally not committed. `scripts/build-pages.mjs` copies only public assets into it and regenerates SEO metadata there.
+`dist/` is generated and intentionally not committed. `scripts/build-pages.mjs` copies only public assets into it and regenerates SEO metadata, the sitemap, and `feed.xml` there. The feed includes every dated `article` and `project` entry from `seo.config.json`; do not maintain it by hand.
 
 ## Run locally
 
