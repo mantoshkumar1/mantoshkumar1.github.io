@@ -127,6 +127,13 @@ for (const card of homeHtml.matchAll(/<article\b[^>]*class=["'][^"']*project-car
     failures += 1;
   }
 }
+const photoSahiHomeCard = [...homeHtml.matchAll(/<article\b[^>]*class=["'][^"']*project-card[^"']*["'][^>]*>([\s\S]*?)<\/article>/gi)]
+  .map((match) => match[1])
+  .find((card) => /<h3>PhotoSahi<\/h3>/i.test(card)) || "";
+if (!/<a\b(?=[^>]*href=["']https:\/\/github\.com\/mantoshkumar1\/photosahi["'])(?=[^>]*target=["']_blank["'])(?=[^>]*rel=["']noreferrer["'])[^>]*>\s*Inspect the source/i.test(photoSahiHomeCard)) {
+  console.error("homepage: PhotoSahi needs a direct source-code action");
+  failures += 1;
+}
 for (const [page, html] of [["index.html", homeHtml], ["projects/index.html", projectsHtml]]) {
   if (!/href=["']#ask-mantosh["'][^>]*>Try the live system/i.test(html)) { console.error(`${page}: knowledge-system project must open its live Ask Mantosh experience`); failures += 1; }
 }
