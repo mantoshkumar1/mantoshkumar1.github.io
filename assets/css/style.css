@@ -826,7 +826,7 @@ button.button {
   padding: 0.85rem 0.7rem;
   border: 1px solid var(--border);
   border-radius: 12px;
-  color: #b8d7ff;
+  color: var(--primary);
   text-decoration: none;
   background: rgba(255, 255, 255, 0.018);
   transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
@@ -2261,7 +2261,7 @@ nav .nav-cta:not([aria-current="page"]):focus-visible {
     scrollbar-width: none;
   }
 
-  nav:not(.mobile-nav-expanded) > a {
+  .navbar nav:not(.mobile-nav-expanded) > a {
     display: none;
   }
 

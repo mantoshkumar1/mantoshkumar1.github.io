@@ -67,6 +67,14 @@ if (/href=["'][^"']*feed\.xml["'][^>]*>\s*Follow via RSS/i.test(newsletterHtml))
 if (!/<button[^>]+id=["']copy-rss["'][^>]+type=["']button["'][^>]*>Copy RSS link<\/button>/i.test(newsletterHtml)) { console.error("newsletter: missing independent copy-RSS action"); failures += 1; }
 if (!/id=["']copy-rss-status["'][^>]+role=["']status["'][^>]+aria-live=["']polite["']/i.test(newsletterHtml) || !/navigator\.clipboard\.writeText\(rssFeedUrl\)/.test(newsletterHtml)) { console.error("newsletter: RSS copy action needs accessible confirmation"); failures += 1; }
 const stylesheet = await readFile(join(root, "assets/css/style.css"), "utf8");
+if (!/\.contact-links a\s*\{[^}]*color:\s*var\(--primary\);/is.test(stylesheet) || /\.contact-links a\s*\{[^}]*color:\s*#b8d7ff/is.test(stylesheet)) {
+  console.error("stylesheet: contact profile links must use the theme-aware accent color");
+  failures += 1;
+}
+if (!/\.navbar nav:not\(\.mobile-nav-expanded\)\s*>\s*a\s*\{[^}]*display:\s*none/is.test(stylesheet) || /(?:^|\n)\s*nav:not\(\.mobile-nav-expanded\)\s*>\s*a\s*\{[^}]*display:\s*none/im.test(stylesheet)) {
+  console.error("stylesheet: mobile link hiding must be scoped to the header navigation");
+  failures += 1;
+}
 if (/contain-intrinsic-size:\s*auto\s+720px/i.test(stylesheet) || /\.section\s*\{[^}]*content-visibility:\s*auto/is.test(stylesheet)) {
   console.error("stylesheet: homepage sections must not reserve synthetic off-screen height");
   failures += 1;
