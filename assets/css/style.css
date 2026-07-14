@@ -2542,6 +2542,10 @@ main.project-shell > .container > .section-block {
   margin: 1rem 0 1.25rem;
 }
 
+.reference-grid + .section-link {
+  margin-top: 0;
+}
+
 .reference-card {
   padding: 1.25rem;
   border: 1px solid var(--border);
