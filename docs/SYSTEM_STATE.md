@@ -21,7 +21,7 @@ Last verified Worker deployment: `22786bb9-a4e5-4a25-89ba-8f22009a9bdb`. The act
 - 14 public Ask Mantosh documents: five project sources, six Insights sources, two résumé-backed experience and academic-achievement sources, and one evidence-backed profile and fit guide.
 - One résumé PDF served for in-browser preview and explicit download.
 - Sitemap, RSS feed, `robots.txt`, `llms.txt`, JSON-LD, Open Graph, Twitter Card, manifest, icons, and a 1200×630 social image.
-- A visitor-controlled Auto, Light, Dark, Soft, and High contrast appearance setting. Dark is the first-visit default; explicit choices persist on the device, and Auto follows the operating system.
+- A visitor-controlled Auto, Light, Dark, Soft, and High contrast appearance setting. Soft is the first-visit default; an early initializer prevents a dark-theme flash, explicit choices persist on the device, and Auto follows the operating system.
 - English remains the authoritative content language. Pages expose standard language metadata and selectable text for browser translation; the site does not infer language from location or load a third-party translation widget.
 - Single-destination Insight cards expose the whole card as one link, while project cards preserve separate case-study, product, and source destinations. Long-form Insight pages use a compact reading rhythm distinct from broader landing-page spacing.
 - Page density is intentional: homepage sections render at their real height without synthetic off-screen placeholders; landing, case-study, article, and mobile shells use separate compact spacing scales so the next useful decision arrives sooner without reducing touch-target size.

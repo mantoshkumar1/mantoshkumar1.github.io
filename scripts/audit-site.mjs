@@ -26,6 +26,9 @@ for (const page of pages) {
   const widgetVersion = /ask-mantosh-widget\.js\?v=([\w-]+)/i.exec(html)?.[1];
   if (!widgetVersion) { console.error(`${page}: missing versioned Ask Mantosh widget`); failures += 1; }
   else widgetVersions.set(page, widgetVersion);
+  const themeInitPosition = html.search(/theme-init\.js\?v=[\w-]+/i);
+  const stylesheetPosition = html.search(/style\.css\?v=[\w-]+/i);
+  if (themeInitPosition < 0 || stylesheetPosition < 0 || themeInitPosition > stylesheetPosition) { console.error(`${page}: early theme initialization must load before the stylesheet`); failures += 1; }
 }
 const notFoundHtml = await readFile(join(root, "404.html"), "utf8");
 const notFoundVersion = /style\.css\?v=([\w-]+)/i.exec(notFoundHtml)?.[1];
@@ -34,6 +37,7 @@ else stylesheetVersions.set("404.html", notFoundVersion);
 const notFoundWidgetVersion = /ask-mantosh-widget\.js\?v=([\w-]+)/i.exec(notFoundHtml)?.[1];
 if (!notFoundWidgetVersion) { console.error("404.html: missing versioned Ask Mantosh widget"); failures += 1; }
 else widgetVersions.set("404.html", notFoundWidgetVersion);
+if (!/theme-init\.js\?v=[\w-]+/i.test(notFoundHtml) || notFoundHtml.search(/theme-init\.js/i) > notFoundHtml.search(/style\.css/i)) { console.error("404.html: early theme initialization must load before the stylesheet"); failures += 1; }
 if (new Set(stylesheetVersions.values()).size !== 1) {
   console.error(`stylesheet cache versions differ: ${[...stylesheetVersions].map(([page, version]) => `${page}=${version}`).join(", ")}`);
   failures += 1;

@@ -55,6 +55,7 @@ for (const feature of ["prefers-color-scheme: light", "prefers-reduced-motion", 
   if (!css.includes(feature)) failures.push(`stylesheet missing ${feature}`);
 }
 const widget = await readFile(join(root, "assets/js/ask-mantosh-widget.js"), "utf8");
+const themeInit = await readFile(join(root, "assets/js/theme-init.js"), "utf8");
 const client = await readFile(join(root, "assets/js/main.js"), "utf8");
 if (!/role=["']dialog["']/.test(widget) || !/aria-modal=["']true["']/.test(widget)) failures.push("Ask Mantosh missing modal dialog semantics");
 if (!/id=["']ask-mantosh-toggle["'][^>]+aria-label=["']Ask Mantosh["']/.test(widget)) failures.push("Ask Mantosh mobile toggle needs an explicit accessible name");
@@ -82,7 +83,8 @@ for (const navigationFeature of ["mobile-nav-toggle", "aria-controls", "aria-exp
 for (const navigationSelector of [".mobile-nav-toggle", "nav:not(.mobile-nav-expanded) > a", "nav.mobile-nav-expanded > a"]) {
   if (!css.includes(navigationSelector)) failures.push(`mobile navigation stylesheet missing ${navigationSelector}`);
 }
-if (!/let savedTheme = ["']dark["']/.test(widget)) failures.push("Dark must be the first-visit default appearance");
+if (!/let savedTheme = ["']soft["']/.test(widget) || !/let theme = ["']soft["']/.test(themeInit)) failures.push("Soft must be the first-visit default appearance without a theme flash");
+if (!themeInit.includes('localStorage.getItem("mantosh-appearance")') || !themeInit.includes('theme === "auto"')) failures.push("early theme initialization must preserve stored and Auto preferences");
 if (!widget.includes('<option value="contrast">Contrast</option>')) failures.push("mobile appearance control needs a compact contrast label");
 for (const themeSelector of ['html[data-theme="soft"]', 'html[data-theme="contrast"]']) {
   if (!css.includes(themeSelector)) failures.push(`stylesheet missing ${themeSelector}`);

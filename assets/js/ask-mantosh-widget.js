@@ -2,7 +2,7 @@
 (() => {
   const themeKey = "mantosh-appearance";
   const supportedThemes = new Set(["auto", "light", "dark", "soft", "contrast"]);
-  let savedTheme = "dark";
+  let savedTheme = "soft";
   try {
     const storedTheme = window.localStorage.getItem(themeKey);
     if (supportedThemes.has(storedTheme)) savedTheme = storedTheme;
