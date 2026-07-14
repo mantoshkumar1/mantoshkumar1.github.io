@@ -21,6 +21,7 @@ for (const page of pages) {
   }
   if ((html.match(/<h1\b/gi) || []).length !== 1) { console.error(`${page}: requires exactly one h1`); failures += 1; }
   if (!/class=["'][^"']*logo[^"']*["'][^>]+aria-label=["']Mantosh Kumar — Home["']/i.test(html)) { console.error(`${page}: logo must provide an explicit home affordance`); failures += 1; }
+  if (!/class=["'][^"']*nav-cta[^"']*["'][^>]*>Discuss a role<\/a>/i.test(html)) { console.error(`${page}: primary navigation needs the consistent Discuss a role CTA`); failures += 1; }
   if (!/ask-mantosh-widget\.js/i.test(html)) { console.error(`${page}: missing shared Ask Mantosh launcher`); failures += 1; }
   if (/href=["']\.\.\/#systems["']/i.test(html)) { console.error(`${page}: Projects navigation must open the complete project catalog`); failures += 1; }
   if (/adapted from (?:a|the) public LinkedIn (?:post|reflection)/i.test(html)) { console.error(`${page}: LinkedIn provenance must identify Mantosh as the post author`); failures += 1; }
