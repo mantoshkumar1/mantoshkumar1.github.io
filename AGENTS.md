@@ -122,3 +122,10 @@ My goal is not to become an influencer.
 My goal is to become recognized as an engineer who consistently builds thoughtful systems and communicates engineering decisions clearly.
 
 Everything should reinforce that mission.
+
+## Git workflow preference
+
+When the user says **push**, treat that instruction as explicit authorization to
+push the current committed branch to its configured remote immediately. Do not
+ask for a separate confirmation unless a system-enforced security policy blocks
+the command and explicitly requires one.
