@@ -2158,6 +2158,10 @@ main.project-shell > .container > .section-block {
   padding-top: 1.1rem;
 }
 
+.resume-summary .experience-evidence {
+  padding-top: 0;
+}
+
 .case-study .resume-section h2 {
   margin-bottom: .9rem;
   font-size: clamp(1.45rem, 2.8vw, 2rem);
