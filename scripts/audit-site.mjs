@@ -21,6 +21,7 @@ for (const page of pages) {
   }
   if ((html.match(/<h1\b/gi) || []).length !== 1) { console.error(`${page}: requires exactly one h1`); failures += 1; }
   if (!/class=["'][^"']*logo[^"']*["'][^>]+aria-label=["']Mantosh Kumar — Home["']/i.test(html)) { console.error(`${page}: logo must provide an explicit home affordance`); failures += 1; }
+  if (!/class=["'][^"']*nav-cta[^"']*["'][^>]*>Discuss a role<\/a>/i.test(html)) { console.error(`${page}: primary navigation needs the consistent Discuss a role CTA`); failures += 1; }
   if (!/ask-mantosh-widget\.js/i.test(html)) { console.error(`${page}: missing shared Ask Mantosh launcher`); failures += 1; }
   if (/href=["']\.\.\/#systems["']/i.test(html)) { console.error(`${page}: Projects navigation must open the complete project catalog`); failures += 1; }
   if (/adapted from (?:a|the) public LinkedIn (?:post|reflection)/i.test(html)) { console.error(`${page}: LinkedIn provenance must identify Mantosh as the post author`); failures += 1; }
@@ -118,7 +119,12 @@ if (/class=["'][^"']*section-link[^"']*["'][^>]*>\s*View Experience/i.test(homeH
 if (!/href=["']projects\/["'][^>]*>View all projects/i.test(homeHtml)) { console.error("homepage: selected projects need a scalable route to the complete portfolio"); failures += 1; }
 if (!/class=["']value-strip["']/i.test(homeHtml)) { console.error("homepage: staff impact summary strip is missing"); failures += 1; }
 if (!/5 documented projects across platforms, automation, and applied engineering/.test(homeHtml)) { console.error("homepage: project evidence line is stale"); failures += 1; }
-if (!/href=["']resume\/Resume-MantoshKumar-MSc-CS\.pdf["'][^>]*>View résumé PDF/i.test(homeHtml)) { console.error("homepage: recruiter-facing résumé action is missing"); failures += 1; }
+if (!/<div class=["']hero-buttons["']>[\s\S]*href=["']#systems["'][^>]*>See projects[\s\S]*href=["']experience\/["'][^>]*>View experience[\s\S]*href=["']contact\/["'][^>]*>Discuss a role[\s\S]*<\/div>/i.test(homeHtml)) { console.error("homepage: recruiter actions must lead to projects, experience, and role discussion"); failures += 1; }
+if (/<div class=["']hero-buttons["']>[\s\S]*View résumé PDF[\s\S]*<\/div>/i.test(homeHtml)) { console.error("homepage: résumé PDF must not displace the Experience path in the primary recruiter actions"); failures += 1; }
+const homeProjectPosition = homeHtml.indexOf('id="systems"');
+const homeExperiencePosition = homeHtml.indexOf('id="experience"');
+const homeInsightsPosition = homeHtml.indexOf('id="insights"');
+if (!(homeProjectPosition >= 0 && homeExperiencePosition > homeProjectPosition && homeInsightsPosition > homeExperiencePosition)) { console.error("homepage: content must flow from projects to experience to supporting insights"); failures += 1; }
 if (!/<div class=["']hero-buttons["']>[\s\S]*>Discuss a role[\s\S]*<\/div>\s*<nav class=["']hero-discovery["'][^>]*>[\s\S]*href=["']insights\/["'][^>]*>Read insights[\s\S]*href=["']newsletter\/["'][^>]*>Join the newsletter[\s\S]*<\/nav>/i.test(homeHtml)) { console.error("homepage: insights and newsletter need a visible secondary discovery row after recruiter actions"); failures += 1; }
 if (!/\.hero-content\s*\{[^}]*width:\s*100%;[^}]*max-width:\s*900px/is.test(stylesheet)) { console.error("stylesheet: homepage hero content must use the available responsive width"); failures += 1; }
 if (!/\.hero-discovery\s*\{[^}]*display:\s*flex;[^}]*margin-bottom:/is.test(stylesheet)) { console.error("stylesheet: homepage discovery links need a compact horizontal treatment"); failures += 1; }
@@ -131,6 +137,8 @@ const projectsHtml = await readFile(join(root, "projects/index.html"), "utf8");
 const knowledgeSystemHtml = await readFile(join(root, "projects/engineering-knowledge-system.html"), "utf8");
 const validationPlatformHtml = await readFile(join(root, "projects/validation-platform-optical-networking.html"), "utf8");
 const validationPlatformKnowledge = await readFile(join(root, "knowledge/projects/validation-platform-optical-networking.md"), "utf8");
+if (!/<h1>Systems and tools I’ve built<\/h1>/.test(projectsHtml)) { console.error("projects: page title must describe the work plainly"); failures += 1; }
+if (!/<div class=["']inline-cta["']>[\s\S]*<strong>Evaluating fit\?<\/strong>[\s\S]*href=["']\.\.\/experience\/["'][^>]*>View experience[\s\S]*href=["']\.\.\/contact\/["'][^>]*>Discuss a role or project/i.test(projectsHtml)) { console.error("projects: evaluating-fit CTA must offer Experience and contact without losing its current prompt"); failures += 1; }
 for (const [page, html, expectedCards] of [["index.html", homeHtml, 3], ["projects/index.html", projectsHtml, 5]]) {
   const projectCards = [...html.matchAll(/<article\b[^>]*class=["'][^"']*project-card[^"']*["'][^>]*>([\s\S]*?)<\/article>/gi)];
   if (projectCards.length !== expectedCards) { console.error(`${page}: expected ${expectedCards} fully clickable project cards, found ${projectCards.length}`); failures += 1; }
@@ -203,6 +211,7 @@ if (/GATE is a prestigious national examination|About GATE/.test(experienceHtml)
 if (!/href=["']https:\/\/www\.linkedin\.com\/in\/mantoshk\/details\/recommendations\/["'][^>]*>Read the recommendations on LinkedIn/i.test(experienceHtml)) { console.error("experience: recommendation link must open the dedicated LinkedIn recommendations page"); failures += 1; }
 if ((experienceHtml.match(/<blockquote class=["']reference-quote["']>/g) || []).length !== 2 || !/Mustafa Furkan Kaptan/.test(experienceHtml) || !/Itzhak Mordehay/.test(experienceHtml) || !/Short excerpts from public LinkedIn recommendations/.test(experienceHtml)) { console.error("experience: verified LinkedIn pull-quotes and attribution are missing"); failures += 1; }
 if (!/<section class=["']resume-section capability-section["'][\s\S]*?<h2 id=["']capabilities-title["']>How I help engineering teams<\/h2>[\s\S]*?<\/section>\s*<section class=["']resume-section skills-section["'][\s\S]*?<h2 id=["']technical-skills-title["']>Technical toolkit<\/h2>[\s\S]*?<div class=["']technical-toolkit["']/i.test(experienceHtml)) { console.error("experience: capabilities and technical skills must remain separate, ordered sections"); failures += 1; }
+if (!/<div class=["']resume-actions["']>[\s\S]*href=["']\.\.\/resume\/Resume-MantoshKumar-MSc-CS\.pdf["'][^>]*>View résumé PDF[\s\S]*href=["']\.\.\/projects\/["'][^>]*>See projects[\s\S]*class=["']button primary["'][^>]*href=["']\.\.\/contact\/["'][^>]*>Discuss a role or project[\s\S]*<\/div>/i.test(experienceHtml)) { console.error("experience: closing actions must offer résumé, projects, and a primary role-or-project discussion"); failures += 1; }
 for (const region of ["india", "germany", "canada"]) {
   if (!new RegExp(`id=["']${region}["']`, "i").test(experienceHtml)) { console.error(`experience: missing ${region} regional anchor`); failures += 1; }
 }
@@ -228,6 +237,12 @@ for (const page of ["index.html", "insights/index.html"]) {
     const links = card[1].match(/<a\b[^>]*href=/gi) || [];
     if (links.length !== 1) { console.error(`${page}: every full-card insight must have exactly one destination`); failures += 1; }
   }
+}
+const insightIndexHtml = await readFile(join(root, "insights/index.html"), "utf8");
+if (!/Follow new engineering insights[\s\S]*Receive new evidence-backed notes by email\. Unsubscribe anytime\.[\s\S]*>Subscribe/i.test(insightIndexHtml) || /Choose email or RSS/i.test(insightIndexHtml)) { console.error("insights: visible subscription CTA must describe the email newsletter without presenting RSS as a user choice"); failures += 1; }
+for (const page of pages.filter((entry) => entry.startsWith("projects/") && entry !== "projects/index.html")) {
+  const html = await readFile(join(root, page), "utf8");
+  if (!/<div class=["']inline-cta-actions["']>[\s\S]*href=["']\.\.\/experience\/["'][^>]*>View experience[\s\S]*href=["']\.\.\/contact\/["']/i.test(html)) { console.error(`${page}: closing project CTA must preserve contact context and add an explicit Experience path`); failures += 1; }
 }
 for (const page of pages.filter((entry) => entry.startsWith("insights/") && entry !== "insights/index.html")) {
   const html = await readFile(join(root, page), "utf8");
