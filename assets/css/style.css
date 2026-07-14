@@ -1756,11 +1756,11 @@ nav .nav-cta:not([aria-current="page"]):focus-visible {
 }
 
 #home > .section {
-  padding-block: clamp(1.5rem, 2.5vw, 2.25rem);
+  padding-block: clamp(.875rem, 1.8vw, 1.5rem);
 }
 
 #home > .section .section-title {
-  margin-bottom: clamp(1.15rem, 2vw, 1.6rem);
+  margin-bottom: clamp(.9rem, 1.5vw, 1.2rem);
 }
 
 #home .cards {
@@ -2394,11 +2394,11 @@ nav .nav-cta:not([aria-current="page"]):focus-visible {
   }
 
   #home > .section {
-    padding-block: 1.25rem;
+    padding-block: .75rem;
   }
 
   #home > .section .section-title {
-    margin-bottom: 1rem;
+    margin-bottom: .85rem;
   }
 
   .card {
