@@ -14,6 +14,11 @@ const widgetVersions = new Map();
 for (const page of pages) {
   const html = await readFile(join(root, page), "utf8");
   for (const [pattern, name] of requirements) if (!pattern.test(html)) { console.error(`${page}: missing ${name}`); failures += 1; }
+  if (page.startsWith("projects/") && page !== "projects/index.html") {
+    for (const button of html.match(/<a\b(?=[^>]*class=["'][^"']*button[^"']*["'])(?=[^>]*target=["']_blank["'])[^>]*>[\s\S]*?<\/a>/gi) || []) {
+      if (!/<span\s+aria-hidden=["']true["']>↗<\/span>/i.test(button)) { console.error(`${page}: external project buttons need a visible destination arrow`); failures += 1; }
+    }
+  }
   if ((html.match(/<h1\b/gi) || []).length !== 1) { console.error(`${page}: requires exactly one h1`); failures += 1; }
   if (!/class=["'][^"']*logo[^"']*["'][^>]+aria-label=["']Mantosh Kumar — Home["']/i.test(html)) { console.error(`${page}: logo must provide an explicit home affordance`); failures += 1; }
   if (!/ask-mantosh-widget\.js/i.test(html)) { console.error(`${page}: missing shared Ask Mantosh launcher`); failures += 1; }
