@@ -168,6 +168,11 @@ for (const [page, html] of [["index.html", homeHtml], ["contact/index.html", con
 if (!/<strong>Canadian citizen<\/strong> • Work authorization: Canada • United States • India/.test(contactHtml)) { console.error("contact: citizenship or current work authorization is missing"); failures += 1; }
 if (!/Toronto-based Canadian citizen/.test(resumeHtml) || !/Work authorization:<\/strong> Canada • United States • India/.test(resumeHtml)) { console.error("resume: citizenship or current work authorization is missing"); failures += 1; }
 if (!/Top 1% nationally in GATE CS &amp; IT, twice/.test(resumeHtml) || !/href=["']\.\.\/experience\/#verified-highlights["'][^>]*>View full experience and capabilities/i.test(resumeHtml)) { console.error("resume: verified highlights and experience bridge are missing"); failures += 1; }
+const resumeResourceActions = resumeHtml.match(/<div class=["']resume-resource-actions["'][^>]*role=["']group["'][^>]*aria-label=["']Résumé resources["'][^>]*>([\s\S]*?)<\/div>/i)?.[1] || "";
+if ((resumeResourceActions.match(/class=["'][^"']*resume-resource-link[^"']*["']/gi) || []).length !== 3 || !/>\s*<span>Download PDF<\/span>/i.test(resumeResourceActions) || !/>\s*<span>LinkedIn<\/span>/i.test(resumeResourceActions) || !/>\s*<span>GitHub<\/span>/i.test(resumeResourceActions)) {
+  console.error("resume: PDF, LinkedIn, and GitHub must remain prominent resource actions");
+  failures += 1;
+}
 for (const page of ["index.html", "insights/index.html"]) {
   const html = await readFile(join(root, page), "utf8");
   for (const card of html.matchAll(/<article\b[^>]*class=["'][^"']*insight-card[^"']*["'][^>]*>([\s\S]*?)<\/article>/gi)) {
