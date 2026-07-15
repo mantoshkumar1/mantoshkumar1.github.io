@@ -532,7 +532,10 @@ test("rejects requests after the configured daily free-use limit", async () => {
   }) }) };
   const response = await worker.fetch(request({ question: "What is PhotoSahi?" }), { ...env, KNOWLEDGE_DB: quotaExhaustedDb });
   assert.equal(response.status, 429);
-  assert.equal((await response.json()).error.code, "free_usage_limit_reached");
+  const payload = await response.json();
+  assert.equal(payload.error.code, "free_usage_limit_reached");
+  assert.match(payload.error.message, /50 AI-backed answers.*reset at 00:00 UTC/i);
+  assert.ok(Number(response.headers.get("Retry-After")) > 0);
 });
 
 test("rejects requests after the configured per-minute free-use limit", async () => {
@@ -543,7 +546,10 @@ test("rejects requests after the configured per-minute free-use limit", async ()
   }) }) };
   const response = await worker.fetch(request({ question: "What is PhotoSahi?" }), { ...env, KNOWLEDGE_DB: rateExhaustedDb });
   assert.equal(response.status, 429);
-  assert.equal((await response.json()).error.code, "request_rate_limit_reached");
+  const payload = await response.json();
+  assert.equal(payload.error.code, "request_rate_limit_reached");
+  assert.match(payload.error.message, /5 per minute.*hosting cost and abuse/i);
+  assert.equal(response.headers.get("Retry-After"), "60");
 });
 
 test("does not spend the AI quota on deterministic routes", async () => {

@@ -8,6 +8,12 @@ function utcMinute() {
   return new Date().toISOString().slice(0, 16);
 }
 
+function secondsUntilNextUtcDay() {
+  const now = new Date();
+  const nextDay = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1);
+  return Math.max(1, Math.ceil((nextDay - now.getTime()) / 1_000));
+}
+
 export async function enforceStrictRequestLimit(env, config) {
   if (!env.KNOWLEDGE_DB?.prepare) {
     throw new AppError(503, "request_guard_unavailable", "The request safety guard is unavailable. Request rejected.");
@@ -20,7 +26,7 @@ export async function enforceStrictRequestLimit(env, config) {
        RETURNING request_count`
     ).bind(utcMinute(), config.freePerMinuteRequestLimit).first();
     if (!row) {
-      throw new AppError(429, "request_rate_limit_reached", "The request rate limit has been reached. Please try again shortly.", { retryAfter: 60 });
+      throw new AppError(429, "request_rate_limit_reached", "AI-backed answers are limited to 5 per minute across Ask Mantosh. This controls hosting cost and abuse. Quick replies and navigation remain available; try this question again in about a minute.", { retryAfter: 60 });
     }
   } catch (error) {
     if (error instanceof AppError) throw error;
@@ -43,7 +49,7 @@ export async function enforceFreeUsageLimit(env, config) {
        RETURNING request_count`
     ).bind(utcDay(), config.freeDailyRequestLimit).first();
     if (!row) {
-      throw new AppError(429, "free_usage_limit_reached", "Today's free AI request limit has been reached. Please try again after 00:00 UTC.", { retryAfter: 3600 });
+      throw new AppError(429, "free_usage_limit_reached", "Ask Mantosh's shared allowance of 50 AI-backed answers for today has been reached. This controls hosting cost. Quick replies and navigation remain available; AI-backed answers reset at 00:00 UTC.", { retryAfter: secondsUntilNextUtcDay() });
     }
   } catch (error) {
     if (error instanceof AppError) throw error;

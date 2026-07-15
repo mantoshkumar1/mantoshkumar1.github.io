@@ -13,7 +13,7 @@ This document is the canonical description of what is deployed. Architecture pro
 | Health | `https://ask-mantosh.mantoshk234.workers.dev/health` | Unauthenticated service health without configuration details |
 | Knowledge indexing | `POST /internal/index` | GitHub OIDC or manual recovery token only; intentionally unavailable to browsers through CORS |
 
-Last verified Worker deployment: `1c25266a-5367-4a93-9cf9-353260816c6d`. The active deployed answer-policy cache namespace is `visitor-intent-v26`.
+Last verified Worker deployment: `02e59803-0724-4e67-9ef4-5c0e788009e1`. The active deployed answer-policy cache namespace is `visitor-intent-v26`.
 
 ## Published inventory
 
@@ -80,6 +80,7 @@ Cloudflare Cache API stores eligible embeddings, retrieval candidates, and first
 
 - Exact-origin CORS; no browser bearer secret and no cookie authentication.
 - Mandatory Cloudflare rate-limiter binding for every request plus strict D1 minute/day counters only for retrieval/AI-bound requests; the Worker fails closed when the mandatory limiter is unavailable.
+- The widget discloses the shared five-per-minute and 50-per-UTC-day AI allowance, why it exists, and which deterministic replies do not consume it; quota errors repeat the applicable limit and retry timing.
 - JSON validation, 16 KiB body cap, normalized bounded questions, timeouts, output-size checks, and generic provider errors.
 - Evidence-only prompting, public-visibility filtering, prompt-injection boundaries, approved citation URLs, and sanitized frontend Markdown.
 - Low-information questions are clarified before retrieval, and semantic-only matches below 0.40 cannot trigger generation without lexical support.
