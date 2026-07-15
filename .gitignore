@@ -48,6 +48,9 @@ __pycache__/
 *.py[cod]
 
 # Local static output or caches
+node_modules/
 .cache/
 .tmp/
 dist/
+playwright-report/
+test-results/

@@ -2811,6 +2811,13 @@ main.project-shell > .container > .section-block {
     transform: none;
     will-change: auto;
   }
+
+  .section > .container,
+  .case-study .resume-section,
+  .capability-section {
+    animation: none !important;
+    opacity: 1 !important;
+  }
 }
 
 .reference-grid {
@@ -3139,6 +3146,12 @@ html[data-theme="contrast"] .button.primary { background: #fff; color: #000; }
 html[data-theme="contrast"] .button.secondary { border-color: #fff; background: #000; color: #fff; }
 html[data-theme="contrast"] .hero::after {
   display: none;
+}
+html[data-theme="contrast"] .section > .container,
+html[data-theme="contrast"] .case-study .resume-section,
+html[data-theme="contrast"] .capability-section {
+  animation: none;
+  opacity: 1;
 }
 html[data-theme="contrast"] :focus-visible { outline-color: #ffde59; }
 html[data-theme="contrast"] .appearance-control select { border-color: #fff; background: #000; color: #fff; }

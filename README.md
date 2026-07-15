@@ -9,7 +9,7 @@ The repository contains two deployed surfaces:
 1. A static GitHub Pages site with SEO-configured public pages, project case studies, an engineering-note archive, newsletter information, accessible résumé alternatives, and contact flows.
 2. Ask Mantosh, a Cloudflare Worker that answers only from public Markdown under `knowledge/` using hybrid D1 FTS5 and Vectorize retrieval plus Workers AI.
 
-The current production inventory, data flow, deployment paths, controls, and known limits are maintained in [`docs/SYSTEM_STATE.md`](docs/SYSTEM_STATE.md). Start with the [`documentation map`](docs/README.md) for source authority and subsystem references.
+The current production inventory, data flow, deployment paths, controls, and known limits are maintained in [`docs/SYSTEM_STATE.md`](docs/SYSTEM_STATE.md). Start with the [`documentation map`](docs/README.md) for source authority and subsystem references. Browser, accessibility, performance, and production-smoke coverage is documented in [`docs/RELEASE_CONFIDENCE.md`](docs/RELEASE_CONFIDENCE.md).
 
 ## Public content
 
@@ -64,6 +64,7 @@ Run the same deterministic gates used by CI:
 
 ```bash
 npm run verify
+npm run test:browser
 git diff --check
 ```
 
@@ -81,7 +82,9 @@ node scripts/audit-accessibility.mjs
 node scripts/audit-docs.mjs
 node scripts/audit-content-sections.mjs
 node scripts/audit-ask-mantosh-coverage.mjs
+npm run audit:performance-budget
 npm test --prefix chat-worker
+npm run test:browser
 git diff --check
 ```
 
@@ -94,6 +97,8 @@ What these gates protect:
 - Ask Mantosh coverage for every public HTML route;
 - documentation references that must match the deployed endpoints and configuration;
 - public-content counts and explicit empty states for autonomous publication lanes;
+- desktop and mobile visitor journeys, theme accessibility, navigation, forms, contact fallback, and Ask Mantosh session controls;
+- generated asset-size budgets and revision-aware post-deployment smoke checks;
 - Worker request validation, retrieval contracts, rate limits, OIDC indexing, prompt-injection boundaries, failure handling, and SSE output.
 
 ## Deployment

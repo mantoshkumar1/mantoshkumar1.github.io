@@ -16,6 +16,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
       - run: node scripts/generate-seo.mjs
       - run: node scripts/seo-audit.mjs
       - run: node scripts/validate-discoverability.mjs
@@ -26,3 +29,14 @@ jobs:
       - run: node scripts/audit-content-sections.mjs
       - run: node scripts/audit-ask-mantosh-coverage.mjs
       - run: npm test --prefix chat-worker
+      - run: npm run test:browser
+      - run: npm run audit:performance-budget
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: browser-evidence-${{ github.run_id }}
+          path: |
+            playwright-report/
+            test-results/
+          if-no-files-found: ignore
+          retention-days: 14

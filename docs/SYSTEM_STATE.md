@@ -102,14 +102,18 @@ The repository currently enforces:
 - 528 labelled Ask Mantosh evaluation cases with 9,100 objective assertions: 68 focused regressions plus 460 recruiter, student, curious-visitor, colleague, and founder questions covering social, navigation, unsupported, achievement, grounded-answer, and adversarial behavior;
 - a whole-site coverage audit that fails when any public HTML route lacks reviewed evidence, deterministic navigation, or a documented no-index exclusion;
 - static UI guards for immediate safe Markdown rendering.
+- 14 Playwright browser checks across desktop and mobile Chromium covering critical-page rendering, the recruiter path, project and Insight navigation, newsletter validation, résumé and contact fallbacks, all appearance choices with Axe WCAG scans, and Ask Mantosh minimize, export, and deliberate-clear behavior;
+- generated artifact budgets of 36 KB per HTML page, 100 KB per CSS file, 60 KB total JavaScript, 180 KB per image, and 1 MB for the public artifact excluding the résumé PDF;
+- a revision-aware post-deployment smoke check for the homepage, published evaluation evidence, RSS feed, Ask Mantosh health, and deterministic newsletter navigation.
 
 ## Known limits
 
 - Only 14 public knowledge documents are indexed; outside deterministic greetings, courtesies, light banter, and navigation, Ask Mantosh keeps answers within published evidence and clearly redirects unsupported topics.
 - Public evidence has no fabricated employer metrics or inferred organizational outcomes.
 - The Worker uses the Cloudflare free allocation and may return a clear 429 when safety or provider limits are reached.
-- There is no authenticated user account, durable personal profile, staging environment declared in this repository, formal accessibility conformance audit, human-rated response benchmark, or live-production retrieval benchmark.
+- There is no authenticated user account, durable personal profile, staging environment declared in this repository, formal accessibility conformance audit, human-rated response benchmark, live-production retrieval benchmark, or automated production Core Web Vitals trace.
 - Controlled fixtures make evaluation deterministic but do not measure live Vectorize recall, human preference, or user satisfaction.
+- Automated browser coverage currently uses Chromium; Safari, Firefox, and real-device visual review remain manual checks.
 - The website origin is GitHub Pages rather than a custom domain.
 
 These limits are deliberate or visible. They should change only with evidence, operational need, and updated documentation.
