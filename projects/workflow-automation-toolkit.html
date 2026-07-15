@@ -38,7 +38,7 @@
 
 <title>Workflow Automation Toolkit | Mantosh Kumar</title>
     <script src="../assets/js/theme-init.js?v=20260713-1"></script>
-    <link rel="stylesheet" href="../assets/css/style.css?v=20260715-1" />
+    <link rel="stylesheet" href="../assets/css/style.css?v=20260715-2" />
   </head>
   <body>
     <a class="skip-link" href="#main-content">Skip to main content</a>
@@ -77,6 +77,31 @@
           <section class="resume-section">
             <h2>Design approach</h2>
             <p>The repository keeps processing local and organizes each task as a small command-line utility. Individual modules expose a <code>run.py</code> entry point, keep implementation code under an <code>app</code> package, and reuse file, image, PDF, input, and logging helpers from a shared <code>utility</code> package.</p>
+          </section>
+
+          <section class="resume-section">
+            <h2>Architecture</h2>
+            <figure class="project-architecture" aria-labelledby="toolkit-architecture-caption">
+              <figcaption id="toolkit-architecture-caption"><strong>Small local commands instead of one opaque service</strong><span>Each document workflow stays isolated while common file and PDF behavior is reused.</span></figcaption>
+              <ul class="architecture-boundaries" aria-label="Workflow Automation Toolkit boundaries">
+                <li><strong>Local source files</strong><span>PDFs and images selected by the user</span></li>
+                <li><strong>Task-specific commands</strong><span>Separate entry points and implementation packages</span></li>
+                <li><strong>Shared utility package</strong><span>Reusable file, image, PDF, input, and logging helpers</span></li>
+              </ul>
+              <div class="architecture-lanes">
+                <section class="architecture-lane" aria-labelledby="toolkit-processing-path-title">
+                  <header><span aria-hidden="true">01</span><div><h3 id="toolkit-processing-path-title">Run a document workflow</h3><p>Explicit inputs travel through one focused command and return to local storage.</p></div></header>
+                  <ol class="architecture-steps">
+                    <li><small>Device</small><strong>Source files</strong><span>Local PDFs or images</span></li>
+                    <li><small>CLI</small><strong><code>run.py</code></strong><span>Task entry point</span></li>
+                    <li><small>Module</small><strong>App package</strong><span>Workflow-specific logic</span></li>
+                    <li><small>Shared</small><strong>Utility package</strong><span>Common processing helpers</span></li>
+                    <li><small>Device</small><strong>Local output</strong><span>Processed file or files</span></li>
+                  </ol>
+                </section>
+              </div>
+              <p class="architecture-guardrail"><strong>Privacy boundary</strong><span>Processing runs on the user’s machine; the documented workflow requires no external upload service.</span></p>
+            </figure>
           </section>
 
           <section class="resume-section">

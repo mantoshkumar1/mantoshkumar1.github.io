@@ -135,8 +135,14 @@ if (!/@media\s*\(max-width:\s*640px\)[\s\S]*?#home \.insight-discovery-actions\s
 if (!/@media\s*\(min-width:\s*641px\)\s*and\s*\(max-width:\s*939px\)[\s\S]*?#home #systems \.cards > \.project-card:last-child:nth-child\(odd\),[\s\S]*?#home #insights \.cards > \.insight-card:last-child:nth-child\(odd\)\s*\{[^}]*grid-column:\s*1\s*\/\s*-1/is.test(stylesheet)) { console.error("stylesheet: odd homepage project and insight cards must fill the intermediate two-column row"); failures += 1; }
 const projectsHtml = await readFile(join(root, "projects/index.html"), "utf8");
 const knowledgeSystemHtml = await readFile(join(root, "projects/engineering-knowledge-system.html"), "utf8");
+const gttHtml = await readFile(join(root, "projects/gtt-price-calculator.html"), "utf8");
 const validationPlatformHtml = await readFile(join(root, "projects/validation-platform-optical-networking.html"), "utf8");
+const workflowToolkitHtml = await readFile(join(root, "projects/workflow-automation-toolkit.html"), "utf8");
 const validationPlatformKnowledge = await readFile(join(root, "knowledge/projects/validation-platform-optical-networking.md"), "utf8");
+if (!/<figure class=["']project-architecture["'][^>]*aria-labelledby=["']knowledge-architecture-caption["']/i.test(knowledgeSystemHtml) || !/<figcaption id=["']knowledge-architecture-caption["']/i.test(knowledgeSystemHtml)) { console.error("knowledge system: architecture must use an accessible figure and caption"); failures += 1; }
+if ((knowledgeSystemHtml.match(/class=["']architecture-lane["']/gi) || []).length !== 2 || (knowledgeSystemHtml.match(/<ol class=["']architecture-steps["']/gi) || []).length !== 2 || (knowledgeSystemHtml.match(/<li><small>[^<]+<\/small><strong>[^<]+<\/strong><span>[^<]+<\/span><\/li>/gi) || []).length !== 10) { console.error("knowledge system: architecture must present two controlled five-step paths"); failures += 1; }
+if ((knowledgeSystemHtml.match(/class=["']architecture-boundaries["']/gi) || []).length !== 1 || !/Public browser[\s\S]*GitHub control plane[\s\S]*Cloudflare runtime/i.test(knowledgeSystemHtml) || !/class=["']architecture-guardrail["'][\s\S]*No browser secret[\s\S]*No answer from model memory/i.test(knowledgeSystemHtml)) { console.error("knowledge system: architecture must make its trust and evidence boundaries explicit"); failures += 1; }
+if (!/\.architecture-steps\s*\{[^}]*grid-template-columns:\s*repeat\(5,\s*minmax\(0,\s*1fr\)\)/is.test(stylesheet) || !/@media\s*\(max-width:\s*760px\)[\s\S]*?\.architecture-steps\s*\{[^}]*grid-template-columns:\s*1fr/is.test(stylesheet) || !/@media\s*\(max-width:\s*760px\)[\s\S]*?\.architecture-steps li\s*\{[^}]*grid-template-columns:\s*4rem\s+minmax\(0,\s*1fr\)/is.test(stylesheet)) { console.error("stylesheet: project architecture must remain readable across desktop and mobile"); failures += 1; }
 if (!/<h1>Systems and tools I’ve built<\/h1>/.test(projectsHtml)) { console.error("projects: page title must describe the work plainly"); failures += 1; }
 if (!/<div class=["']inline-cta["']>[\s\S]*<strong>Evaluating fit\?<\/strong>[\s\S]*href=["']\.\.\/experience\/["'][^>]*>View experience[\s\S]*href=["']\.\.\/contact\/["'][^>]*>Discuss a role or project/i.test(projectsHtml)) { console.error("projects: evaluating-fit CTA must offer Experience and contact without losing its current prompt"); failures += 1; }
 for (const [page, html, expectedCards] of [["index.html", homeHtml, 3], ["projects/index.html", projectsHtml, 5]]) {
@@ -147,7 +153,16 @@ for (const [page, html, expectedCards] of [["index.html", homeHtml, 3], ["projec
     if (detailLinks.length !== 1) { console.error(`${page}: every project card needs exactly one stretched detail-page link`); failures += 1; }
   }
 }
-if (!/<ol class=["']case-flow["'][^>]*aria-label=/i.test(validationPlatformHtml) || (validationPlatformHtml.match(/<li><span>[1-5]<\/span>/g) || []).length !== 5) { console.error("validation platform: architecture must present five accessible stages"); failures += 1; }
+for (const [name, html, captionId, boundaryLabel, expectedSteps, requiredBoundary] of [
+  ["GTT calculator", gttHtml, "gtt-architecture-caption", "GTT calculator boundaries", 5, /Broker remains separate[\s\S]*No credentials, live prices, account access, or trade execution/i],
+  ["validation platform", validationPlatformHtml, "validation-architecture-caption", "Validation platform boundaries", 5, /Accountable judgment[\s\S]*Root cause, build health, and release risk remain engineering decisions/i],
+  ["workflow toolkit", workflowToolkitHtml, "toolkit-architecture-caption", "Workflow Automation Toolkit boundaries", 5, /Local source files[\s\S]*Task-specific commands[\s\S]*Shared utility package/i],
+]) {
+  if (!new RegExp(`<figure class=["']project-architecture["'][^>]*aria-labelledby=["']${captionId}["']`, "i").test(html) || !new RegExp(`<figcaption id=["']${captionId}["']`, "i").test(html)) { console.error(`${name}: architecture must use an accessible figure and caption`); failures += 1; }
+  if (!new RegExp(`<ul class=["']architecture-boundaries["'][^>]*aria-label=["']${boundaryLabel}["']`, "i").test(html) || !requiredBoundary.test(html)) { console.error(`${name}: architecture must state its system boundary plainly`); failures += 1; }
+  if ((html.match(/<ol class=["']architecture-steps["']/gi) || []).length !== 1 || (html.match(/<li><small>/gi) || []).length !== expectedSteps) { console.error(`${name}: architecture must present one accessible five-step path`); failures += 1; }
+  if (!/class=["']architecture-guardrail["']/.test(html)) { console.error(`${name}: architecture must retain its evidence or execution guardrail`); failures += 1; }
+}
 const validationPlatformPublicContent = `${validationPlatformHtml}\n${validationPlatformKnowledge}`;
 if (/\bLLM\b|semi-annual|annual executive|weekly release-health|program leadership|pass, fail, unexecuted/i.test(validationPlatformPublicContent)) { console.error("validation platform: public case study exposes unsupported or internal specifics"); failures += 1; }
 if (!/No improvement percentage, employer scale, adoption claim, or customer outcome is asserted/.test(validationPlatformHtml)) { console.error("validation platform: evidence boundary is missing"); failures += 1; }
@@ -194,7 +209,6 @@ for (const [page, html] of [["index.html", homeHtml], ["projects/index.html", pr
 if (!/href=["']#ask-mantosh["'][^>]*>Try Ask Mantosh/i.test(knowledgeSystemHtml)) { console.error("projects/engineering-knowledge-system.html: primary action must demonstrate Ask Mantosh instead of reloading the website"); failures += 1; }
 const askMantoshClient = await readFile(join(root, "assets/js/main.js"), "utf8");
 if (!/window\.location\.hash === ["']#ask-mantosh["']/.test(askMantoshClient) || !/a\[href=["']#ask-mantosh/.test(askMantoshClient)) { console.error("Ask Mantosh: live-system deep link must open the assistant on click and direct arrival"); failures += 1; }
-const gttHtml = await readFile(join(root, "projects/gtt-price-calculator.html"), "utf8");
 for (const [page, html] of [["projects/index.html", projectsHtml], ["projects/gtt-price-calculator.html", gttHtml]]) {
   if (!/href=["']https:\/\/gtt-calculator\.streamlit\.app\/["'][^>]*>[^<]*(?:Try|live product)/i.test(html)) { console.error(`${page}: GTT live product link is missing`); failures += 1; }
 }

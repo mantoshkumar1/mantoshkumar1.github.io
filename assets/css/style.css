@@ -998,6 +998,222 @@ button.button {
   line-height: 1.45;
 }
 
+.project-architecture {
+  display: grid;
+  gap: 1rem;
+  margin: 1.15rem 0 1.4rem;
+  padding: clamp(.9rem, 2vw, 1.25rem);
+  border: 1px solid var(--border-strong);
+  border-radius: 20px;
+  background: linear-gradient(145deg, rgba(59, 130, 246, .07), rgba(255, 255, 255, .015) 58%);
+}
+
+.project-architecture figcaption {
+  display: grid;
+  gap: .3rem;
+}
+
+.project-architecture figcaption strong {
+  color: var(--text);
+  font-size: 1.08rem;
+}
+
+.project-architecture figcaption span,
+.architecture-lane header p,
+.architecture-boundaries span,
+.architecture-steps span,
+.architecture-guardrail span {
+  color: var(--muted);
+}
+
+.architecture-boundaries {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: .55rem;
+  padding: 0;
+  list-style: none;
+}
+
+.architecture-boundaries li {
+  display: grid;
+  gap: .2rem;
+  min-width: 0;
+  padding: .7rem .8rem;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+}
+
+.architecture-boundaries strong {
+  color: var(--text);
+  font-size: .8rem;
+}
+
+.architecture-boundaries span {
+  font-size: .7rem;
+  line-height: 1.4;
+}
+
+.architecture-lanes {
+  display: grid;
+  gap: 1rem;
+}
+
+.architecture-lane {
+  display: grid;
+  gap: .7rem;
+  min-width: 0;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+
+.architecture-lane header {
+  display: flex;
+  gap: .7rem;
+  align-items: center;
+}
+
+.architecture-lane header > span {
+  display: grid;
+  flex: 0 0 2rem;
+  width: 2rem;
+  height: 2rem;
+  place-items: center;
+  border: 1px solid var(--border-strong);
+  border-radius: 50%;
+  color: var(--primary);
+  font-size: .68rem;
+  font-weight: 800;
+}
+
+.case-study .architecture-lane h3 {
+  margin: 0;
+  color: var(--text);
+  font-size: 1rem;
+}
+
+.architecture-lane header p {
+  margin: .12rem 0 0;
+  font-size: .76rem;
+  line-height: 1.45;
+}
+
+.architecture-steps {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: .55rem;
+  padding: 0;
+  list-style: none;
+}
+
+.architecture-steps li {
+  position: relative;
+  display: grid;
+  align-content: start;
+  gap: .24rem;
+  min-width: 0;
+  padding: .72rem;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+}
+
+.architecture-steps li:not(:last-child)::after {
+  position: absolute;
+  top: 50%;
+  right: -.64rem;
+  z-index: 1;
+  display: grid;
+  width: .75rem;
+  height: 1.25rem;
+  place-items: center;
+  transform: translateY(-50%);
+  background: var(--surface);
+  color: var(--primary);
+  content: "→";
+  font-size: .75rem;
+  font-weight: 800;
+}
+
+.architecture-steps small {
+  color: var(--primary);
+  font-size: .59rem;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.architecture-steps strong {
+  color: var(--text);
+  font-size: .78rem;
+  line-height: 1.25;
+}
+
+.architecture-steps span {
+  font-size: .68rem;
+  line-height: 1.4;
+}
+
+.architecture-guardrail {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: .35rem .7rem;
+  align-items: baseline;
+  margin: 0;
+  padding: .75rem .85rem;
+  border-left: 3px solid var(--primary);
+  border-radius: 0 10px 10px 0;
+  background: var(--surface);
+  font-size: .78rem;
+}
+
+.architecture-guardrail strong {
+  color: var(--text);
+}
+
+.case-study .resume-section h3.architecture-details-title {
+  margin-top: 1.25rem;
+}
+
+@media (max-width: 760px) {
+  .architecture-boundaries,
+  .architecture-steps {
+    grid-template-columns: 1fr;
+  }
+
+  .architecture-steps li {
+    grid-template-columns: 4rem minmax(0, 1fr);
+    gap: .15rem .45rem;
+    align-items: start;
+    padding: .65rem .7rem;
+  }
+
+  .architecture-steps small {
+    grid-row: 1 / span 2;
+    padding-top: .08rem;
+  }
+
+  .architecture-steps strong,
+  .architecture-steps span {
+    grid-column: 2;
+  }
+
+  .architecture-steps li:not(:last-child)::after {
+    top: auto;
+    right: auto;
+    bottom: -.74rem;
+    left: 50%;
+    width: 1.25rem;
+    height: .9rem;
+    transform: translateX(-50%);
+    content: "↓";
+  }
+
+  .architecture-guardrail {
+    grid-template-columns: 1fr;
+  }
+}
+
 .sr-only {
   position: absolute;
   width: 1px;
