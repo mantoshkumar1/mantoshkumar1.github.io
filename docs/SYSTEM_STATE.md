@@ -13,7 +13,7 @@ This document is the canonical description of what is deployed. Architecture pro
 | Health | `https://ask-mantosh.mantoshk234.workers.dev/health` | Unauthenticated service health without configuration details |
 | Knowledge indexing | `POST /internal/index` | GitHub OIDC or manual recovery token only; intentionally unavailable to browsers through CORS |
 
-Last verified Worker deployment: `b3a3e27e-981d-462c-b7be-de161215aec6`. The active deployed answer-policy cache namespace is `visitor-intent-v27`.
+Last verified Worker deployment: `13a03e19-bd62-42af-8610-c408aad3ffc1`. The active deployed answer-policy cache namespace is `visitor-intent-v27`.
 
 ## Published inventory
 
@@ -70,8 +70,8 @@ The committed production configuration uses:
 - D1 database `personal-website-knowledge`;
 - five retrieved chunks and an 8,000-character context budget;
 - 20-second AI timeout, 300 output-token cap, and 6,000-character answer cap;
-- 30 requests per minute per network fingerprint through the Cloudflare rate-limiter binding for broad abuse protection, plus a separate shared D1 allowance of 20 requests per minute for retrieval/AI-bound requests;
-- 400 AI-bearing requests per UTC day through D1;
+- 30 requests per minute per network fingerprint through the Cloudflare rate-limiter binding for broad abuse protection, plus a separate shared D1 allowance of 30 requests per minute for retrieval/AI-bound requests;
+- 450 AI-bearing requests per UTC day through D1;
 - six retained conversation turns and a 24-hour session TTL.
 
 Cloudflare Cache API stores eligible embeddings, retrieval candidates, and first-turn answers for 15, 5, and 10 minutes respectively. The optional `CACHE_VERSION` KV binding is not configured in the committed production file, so knowledge-index invalidation currently relies on TTL expiry and the fallback version. Answer-policy changes explicitly advance `ANSWER_POLICY_VERSION`—currently `visitor-intent-v27` in source—to avoid serving a response cached under an older formatter or routing contract. This is an explicit known limitation, not an undocumented guarantee.

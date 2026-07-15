@@ -52,11 +52,11 @@ requireText(workerDocsIndex, "../../docs/SYSTEM_STATE.md", "Worker documentation
 
 const configuredValues = [
   "@cf/meta/llama-3.1-8b-instruct-fast", "@cf/baai/bge-m3", "personal-website-knowledge",
-  "ask-mantosh-knowledge-v3", "MAX_OUTPUT_TOKENS = \"300\"", "FREE_DAILY_REQUEST_LIMIT = \"400\"",
-  "FREE_PER_MINUTE_REQUEST_LIMIT = \"20\"", "CONVERSATION_TTL_SECONDS = \"86400\""
+  "ask-mantosh-knowledge-v3", "MAX_OUTPUT_TOKENS = \"300\"", "FREE_DAILY_REQUEST_LIMIT = \"450\"",
+  "FREE_PER_MINUTE_REQUEST_LIMIT = \"30\"", "CONVERSATION_TTL_SECONDS = \"86400\""
 ];
 for (const value of configuredValues) requireText(wrangler, value, "wrangler.toml");
-for (const value of ["@cf/meta/llama-3.1-8b-instruct-fast", "@cf/baai/bge-m3", "personal-website-knowledge", "ask-mantosh-knowledge-v3", "300 output-token cap", "400 AI-bearing", "20 requests per minute", "24-hour session TTL"]) {
+for (const value of ["@cf/meta/llama-3.1-8b-instruct-fast", "@cf/baai/bge-m3", "personal-website-knowledge", "ask-mantosh-knowledge-v3", "300 output-token cap", "450 AI-bearing", "30 requests per minute", "24-hour session TTL"]) {
   requireText(state, value, "system state");
 }
 
