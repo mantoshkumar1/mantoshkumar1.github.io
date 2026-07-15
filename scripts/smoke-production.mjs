@@ -37,7 +37,7 @@ await waitFor("knowledge-system evidence", async () => {
 });
 await waitFor("feed", async () => {
   const xml = await text("/feed.xml");
-  if (!xml.includes("<rss") || !xml.includes("<item>")) throw new Error("RSS structure missing");
+  if (!xml.includes("<feed") || !xml.includes("<entry>")) throw new Error("Atom feed structure missing");
 });
 await waitFor("Worker health", async () => {
   const response = await fetch(`${worker}/health`);
