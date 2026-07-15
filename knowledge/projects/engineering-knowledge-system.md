@@ -65,7 +65,7 @@ After GitHub Pages deploys, a revision-aware smoke check verifies the exact comm
 
 - SEO-configured public pages and structured discoverability files.
 - A reviewed public Ask Mantosh knowledge corpus, including this source.
-- Fifty-nine Worker tests covering contracts, deterministic social and achievement routing, quotas, OIDC, retrieval, prompting, citation repair, subjective questions, explicit achievement gating, and failure paths, plus sixteen desktop/mobile browser checks.
+- Sixty-three Worker tests covering contracts, deterministic social and achievement routing, confidence-based lexical relevance gating, quotas, OIDC, retrieval, prompting, citation repair, subjective questions, explicit achievement gating, and failure paths, plus sixteen desktop/mobile browser checks.
 - A committed offline evaluation result that currently records 531 of 531 cases and 9,177 of 9,177 objective assertions passing.
 
 ## Current limits

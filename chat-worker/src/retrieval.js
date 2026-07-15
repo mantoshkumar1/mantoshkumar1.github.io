@@ -4,10 +4,51 @@ import { scoreRetrievalConfidence } from "./prompt/confidence-scorer.js";
 import { fingerprint, isCacheableQuestion, knowledgeVersion, readCachedJson, writeCachedJson } from "./cache.js";
 
 const RRF_K = 60;
+const LEXICAL_GATE_MIN_TERMS = 4;
+const STOP_WORDS = new Set([
+  "a", "an", "and", "are", "as", "at", "be", "been", "but", "by", "can", "could", "did", "do", "does",
+  "for", "from", "had", "has", "have", "he", "her", "him", "his", "how", "i", "if", "in", "is", "it",
+  "its", "me", "my", "of", "on", "or", "our", "please", "she", "should", "tell", "that", "the", "their",
+  "them", "they", "this", "to", "us", "was", "we", "were", "what", "when", "where", "which", "who",
+  "why", "will", "with", "would", "you", "your"
+]);
+
+function lexicalTerms(question) {
+  const terms = question.toLowerCase().match(/[\p{L}\p{N}_-]{2,}/gu) || [];
+  return [...new Set(terms.filter((term) => !STOP_WORDS.has(term)))].slice(0, 12);
+}
 
 function ftsQuery(question) {
-  const terms = question.toLowerCase().match(/[\p{L}\p{N}_-]{2,}/gu) || [];
-  return [...new Set(terms)].slice(0, 12).map((term) => `"${term.replaceAll('"', '')}"`).join(" OR ");
+  return lexicalTerms(question).map((term) => `"${term.replaceAll('"', '')}"`).join(" OR ");
+}
+
+export function assessLexicalRelevance(question, lexicalMatches) {
+  const terms = lexicalTerms(question);
+  const termCount = terms.length;
+  const lexicalMatchCount = lexicalMatches.length;
+  const searchableText = lexicalMatches.map((row) => [row.title, row.summary, row.content, row.tags].filter(Boolean).join(" ").toLowerCase()).join(" ");
+  const scorable = searchableText.length > 0;
+  const matchedTermCount = scorable ? terms.filter((term) => searchableText.includes(term)).length : lexicalMatchCount ? termCount : 0;
+  const coverage = termCount ? matchedTermCount / termCount : 0;
+  const metrics = { termCount, lexicalMatchCount, matchedTermCount, coverage };
+  if (lexicalMatchCount > 0 && (!scorable || coverage >= 0.4)) {
+    return { decision: "continue", confidence: "high", ...metrics };
+  }
+  if (termCount >= LEXICAL_GATE_MIN_TERMS && coverage < 0.4) {
+    return { decision: "clearly_unrelated", confidence: "high", ...metrics };
+  }
+  return { decision: "continue", confidence: "uncertain", ...metrics };
+}
+
+export async function searchLexicalKnowledge(question, env) {
+  if (!env.KNOWLEDGE_DB) throw new AppError(500, "knowledge_unconfigured", "Knowledge search is not configured.");
+  const lexical = ftsQuery(question);
+  if (!lexical) return [];
+  const result = await env.KNOWLEDGE_DB.prepare(
+    `SELECT chunk_id, title, summary, content, tags FROM chunks_fts
+     WHERE chunks_fts MATCH ? AND visibility = 'public' ORDER BY bm25(chunks_fts) LIMIT 16`
+  ).bind(lexical).all();
+  return result.results || [];
 }
 
 function sourceLabel(row) {
@@ -26,7 +67,7 @@ async function getRowsByIds(db, ids) {
   return result.results || [];
 }
 
-export async function retrieveKnowledge(question, env, config) {
+export async function retrieveKnowledge(question, env, config, { lexicalMatches: prefetchedLexicalMatches } = {}) {
   if (!env.KNOWLEDGE_DB || !env.KNOWLEDGE_INDEX) {
     throw new AppError(500, "knowledge_unconfigured", "Knowledge search is not configured.");
   }
@@ -41,20 +82,13 @@ export async function retrieveKnowledge(question, env, config) {
     if (embeddingKey) writeCachedJson("embedding", embeddingKey, embedding, config.embeddingCacheTtlSeconds);
     embeddingCache = "miss";
   }
-  const lexical = ftsQuery(question);
+  const lexicalMatches = prefetchedLexicalMatches || await searchLexicalKnowledge(question, env);
   const retrievalKey = cacheable ? await fingerprint(`${version}:${config.embeddingModel}:${question}`) : null;
   let candidates = retrievalKey ? await readCachedJson("retrieval", retrievalKey) : null;
   let retrievalCache = candidates ? "hit" : "miss";
   if (!candidates || !Array.isArray(candidates.vectorMatches) || !Array.isArray(candidates.lexicalMatches)) {
-    const [vectorResult, lexicalResult] = await Promise.all([
-      env.KNOWLEDGE_INDEX.query(embedding, { topK: 16, returnMetadata: "all" }),
-      lexical
-        ? env.KNOWLEDGE_DB.prepare(
-          `SELECT chunk_id FROM chunks_fts WHERE chunks_fts MATCH ? AND visibility = 'public' ORDER BY bm25(chunks_fts) LIMIT 16`
-        ).bind(lexical).all()
-        : Promise.resolve({ results: [] })
-    ]);
-    candidates = { vectorMatches: vectorResult.matches || [], lexicalMatches: lexicalResult.results || [] };
+    const vectorResult = await env.KNOWLEDGE_INDEX.query(embedding, { topK: 16, returnMetadata: "all" });
+    candidates = { vectorMatches: vectorResult.matches || [], lexicalMatches };
     if (retrievalKey) writeCachedJson("retrieval", retrievalKey, candidates, config.retrievalCacheTtlSeconds);
     retrievalCache = "miss";
   }
@@ -64,8 +98,8 @@ export async function retrieveKnowledge(question, env, config) {
     if (match.score < config.semanticScoreThreshold || !match.metadata?.chunk_id) continue;
     fused.set(match.metadata.chunk_id, { score: 1 / (RRF_K + index + 1), semanticScore: match.score });
   }
-  const lexicalMatches = candidates.lexicalMatches;
-  for (const [index, row] of lexicalMatches.entries()) {
+  const candidateLexicalMatches = candidates.lexicalMatches;
+  for (const [index, row] of candidateLexicalMatches.entries()) {
     const current = fused.get(row.chunk_id) || { score: 0, semanticScore: 0 };
     current.score += 1 / (RRF_K + index + 1);
     fused.set(row.chunk_id, current);
@@ -98,7 +132,7 @@ export async function retrieveKnowledge(question, env, config) {
   return {
     chunks: selected,
     sources,
-    confidence: scoreRetrievalConfidence({ bestSemanticScore, lexicalMatchCount: lexicalMatches.length, sourceCount: sources.length }),
-    metrics: { bestSemanticScore, lexicalMatchCount: lexicalMatches.length, fusedMatchCount: fused.size, embeddingCache, retrievalCache }
+    confidence: scoreRetrievalConfidence({ bestSemanticScore, lexicalMatchCount: candidateLexicalMatches.length, sourceCount: sources.length }),
+    metrics: { bestSemanticScore, lexicalMatchCount: candidateLexicalMatches.length, fusedMatchCount: fused.size, embeddingCache, retrievalCache }
   };
 }

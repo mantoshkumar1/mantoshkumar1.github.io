@@ -3,6 +3,8 @@
 ## Controls
 
 - Retrieve before generating; never send the full knowledge base.
+- Run a conservative D1 lexical relevance gate before embeddings. Skip AI only
+  for sufficiently specific zero-match questions; allow uncertain misses through.
 - Deduplicate chunks and cap retrieved context by character budget.
 - Keep the system prompt stable and concise; it benefits from provider prompt
   caching where available.

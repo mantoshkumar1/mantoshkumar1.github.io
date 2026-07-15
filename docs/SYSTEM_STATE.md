@@ -13,7 +13,7 @@ This document is the canonical description of what is deployed. Architecture pro
 | Health | `https://ask-mantosh.mantoshk234.workers.dev/health` | Unauthenticated service health without configuration details |
 | Knowledge indexing | `POST /internal/index` | GitHub OIDC or manual recovery token only; intentionally unavailable to browsers through CORS |
 
-Last verified Worker deployment: `13a03e19-bd62-42af-8610-c408aad3ffc1`. The active deployed answer-policy cache namespace is `visitor-intent-v27`.
+Last verified Worker deployment: `eb1b23d7-e19e-4a21-8b37-b1fd68eaeeac`. The active deployed answer-policy cache namespace is `visitor-intent-v30`.
 
 ## Published inventory
 
@@ -49,7 +49,7 @@ flowchart LR
   G --> A
 ```
 
-The chat UI streams the response, sanitizes rendered Markdown, presents canonical source chips, preserves server-provided follow-up questions, supports retry/copy actions, traps focus, minimizes without losing the session, exports the visible conversation as a local text file without internal identifiers, and provides an explicit close-and-clear action. Simple greetings, thanks, farewells, capability questions, and bounded light banter receive deterministic conversational replies without retrieval or AI use. Exact public-profile questions read allowlisted facts synchronized from the canonical `about-mantosh` knowledge document into D1; employer, role, location, work-authorization, experience, capability, and skill values are not duplicated in Worker routes. Natural profile wording—including questions about what kind of person or engineer Mantosh is—routes to the published professional profile and technical evidence without inferring private personality. Subjective praise or skepticism is answered as opinion followed by concise published evidence. Home, Projects, Insights, Experience, Resume, Contact, Newsletter, Accessibility, named-project, and latest-article requests navigate directly without retrieval or generation. Unsupported topics receive a helpful scope boundary instead of implying that Mantosh personally has not written about them. If the model omits its Sources section, the Worker inserts the canonical retrieved source rather than exposing an internal citation-formatting failure.
+The chat UI streams the response, sanitizes rendered Markdown, presents canonical source chips, preserves server-provided follow-up questions, supports retry/copy actions, traps focus, minimizes without losing the session, exports the visible conversation as a local text file without internal identifiers, and provides an explicit close-and-clear action. Simple greetings, thanks, farewells, capability questions, and bounded light banter receive deterministic conversational replies without retrieval or AI use. Exact public-profile questions read allowlisted facts synchronized from the canonical `about-mantosh` knowledge document into D1; employer, role, location, work-authorization, experience, capability, and skill values are not duplicated in Worker routes. Natural profile wording—including questions about what kind of person or engineer Mantosh is—routes to the published professional profile and technical evidence without inferring private personality. Subjective praise or skepticism is answered as opinion followed by concise published evidence. Home, Projects, Insights, Experience, Resume, Contact, Newsletter, Accessibility, named-project, and latest-article requests navigate directly without retrieval or generation. Before embeddings, a confidence-based D1 lexical gate rejects only sufficiently specific zero-match questions; lexical matches and uncertain questions continue through hybrid retrieval. Unsupported topics receive a helpful scope boundary instead of implying that Mantosh personally has not written about them. If the model omits its Sources section, the Worker inserts the canonical retrieved source rather than exposing an internal citation-formatting failure.
 
 ## Knowledge publication flow
 
@@ -74,7 +74,7 @@ The committed production configuration uses:
 - 450 AI-bearing requests per UTC day through D1;
 - six retained conversation turns and a 24-hour session TTL.
 
-Cloudflare Cache API stores eligible embeddings, retrieval candidates, and first-turn answers for 15, 5, and 10 minutes respectively. The optional `CACHE_VERSION` KV binding is not configured in the committed production file, so knowledge-index invalidation currently relies on TTL expiry and the fallback version. Answer-policy changes explicitly advance `ANSWER_POLICY_VERSION`—currently `visitor-intent-v27` in source—to avoid serving a response cached under an older formatter or routing contract. This is an explicit known limitation, not an undocumented guarantee.
+Cloudflare Cache API stores eligible embeddings, retrieval candidates, and first-turn answers for 15, 5, and 10 minutes respectively. The optional `CACHE_VERSION` KV binding is not configured in the committed production file, so knowledge-index invalidation currently relies on TTL expiry and the fallback version. Answer-policy changes explicitly advance `ANSWER_POLICY_VERSION`—currently `visitor-intent-v30` in source—to avoid serving a response cached under an older formatter or routing contract. This is an explicit known limitation, not an undocumented guarantee.
 
 ## Security and privacy controls
 
@@ -99,7 +99,7 @@ The repository currently enforces:
 - internal link, fragment, and asset validation;
 - documentation drift checks;
 - autonomous content-lane counts and explicit zero-content states;
-- 59 Worker contract, deterministic social, light-banter, navigation, knowledge-backed public-profile fact, privacy-boundary, transcript-derived scope routing, and achievement routing, natural profile-language routing, security, quota isolation, OIDC, retrieval, concise and explicitly detailed response modes, collapsed-Markdown repair, prompt, citation-repair, repetition and control-tag sanitization, and failure-path tests;
+- 63 Worker contract, deterministic social, light-banter, navigation, knowledge-backed public-profile fact, privacy-boundary, confidence-based lexical relevance gating, transcript-derived scope routing, and achievement routing, natural profile-language routing, security, quota isolation, OIDC, retrieval, concise and explicitly detailed response modes, collapsed-Markdown repair, prompt, citation-repair, repetition and control-tag sanitization, and failure-path tests;
 - 531 labelled Ask Mantosh evaluation cases with 9,177 objective assertions: 71 focused regressions plus 460 recruiter, student, curious-visitor, colleague, and founder questions covering social, navigation, unsupported, achievement, grounded-answer, and adversarial behavior;
 - a whole-site coverage audit that fails when any public HTML route lacks reviewed evidence, deterministic navigation, or a documented no-index exclusion;
 - static UI guards for immediate safe Markdown rendering.

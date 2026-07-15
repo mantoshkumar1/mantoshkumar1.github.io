@@ -5,6 +5,7 @@ import { verifyGitHubOidcToken } from "../src/github-oidc.js";
 import { RecommendationEngine, SearchRouter } from "../src/intelligence/index.js";
 import worker from "../src/index.js";
 import { buildPrompt, buildSystemPrompt, classifyQuestionIntent, conciseAchievementResponse, expandRetrievalQuery, isSubjectiveProfileQuestion, scoreRetrievalConfidence } from "../src/prompt/index.js";
+import { assessLexicalRelevance } from "../src/retrieval.js";
 
 const TEST_PROFILE_FACTS = [
   ["location", "Toronto, Canada"], ["citizenship", "Canadian"],
@@ -427,13 +428,16 @@ test("handles a Workers AI timeout", async () => {
 });
 
 test("does not call Workers AI generation when retrieval finds no published knowledge", async () => {
+  let embeddingCalls = 0;
   const noMatchEnv = { ...env, KNOWLEDGE_INDEX: { query: async () => ({ matches: [] }) } };
   noMatchEnv.AI = { run: async (model) => {
+    embeddingCalls += 1;
     assert.match(model, /bge-m3/);
     return { data: [[0.1, 0.2]] };
   } };
   const response = await worker.fetch(request({ question: "Explain underwater basket weaving" }), noMatchEnv);
-  assert.equal((await response.json()).answer, "I can't support that from Mantosh's published work. Ask me about his experience, projects, engineering approach, or fit for your problem.");
+  assert.equal((await response.json()).answer, "That appears outside this website's scope. Ask about Mantosh's experience, projects, engineering approach, or fit for a problem.");
+  assert.equal(embeddingCalls, 0);
 });
 
 test("exposes an unauthenticated health endpoint without configuration details", async () => {
@@ -572,6 +576,51 @@ test("does not spend the AI quota on deterministic routes", async () => {
     assert.equal(response.status, 200, question);
     assert.equal((await response.json()).success, true, question);
   }
+});
+
+test("blocks only clearly unrelated lexical misses before embeddings and AI quota", async () => {
+  let aiCalls = 0;
+  const unrelatedDb = testDatabase();
+  const originalPrepare = unrelatedDb.prepare.bind(unrelatedDb);
+  unrelatedDb.prepare = (sql) => sql.includes("chunks_fts")
+    ? { bind: () => ({ all: async () => ({ results: [] }) }) }
+    : originalPrepare(sql);
+  const response = await worker.fetch(request({ question: "Explain quantum entanglement using simple physics examples" }), {
+    ...env,
+    KNOWLEDGE_DB: unrelatedDb,
+    KNOWLEDGE_INDEX: { query: async () => { throw new Error("Semantic retrieval should be skipped."); } },
+    AI: { run: async () => { aiCalls += 1; throw new Error("AI should be skipped."); } }
+  });
+  const payload = await response.json();
+  assert.equal(response.status, 200);
+  assert.equal(payload.confidence, "low");
+  assert.equal(payload.relevanceGate.decision, "clearly_unrelated");
+  assert.equal(aiCalls, 0);
+});
+
+test("allows uncertain lexical misses to continue to semantic retrieval", () => {
+  assert.deepEqual(assessLexicalRelevance("Could he help?", []), {
+    decision: "continue", confidence: "uncertain", termCount: 1, lexicalMatchCount: 0, matchedTermCount: 0, coverage: 0
+  });
+});
+
+test("allows natural website questions when D1 finds lexical evidence", () => {
+  for (const [question, content] of [
+    ["Could he help our release process?", "Release reports improve the release process."],
+    ["What kind of engineer is he?", "Mantosh is a platform engineer."],
+    ["Why does repeated work indicate a design problem?", "Repeated human work is an engineering design signal."]
+  ]) {
+    assert.equal(assessLexicalRelevance(question, [{ chunk_id: "evidence-1", content }]).decision, "continue");
+  }
+});
+
+test("rejects weak generic lexical overlap for a specific unrelated question", () => {
+  const result = assessLexicalRelevance(
+    "Explain quantum entanglement using simple physics examples",
+    [{ chunk_id: "generic-1", content: "This example explains an engineering workflow." }]
+  );
+  assert.equal(result.decision, "clearly_unrelated");
+  assert.ok(result.coverage < 0.4);
 });
 
 test("extracts exactly three Markdown follow-up questions", () => {

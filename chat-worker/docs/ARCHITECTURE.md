@@ -1,7 +1,9 @@
 # Ask Mantosh production architecture
 
 ```text
-GitHub Pages → Cloudflare Worker → validation/rate limit → hybrid retrieval
+GitHub Pages → Cloudflare Worker → validation/rate limit → deterministic routing
+                                         → D1 lexical relevance gate
+                                         → hybrid retrieval when related or uncertain
                                                      ↘ D1 FTS5/BM25
                                                       ↘ Vectorize
                                                       ↘ Workers AI embeddings
@@ -35,6 +37,14 @@ and response templates, not duplicated employer or skill values.
   are not present in the retrieved source allowlist.
 
 ## Retrieval and cache policy
+
+Before embedding, the Worker queries D1 FTS5 and evaluates lexical relevance.
+Any lexical evidence continues to hybrid retrieval. A sufficiently specific
+question with no lexical evidence receives a concise scope response without an
+embedding or generation call. Short and ambiguous misses continue to semantic
+retrieval, so the gate fails open when relevance is uncertain. The decision is
+based on query specificity and retrieval evidence, not a catalogue of unrelated
+topics.
 
 Use hybrid retrieval: semantic Vectorize search for phrasing, D1 FTS5/BM25 for
 proper nouns and technologies, then reciprocal-rank fusion. Send only the

@@ -8,10 +8,10 @@ import { createResponse } from "./ai.js";
 import { enforceFreeUsageLimit, enforceStrictRequestLimit } from "./quota.js";
 import { buildPrompt, classifyQuestionIntent, conciseAchievementResponse, expandRetrievalQuery, formatError, formatResponse, isAnswerable, isSubjectiveProfileQuestion, unavailableResponse } from "./prompt/index.js";
 import { enforceRateLimit } from "./rate-limit.js";
-import { retrieveKnowledge } from "./retrieval.js";
+import { assessLexicalRelevance, retrieveKnowledge, searchLexicalKnowledge } from "./retrieval.js";
 import { parseChatRequest } from "./validation.js";
 
-const ANSWER_POLICY_VERSION = "visitor-intent-v27";
+const ANSWER_POLICY_VERSION = "visitor-intent-v30";
 
 function json(body, status, origin, extraHeaders = {}) {
   const headers = corsHeaders(origin);
@@ -118,14 +118,31 @@ export default {
         return json(result, 200, origin);
       }
 
+      const baseRetrievalQuery = memory.buildRetrievalQuery(question, conversation);
+      const lexicalMatches = await searchLexicalKnowledge(baseRetrievalQuery, env);
+      const lexicalRelevance = assessLexicalRelevance(baseRetrievalQuery, lexicalMatches);
+      if (lexicalRelevance.decision === "clearly_unrelated") {
+        const result = socialResponse({
+          answer: "That appears outside this website's scope. Ask about Mantosh's experience, projects, engineering approach, or fit for a problem.",
+          followUpQuestions: [], confidence: "low"
+        }, conversationId);
+        result.relevanceGate = lexicalRelevance;
+        analytics.trackInBackground(ctx, "scope_boundary", question.toLowerCase());
+        ctx?.waitUntil?.(memory.recordTurn({ conversationId, question, answer: result.answer, sources: [] }));
+        return wantsStream
+          ? eventStream([{ type: "metadata", data: result }, { type: "response.output_text.delta", data: { delta: result.answer } }, { type: "done", data: {} }], origin)
+          : json(result, 200, origin);
+      }
+
       // Only retrieval/AI-bound requests consume the strict shared allowance.
       // Deterministic and cached responses remain protected by the broader
       // per-client abuse limiter above without spending scarce AI capacity.
       await enforceStrictRequestLimit(env, config);
       await enforceFreeUsageLimit(env, config);
-      const retrievalQuery = expandRetrievalQuery(question, memory.buildRetrievalQuery(question, conversation));
+      const retrievalQuery = expandRetrievalQuery(question, baseRetrievalQuery);
       const intent = classifyQuestionIntent(question);
-      const retrieval = await retrieveKnowledge(retrievalQuery, env, config);
+      const retrieval = await retrieveKnowledge(retrievalQuery, env, config,
+        retrievalQuery === baseRetrievalQuery ? { lexicalMatches } : undefined);
       const recommendationEngine = new RecommendationEngine(metadataService, config);
       const recommendations = await recommendationEngine.recommend({ sources: retrieval.sources });
       const followUpQuestions = recommendationEngine.followUpQuestions({ sources: retrieval.sources, intent });
