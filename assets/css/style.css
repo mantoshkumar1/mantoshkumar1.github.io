@@ -2368,12 +2368,34 @@ main.project-shell > .container > .section-block {
 }
 
 .reading-page .resume-header {
-  margin-bottom: clamp(1.1rem, 2vw, 1.5rem);
+  margin-bottom: clamp(.75rem, 1.2vw, 1rem);
 }
 
 .reading-page .resume-section {
-  margin-top: clamp(.9rem, 1.6vw, 1.2rem);
-  padding-top: clamp(1rem, 1.8vw, 1.35rem);
+  margin-top: clamp(.6rem, .9vw, .75rem);
+  padding-top: clamp(.75rem, 1.1vw, .9rem);
+}
+
+.reading-page .resume-section h2 {
+  margin-bottom: .65rem;
+}
+
+.reading-page .resume-section h3 {
+  margin-top: 1rem;
+}
+
+.reading-page .resume-section > p,
+.reading-page .case-study-list li {
+  line-height: 1.68;
+}
+
+.reading-page .case-study-list {
+  gap: .45rem;
+}
+
+.reading-page .resume-actions {
+  gap: .65rem;
+  margin: .85rem 0 0;
 }
 
 .capability-section {

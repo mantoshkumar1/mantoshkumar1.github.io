@@ -74,8 +74,12 @@ if (!/\.page-shell\s*\{[^}]*padding:\s*clamp\(1\.75rem,\s*3vw,\s*2\.5rem\)\s+0\s
   console.error("stylesheet: internal page shells must retain the compact responsive rhythm");
   failures += 1;
 }
-if (!/\.reading-page \.resume-section\s*\{[^}]*margin-top:\s*clamp\(\.9rem,\s*1\.6vw,\s*1\.2rem\);[^}]*padding-top:\s*clamp\(1rem,\s*1\.8vw,\s*1\.35rem\)/is.test(stylesheet)) {
+if (!/\.reading-page \.resume-header\s*\{[^}]*margin-bottom:\s*clamp\(\.75rem,\s*1\.2vw,\s*1rem\)/is.test(stylesheet) || !/\.reading-page \.resume-section\s*\{[^}]*margin-top:\s*clamp\(\.6rem,\s*\.9vw,\s*\.75rem\);[^}]*padding-top:\s*clamp\(\.75rem,\s*1\.1vw,\s*\.9rem\)/is.test(stylesheet)) {
   console.error("stylesheet: long-form articles must use compact but readable section transitions");
+  failures += 1;
+}
+if (!/\.reading-page \.resume-section > p,\s*\.reading-page \.case-study-list li\s*\{[^}]*line-height:\s*1\.68/is.test(stylesheet) || !/\.reading-page \.resume-actions\s*\{[^}]*gap:\s*\.65rem;[^}]*margin:\s*\.85rem\s+0\s+0/is.test(stylesheet)) {
+  console.error("stylesheet: Insight body copy and closing actions must retain their compact reading rhythm");
   failures += 1;
 }
 if (!/main\.project-shell\s*\{[^}]*padding-block:\s*clamp\(1\.75rem,\s*3vw,\s*2\.5rem\)\s+clamp\(2\.25rem,\s*3\.5vw,\s*3\.25rem\)/is.test(stylesheet) || !/main\.project-shell\s*>\s*\.container\s*>\s*\.section-block\s*\{[^}]*margin-top:\s*1rem/is.test(stylesheet)) {
