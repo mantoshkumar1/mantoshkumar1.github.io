@@ -5,7 +5,7 @@
   "scripts": {
     "generate-seo": "node scripts/generate-seo.mjs",
     "build": "node scripts/build-pages.mjs",
-    "verify": "node scripts/generate-seo.mjs && node scripts/build-pages.mjs && node scripts/audit-site.mjs && node scripts/validate-discoverability.mjs && node scripts/validate-xml-feeds.mjs && node scripts/seo-audit.mjs && node scripts/audit-links.mjs && node scripts/audit-accessibility.mjs && node scripts/audit-docs.mjs && node scripts/audit-content-sections.mjs && npm test --prefix chat-worker",
+    "verify": "node scripts/generate-seo.mjs && node scripts/build-pages.mjs && node scripts/audit-site.mjs && node scripts/validate-discoverability.mjs && node scripts/validate-xml-feeds.mjs && node scripts/seo-audit.mjs && node scripts/audit-links.mjs && node scripts/audit-accessibility.mjs && node scripts/audit-docs.mjs && node scripts/audit-content-sections.mjs && node scripts/audit-ask-mantosh-coverage.mjs && npm test --prefix chat-worker",
     "verify:diff": "npm run verify && git diff --check"
   }
 }

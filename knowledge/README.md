@@ -36,6 +36,20 @@ topics, an explicit public URL, and an evidence boundary in its body. The
 automatic sync workflow uses changed-file indexing for normal pushes and a full
 reindex for manual workflow runs.
 
+## Whole-site coverage
+
+Ask Mantosh uses all relevant reviewed website content without treating interface
+copy as evidence. Project case studies, Insights, experience, capabilities,
+achievements, and public profile facts are retrieved from the source documents
+above. Home, Projects, Insights, résumé, contact, newsletter, and accessibility
+requests use deterministic navigation. Error pages and legacy redirects are
+explicitly excluded from evidence.
+
+[`site-coverage.json`](site-coverage.json) records those utility and non-evidence
+routes. `node scripts/audit-ask-mantosh-coverage.mjs` discovers every public HTML
+page and fails CI if a route is not backed by public knowledge, deterministic
+navigation, or a documented no-index exclusion.
+
 ## Publication checklist
 
 Before setting `visibility: public`:
@@ -44,6 +58,6 @@ Before setting `visibility: public`:
 2. Use explicit headings for evidence, decisions, trade-offs, outcomes, and
    limitations when the source supports them.
 3. Keep the canonical website page and knowledge document consistent.
-4. Run `node scripts/audit-docs.mjs`, the site audits, and Worker tests.
+4. Run `node scripts/audit-docs.mjs`, `node scripts/audit-ask-mantosh-coverage.mjs`, the site audits, and Worker tests.
 5. After synchronization, ask one grounded question and one unrelated question;
    verify canonical source labels and the fixed no-evidence response.

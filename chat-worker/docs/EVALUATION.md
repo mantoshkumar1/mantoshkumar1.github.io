@@ -9,7 +9,7 @@ Dataset version: `2026-07-15`
 | Category | Cases | What is checked |
 | --- | ---: | --- |
 | Social | 25 | Greetings, courtesies, bounded banter, knowledge-backed public profile facts and qualified inferences, help, and low-information clarification avoid generation. |
-| Navigation | 9 | Resume—including natural possessive and accented wording—contact and email requests, and experience commands resolve to the intended public destination without inference. |
+| Navigation | 14 | Home, Projects, Insights, Experience, Resume—including natural possessive and accented wording—Contact, Newsletter, and Accessibility requests resolve to the intended public destination without inference. |
 | Unsupported | 6 | Out-of-scope and private-information questions decline without a generative answer. |
 | Achievement | 4 | GATE and Intel responses require the expected public evidence and stay concise. |
 | Grounded | 13 | Profile, skills, project, and Insight answers use the expected source, approved citation URL, readable Markdown, and bounded output. |
@@ -20,11 +20,11 @@ Dataset version: `2026-07-15`
 | Colleague persona | 100 | Architecture, validation, automation, release intelligence, project trade-offs, capabilities, and confidentiality. |
 | Founder persona | 60 | Commercial fit, platform and automation problems, release risk, evidence systems, and contact flow. |
 
-All **523 of 523 cases** and **9,025 of 9,025 objective assertions** pass in [`../eval/results/latest.json`](../eval/results/latest.json). The 523 labelled cases combine 63 focused regressions with the 460-question persona contract requested for recruiter, student, curious visitor, colleague, and founder behavior.
+All **528 of 528 cases** and **9,100 of 9,100 objective assertions** pass in [`../eval/results/latest.json`](../eval/results/latest.json). The 528 labelled cases combine 68 focused regressions with the 460-question persona contract requested for recruiter, student, curious visitor, colleague, and founder behavior.
 
 The first persona run passed 434 of 519 cases. Its 85 failures clustered around natural navigation wording, public location and employer paraphrases, work-authorization nuance, casual capability questions, conversational recovery, and privacy or prompt-injection variants. The routes and evidence boundaries were then tightened; the final result above is the post-fix run.
 
-Four additional regressions verify that employment history, current role, capabilities, and skills come from the canonical profile-fact store rather than duplicated Worker constants.
+Four regressions verify that employment history, current role, capabilities, and skills come from the canonical profile-fact store rather than duplicated Worker constants. Five whole-site regressions verify direct access to Home, Projects, Insights, Newsletter, and Accessibility.
 
 ## What an assertion covers
 
