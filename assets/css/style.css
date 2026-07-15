@@ -901,6 +901,10 @@ button.button {
   color: var(--text);
 }
 
+.resume-summary .experience-evidence strong {
+  color: var(--text);
+}
+
 .case-study {
   max-width: 920px;
   margin-inline: auto;
