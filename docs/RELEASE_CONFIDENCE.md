@@ -21,7 +21,7 @@ Failure evidence includes screenshots, videos, traces, and a browser report reta
 
 The generated public artifact fails the release when any HTML page exceeds 36 KB, CSS exceeds 100 KB, JavaScript exceeds 60 KB in total, an image exceeds 180 KB, or the public artifact excluding the résumé PDF exceeds 1 MB.
 
-At the time this document was updated, the measured maxima were 20,236-byte HTML, 75,767-byte CSS, 33,351 bytes of JavaScript, and a 546,053-byte public artifact excluding the PDF.
+At the time this document was updated, the measured maxima were 20,236-byte HTML, 75,767-byte CSS, 33,351 bytes of JavaScript, and a 534,075-byte public artifact excluding the PDF.
 
 These are transfer-size guardrails, not Core Web Vitals measurements. This repository does not currently claim automated LCP, INP, or CLS results from a production trace.
 
