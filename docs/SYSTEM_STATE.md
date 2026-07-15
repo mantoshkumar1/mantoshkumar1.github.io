@@ -1,6 +1,6 @@
 # Production system state
 
-Verified: 2026-07-13
+Verified: 2026-07-15
 
 This document is the canonical description of what is deployed. Architecture proposals and future operating standards in other documents must not be read as already implemented unless they also appear here or in executable configuration.
 
@@ -87,7 +87,7 @@ Cloudflare Cache API stores eligible embeddings, retrieval candidates, and first
 
 ## Deployment and verification
 
-GitHub Pages and technical audits run automatically on pushes to `main`. Worker deployment is a separate Wrangler operation; D1 migrations are additive and must be applied before code that depends on them. The production Worker exposes `/health`, and knowledge synchronization is independent of Worker deployment.
+GitHub Pages and technical audits run automatically on pushes to `main`. Worker deployment is a separate Wrangler operation; D1 migrations are additive and must be applied before code that depends on them. The production Worker exposes `/health`, and knowledge synchronization is independent of Worker deployment. The offline evaluator imports the same Worker entry point with controlled bindings, so it does not call the deployed service or consume production quota.
 
 The repository currently enforces:
 
@@ -97,14 +97,17 @@ The repository currently enforces:
 - internal link, fragment, and asset validation;
 - documentation drift checks;
 - autonomous content-lane counts and explicit zero-content states;
-- 47 Worker contract, deterministic social, light-banter, and achievement routing, natural profile-language routing, security, quota, OIDC, retrieval, concise intent-formatting, prompt, citation-repair, and failure-path tests, plus static UI guards for immediate safe Markdown rendering.
+- 47 Worker contract, deterministic social, light-banter, and achievement routing, natural profile-language routing, security, quota, OIDC, retrieval, concise intent-formatting, prompt, citation-repair, and failure-path tests;
+- 45 labelled Ask Mantosh evaluation cases with 651 objective assertions covering social, navigation, unsupported, achievement, skills, grounded-answer, and adversarial behavior;
+- static UI guards for immediate safe Markdown rendering.
 
 ## Known limits
 
 - Only 14 public knowledge documents are indexed; outside deterministic greetings, courtesies, light banter, and navigation, Ask Mantosh keeps answers within published evidence and clearly redirects unsupported topics.
 - Public evidence has no fabricated employer metrics or inferred organizational outcomes.
 - The Worker uses the Cloudflare free allocation and may return a clear 429 when safety or provider limits are reached.
-- There is no authenticated user account, durable personal profile, staging environment declared in this repository, formal accessibility conformance audit, or labeled offline retrieval-evaluation set.
+- There is no authenticated user account, durable personal profile, staging environment declared in this repository, formal accessibility conformance audit, human-rated response benchmark, or live-production retrieval benchmark.
+- Controlled fixtures make evaluation deterministic but do not measure live Vectorize recall, human preference, or user satisfaction.
 - The website origin is GitHub Pages rather than a custom domain.
 
 These limits are deliberate or visible. They should change only with evidence, operational need, and updated documentation.

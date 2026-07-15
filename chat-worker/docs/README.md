@@ -3,6 +3,7 @@
 - [`ARCHITECTURE.md`](ARCHITECTURE.md) — component boundaries, retrieval, caching, and provider seam
 - [`RAG_ARCHITECTURE.md`](RAG_ARCHITECTURE.md) — indexing, chunking, ranking, query sequence, and evolution points
 - [`INTELLIGENCE_LAYER.md`](INTELLIGENCE_LAYER.md) — memory, navigation, recommendations, confidence, and aggregate analytics
+- [`EVALUATION.md`](EVALUATION.md) — labelled offline cases, scoring, CI enforcement, results, and explicit limits
 - [`ASK_MANTOSH_SYSTEM_PROMPT.md`](ASK_MANTOSH_SYSTEM_PROMPT.md) — executable prompt-policy contract
 - [`SECURITY.md`](SECURITY.md) — required trust, input, output, privacy, and incident controls
 - [`COST.md`](COST.md) — free-tier safety and caching economics

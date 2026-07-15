@@ -85,7 +85,7 @@ curl -i http://localhost:8787/chat \
   --data '{"question":"Why did you build PhotoSahi without a backend?"}'
 ```
 
-Run checks with `npm test`. Test the deployed Worker with:
+Run `npm test`; it executes the unit/contract tests and the 45-case labelled offline evaluation. Run only that evaluation with `npm run evaluate`. The committed evidence and methodology are documented in [`docs/EVALUATION.md`](docs/EVALUATION.md). Test the deployed Worker with:
 
 ```bash
 curl -i https://ask-mantosh.mantoshk234.workers.dev/chat \
@@ -195,5 +195,5 @@ automated content sync cannot bypass the free-use guard.
 After adding a public Markdown document and indexing it, test a question tied to
 its evidence. Confirm the response lists a structured source, such as
 `{"label":"Project: PhotoSahi", ...}`, and test an unrelated query returns
-exactly `I haven't written about this topic yet.`. Run `npm test` for request,
-retrieval, and failure-path contract tests.
+the published evidence boundary without invoking generation. Run `npm test` for
+request, retrieval, failure-path, citation, routing, and offline evaluation checks.

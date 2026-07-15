@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "datasetVersion": "2026-07-15",
+  "datasetSha256": "29552421823a9d26a7f3bce13f1d671543bc0e65ba30f2764db298bfc8372eeb",
+  "cases": 45,
+  "passedCases": 45,
+  "passRate": 100,
+  "assertions": {
+    "total": 651,
+    "passed": 651
+  },
+  "categories": {
+    "social": {
+      "cases": 12,
+      "passed": 12
+    },
+    "navigation": {
+      "cases": 6,
+      "passed": 6
+    },
+    "unsupported": {
+      "cases": 6,
+      "passed": 6
+    },
+    "achievement": {
+      "cases": 4,
+      "passed": 4
+    },
+    "grounded": {
+      "cases": 13,
+      "passed": 13
+    },
+    "adversarial": {
+      "cases": 4,
+      "passed": 4
+    }
+  },
+  "limitations": [
+    "The suite uses controlled retrieval and model fixtures; it does not measure production Vectorize recall.",
+    "The suite checks objective response contracts, citations, boundaries, and concision; it is not a human preference score.",
+    "Evaluation cases live outside knowledge/ so expected answers cannot enter the public retrieval corpus."
+  ],
+  "failures": []
+}
