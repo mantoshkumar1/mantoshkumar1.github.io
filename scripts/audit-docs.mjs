@@ -101,7 +101,7 @@ if (evaluationResults.cases !== caseCount) failures.push(`evaluation result: rec
 if (evaluationResults.passedCases !== caseCount || evaluationResults.passRate !== 100) failures.push("evaluation result: not every labelled case passes");
 if (!assertionCount || evaluationResults.assertions?.passed !== assertionCount) failures.push("evaluation result: not every objective assertion passes");
 if (evaluationResults.failures?.length) failures.push("evaluation result: committed failure records are present");
-for (const [content, label] of [[state, "system state"], [evaluationDoc, "evaluation guide"], [knowledgeSystemPage, "knowledge-system case study"], [knowledgeSystemSource, "knowledge-system source"]]) {
+for (const [content, label] of [[state, "system state"], [workerReadme, "Worker README"], [evaluationDoc, "evaluation guide"], [knowledgeSystemPage, "knowledge-system case study"], [knowledgeSystemSource, "knowledge-system source"]]) {
   requireText(content, `${caseCount} labelled`, label);
   requireText(content, `${assertionLabel} objective assertions`, label);
 }
