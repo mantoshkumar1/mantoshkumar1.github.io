@@ -4,7 +4,7 @@ slug: "engineering-knowledge-system"
 category: "project"
 tags: [platform-engineering, retrieval-augmented-generation, cloudflare-workers, d1, vectorize, workers-ai, github-actions, accessibility, security, developer-experience]
 summary: "A production engineering publication and grounded assistant built with GitHub Pages, Cloudflare Workers, hybrid D1 and Vectorize retrieval, evidence-only generation, and automated release gates."
-last_updated: "2026-07-13"
+last_updated: "2026-07-15"
 related_topics: [ask-mantosh, knowledge-systems, hybrid-retrieval, ci-cd, trust-boundaries]
 visibility: "public"
 url: "/projects/engineering-knowledge-system.html"
@@ -41,17 +41,25 @@ The browser holds no provider or indexing secret. Visitor chat, knowledge indexi
 
 ### Automated release confidence
 
-Release gates check static generation, SEO, discoverability, internal links, accessibility semantics and preferences, documentation drift, content-lane inventory, and Worker contract and security behaviors.
+Release gates check static generation, SEO, discoverability, internal links, accessibility semantics and preferences, documentation drift, content-lane inventory, Worker contract and security behaviors, and evaluation-result drift.
+
+## Evaluation evidence
+
+- 45 labelled cases cover social conversation, navigation, unsupported requests, achievements, skills, grounded profile, project and Insight answers, and adversarial attempts.
+- 651 objective assertions check response contracts, source selection, citation safety, required and forbidden language, readable Markdown, output bounds, and expected retrieval or generation calls.
+- The evaluator imports the production Worker entry point with controlled D1, Vectorize, Workers AI, and rate-limiter bindings. It runs without calling the deployed Worker or consuming production quota.
+- The cases and fixtures live under `chat-worker/eval/`, outside `knowledge/`, so expected answers cannot become retrieval evidence.
 
 ## Verifiable implementation
 
 - SEO-configured public pages and structured discoverability files.
 - A reviewed public Ask Mantosh knowledge corpus, including this source.
 - Automated tests covering contracts, deterministic social and achievement routing, quotas, OIDC, retrieval, prompting, citation repair, subjective questions, explicit achievement gating, and failure paths.
+- A committed offline evaluation result that currently records 45 of 45 cases and 651 of 651 objective assertions passing.
 
 ## Current limits
 
-The site uses GitHub Pages rather than a custom domain and Cloudflare's free allocation. The repository declares no staging environment, formal accessibility conformance audit, or labeled offline retrieval-evaluation set. No claim is made about external adoption, traffic, revenue, or organizational impact.
+The site uses GitHub Pages rather than a custom domain and Cloudflare's free allocation. The repository declares no staging environment, formal accessibility conformance audit, human-rated response benchmark, or live-production retrieval benchmark. Controlled fixtures do not measure live Vectorize recall or human preference. No claim is made about external adoption, traffic, revenue, or organizational impact.
 
 ## Evidence boundary
 

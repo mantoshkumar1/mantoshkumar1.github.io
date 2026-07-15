@@ -4,15 +4,15 @@
   <id>https://mantoshkumar1.github.io/</id>
   <link href="https://mantoshkumar1.github.io/" />
   <link href="https://mantoshkumar1.github.io/feed.xml" rel="self" type="application/atom+xml" />
-  <updated>2026-07-13T12:00:00Z</updated>
+  <updated>2026-07-15T12:00:00Z</updated>
   <author><name>Mantosh Kumar</name></author>
   <subtitle>Platform engineering, automation, backend systems, and operational intelligence.</subtitle>
   <entry>
     <title>Evidence-First Engineering Knowledge System</title>
     <id>https://mantoshkumar1.github.io/projects/engineering-knowledge-system.html</id>
     <link href="https://mantoshkumar1.github.io/projects/engineering-knowledge-system.html" />
-    <published>2026-07-13T12:00:00Z</published>
-    <updated>2026-07-13T12:00:00Z</updated>
+    <published>2026-07-15T12:00:00Z</published>
+    <updated>2026-07-15T12:00:00Z</updated>
     <author><name>Mantosh Kumar</name></author>
     <category term="project-case-study" />
     <summary>Architecture case study for a production engineering publication with grounded AI retrieval, Cloudflare Workers, D1, Vectorize, and automated release gates.</summary>

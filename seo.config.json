@@ -180,7 +180,7 @@
       "description": "Architecture case study for a production engineering publication with grounded AI retrieval, Cloudflare Workers, D1, Vectorize, and automated release gates.",
       "kind": "project",
       "entityName": "Evidence-First Engineering Knowledge System",
-      "dateModified": "2026-07-13",
+      "dateModified": "2026-07-15",
       "softwareApplication": true,
       "applicationCategory": "DeveloperApplication",
       "breadcrumbs": [

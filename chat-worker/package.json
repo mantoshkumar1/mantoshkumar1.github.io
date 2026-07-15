@@ -6,7 +6,10 @@
   "scripts": {
     "dev": "wrangler dev",
     "deploy": "wrangler deploy",
-    "test": "node --test"
+    "test:unit": "node --test",
+    "evaluate": "node eval/run-evaluation.mjs --check",
+    "evaluate:update": "node eval/run-evaluation.mjs --write",
+    "test": "npm run test:unit && npm run evaluate"
   },
   "devDependencies": {
     "wrangler": "^4.36.0"

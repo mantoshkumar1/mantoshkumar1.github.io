@@ -8,7 +8,7 @@ const requireText = (content, expected, label) => {
   if (!content.includes(expected)) failures.push(`${label}: missing ${expected}`);
 };
 
-const [readme, state, docsIndex, linkedInAudit, knowledgeReadme, workerReadme, workerDocsIndex, maintenance, troubleshooting, workerSource, wrangler, widget, deployWorkflow, seoWorkflow] = await Promise.all([
+const [readme, state, docsIndex, linkedInAudit, knowledgeReadme, workerReadme, workerDocsIndex, maintenance, troubleshooting, workerSource, wrangler, widget, deployWorkflow, seoWorkflow, evaluationDoc, evaluationDatasetText, evaluationResultsText, evaluationPackageText, knowledgeSystemPage, knowledgeSystemSource] = await Promise.all([
   read("README.md"),
   read("docs/SYSTEM_STATE.md"),
   read("docs/README.md"),
@@ -22,7 +22,13 @@ const [readme, state, docsIndex, linkedInAudit, knowledgeReadme, workerReadme, w
   read("chat-worker/wrangler.toml"),
   read("assets/js/ask-mantosh-widget.js"),
   read(".github/workflows/deploy-pages.yml"),
-  read(".github/workflows/technical-seo.yml")
+  read(".github/workflows/technical-seo.yml"),
+  read("chat-worker/docs/EVALUATION.md"),
+  read("chat-worker/eval/cases.json"),
+  read("chat-worker/eval/results/latest.json"),
+  read("chat-worker/package.json"),
+  read("projects/engineering-knowledge-system.html"),
+  read("knowledge/projects/engineering-knowledge-system.md")
 ]);
 
 async function markdownFiles(directory) {
@@ -83,6 +89,24 @@ const workerTests = await read("chat-worker/test/worker.test.js");
 const testCount = (workerTests.match(/\btest\s*\(/g) || []).length;
 requireText(state, `${testCount} Worker contract`, "system state");
 
+const evaluationDataset = JSON.parse(evaluationDatasetText);
+const evaluationResults = JSON.parse(evaluationResultsText);
+const evaluationPackage = JSON.parse(evaluationPackageText);
+const caseCount = evaluationDataset.cases?.length || 0;
+const assertionCount = evaluationResults.assertions?.total || 0;
+if (!caseCount) failures.push("evaluation dataset: no labelled cases found");
+if (evaluationResults.cases !== caseCount) failures.push(`evaluation result: records ${evaluationResults.cases} cases for a ${caseCount}-case dataset`);
+if (evaluationResults.passedCases !== caseCount || evaluationResults.passRate !== 100) failures.push("evaluation result: not every labelled case passes");
+if (!assertionCount || evaluationResults.assertions?.passed !== assertionCount) failures.push("evaluation result: not every objective assertion passes");
+if (evaluationResults.failures?.length) failures.push("evaluation result: committed failure records are present");
+for (const [content, label] of [[state, "system state"], [evaluationDoc, "evaluation guide"], [knowledgeSystemPage, "knowledge-system case study"], [knowledgeSystemSource, "knowledge-system source"]]) {
+  requireText(content, `${caseCount} labelled`, label);
+  requireText(content, `${assertionCount} objective assertions`, label);
+}
+requireText(workerDocsIndex, "EVALUATION.md", "Worker documentation map");
+requireText(workerReadme, "npm run evaluate", "Worker README");
+if (evaluationPackage.scripts?.test !== "npm run test:unit && npm run evaluate") failures.push("Worker package: npm test must include the offline evaluation");
+
 for (const file of await markdownFiles(root)) {
   const content = await readFile(file, "utf8");
   if (/adapted from (?:a|the) public LinkedIn (?:post|reflection)/i.test(content)) failures.push(`${relative(root, file)}: LinkedIn provenance must identify Mantosh as the post author`);
@@ -98,6 +122,7 @@ for (const [workflow, label] of [[deployWorkflow, "Pages workflow"], [seoWorkflo
   requireText(workflow, "node scripts/audit-docs.mjs", label);
   requireText(workflow, "node scripts/audit-content-sections.mjs", label);
   requireText(workflow, "node scripts/audit-accessibility.mjs", label);
+  requireText(workflow, "npm test --prefix chat-worker", label);
 }
 requireText(readme, "node scripts/audit-accessibility.mjs", "README release gates");
 requireText(workerReadme, "mandatory Cloudflare Rate Limiting binding", "Worker README");
@@ -106,7 +131,8 @@ const stalePatterns = [
   [/YOUR-WORKER\.workers\.dev/g, "placeholder Worker URL"],
   [/Before production, change `ALLOWED_ORIGINS`/g, "pre-production CORS instruction"],
   [/Enable the Cloudflare Rate Limiting binding before public launch/g, "pre-launch limiter instruction"],
-  [/A future offline evaluation set/g, "stale future evaluation wording"]
+  [/A future offline evaluation set/g, "stale future evaluation wording"],
+  [/no labeled offline retrieval-evaluation set/gi, "stale missing-evaluation wording"]
 ];
 const maintainedDocs = [readme, state, workerReadme, await read("chat-worker/docs/ARCHITECTURE.md"), await read("chat-worker/docs/ASK_MANTOSH_SYSTEM_PROMPT.md"), await read("chat-worker/docs/SECURITY.md")].join("\n");
 for (const [pattern, label] of stalePatterns) if (pattern.test(maintainedDocs)) failures.push(`documentation contains ${label}`);
