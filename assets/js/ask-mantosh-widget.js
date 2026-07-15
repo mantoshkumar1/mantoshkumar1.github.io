@@ -114,7 +114,7 @@
         <div class="ask-mantosh-conversation"><div class="ask-mantosh-messages" id="ask-mantosh-messages" role="log" aria-live="polite" aria-relevant="additions text" aria-label="Ask Mantosh conversation"></div><button class="ask-mantosh-jump" id="ask-mantosh-jump" type="button" hidden>Jump to latest</button></div>
         <div class="ask-mantosh-suggestions" id="ask-mantosh-suggestions" role="group" aria-label="Suggested questions" hidden></div>
         <div class="ask-mantosh-status" id="ask-mantosh-status" role="status" aria-live="polite"></div>
-        <p class="ask-mantosh-limit-note">AI answer limits: 5 per minute and 50 per UTC day, shared across visitors. These limits control hosting cost and abuse; quick replies and navigation do not use the AI allowance.</p>
+        <p class="ask-mantosh-limit-note">AI answers: shared limit 5/min · 50/day. Quick replies don't count.</p>
         <div class="ask-mantosh-composer-hint" aria-hidden="true"><span><kbd>Enter</kbd> send</span><span><kbd>Shift</kbd> + <kbd>Enter</kbd> new line</span></div>
         <form class="ask-mantosh-composer" id="ask-mantosh-form"><label class="sr-only" for="ask-mantosh-input">Ask about Mantosh's engineering work</label><textarea id="ask-mantosh-input" rows="1" placeholder="Ask about Mantosh's engineering work..." maxlength="1000"></textarea><button class="ask-mantosh-send" id="ask-mantosh-send" type="submit" aria-label="Send message">Send</button></form>
       </div>
