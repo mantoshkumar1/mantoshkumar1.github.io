@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { formatSuccess } from "../src/formatter.js";
 import { verifyGitHubOidcToken } from "../src/github-oidc.js";
-import { RecommendationEngine, SearchRouter } from "../src/intelligence/index.js";
+import { AnalyticsService, RecommendationEngine, SearchRouter } from "../src/intelligence/index.js";
 import worker from "../src/index.js";
 import { buildPrompt, buildSystemPrompt, classifyQuestionIntent, conciseAchievementResponse, expandRetrievalQuery, isSubjectiveProfileQuestion, scoreRetrievalConfidence } from "../src/prompt/index.js";
 import { assessLexicalRelevance } from "../src/retrieval.js";
@@ -621,6 +621,34 @@ test("rejects weak generic lexical overlap for a specific unrelated question", (
   );
   assert.equal(result.decision, "clearly_unrelated");
   assert.ok(result.coverage < 0.4);
+});
+
+test("stores only allowlisted readable aggregate metrics", async () => {
+  const writes = [];
+  const analytics = new AnalyticsService({
+    prepare: () => ({ bind: (...values) => ({ run: async () => { writes.push(values); } }) })
+  });
+  await analytics.trackAggregate("relevance_gate", "blocked");
+  await analytics.trackAggregate("relevance_gate", "visitor question must not be stored");
+  assert.equal(writes.length, 1);
+  assert.equal(writes[0][1], "aggregate:relevance_gate");
+  assert.equal(writes[0][2], "blocked");
+});
+
+test("batches aggregate metrics into one ordered D1 operation", async () => {
+  const batches = [];
+  const analytics = new AnalyticsService({
+    prepare: () => ({ bind: (...values) => ({ values }) }),
+    batch: async (statements) => { batches.push(statements); }
+  });
+  await analytics.trackAggregates([
+    ["relevance_gate", "blocked"],
+    ["lexical_coverage", "coverage_0"],
+    ["relevance_gate", "raw visitor text"]
+  ]);
+  assert.equal(batches.length, 1);
+  assert.equal(batches[0].length, 2);
+  assert.deepEqual(batches[0].map((statement) => statement.values[1]), ["aggregate:relevance_gate", "aggregate:lexical_coverage"]);
 });
 
 test("extracts exactly three Markdown follow-up questions", () => {

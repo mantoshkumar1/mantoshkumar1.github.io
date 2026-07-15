@@ -56,6 +56,13 @@ function socialResponse(response, conversationId) {
   };
 }
 
+function coverageBand(coverage) {
+  if (coverage <= 0) return "coverage_0";
+  if (coverage < 0.4) return "coverage_1_39";
+  if (coverage < 0.7) return "coverage_40_69";
+  return "coverage_70_100";
+}
+
 export default {
   async fetch(request, env, ctx) {
     let origin = null;
@@ -127,12 +134,22 @@ export default {
           followUpQuestions: [], confidence: "low"
         }, conversationId);
         result.relevanceGate = lexicalRelevance;
+        analytics.trackAggregatesInBackground(ctx, [
+          ["relevance_gate", "blocked"],
+          ["lexical_coverage", coverageBand(lexicalRelevance.coverage)],
+          ["ai_call_avoided", "embedding"],
+          ["ai_call_avoided", "generation"]
+        ]);
         analytics.trackInBackground(ctx, "scope_boundary", question.toLowerCase());
         ctx?.waitUntil?.(memory.recordTurn({ conversationId, question, answer: result.answer, sources: [] }));
         return wantsStream
           ? eventStream([{ type: "metadata", data: result }, { type: "response.output_text.delta", data: { delta: result.answer } }, { type: "done", data: {} }], origin)
           : json(result, 200, origin);
       }
+      analytics.trackAggregatesInBackground(ctx, [
+        ["relevance_gate", lexicalRelevance.confidence === "uncertain" ? "continued_uncertain" : "continued_related"],
+        ["lexical_coverage", coverageBand(lexicalRelevance.coverage)]
+      ]);
 
       // Only retrieval/AI-bound requests consume the strict shared allowance.
       // Deterministic and cached responses remain protected by the broader
@@ -150,6 +167,7 @@ export default {
       analytics.trackInBackground(ctx, retrieval.sources.length ? "knowledge_search" : "knowledge_gap", question);
 
       if (!isAnswerable(retrieval.confidence, retrieval.sources.length)) {
+        analytics.trackAggregatesInBackground(ctx, [["post_gate_outcome", "knowledge_gap"]]);
         const result = { ...unavailableResponse({ conversationId, recommendations, followUpQuestions }), confidenceDetails, cache: "miss" };
         ctx?.waitUntil?.(memory.recordTurn({ conversationId, question, answer: result.answer, sources: [] }));
         return wantsStream
@@ -159,6 +177,7 @@ export default {
 
       const conciseAchievement = conciseAchievementResponse(question, retrieval.sources);
       if (conciseAchievement) {
+        analytics.trackAggregatesInBackground(ctx, [["post_gate_outcome", "grounded_answer"]]);
         const sources = [conciseAchievement.source];
         const result = {
           answer: conciseAchievement.answer,
@@ -176,6 +195,7 @@ export default {
       }
 
       const prompt = buildPrompt({ question, retrieval, memory: conversation });
+      analytics.trackAggregatesInBackground(ctx, [["post_gate_outcome", "grounded_answer"]]);
       const streamMetadata = { sources: prompt.sources, recommendations: recommendations.all, relatedArticles: recommendations.articles, relatedProjects: recommendations.projects, relatedNotes: recommendations.notes, followUpQuestions, suggestedQuestions: followUpQuestions, confidence: retrieval.confidence, confidenceDetails, conversationId, cache: "miss" };
       if (wantsStream) {
         const response = await createResponse({ env, config, instructions: prompt.instructions, input: prompt.input });

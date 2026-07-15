@@ -55,8 +55,11 @@ without calling the AI model.
 Recommendations are selected from indexed public document `tags` and
 `related_topics`; the model does not invent them. The click endpoint hashes its
 document identifier before storing an event counter. Search analytics likewise
-hash the normalized topic dimension. Keep dashboards aggregate-only and use
-retention appropriate to local privacy policy.
+hash the normalized topic dimension. Relevance-gate telemetry uses only
+code-defined, allowlisted labels for outcomes, lexical coverage bands,
+downstream knowledge gaps, and avoided embedding or generation calls. No
+visitor text is accepted by that aggregate path. Keep dashboards aggregate-only
+and use retention appropriate to local privacy policy.
 
 ## Scaling without redesign
 

@@ -14,6 +14,19 @@
 - Review 429, 5xx, timeout, no-answer, and cache-hit rates.
 - Review the most-used source labels and low-confidence searches without
   collecting raw visitor questions.
+- Review `aggregate:relevance_gate`, `aggregate:lexical_coverage`,
+  `aggregate:post_gate_outcome`, and `aggregate:ai_call_avoided` counters. Tune
+  the gate only when aggregate evidence shows avoidable AI use or excess
+  knowledge gaps; never retain raw questions for this purpose.
+
+Query the readable aggregates without exposing hashed question dimensions:
+
+```sql
+SELECT event_day, event_type, dimension, count
+FROM intelligence_analytics
+WHERE event_type LIKE 'aggregate:%'
+ORDER BY event_day DESC, event_type, dimension;
+```
 - Check token usage and output-length distributions for regressions.
 
 ## Monthly
