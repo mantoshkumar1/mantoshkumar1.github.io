@@ -4,12 +4,14 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import worker from "../src/index.js";
 import { SOURCE_FIXTURES } from "./fixtures.mjs";
+import { PERSONA_CASES, PERSONA_TARGETS } from "./persona-cases.mjs";
 
 const directory = dirname(fileURLToPath(import.meta.url));
 const casesPath = resolve(directory, "cases.json");
 const resultsPath = resolve(directory, "results/latest.json");
 const rawDataset = await readFile(casesPath, "utf8");
 const dataset = JSON.parse(rawDataset);
+const allCases = [...dataset.cases, ...PERSONA_CASES];
 
 function evaluationDatabase(source) {
   const row = source?.row;
@@ -132,8 +134,8 @@ async function evaluateCase(entry) {
 }
 
 const caseResults = [];
-for (const entry of dataset.cases) caseResults.push(await evaluateCase(entry));
-const categoryNames = [...new Set(dataset.cases.map((entry) => entry.category))];
+for (const entry of allCases) caseResults.push(await evaluateCase(entry));
+const categoryNames = [...new Set(allCases.map((entry) => entry.category))];
 const categories = Object.fromEntries(categoryNames.map((category) => {
   const results = caseResults.filter((result) => result.category === category);
   return [category, { cases: results.length, passed: results.filter((result) => result.passed).length }];
@@ -141,15 +143,20 @@ const categories = Object.fromEntries(categoryNames.map((category) => {
 const totalAssertions = caseResults.reduce((total, result) => total + result.assertions, 0);
 const failedAssertions = caseResults.reduce((total, result) => total + result.failures.length, 0);
 const passedCases = caseResults.filter((result) => result.passed).length;
+const personas = Object.fromEntries(Object.entries(PERSONA_TARGETS).map(([persona, target]) => {
+  const results = caseResults.filter((result) => result.id.startsWith(`persona-${persona}-`));
+  return [persona, { target, cases: results.length, passed: results.filter((result) => result.passed).length }];
+}));
 const report = {
   schemaVersion: 1,
   datasetVersion: dataset.datasetVersion,
-  datasetSha256: createHash("sha256").update(rawDataset).digest("hex"),
-  cases: dataset.cases.length,
+  datasetSha256: createHash("sha256").update(rawDataset).update(JSON.stringify(PERSONA_CASES)).digest("hex"),
+  cases: allCases.length,
   passedCases,
-  passRate: Number(((passedCases / dataset.cases.length) * 100).toFixed(1)),
+  passRate: Number(((passedCases / allCases.length) * 100).toFixed(1)),
   assertions: { total: totalAssertions, passed: totalAssertions - failedAssertions },
   categories,
+  personas,
   limitations: [
     "The suite uses controlled retrieval and model fixtures; it does not measure production Vectorize recall.",
     "The suite checks objective response contracts, citations, boundaries, and concision; it is not a human preference score.",

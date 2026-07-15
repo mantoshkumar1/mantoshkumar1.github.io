@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
   "datasetVersion": "2026-07-15",
-  "datasetSha256": "cee0f4e3a47ffb9bd218ab0265c79dc1e59ae023375aedee45ffdbccf4e921e8",
-  "cases": 59,
-  "passedCases": 59,
+  "datasetSha256": "11f2ae10bb45879b4f56ce9800efbf51be5a48a9bbffed456f8554914e5a2b60",
+  "cases": 519,
+  "passedCases": 519,
   "passRate": 100,
   "assertions": {
-    "total": 899,
-    "passed": 899
+    "total": 8959,
+    "passed": 8959
   },
   "categories": {
     "social": {
@@ -33,6 +33,53 @@
     "adversarial": {
       "cases": 6,
       "passed": 6
+    },
+    "persona-recruiter": {
+      "cases": 100,
+      "passed": 100
+    },
+    "persona-student": {
+      "cases": 100,
+      "passed": 100
+    },
+    "persona-curious": {
+      "cases": 100,
+      "passed": 100
+    },
+    "persona-colleague": {
+      "cases": 100,
+      "passed": 100
+    },
+    "persona-founder": {
+      "cases": 60,
+      "passed": 60
+    }
+  },
+  "personas": {
+    "recruiter": {
+      "target": 100,
+      "cases": 100,
+      "passed": 100
+    },
+    "student": {
+      "target": 100,
+      "cases": 100,
+      "passed": 100
+    },
+    "curious": {
+      "target": 100,
+      "cases": 100,
+      "passed": 100
+    },
+    "colleague": {
+      "target": 100,
+      "cases": 100,
+      "passed": 100
+    },
+    "founder": {
+      "target": 60,
+      "cases": 60,
+      "passed": 60
     }
   },
   "limitations": [

@@ -1,5 +1,6 @@
 import { access, readFile, readdir } from "node:fs/promises";
 import { dirname, join, relative, resolve } from "node:path";
+import { PERSONA_CASES } from "../chat-worker/eval/persona-cases.mjs";
 
 const root = resolve(import.meta.dirname, "..");
 const read = (path) => readFile(join(root, path), "utf8");
@@ -92,8 +93,9 @@ requireText(state, `${testCount} Worker contract`, "system state");
 const evaluationDataset = JSON.parse(evaluationDatasetText);
 const evaluationResults = JSON.parse(evaluationResultsText);
 const evaluationPackage = JSON.parse(evaluationPackageText);
-const caseCount = evaluationDataset.cases?.length || 0;
+const caseCount = (evaluationDataset.cases?.length || 0) + PERSONA_CASES.length;
 const assertionCount = evaluationResults.assertions?.total || 0;
+const assertionLabel = assertionCount.toLocaleString("en-US");
 if (!caseCount) failures.push("evaluation dataset: no labelled cases found");
 if (evaluationResults.cases !== caseCount) failures.push(`evaluation result: records ${evaluationResults.cases} cases for a ${caseCount}-case dataset`);
 if (evaluationResults.passedCases !== caseCount || evaluationResults.passRate !== 100) failures.push("evaluation result: not every labelled case passes");
@@ -101,7 +103,7 @@ if (!assertionCount || evaluationResults.assertions?.passed !== assertionCount) 
 if (evaluationResults.failures?.length) failures.push("evaluation result: committed failure records are present");
 for (const [content, label] of [[state, "system state"], [evaluationDoc, "evaluation guide"], [knowledgeSystemPage, "knowledge-system case study"], [knowledgeSystemSource, "knowledge-system source"]]) {
   requireText(content, `${caseCount} labelled`, label);
-  requireText(content, `${assertionCount} objective assertions`, label);
+  requireText(content, `${assertionLabel} objective assertions`, label);
 }
 requireText(workerDocsIndex, "EVALUATION.md", "Worker documentation map");
 requireText(workerReadme, "npm run evaluate", "Worker README");

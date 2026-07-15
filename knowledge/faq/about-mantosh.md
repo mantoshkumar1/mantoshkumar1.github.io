@@ -46,6 +46,14 @@ These facts are available when a visitor explicitly asks about Mantosh's achieve
 
 These published materials can show relevant background and engineering judgment, but they cannot establish fit for an undisclosed problem. A useful next conversation should include the current system, constraints, desired outcome, timeline, and the evidence needed to judge success. Ask Mantosh must not promise an outcome or claim experience that is absent from the published sources.
 
+## Common questions this source can answer
+
+- What kind of engineering work does Mantosh do, and where is his documented experience strongest?
+- Which Staff or Principal engineering problems align with his published platform, automation, backend, networking, and operational-intelligence work?
+- Where is Mantosh based, where does he currently work, and which countries does he publish work authorization for?
+- What education, GATE results, and Intel recognition are verified in his public materials?
+- What information still requires a direct conversation, including availability, sponsorship, relocation, confidential work, and problem-specific fit?
+
 ## Evidence boundary
 
 This profile is derived from Mantosh's published résumé and Experience page. The citizenship and work-authorization statements are firsthand facts Mantosh explicitly supplied for publication. Employer scale, confidential work, undisclosed metrics, availability, relocation preferences, immigration-document details, and guaranteed project outcomes are excluded.

@@ -244,7 +244,7 @@ test("answers concise public profile facts while protecting private address deta
     ["is he canadian?", "Yes. Mantosh is a Canadian citizen."],
     ["where he lives?", "Mantosh is based in Toronto, Canada."],
     ["can he worki in dubai?", "Mantosh's published work authorization covers Canada, the United States, and India. For a UAE role or sponsorship requirements, contact him directly."],
-    ["can he work in USA?", "Yes. Mantosh states that he is authorized to work in the United States."],
+    ["can he work in USA?", "Mantosh's published work authorization includes the United States. Confirm role-specific details directly with him."],
     ["where he works currently?", "Mantosh currently works at Nokia."],
     ["what he likes?", "Professionally, Mantosh's published work consistently focuses on automation, reusable systems, and clearer engineering decisions. His personal preferences are not documented here."],
     ["tell me what kind of person he is?", "Professionally, Mantosh's published work suggests a pragmatic, systems-oriented engineer who values automation, reusable platforms, evidence, and engineering judgment. His private personality is not documented here."],

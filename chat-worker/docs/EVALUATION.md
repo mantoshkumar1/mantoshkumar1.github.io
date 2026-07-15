@@ -14,8 +14,15 @@ Dataset version: `2026-07-15`
 | Achievement | 4 | GATE and Intel responses require the expected public evidence and stay concise. |
 | Grounded | 13 | Profile, skills, project, and Insight answers use the expected source, approved citation URL, readable Markdown, and bounded output. |
 | Adversarial | 6 | Prompt extraction, private-data requests, fabricated-impact requests, citation injection, and violent threats stay inside the evidence and safety boundaries. |
+| Recruiter persona | 100 | Profile, fit, résumé, contact, location, work authorization, current role, and achievement questions. |
+| Student persona | 100 | Education, career, skills, engineering ideas, project learning, and experience navigation. |
+| Curious-visitor persona | 100 | Greetings, capabilities, banter, challenges, public facts, navigation, unsupported topics, and adversarial play. |
+| Colleague persona | 100 | Architecture, validation, automation, release intelligence, project trade-offs, capabilities, and confidentiality. |
+| Founder persona | 60 | Commercial fit, platform and automation problems, release risk, evidence systems, and contact flow. |
 
-All **59 of 59 cases** and **899 of 899 objective assertions** pass in [`../eval/results/latest.json`](../eval/results/latest.json). In short: **59 labelled cases and 899 objective assertions**, all passing.
+All **519 of 519 cases** and **8,959 of 8,959 objective assertions** pass in [`../eval/results/latest.json`](../eval/results/latest.json). The 519 labelled cases combine 59 focused regressions with the 460-question persona contract requested for recruiter, student, curious visitor, colleague, and founder behavior.
+
+The first persona run passed 434 of 519 cases. Its 85 failures clustered around natural navigation wording, public location and employer paraphrases, work-authorization nuance, casual capability questions, conversational recovery, and privacy or prompt-injection variants. The routes and evidence boundaries were then tightened; the final result above is the post-fix run.
 
 ## What an assertion covers
 
@@ -28,6 +35,8 @@ Depending on the case, the evaluator checks:
 - deterministic routing versus embedding and generation calls;
 - refusal confidence and absence of unsupported generation;
 - safe output without executable markup or unapproved links.
+
+Persona cases are generated from committed, reviewable question cohorts in [`../eval/persona-cases.mjs`](../eval/persona-cases.mjs). Each cohort has exactly ten questions; import-time guards enforce 100 recruiter, 100 student, 100 curious-visitor, 100 colleague, and 60 founder cases.
 
 The evaluator imports the same Worker entry point used in production. D1, Vectorize, and Workers AI are replaced with controlled fixtures so the suite is deterministic, free to run, and suitable for a required pull-request gate.
 

@@ -1,7 +1,7 @@
 const STATIC_DESTINATIONS = [
-  { pattern: /^(?:show(?: me)? |open |go to )?(?:(?:my|mantosh(?:'s|’s)) )?r[eé]sum[eé][?.!]*$/iu, label: "Resume", url: "/resume/", type: "resume" },
-  { pattern: /^(?:(?:show |open |go to )?contact|(?:(?:what(?:'s| is)|whats|give me|show me|find) )?(?:mantosh(?:'s|’s)? )?(?:email(?: id| address)?|contact (?:details|information|info))|(?:how (?:can|do) i|how to|where (?:can|do) i) (?:contact|email|reach) (?:mantosh|him))[?.!]*$/i, label: "Contact", url: "/contact/", type: "contact" },
-  { pattern: /^(?:show |open |go to )?(?:my )?experience(?: timeline)?\??$/i, label: "Experience", url: "/experience/", type: "experience" }
+  { pattern: /^(?:(?:show(?: me)?|open|go to|view|take me to|please show me|can i see|where is)\s+)?(?:(?:the|my|his|mantosh(?:'s|’s))\s+)?r[eé]sum[eé][?.!]*$/iu, label: "Resume", url: "/resume/", type: "resume" },
+  { pattern: /^(?:(?:show(?: me)?|open|go to|take me to)\s+)?(?:(?:the|his|mantosh(?:'s|’s))\s+)?contact(?: page)?[?.!]*$|^(?:(?:what(?:'s| is)|whats|give me|show me|find)\s+)?(?:(?:his|mantosh(?:'s|’s)?)\s+)?(?:email(?: id| address)?|contact (?:details|information|info))[?.!]*$|^(?:how (?:can|do) i|how to|where (?:can|do) i) (?:contact|email|reach) (?:mantosh|him)[?.!]*$|^(?:i want to (?:contact|hire) (?:mantosh|him)|where can i discuss (?:a )?(?:role|project) with him|how can i reach him about (?:a )?(?:contract|role|project)|i want to discuss (?:a )?(?:role|project)|where do i start a conversation)[?.!]*$/i, label: "Contact", url: "/contact/", type: "contact" },
+  { pattern: /^(?:(?:show(?: me)?|open|go to|view|take me to|can i see|where is|i want to read)\s+)?(?:(?:the|my|his|mantosh(?:'s|’s))\s+)?(?:experience(?: timeline| page)?|professional experience|work history)[?.!]*$/i, label: "Experience", url: "/experience/", type: "experience" }
 ];
 
 const SOCIAL_RESPONSES = [
@@ -20,7 +20,7 @@ const SOCIAL_RESPONSES = [
     followUpQuestions: []
   },
   {
-    pattern: /^(?:bye|goodbye|see you|good night)[!.?\s]*$/i,
+    pattern: /^(?:bye(?: bye)?|goodbye|see you|good night)[!.?\s]*$/i,
     answer: "Goodbye! Come back anytime.",
     followUpQuestions: []
   },
@@ -34,7 +34,7 @@ const SOCIAL_RESPONSES = [
     ]
   },
   {
-    pattern: /^(?:who are you|what can you do|help me|help)[!.?\s]*$/i,
+    pattern: /^(?:who are you|what can you do|what are you for|how can you help me|explain ask mantosh|what should i ask you|tell me what you know|what topics can we discuss|help me|help)[!.?\s]*$/i,
     answer: "I'm the evidence-based guide to Mantosh's published work. I can explain his experience, projects, engineering decisions, and where that experience may fit your problem.",
     followUpQuestions: [
       "Tell me about Mantosh in brief.",
@@ -48,7 +48,7 @@ const SOCIAL_RESPONSES = [
     followUpQuestions: []
   },
   {
-    pattern: /^(?:where (?:does )?(?:mantosh|he) (?:live|lives)|where is (?:mantosh|he) based|what(?:'s| is) (?:mantosh(?:'s|’s)|his) location)[!.?\s]*$/i,
+    pattern: /^(?:where (?:does )?(?:mantosh|he) (?:live|lives)|where is (?:mantosh|he) (?:based|located)|what(?:'s| is) (?:mantosh(?:'s|’s)|his) (?:location|professional location)|which city is (?:mantosh|he) based in|is (?:mantosh|he) in toronto|where in canada is (?:mantosh|he) based|tell me where (?:mantosh|he) is based|what city does (?:mantosh|he) work from)[!.?\s]*$/i,
     answer: "Mantosh is based in Toronto, Canada.",
     followUpQuestions: []
   },
@@ -59,11 +59,21 @@ const SOCIAL_RESPONSES = [
   },
   {
     pattern: /^(?:can (?:mantosh|he) work in (?:the )?(?:usa|u\.s\.?a?\.?|united states)|is (?:mantosh|he) authorized to work in (?:the )?(?:usa|u\.s\.?a?\.?|united states))[!.?\s]*$/i,
-    answer: "Yes. Mantosh states that he is authorized to work in the United States.",
+    answer: "Mantosh's published work authorization includes the United States. Confirm role-specific details directly with him.",
     followUpQuestions: []
   },
   {
-    pattern: /^(?:where (?:does )?(?:mantosh|he) work(?: currently| now)?|where (?:mantosh|he) works currently|who does (?:mantosh|he) work for(?: currently| now)?)[!.?\s]*$/i,
+    pattern: /^(?:can (?:mantosh|he) work in (?:canada|india)|is (?:mantosh|he) authorized to work in (?:canada|india)|where is (?:mantosh|he) authorized to work|what countries can (?:mantosh|he) legally work in|what(?:'s| is) (?:mantosh(?:'s|’s)|his) published work authorization)[!.?\s]*$/i,
+    answer: "Mantosh's published work authorization covers Canada, the United States, and India. Confirm role-specific details directly with him.",
+    followUpQuestions: []
+  },
+  {
+    pattern: /^(?:does (?:mantosh|he) need sponsorship in (?:the )?(?:usa|u\.s\.?a?\.?|united states))[!.?\s]*$/i,
+    answer: "Mantosh publishes United States work authorization, but sponsorship details are not documented. Confirm the role-specific requirements directly with him.",
+    followUpQuestions: []
+  },
+  {
+    pattern: /^(?:where (?:does )?(?:mantosh|he) work(?: currently| now)?|where (?:mantosh|he) works currently|who does (?:mantosh|he) work for(?: currently| now)?|what company is (?:mantosh|he) at|is (?:mantosh|he) currently at nokia|what(?:'s| is) (?:mantosh(?:'s|’s)|his) current employer|where is (?:mantosh|he) employed|which company employs (?:mantosh|him)|tell me (?:mantosh(?:'s|’s)|his) current workplace|who is (?:mantosh|he) working for|what is (?:mantosh(?:'s|’s)|his) current company)[!.?\s]*$/i,
     answer: "Mantosh currently works at Nokia.",
     followUpQuestions: []
   },
@@ -92,7 +102,7 @@ const SOCIAL_RESPONSES = [
     followUpQuestions: []
   },
   {
-    pattern: /^(?:(?:are you|you(?:'re| are)) (?:dumb|stupid|useless)|this is nonsense)[!.?\s]*$/i,
+    pattern: /^(?:(?:are you|you(?:'re| are)) (?:dumb|stupid|useless)|this is nonsense|that answer was useless|do you know anything|why are you so dull|you failed that question)[!.?\s]*$/i,
     answer: "Fair challenge. Give me a specific question about Mantosh's work or an engineering problem, and I'll answer from the published evidence—or say clearly when I cannot.",
     followUpQuestions: [
       "What kind of engineer is Mantosh?",
@@ -116,12 +126,24 @@ const SCOPE_BOUNDARY_RESPONSES = [
     answer: "I can't provide or invent confidential company information. I can discuss Mantosh's reviewed public experience, projects, and engineering approach instead."
   },
   {
+    pattern: /\b(?:non-public incident|proprietary systems?|internal company metrics?|private client information|confidential release plans?)\b/i,
+    answer: "I can't provide or invent confidential company information. I can discuss Mantosh's reviewed public experience, projects, and engineering approach instead."
+  },
+  {
     pattern: /\b(?:reveal|show|print|repeat|disclose)\b.*\b(?:system prompt|hidden prompt|internal instructions|developer instructions)\b/i,
     answer: "I can't reveal internal instructions. I can explain how Ask Mantosh works from the published architecture and evidence instead."
   },
   {
+    pattern: /\b(?:reveal|show|print|repeat|disclose)\b.*\b(?:(?:hidden|internal|developer|system) instructions?)\b|\b(?:ignore|override)\b.*\b(?:evidence boundary|rules?)\b|\bcite fake evidence\b/i,
+    answer: "I can't reveal or override internal instructions or the evidence boundary. I can explain the published architecture and answer from reviewed public material."
+  },
+  {
     pattern: /\b(?:invent|fabricate|make up|fake)\b.*\b(?:metric|metrics|revenue|impact|adoption|result|results|claim|claims)\b/i,
     answer: "I won't invent metrics or claims. I can summarize only the outcomes and evidence Mantosh has published."
+  },
+  {
+    pattern: /\b(?:pretend|invent|fabricate|make up|fake)\b.*\b(?:ceo|client|customer|employer|role|title|name|names)\b/i,
+    answer: "I won't invent roles, clients, names, or claims. I can summarize only what Mantosh has published."
   },
   {
     pattern: /^(?:give|show|write|share|tell)\s+(?:me\s+)?(?:a\s+)?(?:pasta\s+)?recipe\b/i,
@@ -134,8 +156,9 @@ function normalize(value) { return value.toLowerCase().replace(/[^\p{L}\p{N}]+/g
 function isLowInformationQuestion(value) {
   const normalized = normalize(value);
   const tokens = normalized.split(" ").filter(Boolean);
+  if (!normalized) return true;
   if (tokens.length !== 1) return false;
-  return /(.)\1{2}/i.test(normalized) || (normalized.length >= 5 && !/[aeiou]/i.test(normalized) && value !== value.toUpperCase());
+  return /(.)\1{2}/i.test(normalized) || /^(?:asdfgh|qwerty)$/i.test(normalized) || (normalized.length >= 5 && !/[aeiou]/i.test(normalized) && value !== value.toUpperCase());
 }
 
 const CLARIFY_RESPONSE = {

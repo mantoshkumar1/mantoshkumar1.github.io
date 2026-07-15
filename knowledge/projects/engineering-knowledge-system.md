@@ -47,8 +47,9 @@ Release gates check static generation, SEO, discoverability, internal links, acc
 
 ## Evaluation evidence
 
-- 59 labelled cases cover social conversation, navigation, unsupported requests, achievements, skills, grounded profile, project and Insight answers, and adversarial attempts.
-- 899 objective assertions check response contracts, source selection, citation safety, required and forbidden language, readable Markdown, output bounds, and expected retrieval or generation calls.
+- 519 labelled cases combine 59 focused regressions with 460 persona questions: 100 recruiter, 100 student, 100 curious visitor, 100 colleague, and 60 founder prompts.
+- 8,959 objective assertions check response contracts, source selection, citation safety, required and forbidden language, readable Markdown, output bounds, navigation, and expected retrieval or generation calls.
+- The first persona run passed 434 of 519 cases. The failures exposed narrow natural-language routing for navigation, public profile facts, work-authorization nuance, conversational recovery, and privacy boundaries; those categories were strengthened before the final all-passing run.
 - The evaluator imports the production Worker entry point with controlled D1, Vectorize, Workers AI, and rate-limiter bindings. It runs without calling the deployed Worker or consuming production quota.
 - The cases and fixtures live under `chat-worker/eval/`, outside `knowledge/`, so expected answers cannot become retrieval evidence.
 
@@ -57,7 +58,7 @@ Release gates check static generation, SEO, discoverability, internal links, acc
 - SEO-configured public pages and structured discoverability files.
 - A reviewed public Ask Mantosh knowledge corpus, including this source.
 - Automated tests covering contracts, deterministic social and achievement routing, quotas, OIDC, retrieval, prompting, citation repair, subjective questions, explicit achievement gating, and failure paths.
-- A committed offline evaluation result that currently records 59 of 59 cases and 899 of 899 objective assertions passing.
+- A committed offline evaluation result that currently records 519 of 519 cases and 8,959 of 8,959 objective assertions passing.
 
 ## Current limits
 
