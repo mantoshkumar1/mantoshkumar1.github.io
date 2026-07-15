@@ -241,6 +241,7 @@ test("answers concise public profile facts while protecting private address deta
     KNOWLEDGE_INDEX: { query: async () => { throw new Error("No retrieval is expected for a location fact or privacy boundary"); } }
   };
   for (const [question, expected] of [
+    ["is he canadian?", "Yes. Mantosh is a Canadian citizen."],
     ["where he lives?", "Mantosh is based in Toronto, Canada."],
     ["can he work in USA?", "Yes. Mantosh states that he is authorized to work in the United States."],
     ["where he works currently?", "Mantosh currently works at Nokia."],

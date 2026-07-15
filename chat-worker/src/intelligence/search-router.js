@@ -43,6 +43,11 @@ const SOCIAL_RESPONSES = [
     ]
   },
   {
+    pattern: /^(?:is (?:mantosh|he) (?:a )?canadian(?: citizen)?|(?:is|does) (?:mantosh|he) have canadian citizenship)[!.?\s]*$/i,
+    answer: "Yes. Mantosh is a Canadian citizen.",
+    followUpQuestions: []
+  },
+  {
     pattern: /^(?:where (?:does )?(?:mantosh|he) (?:live|lives)|where is (?:mantosh|he) based|what(?:'s| is) (?:mantosh(?:'s|’s)|his) location)[!.?\s]*$/i,
     answer: "Mantosh is based in Toronto, Canada.",
     followUpQuestions: []

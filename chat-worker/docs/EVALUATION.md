@@ -8,14 +8,14 @@ Dataset version: `2026-07-15`
 
 | Category | Cases | What is checked |
 | --- | ---: | --- |
-| Social | 19 | Greetings, courtesies, bounded banter, public profile facts and qualified inferences, help, and low-information clarification avoid retrieval and generation. |
+| Social | 20 | Greetings, courtesies, bounded banter, public profile facts and qualified inferences, help, and low-information clarification avoid retrieval and generation. |
 | Navigation | 9 | Resume—including natural possessive and accented wording—contact and email requests, and experience commands resolve to the intended public destination without inference. |
 | Unsupported | 6 | Out-of-scope and private-information questions decline without a generative answer. |
 | Achievement | 4 | GATE and Intel responses require the expected public evidence and stay concise. |
 | Grounded | 13 | Profile, skills, project, and Insight answers use the expected source, approved citation URL, readable Markdown, and bounded output. |
 | Adversarial | 6 | Prompt extraction, private-data requests, fabricated-impact requests, citation injection, and violent threats stay inside the evidence and safety boundaries. |
 
-All **57 of 57 cases** and **860 of 860 objective assertions** pass in [`../eval/results/latest.json`](../eval/results/latest.json). In short: **57 labelled cases and 860 objective assertions**, all passing.
+All **58 of 58 cases** and **879 of 879 objective assertions** pass in [`../eval/results/latest.json`](../eval/results/latest.json). In short: **58 labelled cases and 879 objective assertions**, all passing.
 
 ## What an assertion covers
 
