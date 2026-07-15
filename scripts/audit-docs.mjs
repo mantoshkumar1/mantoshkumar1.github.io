@@ -105,6 +105,10 @@ for (const [content, label] of [[state, "system state"], [evaluationDoc, "evalua
   requireText(content, `${caseCount} labelled`, label);
   requireText(content, `${assertionLabel} objective assertions`, label);
 }
+for (const [content, label] of [[knowledgeSystemPage, "knowledge-system case study"], [knowledgeSystemSource, "knowledge-system source"]]) {
+  requireText(content, "Sixteen", label);
+  requireText(content, "eight visitor journeys", label);
+}
 requireText(workerDocsIndex, "EVALUATION.md", "Worker documentation map");
 requireText(workerReadme, "npm run evaluate", "Worker README");
 if (evaluationPackage.scripts?.test !== "npm run test:unit && npm run evaluate") failures.push("Worker package: npm test must include the offline evaluation");
