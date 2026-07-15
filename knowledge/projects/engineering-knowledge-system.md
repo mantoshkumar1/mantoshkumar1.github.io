@@ -47,8 +47,8 @@ Release gates check static generation, SEO, discoverability, internal links, acc
 
 ## Evaluation evidence
 
-- 58 labelled cases cover social conversation, navigation, unsupported requests, achievements, skills, grounded profile, project and Insight answers, and adversarial attempts.
-- 879 objective assertions check response contracts, source selection, citation safety, required and forbidden language, readable Markdown, output bounds, and expected retrieval or generation calls.
+- 59 labelled cases cover social conversation, navigation, unsupported requests, achievements, skills, grounded profile, project and Insight answers, and adversarial attempts.
+- 899 objective assertions check response contracts, source selection, citation safety, required and forbidden language, readable Markdown, output bounds, and expected retrieval or generation calls.
 - The evaluator imports the production Worker entry point with controlled D1, Vectorize, Workers AI, and rate-limiter bindings. It runs without calling the deployed Worker or consuming production quota.
 - The cases and fixtures live under `chat-worker/eval/`, outside `knowledge/`, so expected answers cannot become retrieval evidence.
 
@@ -57,7 +57,7 @@ Release gates check static generation, SEO, discoverability, internal links, acc
 - SEO-configured public pages and structured discoverability files.
 - A reviewed public Ask Mantosh knowledge corpus, including this source.
 - Automated tests covering contracts, deterministic social and achievement routing, quotas, OIDC, retrieval, prompting, citation repair, subjective questions, explicit achievement gating, and failure paths.
-- A committed offline evaluation result that currently records 58 of 58 cases and 879 of 879 objective assertions passing.
+- A committed offline evaluation result that currently records 59 of 59 cases and 899 of 899 objective assertions passing.
 
 ## Current limits
 

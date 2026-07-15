@@ -53,6 +53,11 @@ const SOCIAL_RESPONSES = [
     followUpQuestions: []
   },
   {
+    pattern: /^(?:can (?:mantosh|he) worki? in (?:dubai|(?:the )?(?:uae|u\.a\.e\.?|united arab emirates))|is (?:mantosh|he) authorized to work in (?:dubai|(?:the )?(?:uae|u\.a\.e\.?|united arab emirates)))[!.?\s]*$/i,
+    answer: "Mantosh's published work authorization covers Canada, the United States, and India. For a UAE role or sponsorship requirements, contact him directly.",
+    followUpQuestions: []
+  },
+  {
     pattern: /^(?:can (?:mantosh|he) work in (?:the )?(?:usa|u\.s\.?a?\.?|united states)|is (?:mantosh|he) authorized to work in (?:the )?(?:usa|u\.s\.?a?\.?|united states))[!.?\s]*$/i,
     answer: "Yes. Mantosh states that he is authorized to work in the United States.",
     followUpQuestions: []
