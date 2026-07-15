@@ -61,6 +61,7 @@ const themeInit = await readFile(join(root, "assets/js/theme-init.js"), "utf8");
 const client = await readFile(join(root, "assets/js/main.js"), "utf8");
 if (!/role=["']dialog["']/.test(widget) || !/aria-modal=["']true["']/.test(widget)) failures.push("Ask Mantosh missing modal dialog semantics");
 if (!/id=["']ask-mantosh-toggle["'][^>]+aria-label=["']Ask Mantosh["']/.test(widget)) failures.push("Ask Mantosh mobile toggle needs an explicit accessible name");
+if (!/id=["']ask-mantosh-export["'][^>]+aria-label=["']Export conversation as a text file["']/.test(widget)) failures.push("Ask Mantosh needs an explicitly named text-export control");
 if (!/id=["']ask-mantosh-minimize["'][^>]+aria-label=["']Minimize Ask Mantosh; conversation will remain available["']/.test(widget)) failures.push("Ask Mantosh needs an explicit conversation-preserving minimize control");
 if (!/id=["']ask-mantosh-clear["'][^>]+aria-label=["']Close Ask Mantosh and clear conversation["']/.test(widget)) failures.push("Ask Mantosh needs an explicit close-and-clear control");
 if (!client.includes('setAttribute("aria-busy"') || !client.includes('setAttribute("aria-live"')) failures.push("Ask Mantosh missing quiet streaming announcements");
@@ -74,6 +75,10 @@ for (const historyFeature of ["ask-mantosh-conversation-v1", "window.sessionStor
 for (const clearFeature of ["clearConversation()", "window.sessionStorage.removeItem", "this.view.nodes.clear()", "this.generation += 1", "window.confirm"]) {
   if (!client.includes(clearFeature)) failures.push(`Ask Mantosh close-and-clear flow missing ${clearFeature}`);
 }
+for (const exportFeature of ["exportConversation()", 'type: "text/plain;charset=utf-8"', "URL.createObjectURL", "URL.revokeObjectURL", "ask-mantosh-conversation-"]) {
+  if (!client.includes(exportFeature)) failures.push(`Ask Mantosh text-export flow missing ${exportFeature}`);
+}
+if (!client.includes('message.role === "assistant" && message.text.trim()')) failures.push("Ask Mantosh export must remain hidden until a completed answer exists");
 if (!/ask-mantosh-related-card[^`]*target=\\"_blank\\"|target=\\"_blank\\"[^`]*ask-mantosh-related-card/.test(client)) failures.push("Ask Mantosh related links must preserve the current conversation tab");
 if (!/message\.action\?\.type === "navigate"/.test(client)) failures.push("Ask Mantosh must render direct navigation responses without crashing");
 for (const themeFeature of ["mantosh-appearance", "appearance-select", "prefers-color-scheme: light", "localStorage.setItem", 'value="soft"', 'value="contrast"']) {

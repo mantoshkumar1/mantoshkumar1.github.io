@@ -1,5 +1,6 @@
 const GATE_SOURCE_SLUG = "gate-cs-top-one-percent";
 const PROFILE_SOURCE_SLUG = "about-mantosh";
+const GATE_RESULT = "Mantosh ranked in the top 0.76% among 156,780 candidates in India's GATE CS & IT examination in 2012 and the top 0.87% among 224,160 candidates in 2013.";
 
 function sourceBySlug(sources, slug) {
   return sources.find((source) => source.slug === slug);
@@ -20,12 +21,12 @@ export function conciseAchievementResponse(question, sources = []) {
     }
     if (/\b(?:what is|prestig\w*|why.*(?:matter|notable)|conducted|exam(?:ination)?)\b/i.test(value)) {
       return {
-        answer: "GATE is a prestigious national examination conducted by IISc and the IITs. Mantosh ranked in the top 1% in CS & IT in both 2012 and 2013.",
+        answer: `GATE is a prestigious national examination conducted by IISc and the IITs. ${GATE_RESULT}`,
         source
       };
     }
     return {
-      answer: "Mantosh ranked in the top 1% in India's GATE Computer Science & Information Technology examination in both 2012 and 2013.",
+      answer: GATE_RESULT,
       source
     };
   }

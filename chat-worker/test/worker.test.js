@@ -26,7 +26,7 @@ function testDatabase() {
 function gateDatabase() {
   const row = {
     chunk_id: "gate-1",
-    content: "Mantosh ranked in the top 1% in India's GATE CS & IT examination in 2012 and 2013.",
+    content: "Mantosh ranked in the top 0.76% among 156,780 candidates in India's GATE CS & IT examination in 2012 and the top 0.87% among 224,160 candidates in 2013.",
     title: "GATE CS & IT Top-1% Achievement and TUM Admission Context",
     slug: "gate-cs-top-one-percent",
     category: "experience",
@@ -155,6 +155,23 @@ test("routes direct navigation without calling Workers AI", async () => {
   assert.equal(payload.confidence, "high");
 });
 
+test("routes natural email and contact requests without retrieval or Workers AI", async () => {
+  const navigationEnv = {
+    ...env,
+    AI: { run: async () => { throw new Error("No AI call is expected for contact navigation"); } },
+    KNOWLEDGE_INDEX: { query: async () => { throw new Error("No retrieval is expected for contact navigation"); } }
+  };
+  for (const question of ["whats mantosh email id", "how to contact him"]) {
+    const response = await worker.fetch(request({ question, conversationId: "session_contact_email_123" }), navigationEnv);
+    const payload = await response.json();
+    assert.equal(response.status, 200);
+    assert.equal(payload.answer, "Opening Contact.");
+    assert.equal(payload.action.destinationType, "contact");
+    assert.equal(payload.action.url, "/contact/");
+    assert.deepEqual(payload.sources, []);
+  }
+});
+
 test("answers greetings conversationally without retrieval or Workers AI", async () => {
   const socialEnv = {
     ...env,
@@ -204,6 +221,7 @@ test("handles lightweight banter without retrieval or unsupported claims", async
   for (const [question, expected] of [
     ["How are you?", /Running smoothly/i],
     ["Tell me a joke", /repeated manual task/i],
+    ["lol lol", /take that as a laugh/i],
     ["Are you dumb?", /Fair challenge/i],
     ["What can you do?", /evidence-based guide/i],
     ["zzzxqv", /couldn't make sense/i]
@@ -213,6 +231,29 @@ test("handles lightweight banter without retrieval or unsupported claims", async
     assert.equal(response.status, 200);
     assert.match(payload.answer, expected);
     assert.deepEqual(payload.sources, []);
+  }
+});
+
+test("answers concise public profile facts while protecting private address details", async () => {
+  const deterministicEnv = {
+    ...env,
+    AI: { run: async () => { throw new Error("No AI call is expected for a location fact or privacy boundary"); } },
+    KNOWLEDGE_INDEX: { query: async () => { throw new Error("No retrieval is expected for a location fact or privacy boundary"); } }
+  };
+  for (const [question, expected] of [
+    ["where he lives?", "Mantosh is based in Toronto, Canada."],
+    ["can he work in USA?", "Yes. Mantosh states that he is authorized to work in the United States."],
+    ["where he works currently?", "Mantosh currently works at Nokia."],
+    ["what he likes?", "Professionally, Mantosh's published work consistently focuses on automation, reusable systems, and clearer engineering decisions. His personal preferences are not documented here."],
+    ["tell me what kind of person he is?", "Professionally, Mantosh's published work suggests a pragmatic, systems-oriented engineer who values automation, reusable platforms, evidence, and engineering judgment. His private personality is not documented here."],
+    ["What is his home address?", "I don't provide private home-address details. Mantosh's published professional location is Toronto, Canada."]
+  ]) {
+    const response = await worker.fetch(request({ question }), deterministicEnv);
+    const payload = await response.json();
+    assert.equal(response.status, 200);
+    assert.equal(payload.answer, expected);
+    assert.deepEqual(payload.sources, []);
+    assert.deepEqual(payload.followUpQuestions, []);
   }
 });
 
@@ -246,7 +287,7 @@ test("answers natural broad-profile wording from published engineering evidence"
 test("answers a specific GATE-result question in one concise evidence-backed sentence", () => {
   const source = { slug: "gate-cs-top-one-percent" };
   const result = conciseAchievementResponse("What was Mantosh's GATE result?", [source]);
-  assert.equal(result.answer, "Mantosh ranked in the top 1% in India's GATE Computer Science & Information Technology examination in both 2012 and 2013.");
+  assert.equal(result.answer, "Mantosh ranked in the top 0.76% among 156,780 candidates in India's GATE CS & IT examination in 2012 and the top 0.87% among 224,160 candidates in 2013.");
   assert.equal(result.source, source);
   assert.equal(result.answer.split(/(?<=[.!?])\s+/).length, 1);
 });
@@ -283,7 +324,7 @@ test("serves a concise GATE result without a generative AI call", async () => {
   const response = await worker.fetch(request({ question: "What was Mantosh's GATE result?" }), gateEnv);
   const payload = await response.json();
   assert.equal(response.status, 200);
-  assert.equal(payload.answer, "Mantosh ranked in the top 1% in India's GATE Computer Science & Information Technology examination in both 2012 and 2013.");
+  assert.equal(payload.answer, "Mantosh ranked in the top 0.76% among 156,780 candidates in India's GATE CS & IT examination in 2012 and the top 0.87% among 224,160 candidates in 2013.");
   assert.equal(payload.sources[0].slug, "gate-cs-top-one-percent");
   assert.deepEqual(payload.followUpQuestions, []);
 });
@@ -483,6 +524,49 @@ test("keeps only the first XML-wrapped answer and normalizes plain section headi
   assert.match(result.answer, /## Sources/);
   assert.doesNotMatch(result.answer, /<answer>|corrected answer/i);
   assert.match(result.answer, /- Third\?$/);
+});
+
+test("removes leaked response-mode control tags after a visitor-safe answer", () => {
+  const result = formatSuccess({ output_text: [
+    "I can't support that from Mantosh's published work. Ask me about his experience, projects, engineering approach, or fit for your problem.",
+    ...Array.from({ length: 20 }, () => "</response_mode>")
+  ].join(" ") }, []);
+  assert.equal(result.answer, "## Answer\nI can't support that from Mantosh's published work. Ask me about his experience, projects, engineering approach, or fit for your problem.");
+  assert.doesNotMatch(result.answer, /response_mode/i);
+});
+
+test("collapses a repeated unsupported fallback to one readable response", () => {
+  const fallback = "I can't support that from Mantosh's published work. Ask me about his experience, projects, engineering approach, or fit for your problem.";
+  const result = formatSuccess({ output_text: Array.from({ length: 12 }, () => fallback).join(" ") }, []);
+  assert.equal(result.answer, `## Answer\n${fallback}`);
+  assert.equal(result.answer.match(/I can't support/g)?.length, 1);
+});
+
+test("fails closed when model output starts with a leaked prompt-control tag", () => {
+  assert.throws(
+    () => formatSuccess({ output_text: "<user_question> ## Answer\nThere is no answer in the provided documents." }, []),
+    (error) => error?.code === "invalid_model_response"
+  );
+});
+
+test("removes stray response tags and accepts one complete response wrapper", () => {
+  const leaked = formatSuccess({ output_text: [
+    "## Answer",
+    "A visitor-safe answer.",
+    ...Array.from({ length: 20 }, () => "</response>")
+  ].join(" ") }, []);
+  assert.doesNotMatch(leaked.answer, /<\/?response>/i);
+  assert.match(leaked.answer, /A visitor-safe answer\./);
+
+  const wrapped = formatSuccess({ output_text: "<response>## Answer\nA wrapped visitor-safe answer.</response>" }, []);
+  assert.equal(wrapped.answer, "## Answer\nA wrapped visitor-safe answer.");
+
+  const escaped = formatSuccess({ output_text: "## Answer\nAn escaped visitor-safe answer. &lt;/response&gt; &lt;/response&gt;" }, []);
+  assert.equal(escaped.answer, "## Answer\nAn escaped visitor-safe answer.");
+  assert.doesNotMatch(escaped.answer, /&lt;\/?response&gt;/i);
+
+  const leadingClosingTag = formatSuccess({ output_text: "</response_mode> ## Answer\nA clean answer after a stray closing tag." }, []);
+  assert.equal(leadingClosingTag.answer, "## Answer\nA clean answer after a stray closing tag.");
 });
 
 test("removes empty optional sections and canonicalizes duplicate sources", () => {

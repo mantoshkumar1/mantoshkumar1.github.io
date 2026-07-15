@@ -105,6 +105,7 @@
           <p id="ask-mantosh-description">Evidence-backed answers from Mantosh's projects, experience, and engineering writing.</p>
         </div>
         <div class="ask-mantosh-header-actions">
+          <button class="ask-mantosh-close ask-mantosh-export" id="ask-mantosh-export" type="button" aria-label="Export conversation as a text file" title="Export visible conversation as TXT" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v10m0 0l-4-4m4 4l4-4M5 19h14"></path></svg><span>TXT</span></button>
           <button class="ask-mantosh-close" id="ask-mantosh-minimize" type="button" aria-label="Minimize Ask Mantosh; conversation will remain available" title="Minimize — conversation stays here"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 12h12"></path></svg></button>
           <button class="ask-mantosh-close ask-mantosh-clear" id="ask-mantosh-clear" type="button" aria-label="Close Ask Mantosh and clear conversation" title="Close and clear conversation"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M7 7l10 10M17 7L7 17"></path></svg></button>
         </div>
@@ -119,6 +120,6 @@
     </section>`);
 
   const client = document.createElement("script");
-  client.src = "/assets/js/main.js?v=20260713-3";
+  client.src = "/assets/js/main.js?v=20260715-1";
   document.body.append(client);
 })();

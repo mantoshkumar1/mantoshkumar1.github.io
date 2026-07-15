@@ -22,9 +22,27 @@ function extractFollowUpQuestions(answer) {
     .slice(0, 3);
 }
 
+function removePromptControlLeak(answer) {
+  const promptControlTag = /(?:<|&lt;)\/?(?:response|response_mode|user_question|conversation_memory|retrieved_documents|document)(?:\s+[^<>&]*)?\s*(?:>|&gt;)/i;
+  const leadingClosingTags = /^(?:\s*(?:<|&lt;)\/(?:response|response_mode|user_question|conversation_memory|retrieved_documents|document)(?:\s+[^<>&]*)?\s*(?:>|&gt;)\s*)+/i;
+  const sanitized = answer.replace(leadingClosingTags, "").trimStart();
+  const match = promptControlTag.exec(sanitized);
+  if (!match) return sanitized;
+  const visitorAnswer = sanitized.slice(0, match.index).trim();
+  if (!visitorAnswer) throw new AppError(500, "invalid_model_response", "The AI service returned an invalid response.");
+  return visitorAnswer;
+}
+
+function collapseRepeatedFallback(answer) {
+  const fallback = "I can't support that from Mantosh's published work. Ask me about his experience, projects, engineering approach, or fit for your problem.";
+  const escaped = fallback.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return answer.replace(new RegExp(`(${escaped})(?:\\s+\\1)+`, "gi"), "$1");
+}
+
 function normalizeGroundedAnswer(answer, followUpQuestions = []) {
   const answerBlock = /<answer>\s*([\s\S]*?)\s*<\/answer>/i.exec(answer);
-  let normalized = (answerBlock ? answerBlock[1] : answer).trim();
+  const responseBlock = /(?:<response>|&lt;response&gt;)\s*([\s\S]*?)\s*(?:<\/response>|&lt;\/response&gt;)/i.exec(answer);
+  let normalized = collapseRepeatedFallback(removePromptControlLeak(answerBlock?.[1] || responseBlock?.[1] || answer)).trim();
   normalized = normalized.replace(/^[•▪◦]\s+/gm, "- ");
   const sectionNames = ["Answer", "Summary", "In brief", "Highlights", "Context", "Best fit", "Where Mantosh can help", "Relevant evidence", "A sensible next step", "What matters", "How Mantosh's experience applies", "Practical next steps", "Limits", "Detailed Explanation", "Engineering Decisions", "Trade-offs", "Lessons Learned", "Related Articles", "Related Projects", "Sources", "Follow-up Questions"];
   for (const section of sectionNames) {
@@ -98,7 +116,7 @@ export function formatResponse(response, { sources, confidence, maxAnswerChars =
   const normalizedAnswer = addSubjectiveFraming(normalizeGroundedAnswer(rawAnswer, followUpQuestions), subjectiveProfile);
   const canonicalSources = citedSources(normalizedAnswer, retrievedSources);
   const answer = canonicalizeSourceSection(normalizedAnswer, canonicalSources);
-  if (answer.length > maxAnswerChars || /<\/?(?:system|instructions|retrieved_documents)>/i.test(answer)) {
+  if (answer.length > maxAnswerChars || /(?:<|&lt;)\/?(?:system|instructions|response|response_mode|user_question|conversation_memory|retrieved_documents|document)(?:\s+[^<>&]*)?\s*(?:>|&gt;)/i.test(answer)) {
     throw new AppError(500, "invalid_model_response", "The AI service returned an invalid response.");
   }
   validateSafeModelOutput(answer, canonicalSources);

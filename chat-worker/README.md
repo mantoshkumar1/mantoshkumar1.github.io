@@ -85,7 +85,7 @@ curl -i http://localhost:8787/chat \
   --data '{"question":"Why did you build PhotoSahi without a backend?"}'
 ```
 
-Run `npm test`; it executes the unit/contract tests and the 45-case labelled offline evaluation. Run only that evaluation with `npm run evaluate`. The committed evidence and methodology are documented in [`docs/EVALUATION.md`](docs/EVALUATION.md). Test the deployed Worker with:
+Run `npm test`; it executes the unit/contract tests and the 57-case labelled offline evaluation. Run only that evaluation with `npm run evaluate`. The committed evidence and methodology are documented in [`docs/EVALUATION.md`](docs/EVALUATION.md). Test the deployed Worker with:
 
 ```bash
 curl -i https://ask-mantosh.mantoshk234.workers.dev/chat \

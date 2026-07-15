@@ -11,7 +11,7 @@ import { enforceRateLimit } from "./rate-limit.js";
 import { retrieveKnowledge } from "./retrieval.js";
 import { parseChatRequest } from "./validation.js";
 
-const ANSWER_POLICY_VERSION = "visitor-intent-v16";
+const ANSWER_POLICY_VERSION = "visitor-intent-v18";
 
 function json(body, status, origin, extraHeaders = {}) {
   const headers = corsHeaders(origin);
@@ -51,7 +51,7 @@ function navigationResponse(destination, conversationId) {
 function socialResponse(response, conversationId) {
   return {
     answer: response.answer, sources: [], relatedArticles: [], relatedProjects: [], relatedNotes: [], recommendations: [],
-    followUpQuestions: response.followUpQuestions, suggestedQuestions: response.followUpQuestions, confidence: "high",
+    followUpQuestions: response.followUpQuestions, suggestedQuestions: response.followUpQuestions, confidence: response.confidence || "high",
     conversationId, success: true
   };
 }
@@ -93,9 +93,9 @@ export default {
       const conversation = await memory.load(conversationId);
       const route = await new SearchRouter(metadataService).route(question);
       const wantsStream = request.headers.get("Accept")?.includes("text/event-stream");
-      if (route.kind === "social") {
+      if (route.kind === "social" || route.kind === "boundary") {
         const result = socialResponse(route.response, conversationId);
-        analytics.trackInBackground(ctx, "conversation", question.toLowerCase());
+        analytics.trackInBackground(ctx, route.kind === "boundary" ? "scope_boundary" : "conversation", question.toLowerCase());
         ctx?.waitUntil?.(memory.recordTurn({ conversationId, question, answer: result.answer, sources: [] }));
         return wantsStream
           ? eventStream([{ type: "metadata", data: result }, { type: "response.output_text.delta", data: { delta: result.answer } }, { type: "done", data: {} }], origin)

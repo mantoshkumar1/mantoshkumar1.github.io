@@ -45,7 +45,7 @@ export const SOURCE_FIXTURES = Object.freeze({
     url: "/experience/#verified-highlights",
     tags: ["gate", "top-one-percent", "tum"],
     summary: "A résumé-backed GATE achievement and TUM admission context.",
-    content: "Mantosh ranked in the top 1% in India's GATE CS & IT examination in 2012 and 2013. He says a GATE result formed part of his TUM admission journey, and his résumé confirms the completed M.Sc. degree.",
+    content: "Mantosh ranked in the top 0.76% among 156,780 candidates in India's GATE CS & IT examination in 2012 and the top 0.87% among 224,160 candidates in 2013. He says a GATE result formed part of his TUM admission journey, and his résumé confirms the completed M.Sc. degree.",
     answer: ""
   }),
   "photosahi": fixture({
@@ -90,7 +90,7 @@ export const SOURCE_FIXTURES = Object.freeze({
     tags: ["retrieval-augmented-generation", "evidence-only"],
     summary: "A grounded engineering knowledge interface.",
     content: "Ask Mantosh retrieves reviewed public evidence before generation. When retrieval finds insufficient evidence, the Worker declines rather than answering from model memory. Citations are limited to approved source URLs.",
-    answer: "## Answer\nAsk Mantosh retrieves reviewed public material before generation. If retrieval finds insufficient evidence, it declines instead of answering from model memory, and grounded responses can cite only approved source URLs. [Project: Evidence-First Engineering Knowledge System](/projects/engineering-knowledge-system.html)"
+    answer: "## Answer\nAsk Mantosh retrieves reviewed public material before generation. If retrieval finds insufficient evidence, it declines instead of answering from model memory, and grounded responses can cite only approved source URLs. [Project: Evidence-First Engineering Knowledge System](/projects/engineering-knowledge-system.html) </response_mode> </response_mode>"
   }),
   "validation-platform-optical-networking": fixture({
     title: "Validation Platform and Release Intelligence",

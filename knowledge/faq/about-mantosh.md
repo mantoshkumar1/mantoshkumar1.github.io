@@ -4,7 +4,7 @@ slug: "about-mantosh"
 category: "faq"
 tags: [staff-software-engineer, principal-engineer, platform-engineering, automation, backend-systems, networking, operational-intelligence, hiring, achievements, awards, education, canadian-citizen, work-authorization, toronto, canada, united-states, india]
 summary: "A concise, evidence-backed guide to Mantosh Kumar's engineering background, strongest documented capability areas, and appropriate ways to assess fit for a role or project."
-last_updated: "2026-07-13"
+last_updated: "2026-07-15"
 related_topics: [engineering-capabilities, workflow-automation, distributed-validation, developer-productivity, quality-analytics, academic-achievements, gate, technical-university-of-munich]
 visibility: "public"
 url: "/experience/"
@@ -38,7 +38,7 @@ Mantosh is open to Staff Engineer or Principal Engineer opportunities rather tha
 
 - M.Sc. in Computer Science from the Technical University of Munich, with thesis work in software-defined networking and network-functions virtualization.
 - Two Intel Heroes of Tomorrow awards for outstanding engineering contributions.
-- Ranked in the top 1% in India's GATE Computer Science and Information Technology examination in both 2012 and 2013. Mantosh states that a GATE result formed part of his admission journey to the TUM master's program.
+- Ranked in the top 0.76% among 156,780 candidates in India's GATE Computer Science and Information Technology examination in 2012 and the top 0.87% among 224,160 candidates in 2013. Mantosh states that a GATE result formed part of his admission journey to the TUM master's program.
 
 These facts are available when a visitor explicitly asks about Mantosh's achievements, awards, education, or career story. They should not be inserted into unrelated answers or presented as proof of suitability for a role.
 

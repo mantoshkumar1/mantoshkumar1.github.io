@@ -1405,6 +1405,22 @@ body.ask-mantosh-open {
   height: 1rem;
 }
 
+.ask-mantosh-export {
+  width: auto;
+  min-width: 3.7rem;
+  padding: 0 .72rem;
+  gap: .35rem;
+  color: #c8dcf7;
+  font: inherit;
+  font-size: .65rem;
+  font-weight: 750;
+  letter-spacing: .08em;
+}
+
+.ask-mantosh-export[hidden] {
+  display: none;
+}
+
 .ask-mantosh-body {
   display: flex;
   flex-direction: column;

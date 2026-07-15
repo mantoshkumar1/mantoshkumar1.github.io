@@ -39,14 +39,16 @@ Simple greetings, thanks, and farewells receive concise conversational replies w
 
 The browser holds no provider or indexing secret. Visitor chat, knowledge indexing, AI provider access, and public content are separated. Index synchronization uses GitHub OIDC, with a manually managed token retained only for recovery.
 
+Visitors can export the visible conversation as a local text file. The export contains only the displayed questions and answers—not conversation identifiers, hidden response metadata, or provider details.
+
 ### Automated release confidence
 
 Release gates check static generation, SEO, discoverability, internal links, accessibility semantics and preferences, documentation drift, content-lane inventory, Worker contract and security behaviors, and evaluation-result drift.
 
 ## Evaluation evidence
 
-- 45 labelled cases cover social conversation, navigation, unsupported requests, achievements, skills, grounded profile, project and Insight answers, and adversarial attempts.
-- 651 objective assertions check response contracts, source selection, citation safety, required and forbidden language, readable Markdown, output bounds, and expected retrieval or generation calls.
+- 57 labelled cases cover social conversation, navigation, unsupported requests, achievements, skills, grounded profile, project and Insight answers, and adversarial attempts.
+- 860 objective assertions check response contracts, source selection, citation safety, required and forbidden language, readable Markdown, output bounds, and expected retrieval or generation calls.
 - The evaluator imports the production Worker entry point with controlled D1, Vectorize, Workers AI, and rate-limiter bindings. It runs without calling the deployed Worker or consuming production quota.
 - The cases and fixtures live under `chat-worker/eval/`, outside `knowledge/`, so expected answers cannot become retrieval evidence.
 
@@ -55,7 +57,7 @@ Release gates check static generation, SEO, discoverability, internal links, acc
 - SEO-configured public pages and structured discoverability files.
 - A reviewed public Ask Mantosh knowledge corpus, including this source.
 - Automated tests covering contracts, deterministic social and achievement routing, quotas, OIDC, retrieval, prompting, citation repair, subjective questions, explicit achievement gating, and failure paths.
-- A committed offline evaluation result that currently records 45 of 45 cases and 651 of 651 objective assertions passing.
+- A committed offline evaluation result that currently records 57 of 57 cases and 860 of 860 objective assertions passing.
 
 ## Current limits
 

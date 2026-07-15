@@ -100,6 +100,11 @@ async function evaluateCase(entry) {
     check("no retrieval embedding", calls.embeddings === 0, `received ${calls.embeddings}`);
     check("no generation", calls.generation === 0, `received ${calls.generation}`);
     check("no navigation action", !payload.action);
+  } else if (expected.kind === "boundary") {
+    check("no retrieval embedding", calls.embeddings === 0, `received ${calls.embeddings}`);
+    check("no generation", calls.generation === 0, `received ${calls.generation}`);
+    check("no navigation action", !payload.action);
+    check("low confidence", payload.confidence === "low", `received ${payload.confidence}`);
   } else if (expected.kind === "navigate") {
     check("navigation action", payload.action?.type === "navigate");
     check("navigation destination type", payload.action?.destinationType === expected.actionType, `received ${payload.action?.destinationType}`);

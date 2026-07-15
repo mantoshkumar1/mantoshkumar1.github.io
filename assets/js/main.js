@@ -250,14 +250,15 @@ class AskMantoshApp {
     } catch { /* Chat remains usable when storage is unavailable. */ }
   }
   init() {
-    const { toggle, minimize, clear, backdrop, panel, form, input, send, suggestions } = this.elements;
-    toggle.addEventListener("click", () => this.open()); minimize.addEventListener("click", () => this.close()); clear.addEventListener("click", () => this.clearConversation()); backdrop.addEventListener("click", () => this.close());
+    const { toggle, exportButton, minimize, clear, backdrop, panel, form, input, send, suggestions } = this.elements;
+    toggle.addEventListener("click", () => this.open()); exportButton.addEventListener("click", () => this.exportConversation()); minimize.addEventListener("click", () => this.close()); clear.addEventListener("click", () => this.clearConversation()); backdrop.addEventListener("click", () => this.close());
     form.addEventListener("submit", (event) => { event.preventDefault(); this.ask(input.value); });
     suggestions.addEventListener("click", (event) => { const button = event.target.closest("[data-suggestion]"); if (button) this.ask(button.dataset.suggestion); });
     input.addEventListener("input", () => this.resize()); input.addEventListener("keydown", (event) => { if (event.key === "Enter" && !event.shiftKey) { event.preventDefault(); this.ask(input.value); } });
     document.addEventListener("keydown", (event) => { if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") { event.preventDefault(); this.open(); } if (event.key === "Escape" && !panel.hidden) this.close(); });
     panel.addEventListener("keydown", (event) => this.trapFocus(event));
     if (!this.loadSession()) this.view.showEmpty((question) => this.ask(question));
+    this.updateExportAvailability();
     this.resize();
   }
   open() { if (this.elements.panel.hidden) { this.previousFocus = document.activeElement; this.elements.panel.hidden = false; this.elements.backdrop.hidden = false; document.body.classList.add("ask-mantosh-open"); this.elements.toggle.setAttribute("aria-expanded", "true"); requestAnimationFrame(() => this.elements.input.focus()); } }
@@ -268,7 +269,30 @@ class AskMantoshApp {
     this.controller?.abort(); this.controller = null; this.messages = []; this.id = 0; this.conversationId = this.newConversationId();
     try { window.sessionStorage.removeItem(this.storageKey); } catch { /* The visible conversation can still be cleared. */ }
     this.view.nodes.clear(); this.view.setStreaming(false); this.view.setStatus(""); this.view.showEmpty((question) => this.ask(question));
+    this.updateExportAvailability();
     this.elements.input.value = ""; this.resize(); this.close();
+  }
+  updateExportAvailability() {
+    this.elements.exportButton.hidden = !this.messages.some((message) => message.role === "assistant" && message.text.trim());
+  }
+  exportConversation() {
+    const visibleMessages = this.messages.filter((message) => message.text.trim());
+    if (!visibleMessages.some((message) => message.role === "assistant")) return;
+    const transcript = [
+      "Ask Mantosh conversation",
+      "",
+      ...visibleMessages.flatMap((message) => [message.role === "user" ? "You" : "Ask Mantosh", message.text.trim(), ""])
+    ].join("\n").trimEnd() + "\n";
+    const blob = new Blob([transcript], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `ask-mantosh-conversation-${new Date().toISOString().slice(0, 10)}.txt`;
+    document.body.append(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+    this.view.setStatus("Conversation exported as TXT.");
   }
   trapFocus(event) {
     if (event.key !== "Tab") return;
@@ -323,6 +347,7 @@ class AskMantoshApp {
     // Keep the reading area clear after an answer. Suggestions belong only to the empty welcome state.
     this.view.setSuggestions([], (question) => this.ask(question));
     this.saveSession();
+    this.updateExportAvailability();
     const announcement = message.error ? "Answer unavailable." : "Answer ready.";
     this.view.setStatus(announcement);
     window.setTimeout(() => { if (this.view.status.textContent === announcement) this.view.setStatus(""); }, 2500);
@@ -334,7 +359,7 @@ class AskMantoshApp {
 const initializeAskMantosh = () => {
   document.querySelector("[data-year]")?.replaceChildren(String(new Date().getFullYear()));
   const byId = (id) => document.getElementById(id);
-  const elements = { toggle: byId("ask-mantosh-toggle"), minimize: byId("ask-mantosh-minimize"), clear: byId("ask-mantosh-clear"), backdrop: byId("ask-mantosh-backdrop"), panel: byId("ask-mantosh-panel"), form: byId("ask-mantosh-form"), input: byId("ask-mantosh-input"), send: byId("ask-mantosh-send"), messages: byId("ask-mantosh-messages"), suggestions: byId("ask-mantosh-suggestions"), jump: byId("ask-mantosh-jump"), status: byId("ask-mantosh-status") };
+  const elements = { toggle: byId("ask-mantosh-toggle"), exportButton: byId("ask-mantosh-export"), minimize: byId("ask-mantosh-minimize"), clear: byId("ask-mantosh-clear"), backdrop: byId("ask-mantosh-backdrop"), panel: byId("ask-mantosh-panel"), form: byId("ask-mantosh-form"), input: byId("ask-mantosh-input"), send: byId("ask-mantosh-send"), messages: byId("ask-mantosh-messages"), suggestions: byId("ask-mantosh-suggestions"), jump: byId("ask-mantosh-jump"), status: byId("ask-mantosh-status") };
   if (Object.values(elements).every(Boolean)) {
     const app = new AskMantoshApp(elements);
     app.init();

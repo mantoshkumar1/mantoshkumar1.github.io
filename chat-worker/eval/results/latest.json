@@ -1,22 +1,22 @@
 {
   "schemaVersion": 1,
   "datasetVersion": "2026-07-15",
-  "datasetSha256": "29552421823a9d26a7f3bce13f1d671543bc0e65ba30f2764db298bfc8372eeb",
-  "cases": 45,
-  "passedCases": 45,
+  "datasetSha256": "2539078d41a2394bfd0e732e01d20351011d76f270258149033a05c22c084552",
+  "cases": 57,
+  "passedCases": 57,
   "passRate": 100,
   "assertions": {
-    "total": 651,
-    "passed": 651
+    "total": 860,
+    "passed": 860
   },
   "categories": {
     "social": {
-      "cases": 12,
-      "passed": 12
+      "cases": 19,
+      "passed": 19
     },
     "navigation": {
-      "cases": 6,
-      "passed": 6
+      "cases": 9,
+      "passed": 9
     },
     "unsupported": {
       "cases": 6,
@@ -31,8 +31,8 @@
       "passed": 13
     },
     "adversarial": {
-      "cases": 4,
-      "passed": 4
+      "cases": 6,
+      "passed": 6
     }
   },
   "limitations": [
