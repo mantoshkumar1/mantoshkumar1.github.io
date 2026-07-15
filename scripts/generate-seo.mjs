@@ -135,7 +135,15 @@ function generatedHead({ site, page, url, route, canonicalUrl = url }) {
   const image = routeToUrl(site, page.image || site.socialImage);
   const schema = schemaFor({ site, page, url, route });
   const analytics = site.analytics?.provider === "plausible"
-    ? `\n    <script defer data-domain="${escapeHtml(site.analytics.domain)}" src="https://plausible.io/js/script.js"></script>`
+    ? `\n    <script>
+      window.addEventListener("load", () => {
+        const analytics = document.createElement("script");
+        analytics.defer = true;
+        analytics.dataset.domain = "${escapeHtml(site.analytics.domain)}";
+        analytics.src = "https://plausible.io/js/script.js";
+        document.head.append(analytics);
+      }, { once: true });
+    </script>`
     : "";
   return `${GENERATED_START}
     <meta name="description" content="${escapeHtml(page.description)}" />

@@ -112,14 +112,51 @@
       </div>
       <div class="ask-mantosh-body">
         <div class="ask-mantosh-conversation"><div class="ask-mantosh-messages" id="ask-mantosh-messages" role="log" aria-live="polite" aria-relevant="additions text" aria-label="Ask Mantosh conversation"></div><button class="ask-mantosh-jump" id="ask-mantosh-jump" type="button" hidden>Jump to latest</button></div>
-        <div class="ask-mantosh-suggestions" id="ask-mantosh-suggestions" aria-label="Suggested questions" hidden></div>
+        <div class="ask-mantosh-suggestions" id="ask-mantosh-suggestions" role="group" aria-label="Suggested questions" hidden></div>
         <div class="ask-mantosh-status" id="ask-mantosh-status" role="status" aria-live="polite"></div>
         <div class="ask-mantosh-composer-hint" aria-hidden="true"><span><kbd>Enter</kbd> send</span><span><kbd>Shift</kbd> + <kbd>Enter</kbd> new line</span></div>
         <form class="ask-mantosh-composer" id="ask-mantosh-form"><label class="sr-only" for="ask-mantosh-input">Ask about Mantosh's engineering work</label><textarea id="ask-mantosh-input" rows="1" placeholder="Ask about Mantosh's engineering work..." maxlength="1000"></textarea><button class="ask-mantosh-send" id="ask-mantosh-send" type="submit" aria-label="Send message">Send</button></form>
       </div>
     </section>`);
 
-  const client = document.createElement("script");
-  client.src = "/assets/js/main.js?v=20260715-1";
-  document.body.append(client);
+  let clientPromise;
+  const loadClient = () => {
+    if (clientPromise) return clientPromise;
+    clientPromise = new Promise((resolve, reject) => {
+      const client = document.createElement("script");
+      client.src = "/assets/js/main.js?v=20260715-1";
+      client.addEventListener("load", resolve, { once: true });
+      client.addEventListener("error", reject, { once: true });
+      document.body.append(client);
+    });
+    return clientPromise;
+  };
+
+  const toggle = document.getElementById("ask-mantosh-toggle");
+  toggle.addEventListener("click", (event) => {
+    if (toggle.dataset.clientReady === "true") return;
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    loadClient().then(() => {
+      toggle.dataset.clientReady = "true";
+      toggle.click();
+    }).catch(() => {
+      toggle.setAttribute("aria-disabled", "true");
+    });
+  }, { capture: true });
+
+  document.addEventListener("click", (event) => {
+    const trigger = event.target.closest('a[href="#ask-mantosh"], [data-open-ask-mantosh]');
+    if (!trigger || toggle.dataset.clientReady === "true") return;
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    loadClient().then(() => {
+      toggle.dataset.clientReady = "true";
+      trigger.click();
+    });
+  }, { capture: true });
+
+  if (window.location.hash === "#ask-mantosh") {
+    loadClient().then(() => { toggle.dataset.clientReady = "true"; });
+  }
 })();

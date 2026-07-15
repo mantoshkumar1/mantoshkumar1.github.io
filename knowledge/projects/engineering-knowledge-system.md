@@ -55,8 +55,8 @@ After GitHub Pages deploys, a revision-aware smoke check verifies the exact comm
 
 ## Evaluation evidence
 
-- 528 labelled cases combine 68 focused regressions with 460 persona questions: 100 recruiter, 100 student, 100 curious visitor, 100 colleague, and 60 founder prompts.
-- 9,100 objective assertions check response contracts, source selection, citation safety, required and forbidden language, readable Markdown, output bounds, navigation, and expected retrieval or generation calls.
+- 531 labelled cases combine 71 focused regressions with 460 persona questions: 100 recruiter, 100 student, 100 curious visitor, 100 colleague, and 60 founder prompts.
+- 9,177 objective assertions check response contracts, source selection, citation safety, required and forbidden language, readable Markdown, output bounds, navigation, and expected retrieval or generation calls.
 - The first persona run passed 434 of 519 cases. The failures exposed narrow natural-language routing for navigation, public profile facts, work-authorization nuance, conversational recovery, and privacy boundaries; those categories were strengthened before the final all-passing run.
 - The evaluator imports the production Worker entry point with controlled D1, Vectorize, Workers AI, and rate-limiter bindings. It runs without calling the deployed Worker or consuming production quota.
 - The cases and fixtures live under `chat-worker/eval/`, outside `knowledge/`, so expected answers cannot become retrieval evidence.
@@ -66,7 +66,7 @@ After GitHub Pages deploys, a revision-aware smoke check verifies the exact comm
 - SEO-configured public pages and structured discoverability files.
 - A reviewed public Ask Mantosh knowledge corpus, including this source.
 - Automated tests covering contracts, deterministic social and achievement routing, quotas, OIDC, retrieval, prompting, citation repair, subjective questions, explicit achievement gating, failure paths, and desktop/mobile visitor journeys.
-- A committed offline evaluation result that currently records 528 of 528 cases and 9,100 of 9,100 objective assertions passing.
+- A committed offline evaluation result that currently records 531 of 531 cases and 9,177 of 9,177 objective assertions passing.
 
 ## Current limits
 

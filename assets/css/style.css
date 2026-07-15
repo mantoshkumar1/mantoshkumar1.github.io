@@ -3061,6 +3061,7 @@ html[data-theme="light"] .ask-mantosh-panel { background: rgba(255,255,255,.96);
 html[data-theme="light"] .ask-mantosh-answer pre { background: #eef2f7; }
 html[data-theme="light"] .ask-mantosh-source::after { background: #fff; }
 html[data-theme="light"] .ask-mantosh-jump { background: #e8f1fd; }
+html[data-theme="light"] .ask-mantosh-error { border-color: #be123c; background: #fff1f2; color: #881337; }
 html[data-theme="light"] .appearance-control select { color-scheme: light; }
 
 html[data-theme="soft"] {
@@ -3108,6 +3109,7 @@ html[data-theme="soft"] .ask-mantosh-panel { background: rgba(255,250,242,.97); 
 html[data-theme="soft"] .ask-mantosh-answer pre { background: #eee5d8; }
 html[data-theme="soft"] .ask-mantosh-source::after { background: #fffaf2; }
 html[data-theme="soft"] .ask-mantosh-jump { background: #f0dfcc; }
+html[data-theme="soft"] .ask-mantosh-error { border-color: #b42318; background: #fff0ed; color: #7a271a; }
 html[data-theme="soft"] .appearance-control select { color-scheme: light; }
 
 html[data-theme="contrast"] {
@@ -3155,6 +3157,7 @@ html[data-theme="contrast"] .capability-section {
 }
 html[data-theme="contrast"] :focus-visible { outline-color: #ffde59; }
 html[data-theme="contrast"] .appearance-control select { border-color: #fff; background: #000; color: #fff; }
+html[data-theme="contrast"] .ask-mantosh-error { border-color: #ff8080; background: #450000; color: #fff; }
 
 @media (prefers-color-scheme: light) {
   html:not([data-theme]) {

@@ -269,6 +269,27 @@ test("handles lightweight banter without retrieval or unsupported claims", async
   }
 });
 
+test("routes transcript scope gaps without retrieval or unsupported expertise", async () => {
+  const boundaryEnv = {
+    ...env,
+    AI: { run: async () => { throw new Error("No AI call is expected for a scope boundary"); } },
+    KNOWLEDGE_INDEX: { query: async () => { throw new Error("No retrieval is expected for a scope boundary"); } }
+  };
+  for (const [question, expected] of [
+    ["what is the weather outside", "I don't have live weather data."],
+    ["how the testing can be performed for Informatica mapping", "Informatica is not documented in Mantosh's published work"],
+    ["how source and target load can be tested in inforamatica mapping", "I shouldn't present him as an Informatica authority"]
+  ]) {
+    const response = await worker.fetch(request({ question }), boundaryEnv);
+    const payload = await response.json();
+    assert.equal(response.status, 200);
+    assert.match(payload.answer, new RegExp(expected.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i"));
+    assert.deepEqual(payload.sources, []);
+    assert.deepEqual(payload.followUpQuestions, []);
+    assert.equal(payload.confidence, "low");
+  }
+});
+
 test("answers concise public profile facts while protecting private address details", async () => {
   const deterministicEnv = {
     ...env,
@@ -282,6 +303,7 @@ test("answers concise public profile facts while protecting private address deta
     ["can he work in USA?", "Mantosh's published work authorization includes the United States. Confirm role-specific details directly with him."],
     ["where he works currently?", "Mantosh currently works at Nokia."],
     ["what he likes?", "Professionally, Mantosh's published work consistently focuses on automation, reusable systems, and clearer engineering decisions. His personal preferences are not documented here."],
+    ["what are the hobbies of mantosh", "Professionally, Mantosh's published work consistently focuses on automation, reusable systems, and clearer engineering decisions. His personal preferences are not documented here."],
     ["tell me what kind of person he is?", "Professionally, Mantosh's published work suggests a pragmatic, systems-oriented engineer who values automation, reusable platforms, evidence, and engineering judgment. His private personality is not documented here."],
     ["What is his home address?", "I don't provide private home-address details. Mantosh's published professional location is Toronto, Canada."]
   ]) {
@@ -410,7 +432,7 @@ test("does not call Workers AI generation when retrieval finds no published know
     assert.match(model, /bge-m3/);
     return { data: [[0.1, 0.2]] };
   } };
-  const response = await worker.fetch(request({ question: "What is the weather on Mars?" }), noMatchEnv);
+  const response = await worker.fetch(request({ question: "Explain underwater basket weaving" }), noMatchEnv);
   assert.equal((await response.json()).answer, "I can't support that from Mantosh's published work. Ask me about his experience, projects, engineering approach, or fit for your problem.");
 });
 

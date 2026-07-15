@@ -146,3 +146,27 @@ test("Ask Mantosh preserves minimized history, exports it, and clears deliberate
   await expect(page.locator(".ask-mantosh-empty")).toBeVisible();
   await expect(page.locator(".ask-mantosh-message")).toHaveCount(0);
 });
+
+test("Ask Mantosh errors remain readable in every appearance mode", async ({ page }) => {
+  await page.route("https://ask-mantosh.mantoshk234.workers.dev/**", async (route) => {
+    await route.fulfill({
+      status: 500,
+      contentType: "application/json",
+      body: JSON.stringify({ success: false, error: { code: "invalid_model_response", message: "The AI service returned an invalid response." } })
+    });
+  });
+  await page.goto("/");
+  await page.getByRole("button", { name: "Ask Mantosh" }).click();
+  await page.locator("#ask-mantosh-input").fill("What are the hobbies of Mantosh?");
+  await page.getByRole("button", { name: "Send message" }).click();
+
+  const error = page.locator(".ask-mantosh-error");
+  await expect(error).toContainText("The AI service returned an invalid response.");
+  await expect(error.getByRole("button", { name: "Try again" })).toBeVisible();
+  for (const theme of ["light", "dark", "soft", "contrast"]) {
+    await page.locator("#appearance-select").selectOption(theme);
+    await page.waitForTimeout(300);
+    await expect(error).toBeVisible();
+    await assertNoSeriousAccessibilityViolations(page, `Ask Mantosh error-${theme}-${test.info().project.name}`);
+  }
+});

@@ -110,7 +110,7 @@ const SOCIAL_RESPONSES = [
     ]
   },
   {
-    pattern: /^(?:what (?:does )?(?:mantosh|he) likes?|what (?:are )?(?:mantosh(?:'s|’s)|his) (?:interests|preferences))[!.?\s]*$/i,
+    pattern: /^(?:what (?:does )?(?:mantosh|he) likes?|what (?:are )?(?:the )?(?:hobbies|interests|preferences) of (?:mantosh|him)|what (?:are )?(?:mantosh(?:'s|’s)|his) (?:hobbies|interests|preferences))[!.?\s]*$/i,
     answer: "Professionally, Mantosh's published work consistently focuses on automation, reusable systems, and clearer engineering decisions. His personal preferences are not documented here.",
     followUpQuestions: []
   },
@@ -145,6 +145,18 @@ const SOCIAL_RESPONSES = [
 ];
 
 const SCOPE_BOUNDARY_RESPONSES = [
+  {
+    pattern: /\b(?:weather|temperature|forecast)\b/i,
+    answer: "I don't have live weather data. Ask me about Mantosh's published experience, projects, engineering approach, or fit for your problem."
+  },
+  {
+    pattern: /\b(?:unrelated quantum physics|world cup|history homework|recommend (?:me )?a movie|tomorrow(?:'s|’s) stock price|diagnose (?:my )?headache|medicine .*headache|book (?:me )?a flight|translate this novel|unrelated crossword)\b/i,
+    answer: "I can't support that from Mantosh's published work. Ask me about his experience, projects, engineering approach, or fit for your problem."
+  },
+  {
+    pattern: /\binforamatica\b|\binformatica\b/i,
+    answer: "Informatica is not documented in Mantosh's published work, so I shouldn't present him as an Informatica authority. I can discuss his documented validation approach, or you can use an Informatica-specific resource for product guidance."
+  },
   {
     pattern: /\b(?:home|street|residential|exact) address\b|^(?:what(?:'s| is)|tell me|give me|show me).*(?:his|mantosh(?:'s|’s)) (?:home )?address[?.!]*$/i,
     answer: "I don't provide private home-address details. Mantosh's published professional location is Toronto, Canada."

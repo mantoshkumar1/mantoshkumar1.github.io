@@ -13,7 +13,7 @@ This document is the canonical description of what is deployed. Architecture pro
 | Health | `https://ask-mantosh.mantoshk234.workers.dev/health` | Unauthenticated service health without configuration details |
 | Knowledge indexing | `POST /internal/index` | GitHub OIDC or manual recovery token only; intentionally unavailable to browsers through CORS |
 
-Last verified Worker deployment: `1fb7a6ed-a6c4-4a78-be6a-70819fc81488`. The active deployed answer-policy cache namespace is `visitor-intent-v23`.
+Last verified Worker deployment: `9206e7f4-a0be-4049-a369-546e29bc1175`. The active deployed answer-policy cache namespace is `visitor-intent-v25`.
 
 ## Published inventory
 
@@ -74,7 +74,7 @@ The committed production configuration uses:
 - 50 AI-bearing requests per UTC day through D1;
 - six retained conversation turns and a 24-hour session TTL.
 
-Cloudflare Cache API stores eligible embeddings, retrieval candidates, and first-turn answers for 15, 5, and 10 minutes respectively. The optional `CACHE_VERSION` KV binding is not configured in the committed production file, so knowledge-index invalidation currently relies on TTL expiry and the fallback version. Answer-policy changes explicitly advance `ANSWER_POLICY_VERSION`—currently `visitor-intent-v23`—to avoid serving a response cached under an older formatter or routing contract. This is an explicit known limitation, not an undocumented guarantee.
+Cloudflare Cache API stores eligible embeddings, retrieval candidates, and first-turn answers for 15, 5, and 10 minutes respectively. The optional `CACHE_VERSION` KV binding is not configured in the committed production file, so knowledge-index invalidation currently relies on TTL expiry and the fallback version. Answer-policy changes explicitly advance `ANSWER_POLICY_VERSION`—currently `visitor-intent-v25` in source—to avoid serving a response cached under an older formatter or routing contract. This is an explicit known limitation, not an undocumented guarantee.
 
 ## Security and privacy controls
 
@@ -98,8 +98,8 @@ The repository currently enforces:
 - internal link, fragment, and asset validation;
 - documentation drift checks;
 - autonomous content-lane counts and explicit zero-content states;
-- 55 Worker contract, deterministic social, light-banter, navigation, knowledge-backed public-profile fact, privacy-boundary, and achievement routing, natural profile-language routing, security, quota, OIDC, retrieval, concise intent-formatting, prompt, citation-repair, repetition and control-tag sanitization, and failure-path tests;
-- 528 labelled Ask Mantosh evaluation cases with 9,100 objective assertions: 68 focused regressions plus 460 recruiter, student, curious-visitor, colleague, and founder questions covering social, navigation, unsupported, achievement, grounded-answer, and adversarial behavior;
+- 56 Worker contract, deterministic social, light-banter, navigation, knowledge-backed public-profile fact, privacy-boundary, transcript-derived scope routing, and achievement routing, natural profile-language routing, security, quota, OIDC, retrieval, concise intent-formatting, prompt, citation-repair, repetition and control-tag sanitization, and failure-path tests;
+- 531 labelled Ask Mantosh evaluation cases with 9,177 objective assertions: 71 focused regressions plus 460 recruiter, student, curious-visitor, colleague, and founder questions covering social, navigation, unsupported, achievement, grounded-answer, and adversarial behavior;
 - a whole-site coverage audit that fails when any public HTML route lacks reviewed evidence, deterministic navigation, or a documented no-index exclusion;
 - static UI guards for immediate safe Markdown rendering.
 - 14 Playwright browser checks across desktop and mobile Chromium covering critical-page rendering, the recruiter path, project and Insight navigation, newsletter validation, résumé and contact fallbacks, all appearance choices with Axe WCAG scans, and Ask Mantosh minimize, export, and deliberate-clear behavior;

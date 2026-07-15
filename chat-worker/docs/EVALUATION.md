@@ -20,7 +20,7 @@ Dataset version: `2026-07-15`
 | Colleague persona | 100 | Architecture, validation, automation, release intelligence, project trade-offs, capabilities, and confidentiality. |
 | Founder persona | 60 | Commercial fit, platform and automation problems, release risk, evidence systems, and contact flow. |
 
-All **528 of 528 cases** and **9,100 of 9,100 objective assertions** pass in [`../eval/results/latest.json`](../eval/results/latest.json). The 528 labelled cases combine 68 focused regressions with the 460-question persona contract requested for recruiter, student, curious visitor, colleague, and founder behavior.
+All **531 of 531 cases** and **9,177 of 9,177 objective assertions** pass in [`../eval/results/latest.json`](../eval/results/latest.json). The 531 labelled cases combine 71 focused regressions with the 460-question persona contract requested for recruiter, student, curious visitor, colleague, and founder behavior.
 
 The first persona run passed 434 of 519 cases. Its 85 failures clustered around natural navigation wording, public location and employer paraphrases, work-authorization nuance, casual capability questions, conversational recovery, and privacy or prompt-injection variants. The routes and evidence boundaries were then tightened; the final result above is the post-fix run.
 
