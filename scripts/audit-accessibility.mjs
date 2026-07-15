@@ -64,7 +64,7 @@ if (!/id=["']ask-mantosh-toggle["'][^>]+aria-label=["']Ask Mantosh["']/.test(wid
 if (!/id=["']ask-mantosh-export["'][^>]+aria-label=["']Export conversation as a text file["']/.test(widget)) failures.push("Ask Mantosh needs an explicitly named text-export control");
 if (!/id=["']ask-mantosh-minimize["'][^>]+aria-label=["']Minimize Ask Mantosh; conversation will remain available["']/.test(widget)) failures.push("Ask Mantosh needs an explicit conversation-preserving minimize control");
 if (!/id=["']ask-mantosh-clear["'][^>]+aria-label=["']Close Ask Mantosh and clear conversation["']/.test(widget)) failures.push("Ask Mantosh needs an explicit close-and-clear control");
-if (!/AI answers: shared limit 5\/min · 50\/day\. Quick replies don't count\./.test(widget)) failures.push("Ask Mantosh must disclose its shared AI allowance");
+if (/ask-mantosh-limit-note/.test(widget)) failures.push("Ask Mantosh must show quota details only when a limit is reached");
 if (!client.includes('setAttribute("aria-busy"') || !client.includes('setAttribute("aria-live"')) failures.push("Ask Mantosh missing quiet streaming announcements");
 if (!client.includes("renderBasic(markdown, target)") || !client.includes("this.renderBasic(markdown, target);")) failures.push("Ask Mantosh missing immediate safe Markdown fallback");
 if (!client.includes('stripResponseSections(text) { return text.replace(/\\n*##\\s+(?:Sources|Follow-up Questions)')) failures.push("Ask Mantosh must remove source and follow-up payloads from the reading pane");

@@ -534,7 +534,7 @@ test("rejects requests after the configured daily free-use limit", async () => {
   assert.equal(response.status, 429);
   const payload = await response.json();
   assert.equal(payload.error.code, "free_usage_limit_reached");
-  assert.match(payload.error.message, /50 AI-backed answers.*reset at 00:00 UTC/i);
+  assert.equal(payload.error.message, "Daily AI limit reached. Try again after 00:00 UTC.");
   assert.ok(Number(response.headers.get("Retry-After")) > 0);
 });
 
@@ -548,7 +548,7 @@ test("rejects requests after the configured per-minute free-use limit", async ()
   assert.equal(response.status, 429);
   const payload = await response.json();
   assert.equal(payload.error.code, "request_rate_limit_reached");
-  assert.match(payload.error.message, /5 per minute.*hosting cost and abuse/i);
+  assert.equal(payload.error.message, "AI limit reached. Try again in 1 minute.");
   assert.equal(response.headers.get("Retry-After"), "60");
 });
 

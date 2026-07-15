@@ -26,7 +26,7 @@ export async function enforceStrictRequestLimit(env, config) {
        RETURNING request_count`
     ).bind(utcMinute(), config.freePerMinuteRequestLimit).first();
     if (!row) {
-      throw new AppError(429, "request_rate_limit_reached", "AI-backed answers are limited to 5 per minute across Ask Mantosh. This controls hosting cost and abuse. Quick replies and navigation remain available; try this question again in about a minute.", { retryAfter: 60 });
+      throw new AppError(429, "request_rate_limit_reached", "AI limit reached. Try again in 1 minute.", { retryAfter: 60 });
     }
   } catch (error) {
     if (error instanceof AppError) throw error;
@@ -49,7 +49,7 @@ export async function enforceFreeUsageLimit(env, config) {
        RETURNING request_count`
     ).bind(utcDay(), config.freeDailyRequestLimit).first();
     if (!row) {
-      throw new AppError(429, "free_usage_limit_reached", "Ask Mantosh's shared allowance of 50 AI-backed answers for today has been reached. This controls hosting cost. Quick replies and navigation remain available; AI-backed answers reset at 00:00 UTC.", { retryAfter: secondsUntilNextUtcDay() });
+      throw new AppError(429, "free_usage_limit_reached", "Daily AI limit reached. Try again after 00:00 UTC.", { retryAfter: secondsUntilNextUtcDay() });
     }
   } catch (error) {
     if (error instanceof AppError) throw error;
