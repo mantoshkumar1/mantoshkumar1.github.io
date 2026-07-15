@@ -40,7 +40,7 @@ Every request takes this path before a Workers AI generation call:
 
 1. Validate or create a client-held `conversationId`.
 2. Load the bounded session memory and expand retrieval only with the most recent visitor topic.
-3. Route deterministic commands such as `Resume`, `Contact`, `Show PhotoSahi`, and `Latest article` directly to a page. These return `action: { type: "navigate", ... }` and do not call the AI model.
+3. Route deterministic commands for Home, Projects, Insights, Experience, Resume, Contact, Newsletter, Accessibility, named projects, and the latest article directly to a page. These return `action: { type: "navigate", ... }` and do not call the AI model.
    Greetings, courtesies, capability questions, and a small set of harmless banter also receive deterministic replies so the assistant stays human without becoming an ungrounded general chatbot.
 4. Use hybrid retrieval for questions that need an answer, then calculate retrieval evidence confidence.
 5. Build metadata-only recommendations and three follow-up questions from public tags and related topics. This requires no generative call.
@@ -85,7 +85,7 @@ curl -i http://localhost:8787/chat \
   --data '{"question":"Why did you build PhotoSahi without a backend?"}'
 ```
 
-Run `npm test`; it executes the unit/contract tests and the 523-case labelled offline evaluation: 63 core cases plus 460 recruiter, student, curious-visitor, colleague, and founder questions. Run only that evaluation with `npm run evaluate`. The committed evidence and methodology are documented in [`docs/EVALUATION.md`](docs/EVALUATION.md). Test the deployed Worker with:
+Run `npm test`; it executes the unit/contract tests and the 528-case labelled offline evaluation: 68 focused regressions plus 460 recruiter, student, curious-visitor, colleague, and founder questions. Run only that evaluation with `npm run evaluate`. The committed evidence and methodology are documented in [`docs/EVALUATION.md`](docs/EVALUATION.md). Test the deployed Worker with:
 
 ```bash
 curl -i https://ask-mantosh.mantoshk234.workers.dev/chat \

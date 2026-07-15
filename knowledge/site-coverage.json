@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "navigation": [
+    { "route": "/", "type": "home", "purpose": "Primary site entry point" },
+    { "route": "/projects/", "type": "projects", "purpose": "Complete project index" },
+    { "route": "/insights/", "type": "insights", "purpose": "Complete Insights index" },
+    { "route": "/resume/", "type": "resume", "purpose": "Résumé summary and PDF access" },
+    { "route": "/contact/", "type": "contact", "purpose": "Public contact options" },
+    { "route": "/newsletter/", "type": "newsletter", "purpose": "Email subscription flow" },
+    { "route": "/accessibility/", "type": "accessibility", "purpose": "Accessibility support and feedback" }
+  ],
+  "nonEvidence": [
+    { "route": "/404.html", "reason": "Error recovery page; not biographical evidence" },
+    { "route": "/systems/", "reason": "Legacy redirect to the Projects index" },
+    { "route": "/thinking/", "reason": "Legacy redirect to the Insights index" },
+    { "route": "/thinking/blockchain-without-a-master-branch.html", "reason": "Legacy redirect to the canonical Insight" },
+    { "route": "/thinking/complexity-changes-address.html", "reason": "Legacy redirect to the canonical Insight" },
+    { "route": "/thinking/engineering-philosophy.html", "reason": "Legacy redirect to the canonical Insight" },
+    { "route": "/thinking/ownership-before-escalation.html", "reason": "Legacy redirect to the canonical Insight" },
+    { "route": "/thinking/release-reports-as-operational-history.html", "reason": "Legacy redirect to the canonical Insight" },
+    { "route": "/thinking/why-does-this-still-require-me.html", "reason": "Legacy redirect to the canonical Insight" }
+  ]
+}

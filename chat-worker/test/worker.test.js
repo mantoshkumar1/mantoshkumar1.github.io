@@ -167,6 +167,29 @@ test("routes direct navigation without calling Workers AI", async () => {
   assert.equal(payload.confidence, "high");
 });
 
+test("routes every public website utility surface without retrieval or Workers AI", async () => {
+  const navigationEnv = {
+    ...env,
+    AI: { run: async () => { throw new Error("No AI call is expected for utility navigation"); } },
+    KNOWLEDGE_INDEX: { query: async () => { throw new Error("No retrieval is expected for utility navigation"); } }
+  };
+  const cases = [
+    ["Go to the home page", "home", "/"],
+    ["Browse all projects", "projects", "/projects/"],
+    ["Read all insights", "insights", "/insights/"],
+    ["How do I subscribe?", "newsletter", "/newsletter/"],
+    ["Read the accessibility statement", "accessibility", "/accessibility/"]
+  ];
+  for (const [question, type, url] of cases) {
+    const response = await worker.fetch(request({ question, conversationId: `session_${type}_navigation_123` }), navigationEnv);
+    const payload = await response.json();
+    assert.equal(response.status, 200);
+    assert.equal(payload.action.destinationType, type);
+    assert.equal(payload.action.url, url);
+    assert.deepEqual(payload.sources, []);
+  }
+});
+
 test("routes natural email and contact requests without retrieval or Workers AI", async () => {
   const navigationEnv = {
     ...env,

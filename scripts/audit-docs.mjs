@@ -123,10 +123,12 @@ for (const file of await markdownFiles(root)) {
 for (const [workflow, label] of [[deployWorkflow, "Pages workflow"], [seoWorkflow, "SEO workflow"]]) {
   requireText(workflow, "node scripts/audit-docs.mjs", label);
   requireText(workflow, "node scripts/audit-content-sections.mjs", label);
+  requireText(workflow, "node scripts/audit-ask-mantosh-coverage.mjs", label);
   requireText(workflow, "node scripts/audit-accessibility.mjs", label);
   requireText(workflow, "npm test --prefix chat-worker", label);
 }
 requireText(readme, "node scripts/audit-accessibility.mjs", "README release gates");
+requireText(readme, "node scripts/audit-ask-mantosh-coverage.mjs", "README release gates");
 requireText(workerReadme, "mandatory Cloudflare Rate Limiting binding", "Worker README");
 
 const stalePatterns = [

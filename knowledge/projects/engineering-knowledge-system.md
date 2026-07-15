@@ -33,7 +33,9 @@ The Worker does not answer from general model memory when retrieval has no suffi
 
 ### Deterministic conversation and navigation before inference
 
-Simple greetings, thanks, and farewells receive concise conversational replies without retrieval or AI. Commands for Resume, Contact, named projects, and the latest article are also routed directly without a generative model call. This reduces latency, cost, and ambiguity.
+Simple greetings, thanks, and farewells receive concise conversational replies without retrieval or AI. Commands for Home, Projects, Insights, Experience, Resume, Contact, Newsletter, Accessibility, named projects, and the latest article are routed directly without a generative model call. This reduces latency, cost, and ambiguity.
+
+Every public HTML route has an explicit Ask Mantosh role. Evidence-bearing project, Insight, experience, achievement, capability, skill, and profile content maps to reviewed knowledge documents. Utility pages map to deterministic navigation. Error pages and legacy redirects are documented no-index exclusions. A CI audit fails if a future page has no classification.
 
 ### One profile source, multiple answer paths
 
@@ -51,8 +53,8 @@ Release gates check static generation, SEO, discoverability, internal links, acc
 
 ## Evaluation evidence
 
-- 523 labelled cases combine 63 focused regressions with 460 persona questions: 100 recruiter, 100 student, 100 curious visitor, 100 colleague, and 60 founder prompts.
-- 9,025 objective assertions check response contracts, source selection, citation safety, required and forbidden language, readable Markdown, output bounds, navigation, and expected retrieval or generation calls.
+- 528 labelled cases combine 68 focused regressions with 460 persona questions: 100 recruiter, 100 student, 100 curious visitor, 100 colleague, and 60 founder prompts.
+- 9,100 objective assertions check response contracts, source selection, citation safety, required and forbidden language, readable Markdown, output bounds, navigation, and expected retrieval or generation calls.
 - The first persona run passed 434 of 519 cases. The failures exposed narrow natural-language routing for navigation, public profile facts, work-authorization nuance, conversational recovery, and privacy boundaries; those categories were strengthened before the final all-passing run.
 - The evaluator imports the production Worker entry point with controlled D1, Vectorize, Workers AI, and rate-limiter bindings. It runs without calling the deployed Worker or consuming production quota.
 - The cases and fixtures live under `chat-worker/eval/`, outside `knowledge/`, so expected answers cannot become retrieval evidence.
@@ -62,7 +64,7 @@ Release gates check static generation, SEO, discoverability, internal links, acc
 - SEO-configured public pages and structured discoverability files.
 - A reviewed public Ask Mantosh knowledge corpus, including this source.
 - Automated tests covering contracts, deterministic social and achievement routing, quotas, OIDC, retrieval, prompting, citation repair, subjective questions, explicit achievement gating, and failure paths.
-- A committed offline evaluation result that currently records 523 of 523 cases and 9,025 of 9,025 objective assertions passing.
+- A committed offline evaluation result that currently records 528 of 528 cases and 9,100 of 9,100 objective assertions passing.
 
 ## Current limits
 
