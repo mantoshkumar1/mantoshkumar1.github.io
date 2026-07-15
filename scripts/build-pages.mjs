@@ -26,4 +26,5 @@ for (const path of privateAssetPaths) await rm(join(output, path), { recursive: 
 await generateSeo(output, join(source, "seo.config.json"));
 await unlink(join(output, "seo.config.json"));
 await writeFile(join(output, ".nojekyll"), "");
+await writeFile(join(output, "deployment.json"), `${JSON.stringify({ revision: process.env.GITHUB_SHA || process.env.DEPLOYMENT_REVISION || "local" }, null, 2)}\n`);
 console.log("Built static GitHub Pages artifact in dist/.");

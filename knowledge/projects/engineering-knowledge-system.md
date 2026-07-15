@@ -49,7 +49,9 @@ Visitors can export the visible conversation as a local text file. The export co
 
 ### Automated release confidence
 
-Release gates check static generation, SEO, discoverability, internal links, accessibility semantics and preferences, documentation drift, content-lane inventory, Worker contract and security behaviors, and evaluation-result drift.
+Release gates check static generation, SEO, discoverability, internal links, accessibility semantics and preferences, documentation drift, content-lane inventory, Worker contract and security behaviors, and evaluation-result drift. Fourteen Playwright checks exercise seven visitor journeys in desktop and mobile Chromium, including the recruiter path, themes with Axe WCAG scans, forms, contact fallback, and Ask Mantosh session controls. Generated asset budgets guard page weight before publication.
+
+After GitHub Pages deploys, a revision-aware smoke check verifies the exact commit, homepage, published evaluation evidence, RSS feed, Ask Mantosh health, and deterministic newsletter navigation. Browser artifacts are retained for diagnosis. These checks do not claim a formal accessibility audit, cross-browser coverage, human visual approval, or production Core Web Vitals measurements.
 
 ## Evaluation evidence
 
@@ -63,7 +65,7 @@ Release gates check static generation, SEO, discoverability, internal links, acc
 
 - SEO-configured public pages and structured discoverability files.
 - A reviewed public Ask Mantosh knowledge corpus, including this source.
-- Automated tests covering contracts, deterministic social and achievement routing, quotas, OIDC, retrieval, prompting, citation repair, subjective questions, explicit achievement gating, and failure paths.
+- Automated tests covering contracts, deterministic social and achievement routing, quotas, OIDC, retrieval, prompting, citation repair, subjective questions, explicit achievement gating, failure paths, and desktop/mobile visitor journeys.
 - A committed offline evaluation result that currently records 528 of 528 cases and 9,100 of 9,100 objective assertions passing.
 
 ## Current limits

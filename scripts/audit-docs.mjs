@@ -126,9 +126,13 @@ for (const [workflow, label] of [[deployWorkflow, "Pages workflow"], [seoWorkflo
   requireText(workflow, "node scripts/audit-ask-mantosh-coverage.mjs", label);
   requireText(workflow, "node scripts/audit-accessibility.mjs", label);
   requireText(workflow, "npm test --prefix chat-worker", label);
+  requireText(workflow, "npm run test:browser", label);
+  requireText(workflow, "npm run audit:performance-budget", label);
 }
 requireText(readme, "node scripts/audit-accessibility.mjs", "README release gates");
 requireText(readme, "node scripts/audit-ask-mantosh-coverage.mjs", "README release gates");
+requireText(readme, "npm run test:browser", "README release gates");
+requireText(deployWorkflow, "node scripts/smoke-production.mjs", "Pages workflow");
 requireText(workerReadme, "mandatory Cloudflare Rate Limiting binding", "Worker README");
 
 const stalePatterns = [

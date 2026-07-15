@@ -1,0 +1,148 @@
+import { test, expect } from "@playwright/test";
+import AxeBuilder from "@axe-core/playwright";
+
+const criticalPages = [
+  ["home", "/", "Turn engineering friction into reusable systems"],
+  ["experience", "/experience/", "14+ years across engineering environments"],
+  ["projects", "/projects/", "Systems and tools I’ve built"],
+  ["resume", "/resume/", "Mantosh Kumar"],
+  ["contact", "/contact/", "Discuss a Staff or Principal Engineer role"]
+];
+
+async function expectNoHorizontalOverflow(page) {
+  const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+  expect(overflow, "page must not overflow the viewport horizontally").toBeLessThanOrEqual(1);
+}
+
+async function expectMainBelowHeader(page) {
+  const positions = await page.evaluate(() => {
+    const header = document.querySelector(".navbar")?.getBoundingClientRect();
+    const main = document.querySelector("main")?.getBoundingClientRect();
+    return { headerBottom: header?.bottom ?? 0, mainTop: main?.top ?? 0 };
+  });
+  expect(positions.mainTop).toBeGreaterThanOrEqual(positions.headerBottom - 1);
+}
+
+async function assertNoSeriousAccessibilityViolations(page, context = "page") {
+  const result = await new AxeBuilder({ page })
+    .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
+    .analyze();
+  expect(result.violations, `${context}: ${JSON.stringify(result.violations, null, 2)}`).toEqual([]);
+}
+
+test("critical pages remain visible, bounded, accessible, and reviewable", async ({ page }, testInfo) => {
+  for (const [name, route, heading] of criticalPages) {
+    await page.goto(route);
+    await expect(page.locator("h1")).toContainText(heading);
+    await expect(page.locator("main")).toBeVisible();
+    await expect(page.getByRole("button", { name: "Ask Mantosh" })).toBeVisible();
+    await expectNoHorizontalOverflow(page);
+    await expectMainBelowHeader(page);
+    await assertNoSeriousAccessibilityViolations(page, `${name}-${testInfo.project.name}`);
+    const screenshot = await page.screenshot({ fullPage: true, animations: "disabled" });
+    await testInfo.attach(`${name}-${testInfo.project.name}`, { body: screenshot, contentType: "image/png" });
+  }
+});
+
+test("appearance choices preserve the homepage hero and primary action", async ({ page }) => {
+  await page.goto("/");
+  for (const theme of ["light", "dark", "soft", "contrast"]) {
+    await test.step(theme, async () => {
+      await page.locator("#appearance-select").selectOption(theme);
+      await expect(page.locator("html")).toHaveAttribute("data-theme", theme);
+      // Theme colors animate briefly. Audit the settled palette, not an
+      // inaccessible-looking intermediate frame from the transition.
+      await page.waitForTimeout(300);
+      await expect(page.locator("h1")).toBeVisible();
+      await expect(page.getByRole("link", { name: /See projects/ })).toBeVisible();
+      await expectNoHorizontalOverflow(page);
+      await assertNoSeriousAccessibilityViolations(page, `${theme}-${test.info().project.name}`);
+    });
+  }
+});
+
+test("recruiter path connects home, experience, projects, resume, and contact", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("link", { name: /View experience/ }).first().click();
+  await expect(page).toHaveURL(/\/experience\/$/);
+  await page.getByRole("link", { name: /See projects/ }).last().click();
+  await expect(page).toHaveURL(/\/projects\/$/);
+  await page.getByRole("link", { name: /View experience/ }).last().click();
+  await expect(page).toHaveURL(/\/experience\/$/);
+  await page.getByRole("link", { name: /View résumé/ }).last().click();
+  await expect(page).toHaveURL(/\/resume\/$/);
+  await page.getByRole("link", { name: /Discuss a role/ }).first().click();
+  await expect(page).toHaveURL(/\/contact\/$/);
+});
+
+test("project and insight cards expose their primary detail destinations", async ({ page }) => {
+  await page.goto("/projects/");
+  const projects = page.locator(".project-card");
+  await expect(projects).toHaveCount(5);
+  for (let index = 0; index < await projects.count(); index += 1) {
+    await expect(projects.nth(index).locator(".project-detail-link")).toHaveAttribute("href", /.+/);
+  }
+  await projects.nth(1).locator(".project-detail-link").click();
+  await expect(page).toHaveURL(/\/projects\/photosahi\.html$/);
+
+  await page.goto("/insights/");
+  const firstInsight = page.locator(".insight-card").first();
+  const destination = await firstInsight.locator("a").getAttribute("href");
+  await firstInsight.click();
+  await expect(page).toHaveURL(new RegExp(destination.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "$"));
+});
+
+test("newsletter validation and résumé resources save visitors from dead ends", async ({ page }) => {
+  await page.goto("/newsletter/");
+  await page.getByRole("button", { name: "Subscribe" }).click();
+  await expect(page.locator("#newsletter-email")).toBeFocused();
+  expect(await page.locator("#newsletter-email").evaluate((input) => input.validity.valueMissing)).toBe(true);
+  await expect(page).toHaveURL(/\/newsletter\/$/);
+
+  await page.goto("/resume/");
+  await expect(page.getByRole("link", { name: /View résumé PDF/ })).toHaveAttribute("target", "_blank");
+  await expect(page.getByRole("link", { name: /Download résumé/ })).toHaveAttribute("download", "");
+  await expect(page.getByRole("link", { name: /^LinkedIn/ })).toHaveAttribute("href", "https://www.linkedin.com/in/mantoshk/");
+});
+
+test("contact offers a working copy-email fallback", async ({ page, context }) => {
+  await context.grantPermissions(["clipboard-read", "clipboard-write"]);
+  await page.goto("/contact/");
+  await page.getByRole("button", { name: "Copy email" }).click();
+  await expect(page.locator("#copy-email-status")).toContainText("mantoshk234@gmail.com");
+  expect(await page.evaluate(() => navigator.clipboard.readText())).toBe("mantoshk234@gmail.com");
+});
+
+test("Ask Mantosh preserves minimized history, exports it, and clears deliberately", async ({ page }) => {
+  await page.route("https://ask-mantosh.mantoshk234.workers.dev/**", async (route) => {
+    await route.fulfill({
+      contentType: "application/json",
+      body: JSON.stringify({
+        answer: "Opening Newsletter.", sources: [], followUpQuestions: [], suggestedQuestions: [], confidence: "high",
+        action: { type: "navigate", destinationType: "newsletter", label: "Newsletter", url: "/newsletter/" }, success: true
+      })
+    });
+  });
+  await page.goto("/");
+  await page.getByRole("button", { name: "Ask Mantosh" }).click();
+  await page.locator("#ask-mantosh-input").fill("How do I subscribe?");
+  await page.getByRole("button", { name: "Send message" }).click();
+  await expect(page.locator(".ask-mantosh-message.assistant")).toContainText("Opening Newsletter");
+
+  await page.getByRole("button", { name: /Minimize Ask Mantosh/ }).click();
+  await expect(page.locator("#ask-mantosh-panel")).toBeHidden();
+  await page.getByRole("button", { name: "Ask Mantosh" }).click();
+  await expect(page.locator(".ask-mantosh-message.user")).toContainText("How do I subscribe?");
+
+  const downloadPromise = page.waitForEvent("download");
+  await page.getByRole("button", { name: /Export conversation/ }).click();
+  const download = await downloadPromise;
+  expect(download.suggestedFilename()).toMatch(/^ask-mantosh-conversation-\d{4}-\d{2}-\d{2}\.txt$/);
+
+  page.once("dialog", (dialog) => dialog.accept());
+  await page.getByRole("button", { name: /Close Ask Mantosh and clear/ }).click();
+  await expect(page.locator("#ask-mantosh-panel")).toBeHidden();
+  await page.getByRole("button", { name: "Ask Mantosh" }).click();
+  await expect(page.locator(".ask-mantosh-empty")).toBeVisible();
+  await expect(page.locator(".ask-mantosh-message")).toHaveCount(0);
+});
