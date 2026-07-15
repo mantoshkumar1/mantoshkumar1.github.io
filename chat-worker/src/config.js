@@ -17,8 +17,8 @@ export const DEFAULTS = Object.freeze({
   enableStreaming: false,
   embeddingModel: "@cf/baai/bge-m3",
   model: "@cf/meta/llama-3.1-8b-instruct-fast",
-  freeDailyRequestLimit: 50,
-  freePerMinuteRequestLimit: 5
+  freeDailyRequestLimit: 300,
+  freePerMinuteRequestLimit: 20
 });
 
 function positiveInteger(value, fallback, name) {

@@ -13,14 +13,16 @@
 
 ## Usage monitoring
 
-Workers AI's free allocation is finite and resets daily. Monitor its dashboard
+Workers AI's free allocation is 10,000 Neurons per day and resets at 00:00 UTC.
+Monitor its dashboard
 usage plus response- and embedding-cache hit rates, retrieval context size,
 no-answer rate, and model failures. A response-cache hit avoids both retrieval and generation; an
 embedding-cache hit avoids only the embedding request.
 
 ## Current limits
 
-Production is configured for five requests per minute and 50 AI-bearing
+Production is configured for 20 requests per minute and 300 AI-bearing
 requests per UTC day, with a 450-token output cap. The Cloudflare rate-limiter
 binding and D1 counters are both enforced. The service may become unavailable
-after a free allocation is exhausted; it must not silently enable paid usage.
+after the provider allocation is exhausted. On Workers Free, excess AI operations
+fail instead of becoming paid usage; monitor the dashboard before enabling a paid plan.
