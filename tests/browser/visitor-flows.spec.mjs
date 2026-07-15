@@ -28,6 +28,13 @@ async function assertNoSeriousAccessibilityViolations(page, context = "page") {
     .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
     .analyze();
   expect(result.violations, `${context}: ${JSON.stringify(result.violations, null, 2)}`).toEqual([]);
+  const accessibleNameResult = await new AxeBuilder({ page })
+    .withRules(["label-content-name-mismatch"])
+    .analyze();
+  expect(
+    accessibleNameResult.violations,
+    `${context} accessible names: ${JSON.stringify(accessibleNameResult.violations, null, 2)}`
+  ).toEqual([]);
 }
 
 test("critical pages remain visible, bounded, accessible, and reviewable", async ({ page }, testInfo) => {
