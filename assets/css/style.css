@@ -2170,6 +2170,7 @@ main.project-shell > .container > .section-block {
 
 .resume-summary .experience-evidence {
   padding-top: 0;
+  border-top: 0;
 }
 
 .case-study .resume-section h2 {
