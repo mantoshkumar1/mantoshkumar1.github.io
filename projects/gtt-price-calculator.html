@@ -38,7 +38,7 @@
 
 <title>GTT Price Calculator for Indian Stock Orders | Mantosh Kumar</title>
     <script src="../assets/js/theme-init.js?v=20260713-1"></script>
-    <link rel="stylesheet" href="../assets/css/style.css?v=20260715-1" />
+    <link rel="stylesheet" href="../assets/css/style.css?v=20260715-2" />
   </head>
   <body>
     <a class="skip-link" href="#main-content">Skip to main content</a>
@@ -73,6 +73,31 @@
           <section class="resume-section">
             <h2>Problem</h2>
             <p>Setting up a Good Till Triggered (GTT) order can involve checking the trigger distance, rounding the price correctly, and translating an investment amount into shares. This tool brings those steps together for Indian stock-market orders and shows the candidate values before anything is entered with a broker.</p>
+          </section>
+
+          <section class="resume-section">
+            <h2>Architecture</h2>
+            <figure class="project-architecture" aria-labelledby="gtt-architecture-caption">
+              <figcaption id="gtt-architecture-caption"><strong>Decision support, deliberately separated from trade execution</strong><span>The Streamlit app applies visible rules and returns candidate values for the visitor to verify.</span></figcaption>
+              <ul class="architecture-boundaries" aria-label="GTT calculator boundaries">
+                <li><strong>Visitor input</strong><span>Current price, rounding multiple, amount, or share count</span></li>
+                <li><strong>Streamlit application</strong><span>Validation, calculation, rounding, and synchronized fields</span></li>
+                <li><strong>Broker remains separate</strong><span>No credentials, live prices, account access, or trade execution</span></li>
+              </ul>
+              <div class="architecture-lanes">
+                <section class="architecture-lane" aria-labelledby="gtt-calculation-path-title">
+                  <header><span aria-hidden="true">01</span><div><h3 id="gtt-calculation-path-title">Prepare candidate GTT values</h3><p>Inputs become reviewable values without crossing into a brokerage account.</p></div></header>
+                  <ol class="architecture-steps">
+                    <li><small>Input</small><strong>Current price</strong><span>Positive numeric value</span></li>
+                    <li><small>Rule</small><strong>Distance buffer</strong><span>Threshold-based adjustment</span></li>
+                    <li><small>Rule</small><strong>Price rounding</strong><span>Selected multiple</span></li>
+                    <li><small>State</small><strong>Amount or shares</strong><span>Synchronized calculation</span></li>
+                    <li><small>Review</small><strong>Candidate values</strong><span>Visitor verifies before use</span></li>
+                  </ol>
+                </section>
+              </div>
+              <p class="architecture-guardrail"><strong>Execution boundary</strong><span>The calculator prepares values only; it does not place orders or confirm current broker rules.</span></p>
+            </figure>
           </section>
 
           <section class="resume-section">

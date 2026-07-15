@@ -39,7 +39,7 @@
 <!-- seo:page {"title":"Validation Platform and Release Intelligence | Mantosh Kumar","description":"A public, evidence-bounded case study on reusable validation infrastructure, AI-assisted failure investigation, and release intelligence for optical networking.","kind":"project","entityName":"Validation Platform and Release Intelligence","dateModified":"2026-07-13","breadcrumbs":[{"name":"Projects","path":"/projects/"}]} -->
     <title>Validation Platform and Release Intelligence | Mantosh Kumar</title>
     <script src="../assets/js/theme-init.js?v=20260713-1"></script>
-    <link rel="stylesheet" href="../assets/css/style.css?v=20260715-1" />
+    <link rel="stylesheet" href="../assets/css/style.css?v=20260715-2" />
   </head>
   <body>
     <a class="skip-link" href="#main-content">Skip to main content</a>
@@ -93,13 +93,27 @@
 
           <section class="resume-section">
             <h2>Architecture (high level)</h2>
-            <ol class="case-flow" aria-label="Validation and release-intelligence flow">
-              <li><span>1</span><strong>Execute</strong><small>Run repeatable validation through shared automation.</small></li>
-              <li><span>2</span><strong>Capture</strong><small>Normalize results with provenance and timestamps.</small></li>
-              <li><span>3</span><strong>Investigate</strong><small>Combine evidence, tooling, and accountable judgment.</small></li>
-              <li><span>4</span><strong>Report</strong><small>Describe current health with consistent definitions.</small></li>
-              <li><span>5</span><strong>Learn</strong><small>Compare history to expose recurring risks and trends.</small></li>
-            </ol>
+            <figure class="project-architecture" aria-labelledby="validation-architecture-caption">
+              <figcaption id="validation-architecture-caption"><strong>From repeatable execution to operational learning</strong><span>A shared evidence path supports immediate release decisions and longer-horizon engineering judgment.</span></figcaption>
+              <ul class="architecture-boundaries" aria-label="Validation platform boundaries">
+                <li><strong>Validation inputs</strong><span>Defined execution requests and system context</span></li>
+                <li><strong>Shared platform path</strong><span>Automation, evidence capture, investigation, and reporting</span></li>
+                <li><strong>Accountable judgment</strong><span>Root cause, build health, and release risk remain engineering decisions</span></li>
+              </ul>
+              <div class="architecture-lanes">
+                <section class="architecture-lane" aria-labelledby="validation-evidence-path-title">
+                  <header><span aria-hidden="true">01</span><div><h3 id="validation-evidence-path-title">Evidence to release intelligence</h3><p>Stable signals make individual runs useful now and comparable later.</p></div></header>
+                  <ol class="architecture-steps">
+                    <li><small>Platform</small><strong>Execute</strong><span>Repeatable validation</span></li>
+                    <li><small>Evidence</small><strong>Capture</strong><span>Results with provenance</span></li>
+                    <li><small>Review</small><strong>Investigate</strong><span>Tools plus judgment</span></li>
+                    <li><small>Decision</small><strong>Report</strong><span>Comparable health view</span></li>
+                    <li><small>History</small><strong>Learn</strong><span>Patterns and recurring risks</span></li>
+                  </ol>
+                </section>
+              </div>
+              <p class="architecture-guardrail"><strong>Public evidence boundary</strong><span>No internal product names, customers, program details, confidential metrics, or unreleased systems are shown.</span></p>
+            </figure>
           </section>
 
           <section class="resume-section">
