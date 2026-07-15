@@ -16,6 +16,19 @@ function fixture({ title, slug, category, path, url, content, summary, tags, ans
   });
 }
 
+export const PROFILE_FACT_FIXTURES = Object.freeze([
+  ["location", "Toronto, Canada"],
+  ["citizenship", "Canadian"],
+  ["work_authorization", ["Canada", "United States", "India"]],
+  ["current_employer", "Nokia"],
+  ["current_role", "Staff Software Engineer"],
+  ["employment_history", ["Aricent", "Cisco", "Intel", "Siemens", "KI Labs", "Nokia"]],
+  ["experience_years", "More than 14 years"],
+  ["target_roles", ["Staff Engineer", "Principal Engineer"]],
+  ["capabilities", ["Platform engineering", "Engineering automation", "Backend systems", "Networking", "Distributed validation", "Operational intelligence"]],
+  ["skills", ["Python", "Java", "C++", "SQL", "PostgreSQL", "Django", "REST APIs", "Linux", "Git", "CI/CD", "SDN", "NFV"]]
+].map(([fact_key, fact_value]) => Object.freeze({ fact_key, fact_value: JSON.stringify(fact_value) })));
+
 export const SOURCE_FIXTURES = Object.freeze({
   "about-mantosh": fixture({
     title: "About Mantosh and Where His Experience Can Help",

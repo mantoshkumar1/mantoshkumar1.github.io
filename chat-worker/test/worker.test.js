@@ -2,18 +2,30 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { formatSuccess } from "../src/formatter.js";
 import { verifyGitHubOidcToken } from "../src/github-oidc.js";
-import { RecommendationEngine } from "../src/intelligence/index.js";
+import { RecommendationEngine, SearchRouter } from "../src/intelligence/index.js";
 import worker from "../src/index.js";
 import { buildPrompt, buildSystemPrompt, classifyQuestionIntent, conciseAchievementResponse, expandRetrievalQuery, isSubjectiveProfileQuestion, scoreRetrievalConfidence } from "../src/prompt/index.js";
+
+const TEST_PROFILE_FACTS = [
+  ["location", "Toronto, Canada"], ["citizenship", "Canadian"],
+  ["work_authorization", ["Canada", "United States", "India"]], ["current_employer", "Nokia"],
+  ["current_role", "Staff Software Engineer"], ["employment_history", ["Aricent", "Cisco", "Intel", "Siemens", "KI Labs", "Nokia"]],
+  ["experience_years", "More than 14 years"], ["target_roles", ["Staff Engineer", "Principal Engineer"]],
+  ["capabilities", ["Platform engineering", "Engineering automation", "Backend systems", "Networking", "Distributed validation", "Operational intelligence"]],
+  ["skills", ["Python", "Java", "C++", "SQL", "PostgreSQL", "Django", "REST APIs", "Linux", "Git", "CI/CD", "SDN", "NFV"]]
+].map(([fact_key, fact_value]) => ({ fact_key, fact_value: JSON.stringify(fact_value) }));
 
 function testDatabase() {
   return {
     prepare(sql) {
       return {
         bind: () => ({
-          all: async () => sql.includes("FROM chunks c")
-            ? { results: [{ chunk_id: "photo-1", content: "PhotoSahi was built with browser-side image processing.", title: "PhotoSahi", slug: "photosahi", category: "project", tags: "[\"image-processing\"]", related_topics: "[\"privacy\"]", summary: "A browser-side image-processing project.", path: "knowledge/projects/photosahi.md", url: "/projects/photosahi.html" }] }
-            : { results: [] },
+          all: async () => {
+            if (sql.includes("FROM profile_facts")) return { results: TEST_PROFILE_FACTS };
+            return sql.includes("FROM chunks c")
+              ? { results: [{ chunk_id: "photo-1", content: "PhotoSahi was built with browser-side image processing.", title: "PhotoSahi", slug: "photosahi", category: "project", tags: "[\"image-processing\"]", related_topics: "[\"privacy\"]", summary: "A browser-side image-processing project.", path: "knowledge/projects/photosahi.md", url: "/projects/photosahi.html" }] }
+              : { results: [] };
+          },
           first: async () => (sql.includes("ai_daily_usage") || sql.includes("ai_request_windows")) ? { request_count: 1 } : null,
           run: async () => ({ success: true })
         })
@@ -257,6 +269,20 @@ test("answers concise public profile facts while protecting private address deta
     assert.deepEqual(payload.sources, []);
     assert.deepEqual(payload.followUpQuestions, []);
   }
+});
+
+test("reads changeable profile facts from the knowledge service instead of Worker constants", async () => {
+  const route = await new SearchRouter({
+    profileFacts: async () => ({
+      current_employer: "Future Employer",
+      current_role: "Principal Engineer",
+      employment_history: ["Earlier Company", "Future Employer"],
+      capabilities: ["Platform engineering", "Automation"],
+      skills: ["Python", "Django"]
+    })
+  }).route("Who does he work for now?");
+  assert.equal(route.kind, "social");
+  assert.equal(route.response.answer, "Mantosh currently works at Future Employer.");
 });
 
 test("answers natural broad-profile wording from published engineering evidence", async () => {

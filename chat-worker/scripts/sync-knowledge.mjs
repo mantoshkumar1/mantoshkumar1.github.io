@@ -100,10 +100,13 @@ async function upsert(filePath) {
   const text = toSearchText(parsed.body);
   if (!text) throw new Error(`${filePath}: document body is empty.`);
   const chunks = chunk(`${parsed.title}\n${parsed.summary}\n\n${text}`).map((content, index) => ({ id: sha256(`${path}:${index}`), content }));
+  const facts = Object.fromEntries(Object.entries(parsed)
+    .filter(([key]) => key.startsWith("fact_"))
+    .map(([key, factValue]) => [key.slice(5), factValue]));
   await post({ action: "upsert", document: {
     path, checksum: sha256(raw), title: parsed.title, slug: parsed.slug, category: parsed.category,
     tags: parsed.tags, summary: parsed.summary, last_updated: parsed.last_updated, url: parsed.url,
-    related_topics: parsed.related_topics, visibility: parsed.visibility, chunks
+    related_topics: parsed.related_topics, visibility: parsed.visibility, facts, chunks
   }});
   console.log(`Indexed ${path} (${chunks.length} chunks)`);
 }

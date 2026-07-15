@@ -3,7 +3,7 @@ import { readFile, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import worker from "../src/index.js";
-import { SOURCE_FIXTURES } from "./fixtures.mjs";
+import { PROFILE_FACT_FIXTURES, SOURCE_FIXTURES } from "./fixtures.mjs";
 import { PERSONA_CASES, PERSONA_TARGETS } from "./persona-cases.mjs";
 
 const directory = dirname(fileURLToPath(import.meta.url));
@@ -20,6 +20,7 @@ function evaluationDatabase(source) {
       return {
         bind: () => ({
           all: async () => {
+            if (sql.includes("FROM profile_facts")) return { results: PROFILE_FACT_FIXTURES };
             if (sql.includes("FROM chunks c")) return { results: row ? [row] : [] };
             if (sql.includes("chunks_fts")) return { results: row ? [{ chunk_id: row.chunk_id }] : [] };
             return { results: [] };

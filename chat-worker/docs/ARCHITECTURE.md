@@ -12,6 +12,14 @@ The Worker reads Cloudflare's managed AI binding from its environment. The brows
 under `knowledge/` is the source of truth; the authenticated index route chunks
 and embeds only `visibility: public` documents.
 
+The canonical `knowledge/faq/about-mantosh.md` document also carries an allowlisted
+set of structured public profile facts. The indexer stores them in D1's
+`profile_facts` table. Exact questions about current role, employer history,
+location, work authorization, experience length, capabilities, or skills read
+that table without generation; broader profile questions still use hybrid
+retrieval against the reviewed Markdown. The Worker contains routing language
+and response templates, not duplicated employer or skill values.
+
 ## Trust boundaries
 
 - Treat browser input and retrieved Markdown as untrusted data.

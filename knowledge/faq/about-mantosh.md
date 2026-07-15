@@ -8,6 +8,16 @@ last_updated: "2026-07-15"
 related_topics: [engineering-capabilities, workflow-automation, distributed-validation, developer-productivity, quality-analytics, academic-achievements, gate, technical-university-of-munich]
 visibility: "public"
 url: "/experience/"
+fact_location: "Toronto, Canada"
+fact_citizenship: "Canadian"
+fact_work_authorization: [Canada, United States, India]
+fact_current_employer: "Nokia"
+fact_current_role: "Staff Software Engineer"
+fact_employment_history: [Aricent, Cisco, Intel, Siemens, KI Labs, Nokia]
+fact_experience_years: "More than 14 years"
+fact_target_roles: [Staff Engineer, Principal Engineer]
+fact_capabilities: [Platform engineering, Engineering automation, Backend systems, Networking, Distributed validation, Operational intelligence]
+fact_skills: [Python, Java, C++, SQL, PostgreSQL, Django, REST APIs, Linux, Git, CI/CD, SDN, NFV]
 ---
 
 # About Mantosh and Where His Experience Can Help

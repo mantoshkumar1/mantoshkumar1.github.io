@@ -22,6 +22,15 @@ export class MetadataService {
     return row ? toDestination(row) : null;
   }
 
+  async profileFacts() {
+    if (!this.db) return null;
+    const result = await this.db.prepare(
+      "SELECT fact_key, fact_value FROM profile_facts WHERE source_path = ? ORDER BY fact_key"
+    ).bind("knowledge/faq/about-mantosh.md").all();
+    const entries = (result.results || []).map((row) => [row.fact_key, safeFactValue(row.fact_value)]);
+    return entries.length ? Object.fromEntries(entries) : null;
+  }
+
   async related({ sources, limit }) {
     if (!this.db || !sources.length) return [];
     const paths = sources.map((source) => source.path).filter(Boolean);
@@ -42,6 +51,15 @@ export class MetadataService {
     const result = await statement.bind(...bindings).all();
     return result.results || [];
   }
+}
+
+function safeFactValue(value) {
+  try {
+    const parsed = JSON.parse(value);
+    if (typeof parsed === "string") return parsed;
+    if (Array.isArray(parsed) && parsed.every((item) => typeof item === "string")) return parsed;
+  } catch { /* Invalid stored facts fail closed. */ }
+  return null;
 }
 
 function safeJson(value) {

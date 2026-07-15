@@ -4,6 +4,68 @@ const STATIC_DESTINATIONS = [
   { pattern: /^(?:(?:show(?: me)?|open|go to|view|take me to|can i see|where is|i want to read)\s+)?(?:(?:the|my|his|mantosh(?:'s|’s))\s+)?(?:experience(?: timeline| page)?|professional experience|work history)[?.!]*$/i, label: "Experience", url: "/experience/", type: "experience" }
 ];
 
+function readableList(value) {
+  if (!Array.isArray(value) || !value.length) return null;
+  if (value.length === 1) return value[0];
+  if (value.length === 2) return `${value[0]} and ${value[1]}`;
+  return `${value.slice(0, -1).join(", ")}, and ${value.at(-1)}`;
+}
+
+function workAuthorizationList(value) {
+  return readableList(Array.isArray(value) ? value.map((country) => country === "United States" ? "the United States" : country) : value);
+}
+
+const PROFILE_FACT_RESPONSES = [
+  {
+    pattern: /^(?:is (?:mantosh|he) (?:a )?canadian(?: citizen)?|(?:is|does) (?:mantosh|he) have canadian citizenship)[!.?\s]*$/i,
+    answer: (facts) => facts.citizenship ? `Yes. Mantosh is a ${facts.citizenship} citizen.` : null
+  },
+  {
+    pattern: /^(?:where (?:does )?(?:mantosh|he) (?:live|lives)|where is (?:mantosh|he) (?:based|located)|what(?:'s| is) (?:mantosh(?:'s|’s)|his) (?:location|professional location)|which city is (?:mantosh|he) based in|is (?:mantosh|he) in toronto|where in canada is (?:mantosh|he) based|tell me where (?:mantosh|he) is based|what city does (?:mantosh|he) work from)[!.?\s]*$/i,
+    answer: (facts) => facts.location ? `Mantosh is based in ${facts.location}.` : null
+  },
+  {
+    pattern: /^(?:can (?:mantosh|he) worki? in (?:dubai|(?:the )?(?:uae|u\.a\.e\.?|united arab emirates))|is (?:mantosh|he) authorized to work in (?:dubai|(?:the )?(?:uae|u\.a\.e\.?|united arab emirates)))[!.?\s]*$/i,
+    answer: (facts) => workAuthorizationList(facts.work_authorization) ? `Mantosh's published work authorization covers ${workAuthorizationList(facts.work_authorization)}. For a UAE role or sponsorship requirements, contact him directly.` : null
+  },
+  {
+    pattern: /^(?:can (?:mantosh|he) work in (?:the )?(?:usa|u\.s\.?a?\.?|united states)|is (?:mantosh|he) authorized to work in (?:the )?(?:usa|u\.s\.?a?\.?|united states))[!.?\s]*$/i,
+    answer: (facts) => facts.work_authorization?.includes("United States") ? "Mantosh's published work authorization includes the United States. Confirm role-specific details directly with him." : null
+  },
+  {
+    pattern: /^(?:can (?:mantosh|he) work in (?:canada|india)|is (?:mantosh|he) authorized to work in (?:canada|india)|where is (?:mantosh|he) authorized to work|what countries can (?:mantosh|he) legally work in|what(?:'s| is) (?:mantosh(?:'s|’s)|his) published work authorization)[!.?\s]*$/i,
+    answer: (facts) => workAuthorizationList(facts.work_authorization) ? `Mantosh's published work authorization covers ${workAuthorizationList(facts.work_authorization)}. Confirm role-specific details directly with him.` : null
+  },
+  {
+    pattern: /^(?:does (?:mantosh|he) need sponsorship in (?:the )?(?:usa|u\.s\.?a?\.?|united states))[!.?\s]*$/i,
+    answer: (facts) => facts.work_authorization?.includes("United States") ? "Mantosh publishes United States work authorization, but sponsorship details are not documented. Confirm the role-specific requirements directly with him." : null
+  },
+  {
+    pattern: /^(?:where (?:does )?(?:mantosh|he) work(?: currently| now)?|where (?:mantosh|he) works currently|who does (?:mantosh|he) work for(?: currently| now)?|what company is (?:mantosh|he) at|is (?:mantosh|he) currently at nokia|what(?:'s| is) (?:mantosh(?:'s|’s)|his) current employer|where is (?:mantosh|he) employed|which company employs (?:mantosh|him)|tell me (?:mantosh(?:'s|’s)|his) current workplace|who is (?:mantosh|he) working for|what is (?:mantosh(?:'s|’s)|his) current company)[!.?\s]*$/i,
+    answer: (facts) => facts.current_employer ? `Mantosh currently works at ${facts.current_employer}.` : null
+  },
+  {
+    pattern: /^(?:where (?:has )?(?:mantosh|he) worked(?: before)?|which companies (?:has )?(?:mantosh|he) worked (?:at|for)|list (?:mantosh(?:'s|’s)|his) employers|what(?:'s| is) (?:mantosh(?:'s|’s)|his) employment history)[!.?\s]*$/i,
+    answer: (facts) => readableList(facts.employment_history) ? `Mantosh's published employment history lists ${readableList(facts.employment_history)}.` : null
+  },
+  {
+    pattern: /^(?:what(?:'s| is) (?:mantosh(?:'s|’s)|his) current (?:role|title)|what role does (?:mantosh|he) have(?: currently)?)[!.?\s]*$/i,
+    answer: (facts) => facts.current_role && facts.current_employer ? `Mantosh's published current role is ${facts.current_role} at ${facts.current_employer}.` : null
+  },
+  {
+    pattern: /^(?:how many years of experience does (?:mantosh|he) have|what(?:'s| is) (?:mantosh(?:'s|’s)|his) experience length)[!.?\s]*$/i,
+    answer: (facts) => facts.experience_years ? `Mantosh has ${String(facts.experience_years).toLowerCase()} of documented engineering experience.` : null
+  },
+  {
+    pattern: /^(?:what are|list|summarize) (?:mantosh(?:'s|’s)|his) (?:engineering )?capabilities[!.?\s]*$/i,
+    answer: (facts) => readableList(facts.capabilities) ? `Mantosh's documented capabilities include ${readableList(facts.capabilities)}.` : null
+  },
+  {
+    pattern: /^(?:what are|list|summarize) (?:mantosh(?:'s|’s)|his) (?:technical )?skills[!.?\s]*$/i,
+    answer: (facts) => readableList(facts.skills) ? `Mantosh's published technical toolkit includes ${readableList(facts.skills)}.` : null
+  }
+];
+
 const SOCIAL_RESPONSES = [
   {
     pattern: /^(?:(?:hi|hello|hey)(?:\s+there|\s+ask mantosh)?|good\s+(?:morning|afternoon|evening))[!.?\s]*$/i,
@@ -41,41 +103,6 @@ const SOCIAL_RESPONSES = [
       "Which projects best demonstrate his work?",
       "How could Mantosh help my engineering team?"
     ]
-  },
-  {
-    pattern: /^(?:is (?:mantosh|he) (?:a )?canadian(?: citizen)?|(?:is|does) (?:mantosh|he) have canadian citizenship)[!.?\s]*$/i,
-    answer: "Yes. Mantosh is a Canadian citizen.",
-    followUpQuestions: []
-  },
-  {
-    pattern: /^(?:where (?:does )?(?:mantosh|he) (?:live|lives)|where is (?:mantosh|he) (?:based|located)|what(?:'s| is) (?:mantosh(?:'s|’s)|his) (?:location|professional location)|which city is (?:mantosh|he) based in|is (?:mantosh|he) in toronto|where in canada is (?:mantosh|he) based|tell me where (?:mantosh|he) is based|what city does (?:mantosh|he) work from)[!.?\s]*$/i,
-    answer: "Mantosh is based in Toronto, Canada.",
-    followUpQuestions: []
-  },
-  {
-    pattern: /^(?:can (?:mantosh|he) worki? in (?:dubai|(?:the )?(?:uae|u\.a\.e\.?|united arab emirates))|is (?:mantosh|he) authorized to work in (?:dubai|(?:the )?(?:uae|u\.a\.e\.?|united arab emirates)))[!.?\s]*$/i,
-    answer: "Mantosh's published work authorization covers Canada, the United States, and India. For a UAE role or sponsorship requirements, contact him directly.",
-    followUpQuestions: []
-  },
-  {
-    pattern: /^(?:can (?:mantosh|he) work in (?:the )?(?:usa|u\.s\.?a?\.?|united states)|is (?:mantosh|he) authorized to work in (?:the )?(?:usa|u\.s\.?a?\.?|united states))[!.?\s]*$/i,
-    answer: "Mantosh's published work authorization includes the United States. Confirm role-specific details directly with him.",
-    followUpQuestions: []
-  },
-  {
-    pattern: /^(?:can (?:mantosh|he) work in (?:canada|india)|is (?:mantosh|he) authorized to work in (?:canada|india)|where is (?:mantosh|he) authorized to work|what countries can (?:mantosh|he) legally work in|what(?:'s| is) (?:mantosh(?:'s|’s)|his) published work authorization)[!.?\s]*$/i,
-    answer: "Mantosh's published work authorization covers Canada, the United States, and India. Confirm role-specific details directly with him.",
-    followUpQuestions: []
-  },
-  {
-    pattern: /^(?:does (?:mantosh|he) need sponsorship in (?:the )?(?:usa|u\.s\.?a?\.?|united states))[!.?\s]*$/i,
-    answer: "Mantosh publishes United States work authorization, but sponsorship details are not documented. Confirm the role-specific requirements directly with him.",
-    followUpQuestions: []
-  },
-  {
-    pattern: /^(?:where (?:does )?(?:mantosh|he) work(?: currently| now)?|where (?:mantosh|he) works currently|who does (?:mantosh|he) work for(?: currently| now)?|what company is (?:mantosh|he) at|is (?:mantosh|he) currently at nokia|what(?:'s| is) (?:mantosh(?:'s|’s)|his) current employer|where is (?:mantosh|he) employed|which company employs (?:mantosh|him)|tell me (?:mantosh(?:'s|’s)|his) current workplace|who is (?:mantosh|he) working for|what is (?:mantosh(?:'s|’s)|his) current company)[!.?\s]*$/i,
-    answer: "Mantosh currently works at Nokia.",
-    followUpQuestions: []
   },
   {
     pattern: /^(?:what (?:does )?(?:mantosh|he) likes?|what (?:are )?(?:mantosh(?:'s|’s)|his) (?:interests|preferences))[!.?\s]*$/i,
@@ -177,6 +204,12 @@ export class SearchRouter {
     const trimmed = question.trim();
     const boundary = SCOPE_BOUNDARY_RESPONSES.find((response) => response.pattern.test(trimmed));
     if (boundary) return { kind: "boundary", response: { ...boundary, followUpQuestions: [], confidence: "low" } };
+    const profileFact = PROFILE_FACT_RESPONSES.find((response) => response.pattern.test(trimmed));
+    if (profileFact) {
+      const facts = await this.metadataService.profileFacts();
+      const answer = facts ? profileFact.answer(facts) : null;
+      if (answer) return { kind: "social", response: { answer, followUpQuestions: [] } };
+    }
     const social = SOCIAL_RESPONSES.find((response) => response.pattern.test(trimmed));
     if (social) return { kind: "social", response: social };
     if (isLowInformationQuestion(trimmed)) return { kind: "social", response: CLARIFY_RESPONSE };
