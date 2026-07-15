@@ -827,7 +827,19 @@ test("gives visitor problems practical guidance with explicit limits", () => {
   });
   assert.match(prompt.input, /<response_mode intent="problem">/);
   assert.match(prompt.input, /## Practical next steps/);
+  assert.match(prompt.input, /did not request depth.*under 160 words/is);
   assert.match(prompt.input, /Never imply a guaranteed result/i);
+});
+
+test("allows a longer concise answer only when the visitor explicitly requests depth", () => {
+  const prompt = buildPrompt({
+    question: "Give me a detailed step-by-step explanation of the PhotoSahi architecture",
+    retrieval: {
+      chunks: [{ path: "knowledge/projects/photosahi.md", content: "Verified architecture.", title: "PhotoSahi", summary: "A browser-only image workflow.", tags: "architecture", category: "project", url: "/projects/photosahi.html" }],
+      sources: [{ title: "PhotoSahi", slug: "photosahi", category: "project", label: "Project: PhotoSahi", url: "/projects/photosahi.html" }]
+    }
+  });
+  assert.match(prompt.input, /explicitly requested depth.*under 220 words/is);
 });
 
 test("wraps an unformatted grounded model answer in a readable heading", () => {

@@ -21,8 +21,8 @@ embedding-cache hit avoids only the embedding request.
 
 ## Current limits
 
-Production is configured for 20 requests per minute and 300 AI-bearing
-requests per UTC day, with a 450-token output cap. The Cloudflare rate-limiter
+Production is configured for 20 requests per minute and 400 AI-bearing
+requests per UTC day, with a 300-token output cap. The Cloudflare rate-limiter
 binding and D1 counters are both enforced. The service may become unavailable
 after the provider allocation is exhausted. On Workers Free, excess AI operations
 fail instead of becoming paid usage; monitor the dashboard before enabling a paid plan.

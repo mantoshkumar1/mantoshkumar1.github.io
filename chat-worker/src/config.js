@@ -1,7 +1,7 @@
 export const DEFAULTS = Object.freeze({
   maxQuestionLength: 1000,
   aiTimeoutMs: 20_000,
-  maxOutputTokens: 700,
+  maxOutputTokens: 300,
   retrievalTopK: 5,
   retrievalMaxContextChars: 8_000,
   semanticScoreThreshold: 0.25,
@@ -17,7 +17,7 @@ export const DEFAULTS = Object.freeze({
   enableStreaming: false,
   embeddingModel: "@cf/baai/bge-m3",
   model: "@cf/meta/llama-3.1-8b-instruct-fast",
-  freeDailyRequestLimit: 300,
+  freeDailyRequestLimit: 400,
   freePerMinuteRequestLimit: 20
 });
 

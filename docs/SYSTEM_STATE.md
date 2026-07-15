@@ -13,7 +13,7 @@ This document is the canonical description of what is deployed. Architecture pro
 | Health | `https://ask-mantosh.mantoshk234.workers.dev/health` | Unauthenticated service health without configuration details |
 | Knowledge indexing | `POST /internal/index` | GitHub OIDC or manual recovery token only; intentionally unavailable to browsers through CORS |
 
-Last verified Worker deployment: `cfefb983-039b-4dc6-9243-80510f6bc12b`. The active deployed answer-policy cache namespace is `visitor-intent-v26`.
+Last verified Worker deployment: `b3a3e27e-981d-462c-b7be-de161215aec6`. The active deployed answer-policy cache namespace is `visitor-intent-v27`.
 
 ## Published inventory
 
@@ -69,12 +69,12 @@ The committed production configuration uses:
 - embedding model `@cf/baai/bge-m3` with the 1024-dimension `ask-mantosh-knowledge-v3` Vectorize index;
 - D1 database `personal-website-knowledge`;
 - five retrieved chunks and an 8,000-character context budget;
-- 20-second AI timeout, 450 output-token cap, and 6,000-character answer cap;
+- 20-second AI timeout, 300 output-token cap, and 6,000-character answer cap;
 - 30 requests per minute per network fingerprint through the Cloudflare rate-limiter binding for broad abuse protection, plus a separate shared D1 allowance of 20 requests per minute for retrieval/AI-bound requests;
-- 300 AI-bearing requests per UTC day through D1;
+- 400 AI-bearing requests per UTC day through D1;
 - six retained conversation turns and a 24-hour session TTL.
 
-Cloudflare Cache API stores eligible embeddings, retrieval candidates, and first-turn answers for 15, 5, and 10 minutes respectively. The optional `CACHE_VERSION` KV binding is not configured in the committed production file, so knowledge-index invalidation currently relies on TTL expiry and the fallback version. Answer-policy changes explicitly advance `ANSWER_POLICY_VERSION`—currently `visitor-intent-v26` in source—to avoid serving a response cached under an older formatter or routing contract. This is an explicit known limitation, not an undocumented guarantee.
+Cloudflare Cache API stores eligible embeddings, retrieval candidates, and first-turn answers for 15, 5, and 10 minutes respectively. The optional `CACHE_VERSION` KV binding is not configured in the committed production file, so knowledge-index invalidation currently relies on TTL expiry and the fallback version. Answer-policy changes explicitly advance `ANSWER_POLICY_VERSION`—currently `visitor-intent-v27` in source—to avoid serving a response cached under an older formatter or routing contract. This is an explicit known limitation, not an undocumented guarantee.
 
 ## Security and privacy controls
 
@@ -99,7 +99,7 @@ The repository currently enforces:
 - internal link, fragment, and asset validation;
 - documentation drift checks;
 - autonomous content-lane counts and explicit zero-content states;
-- 58 Worker contract, deterministic social, light-banter, navigation, knowledge-backed public-profile fact, privacy-boundary, transcript-derived scope routing, and achievement routing, natural profile-language routing, security, quota isolation, OIDC, retrieval, concise intent-formatting, collapsed-Markdown repair, prompt, citation-repair, repetition and control-tag sanitization, and failure-path tests;
+- 59 Worker contract, deterministic social, light-banter, navigation, knowledge-backed public-profile fact, privacy-boundary, transcript-derived scope routing, and achievement routing, natural profile-language routing, security, quota isolation, OIDC, retrieval, concise and explicitly detailed response modes, collapsed-Markdown repair, prompt, citation-repair, repetition and control-tag sanitization, and failure-path tests;
 - 531 labelled Ask Mantosh evaluation cases with 9,177 objective assertions: 71 focused regressions plus 460 recruiter, student, curious-visitor, colleague, and founder questions covering social, navigation, unsupported, achievement, grounded-answer, and adversarial behavior;
 - a whole-site coverage audit that fails when any public HTML route lacks reviewed evidence, deterministic navigation, or a documented no-index exclusion;
 - static UI guards for immediate safe Markdown rendering.

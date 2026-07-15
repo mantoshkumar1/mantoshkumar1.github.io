@@ -96,7 +96,7 @@ curl -i https://ask-mantosh.mantoshk234.workers.dev/chat \
 
 ## Public-endpoint controls
 
-The Cloudflare Rate Limiting binding in `wrangler.toml` is mandatory and the Worker fails closed if it is missing or unavailable. D1 also enforces strict global counters: `FREE_PER_MINUTE_REQUEST_LIMIT` defaults to 20 requests per UTC minute and `FREE_DAILY_REQUEST_LIMIT` defaults to 300 AI-bearing requests per UTC day. Do not rely on CORS as an access-control or abuse-control mechanism.
+The Cloudflare Rate Limiting binding in `wrangler.toml` is mandatory and the Worker fails closed if it is missing or unavailable. D1 also enforces strict global counters: `FREE_PER_MINUTE_REQUEST_LIMIT` defaults to 20 requests per UTC minute and `FREE_DAILY_REQUEST_LIMIT` defaults to 400 AI-bearing requests per UTC day. Do not rely on CORS as an access-control or abuse-control mechanism.
 
 No application-level user authentication is included: a static public chat client cannot keep a bearer secret. If private access is later needed, put Cloudflare Access in front of the Worker or add a server-side session issuer.
 
