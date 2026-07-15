@@ -1470,6 +1470,15 @@ body.ask-mantosh-open {
   text-transform: uppercase;
 }
 
+.ask-mantosh-answer strong {
+  display: inline;
+  margin: 0;
+  color: inherit;
+  font-size: inherit;
+  letter-spacing: normal;
+  text-transform: none;
+}
+
 .ask-mantosh-suggestions {
   display: flex;
   flex-wrap: wrap;

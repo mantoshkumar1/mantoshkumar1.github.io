@@ -39,12 +39,23 @@ function collapseRepeatedFallback(answer) {
   return answer.replace(new RegExp(`(${escaped})(?:\\s+\\1)+`, "gi"), "$1");
 }
 
+function restoreCollapsedMarkdown(answer, sectionNames) {
+  const sectionPattern = sectionNames
+    .map((section) => section.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
+    .join("|");
+  const restored = answer
+    .replace(new RegExp(`(?:^|\\s+)#{1,2}\\s*(${sectionPattern})\\s+`, "gi"), (_match, section) => `\n\n## ${section}\n`)
+    .replace(/\s+\*\s+(?=\*\*)/g, "\n- ")
+    .trim();
+  return restored.replace(/^(##\s+Answer\s*\n)(?:##\s+Answer\s+)/i, "$1");
+}
+
 function normalizeGroundedAnswer(answer, followUpQuestions = []) {
   const answerBlock = /<answer>\s*([\s\S]*?)\s*<\/answer>/i.exec(answer);
   const responseBlock = /(?:<response>|&lt;response&gt;)\s*([\s\S]*?)\s*(?:<\/response>|&lt;\/response&gt;)/i.exec(answer);
+  const sectionNames = ["Answer", "Summary", "In brief", "Highlights", "Context", "Best fit", "Where Mantosh can help", "Relevant evidence", "Patterns in Published Work", "A sensible next step", "What matters", "How Mantosh's experience applies", "Practical next steps", "Limits", "Detailed Explanation", "Engineering Decisions", "Trade-offs", "Lessons Learned", "Related Articles", "Related Projects", "Sources", "Follow-up Questions"];
   let normalized = collapseRepeatedFallback(removePromptControlLeak(answerBlock?.[1] || responseBlock?.[1] || answer)).trim();
-  normalized = normalized.replace(/^[•▪◦]\s+/gm, "- ");
-  const sectionNames = ["Answer", "Summary", "In brief", "Highlights", "Context", "Best fit", "Where Mantosh can help", "Relevant evidence", "A sensible next step", "What matters", "How Mantosh's experience applies", "Practical next steps", "Limits", "Detailed Explanation", "Engineering Decisions", "Trade-offs", "Lessons Learned", "Related Articles", "Related Projects", "Sources", "Follow-up Questions"];
+  normalized = restoreCollapsedMarkdown(normalized, sectionNames).replace(/^[•▪◦]\s+/gm, "- ");
   for (const section of sectionNames) {
     normalized = normalized.replace(new RegExp(`^#{0,2}\\s*${section}\\s*$`, "gim"), `## ${section}`);
   }

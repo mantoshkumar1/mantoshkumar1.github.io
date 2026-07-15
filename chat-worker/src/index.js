@@ -11,7 +11,7 @@ import { enforceRateLimit } from "./rate-limit.js";
 import { retrieveKnowledge } from "./retrieval.js";
 import { parseChatRequest } from "./validation.js";
 
-const ANSWER_POLICY_VERSION = "visitor-intent-v25";
+const ANSWER_POLICY_VERSION = "visitor-intent-v26";
 
 function json(body, status, origin, extraHeaders = {}) {
   const headers = corsHeaders(origin);
@@ -88,7 +88,6 @@ export default {
 
       const { question, conversationId } = await parseChatRequest(request, config);
       await enforceRateLimit(request, env, config);
-      await enforceStrictRequestLimit(env, config);
       const memory = new MemoryManager(env.KNOWLEDGE_DB, config);
       const conversation = await memory.load(conversationId);
       const route = await new SearchRouter(metadataService).route(question);
@@ -119,6 +118,10 @@ export default {
         return json(result, 200, origin);
       }
 
+      // Only retrieval/AI-bound requests consume the strict shared allowance.
+      // Deterministic and cached responses remain protected by the broader
+      // per-client abuse limiter above without spending scarce AI capacity.
+      await enforceStrictRequestLimit(env, config);
       await enforceFreeUsageLimit(env, config);
       const retrievalQuery = expandRetrievalQuery(question, memory.buildRetrievalQuery(question, conversation));
       const intent = classifyQuestionIntent(question);

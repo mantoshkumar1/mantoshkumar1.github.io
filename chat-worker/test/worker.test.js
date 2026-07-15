@@ -546,6 +546,28 @@ test("rejects requests after the configured per-minute free-use limit", async ()
   assert.equal((await response.json()).error.code, "request_rate_limit_reached");
 });
 
+test("does not spend the AI quota on deterministic routes", async () => {
+  const exhaustedAiQuotaDb = { ...testDatabase(), prepare: (sql) => ({ bind: () => ({
+    all: async () => ({ results: [] }),
+    first: async () => {
+      if (sql.includes("ai_request_windows") || sql.includes("ai_daily_usage")) return null;
+      return null;
+    },
+    run: async () => ({ success: true })
+  }) }) };
+  const deterministicEnv = {
+    ...env,
+    AI: { run: async () => { throw new Error("No AI call is expected for deterministic routes"); } },
+    KNOWLEDGE_INDEX: { query: async () => { throw new Error("No retrieval is expected for deterministic routes"); } },
+    KNOWLEDGE_DB: exhaustedAiQuotaDb
+  };
+  for (const question of ["Tell me a joke", "hi", "what are the hobbies of mantosh", "Resume", "what is the weather outside"]) {
+    const response = await worker.fetch(request({ question }), deterministicEnv);
+    assert.equal(response.status, 200, question);
+    assert.equal((await response.json()).success, true, question);
+  }
+});
+
 test("extracts exactly three Markdown follow-up questions", () => {
   const result = formatSuccess({ output_text: [
     "## Summary",
@@ -597,6 +619,16 @@ test("keeps only the first XML-wrapped answer and normalizes plain section headi
   assert.match(result.answer, /## Sources/);
   assert.doesNotMatch(result.answer, /<answer>|corrected answer/i);
   assert.match(result.answer, /- Third\?$/);
+});
+
+test("restores collapsed Markdown headings and lists from a grounded response", () => {
+  const raw = "## Answer ## Answer Repeated human work is an engineering smell because repetition may indicate missing system design. ## Patterns in Published Work *   **Identify the bottleneck**: Start with the bottleneck. *   **Turn repetition into a paved path**: Capture stable work as a reusable system. ## Sources *   [Note: Engineering Philosophy](/insights/engineering-philosophy.html) ## Follow-up Questions *   What should be automated? *   What should remain a human decision? I can't support that from Mantosh's published work. Ask me about his experience, projects, engineering approach, or fit for your problem.";
+  const result = formatSuccess({ output_text: raw }, [{ title: "Engineering Philosophy", label: "Note: Engineering Philosophy", category: "note", url: "/insights/engineering-philosophy.html" }], { followUpQuestions: ["What should be automated?", "What should remain a human decision?", "How should ownership be assigned?"] });
+  assert.match(result.answer, /^## Answer\nRepeated human work/m);
+  assert.doesNotMatch(result.answer, /## Answer\s+## Answer/);
+  assert.match(result.answer, /## Patterns in Published Work\n- \*\*Identify the bottleneck\*\*/);
+  assert.match(result.answer, /\n- \*\*Turn repetition into a paved path\*\*/);
+  assert.doesNotMatch(result.answer, /I can't support that.*I can't support that/s);
 });
 
 test("removes leaked response-mode control tags after a visitor-safe answer", () => {

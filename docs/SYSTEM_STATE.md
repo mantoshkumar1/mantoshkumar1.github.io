@@ -13,7 +13,7 @@ This document is the canonical description of what is deployed. Architecture pro
 | Health | `https://ask-mantosh.mantoshk234.workers.dev/health` | Unauthenticated service health without configuration details |
 | Knowledge indexing | `POST /internal/index` | GitHub OIDC or manual recovery token only; intentionally unavailable to browsers through CORS |
 
-Last verified Worker deployment: `9206e7f4-a0be-4049-a369-546e29bc1175`. The active deployed answer-policy cache namespace is `visitor-intent-v25`.
+Last verified Worker deployment: `1c25266a-5367-4a93-9cf9-353260816c6d`. The active deployed answer-policy cache namespace is `visitor-intent-v26`.
 
 ## Published inventory
 
@@ -70,16 +70,16 @@ The committed production configuration uses:
 - D1 database `personal-website-knowledge`;
 - five retrieved chunks and an 8,000-character context budget;
 - 20-second AI timeout, 450 output-token cap, and 6,000-character answer cap;
-- five requests per minute through both the Cloudflare rate-limiter binding and D1 safety counter;
+- 30 requests per minute per network fingerprint through the Cloudflare rate-limiter binding for broad abuse protection, plus a separate shared D1 allowance of five requests per minute for retrieval/AI-bound requests;
 - 50 AI-bearing requests per UTC day through D1;
 - six retained conversation turns and a 24-hour session TTL.
 
-Cloudflare Cache API stores eligible embeddings, retrieval candidates, and first-turn answers for 15, 5, and 10 minutes respectively. The optional `CACHE_VERSION` KV binding is not configured in the committed production file, so knowledge-index invalidation currently relies on TTL expiry and the fallback version. Answer-policy changes explicitly advance `ANSWER_POLICY_VERSION`—currently `visitor-intent-v25` in source—to avoid serving a response cached under an older formatter or routing contract. This is an explicit known limitation, not an undocumented guarantee.
+Cloudflare Cache API stores eligible embeddings, retrieval candidates, and first-turn answers for 15, 5, and 10 minutes respectively. The optional `CACHE_VERSION` KV binding is not configured in the committed production file, so knowledge-index invalidation currently relies on TTL expiry and the fallback version. Answer-policy changes explicitly advance `ANSWER_POLICY_VERSION`—currently `visitor-intent-v26` in source—to avoid serving a response cached under an older formatter or routing contract. This is an explicit known limitation, not an undocumented guarantee.
 
 ## Security and privacy controls
 
 - Exact-origin CORS; no browser bearer secret and no cookie authentication.
-- Mandatory Cloudflare rate-limiter binding plus strict D1 minute/day counters; the Worker fails closed when the mandatory limiter is unavailable.
+- Mandatory Cloudflare rate-limiter binding for every request plus strict D1 minute/day counters only for retrieval/AI-bound requests; the Worker fails closed when the mandatory limiter is unavailable.
 - JSON validation, 16 KiB body cap, normalized bounded questions, timeouts, output-size checks, and generic provider errors.
 - Evidence-only prompting, public-visibility filtering, prompt-injection boundaries, approved citation URLs, and sanitized frontend Markdown.
 - Low-information questions are clarified before retrieval, and semantic-only matches below 0.40 cannot trigger generation without lexical support.
@@ -98,7 +98,7 @@ The repository currently enforces:
 - internal link, fragment, and asset validation;
 - documentation drift checks;
 - autonomous content-lane counts and explicit zero-content states;
-- 56 Worker contract, deterministic social, light-banter, navigation, knowledge-backed public-profile fact, privacy-boundary, transcript-derived scope routing, and achievement routing, natural profile-language routing, security, quota, OIDC, retrieval, concise intent-formatting, prompt, citation-repair, repetition and control-tag sanitization, and failure-path tests;
+- 58 Worker contract, deterministic social, light-banter, navigation, knowledge-backed public-profile fact, privacy-boundary, transcript-derived scope routing, and achievement routing, natural profile-language routing, security, quota isolation, OIDC, retrieval, concise intent-formatting, collapsed-Markdown repair, prompt, citation-repair, repetition and control-tag sanitization, and failure-path tests;
 - 531 labelled Ask Mantosh evaluation cases with 9,177 objective assertions: 71 focused regressions plus 460 recruiter, student, curious-visitor, colleague, and founder questions covering social, navigation, unsupported, achievement, grounded-answer, and adversarial behavior;
 - a whole-site coverage audit that fails when any public HTML route lacks reviewed evidence, deterministic navigation, or a documented no-index exclusion;
 - static UI guards for immediate safe Markdown rendering.
