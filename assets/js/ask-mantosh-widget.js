@@ -101,8 +101,8 @@
     <section class="ask-mantosh-panel" id="ask-mantosh-panel" role="dialog" aria-modal="true" aria-labelledby="ask-mantosh-title" aria-describedby="ask-mantosh-description" data-api-url="https://ask-mantosh.mantoshk234.workers.dev/" hidden>
       <div class="ask-mantosh-header">
         <div class="ask-mantosh-header-content">
-          <div class="ask-mantosh-identity"><span class="ask-mantosh-presence" aria-hidden="true"></span><div><p class="ask-mantosh-eyebrow">PUBLISHED KNOWLEDGE</p><h2 id="ask-mantosh-title">Ask Mantosh</h2></div></div>
-          <p id="ask-mantosh-description">Evidence-backed answers from Mantosh's projects, experience, and engineering writing.</p>
+          <div class="ask-mantosh-identity"><span class="ask-mantosh-presence" aria-hidden="true"></span><h2 id="ask-mantosh-title">Ask Mantosh</h2></div>
+          <p id="ask-mantosh-description">Ask about my projects, engineering decisions, and experience.</p>
         </div>
         <div class="ask-mantosh-header-actions">
           <button class="ask-mantosh-close ask-mantosh-export" id="ask-mantosh-export" type="button" aria-label="Export conversation as a text file" title="Export visible conversation as TXT" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v10m0 0l-4-4m4 4l4-4M5 19h14"></path></svg><span>TXT</span></button>
@@ -115,7 +115,7 @@
         <div class="ask-mantosh-suggestions" id="ask-mantosh-suggestions" role="group" aria-label="Suggested questions" hidden></div>
         <div class="ask-mantosh-status" id="ask-mantosh-status" role="status" aria-live="polite"></div>
         <div class="ask-mantosh-composer-hint" aria-hidden="true"><span><kbd>Enter</kbd> send</span><span><kbd>Shift</kbd> + <kbd>Enter</kbd> new line</span></div>
-        <form class="ask-mantosh-composer" id="ask-mantosh-form"><label class="sr-only" for="ask-mantosh-input">Ask about Mantosh's engineering work</label><textarea id="ask-mantosh-input" rows="1" placeholder="Ask about Mantosh's engineering work..." maxlength="1000"></textarea><button class="ask-mantosh-send" id="ask-mantosh-send" type="submit" aria-label="Send message">Send</button></form>
+        <form class="ask-mantosh-composer" id="ask-mantosh-form"><label class="sr-only" for="ask-mantosh-input">Ask about my work</label><textarea id="ask-mantosh-input" rows="1" placeholder="Ask about my work…" maxlength="1000"></textarea><button class="ask-mantosh-send" id="ask-mantosh-send" type="submit" aria-label="Send message">Send</button></form>
       </div>
     </section>`);
 
@@ -124,7 +124,7 @@
     if (clientPromise) return clientPromise;
     clientPromise = new Promise((resolve, reject) => {
       const client = document.createElement("script");
-      client.src = "/assets/js/main.js?v=20260715-3";
+      client.src = "/assets/js/main.js?v=20260716-1";
       client.addEventListener("load", resolve, { once: true });
       client.addEventListener("error", reject, { once: true });
       document.body.append(client);

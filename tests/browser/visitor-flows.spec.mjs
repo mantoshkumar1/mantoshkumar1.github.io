@@ -121,6 +121,32 @@ test("contact offers a working copy-email fallback", async ({ page, context }) =
   expect(await page.evaluate(() => navigator.clipboard.readText())).toBe("mantoshk234@gmail.com");
 });
 
+test("Ask Mantosh opens with a compact, portfolio-wide welcome state", async ({ page }) => {
+  let submittedQuestion = "";
+  await page.route("https://ask-mantosh.mantoshk234.workers.dev/**", async (route) => {
+    submittedQuestion = JSON.parse(route.request().postData()).question;
+    await route.fulfill({
+      contentType: "application/json",
+      body: JSON.stringify({ answer: "A concise evidence-backed answer.", sources: [], followUpQuestions: [], confidence: "high", success: true })
+    });
+  });
+  await page.goto("/");
+  await page.getByRole("button", { name: "Ask Mantosh" }).click();
+
+  const panel = page.locator("#ask-mantosh-panel");
+  await expect(panel.getByRole("heading", { name: "Ask Mantosh" })).toBeVisible();
+  await expect(panel.getByText("Ask about my projects, engineering decisions, and experience.", { exact: true })).toBeVisible();
+  await expect(panel.getByText("Answers are grounded in published projects, case studies, and engineering notes.", { exact: true })).toBeVisible();
+  await expect(panel.getByText("Published Engineering Knowledge", { exact: true })).toHaveCount(0);
+  await expect(panel.getByText("Explore the evidence behind the work.", { exact: true })).toHaveCount(0);
+  await expect(panel.locator(".ask-mantosh-chip")).toHaveCount(3);
+  await expect(panel.locator("#ask-mantosh-input")).toHaveAttribute("placeholder", "Ask about my work…");
+
+  await panel.getByRole("button", { name: "How did Mantosh modernize validation infrastructure?" }).click();
+  await expect.poll(() => submittedQuestion).toBe("How did Mantosh modernize validation infrastructure?");
+  await expect(panel.locator(".ask-mantosh-message.user")).toContainText(submittedQuestion);
+});
+
 test("Ask Mantosh preserves minimized history, exports it, and clears deliberately", async ({ page }) => {
   const longAnswer = `Opening Newsletter.\n\n${Array.from({ length: 18 }, (_, index) => `Paragraph ${index + 1} explains a published engineering lesson with enough detail to require scrolling.`).join("\n\n")}`;
   await page.route("https://ask-mantosh.mantoshk234.workers.dev/**", async (route) => {

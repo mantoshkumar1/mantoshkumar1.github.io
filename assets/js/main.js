@@ -1,8 +1,8 @@
 /* Ask Mantosh: isolated vanilla-JS chat client. External rendering libraries are lazy-loaded. */
 const EMPTY_QUESTIONS = [
-  "Why did you build PhotoSahi without a backend?",
-  "What privacy trade-offs shaped PhotoSahi?",
-  "How does PhotoSahi process an image in the browser?"
+  "What are Mantosh’s strongest engineering skills?",
+  "How did Mantosh modernize validation infrastructure?",
+  "Which project should I explore first?"
 ];
 
 class MarkdownService {
@@ -154,7 +154,7 @@ class ConversationView {
     this.messages.innerHTML = "";
     const empty = document.createElement("section");
     empty.className = "ask-mantosh-empty";
-    empty.innerHTML = "<p class=\"ask-mantosh-eyebrow\">PUBLISHED ENGINEERING KNOWLEDGE</p><h3>Explore the evidence behind the work.</h3><p>Answers are grounded in published projects, case studies, and engineering notes.</p>";
+    empty.innerHTML = "<p>Answers are grounded in published projects, case studies, and engineering notes.</p>";
     this.messages.append(empty); this.setSuggestions(EMPTY_QUESTIONS, onAsk); this.updateJump();
   }
 

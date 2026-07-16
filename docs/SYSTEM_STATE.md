@@ -103,7 +103,7 @@ The repository currently enforces:
 - 541 labelled Ask Mantosh evaluation cases with 9,344 objective assertions: 71 focused regressions plus 470 recruiter, student, curious-visitor, spouse, colleague, and founder questions covering social, navigation, unsupported, achievement, grounded-answer, and adversarial behavior;
 - a whole-site coverage audit that fails when any public HTML route lacks reviewed evidence, deterministic navigation, or a documented no-index exclusion;
 - static UI guards for immediate safe Markdown rendering.
-- 14 Playwright browser checks across desktop and mobile Chromium covering critical-page rendering, the recruiter path, project and Insight navigation, newsletter validation, résumé and contact fallbacks, all appearance choices with Axe WCAG scans, and Ask Mantosh minimize, export, and deliberate-clear behavior;
+- 18 Playwright browser checks across desktop and mobile Chromium covering critical-page rendering, the recruiter path, project and Insight navigation, newsletter validation, résumé and contact fallbacks, all appearance choices with Axe WCAG scans, the compact Ask Mantosh welcome state, and Ask Mantosh minimize, export, and deliberate-clear behavior;
 - generated artifact budgets of 36 KB per HTML page, 100 KB per CSS file, 60 KB total JavaScript, 180 KB per image, and 1 MB for the public artifact excluding the résumé PDF;
 - a revision-aware post-deployment smoke check for the homepage, published evaluation evidence, RSS feed, Ask Mantosh health, and deterministic newsletter navigation.
 

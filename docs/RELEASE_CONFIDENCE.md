@@ -4,7 +4,7 @@ The site uses layered checks because no single test can protect content, navigat
 
 ## Before deployment
 
-Every pull request runs the deterministic static audits, 68 Worker tests, the 541-case Ask Mantosh evaluation, and 16 browser checks: eight visitor journeys in desktop Chromium and a mobile Chromium viewport.
+Every pull request runs the deterministic static audits, 68 Worker tests, the 541-case Ask Mantosh evaluation, and 18 browser checks: nine visitor journeys in desktop Chromium and a mobile Chromium viewport.
 
 The browser checks cover:
 
