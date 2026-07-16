@@ -750,7 +750,8 @@ test("collapses a repeated unsupported fallback to one readable response", () =>
 test("removes unrelated retrieval material from an unsupported answer", () => {
   const fallback = "I can't support that from Mantosh's published work. Ask me about his experience, projects, engineering approach, or fit for your problem.";
   const source = { title: "Evidence-First Engineering Knowledge System", label: "Project: Evidence-First Engineering Knowledge System", category: "project", url: "/projects/engineering-knowledge-system.html" };
-  const result = formatSuccess({ output_text: fallback }, [source], {
+  const modelOutput = `${fallback}\n\n## Sources\n- [Project: Evidence-First Engineering Knowledge System](/projects/engineering-knowledge-system.html)\n\n## Follow-up Questions\n- What projects has Mantosh published?`;
+  const result = formatSuccess({ output_text: modelOutput }, [source], {
     recommendations: { all: [source], articles: [], projects: [source], notes: [] },
     followUpQuestions: ["What projects has Mantosh published?"]
   });

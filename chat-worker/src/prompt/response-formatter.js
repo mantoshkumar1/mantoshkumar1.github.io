@@ -126,7 +126,7 @@ export function formatResponse(response, { sources, confidence, maxAnswerChars =
   if (!rawAnswer) throw new AppError(500, "empty_model_response", "The AI service returned no answer.");
   const retrievedSources = deduplicateSources(sources);
   const normalizedAnswer = addSubjectiveFraming(normalizeGroundedAnswer(rawAnswer, followUpQuestions), subjectiveProfile);
-  if (normalizedAnswer.replace(/^##\s+Answer\s*/i, "").trim() === NO_KNOWLEDGE_ANSWER) {
+  if (normalizedAnswer.replace(/^##\s+Answer\s*/i, "").trimStart().startsWith(NO_KNOWLEDGE_ANSWER)) {
     return {
       answer: `## Answer\n${NO_KNOWLEDGE_ANSWER}`,
       sources: [], relatedArticles: [], relatedProjects: [], relatedNotes: [], recommendations: [],
