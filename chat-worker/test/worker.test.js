@@ -985,6 +985,15 @@ test("classifies visitor questions into profile, problem, and direct response mo
   assert.equal(classifyQuestionIntent("What has Mantosh personally owned?"), "ownership");
   assert.equal(classifyQuestionIntent("What was he personally responsible for?"), "ownership");
   assert.equal(classifyQuestionIntent("What were his contributions?"), "ownership");
+  for (const question of [
+    "What did Mantosh personally lead?",
+    "Which parts of the migration were his responsibility?",
+    "Separate Mantosh's contribution from the team's work.",
+    "What did Mantosh himself deliver?",
+    "Where is his individual ownership documented?",
+    "Which migration responsibilities belonged to Mantosh?",
+    "What engineering work can be attributed directly to him?"
+  ]) assert.equal(classifyQuestionIntent(question), "ownership", question);
   assert.equal(classifyQuestionIntent("Tell me his career story and awards"), "achievement");
   assert.equal(classifyQuestionIntent("We have a slow release workflow. What should we improve?"), "problem");
   assert.equal(classifyQuestionIntent("Why did PhotoSahi avoid a backend?"), "direct");
@@ -1030,6 +1039,7 @@ test("gives engineering ownership questions a contribution-safe response contrac
   assert.match(prompt.input, /natural third-person language/);
   assert.match(prompt.input, /distinguish his work from what the team delivered/i);
   assert.match(prompt.input, /Do not infer sole ownership from participation/);
+  assert.match(prompt.input, /every distinct ownership area explicitly supported/i);
   const followUps = new RecommendationEngine(null, {}).followUpQuestions({ sources: [], intent: "ownership", question: "What has Mantosh personally owned?" });
   assert.deepEqual(followUps, [
     "Which decisions did Mantosh make during the migration?",

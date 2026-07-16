@@ -1,7 +1,16 @@
 const SUBJECTIVE_PROFILE_PATTERN = /\b(?:genius|brilliant|smart|impressive|exceptional|great engineer|good engineer|really good|actually good|overrated)\b/i;
 const ACHIEVEMENT_PATTERN = /\b(?:achievement|achievements|accomplishment|accomplishments|award|awards|recognition|honou?rs?|career story|his story|journey|education|academic|gate|heroes of tomorrow|something interesting about (?:mantosh|him))\b/i;
 const DETAILED_RESPONSE_PATTERN = /\b(?:in detail|detailed|deep dive|deeply|comprehensive|thorough|step[- ]by[- ]step|full explanation|explain fully|long answer)\b/i;
-const OWNERSHIP_PATTERN = /\b(?:(?:what|which) (?:has|did|does) (?:mantosh|he) (?:personally )?(?:own|owned|lead|led|deliver|delivered)|what (?:was|were) (?:mantosh|he) (?:personally )?responsible for|(?:mantosh(?:'s)?|his) (?:personal )?(?:ownership|contribution|contributions|responsibilities)|what (?:parts?|work|systems?|projects?) did (?:mantosh|he) (?:personally )?(?:own|build|lead|deliver))\b/i;
+const OWNERSHIP_PATTERNS = [
+  /\b(?:what|which) (?:has|did|does) (?:mantosh|he) (?:personally |himself )?(?:own|owned|lead|led|deliver|delivered)\b/i,
+  /\bwhat (?:was|were) (?:mantosh|he) (?:personally )?responsible for\b/i,
+  /\b(?:mantosh(?:'s)?|his) (?:personal |individual )?(?:ownership|contribution|contributions|responsibilities)\b/i,
+  /\b(?:which|what) (?:parts?|work|systems?|projects?|migration responsibilities)\b[^?]*\b(?:his|mantosh(?:'s)?) (?:responsibility|responsibilities)\b/i,
+  /\bseparate (?:mantosh(?:'s)?|his) contribution from (?:the )?team(?:'s)? work\b/i,
+  /\b(?:where is|show|document) (?:mantosh(?:'s)?|his) (?:individual |personal )?ownership\b/i,
+  /\b(?:which|what)\b[^?]*\bresponsibilities belonged to (?:mantosh|him)\b/i,
+  /\bwhat engineering work (?:can be|is) attributed directly to (?:mantosh|him)\b/i
+];
 
 const PROFILE_PATTERNS = [
   /\b(?:who is|tell me about|about)\s+(?:this (?:guy|person|engineer)|mantosh|him)\b/i,
@@ -23,7 +32,7 @@ const PROBLEM_PATTERNS = [
 
 export function classifyQuestionIntent(question) {
   const value = String(question || "").trim();
-  if (OWNERSHIP_PATTERN.test(value)) return "ownership";
+  if (OWNERSHIP_PATTERNS.some((pattern) => pattern.test(value))) return "ownership";
   if (ACHIEVEMENT_PATTERN.test(value)) return "achievement";
   if (PROFILE_PATTERNS.some((pattern) => pattern.test(value))) return "profile";
   if (PROBLEM_PATTERNS.some((pattern) => pattern.test(value))) return "problem";
@@ -49,7 +58,8 @@ export function responseModeInstructions(intent, detailed = false) {
       "Lead with concrete systems, integrations, technical decisions, delivery responsibilities, or operational responsibilities explicitly attributed to Mantosh.",
       "State Mantosh's ownership in natural third-person language. Clearly distinguish his work from what the team delivered, and preserve collaborators' contributions when the source describes them.",
       "Degrees, awards, rankings, employment, and technologies are not engineering ownership. Do not use them as evidence for this question.",
-      "Use at most four concise bullets and keep the answer body before Sources under 140 words. Do not infer sole ownership from participation."
+      "Summarize every distinct ownership area explicitly supported by the primary project source; do not stop after the first example.",
+      "Use up to six concise bullets and keep the answer body before Sources under 170 words. Do not infer sole ownership from participation."
     ].join("\n");
   }
   if (intent === "achievement") {

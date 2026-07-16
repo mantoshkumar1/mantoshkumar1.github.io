@@ -11,7 +11,7 @@ import { enforceRateLimit } from "./rate-limit.js";
 import { assessLexicalRelevance, retrieveKnowledge, searchLexicalKnowledge } from "./retrieval.js";
 import { parseChatRequest } from "./validation.js";
 
-const ANSWER_POLICY_VERSION = "visitor-intent-v37-engineering-ownership";
+const ANSWER_POLICY_VERSION = "visitor-intent-v39-complete-ownership";
 const RETRYABLE_MODEL_OUTPUT_CODES = new Set(["workers_ai_invalid_response", "empty_model_response", "invalid_model_response", "uncited_model_response"]);
 
 async function generateVerifiedResponse({ env, config, prompt, formatOptions }) {
@@ -79,12 +79,27 @@ function coverageBand(coverage) {
   return "coverage_70_100";
 }
 
-function focusRetrievalForIntent(retrieval, intent) {
+async function focusRetrievalForIntent(retrieval, intent, env, config) {
   if (intent !== "ownership") return retrieval;
   const projectChunks = retrieval.chunks.filter((chunk) => chunk.category === "project");
   if (!projectChunks.length) return retrieval;
   const paths = new Set(projectChunks.map((chunk) => chunk.path));
-  return { ...retrieval, chunks: projectChunks, sources: retrieval.sources.filter((source) => paths.has(source.path)) };
+  const sources = retrieval.sources.filter((source) => paths.has(source.path));
+  const primary = sources[0];
+  if (!primary?.path) return { ...retrieval, chunks: projectChunks, sources };
+  const result = await env.KNOWLEDGE_DB.prepare(
+    `SELECT c.chunk_id, c.content, d.title, d.slug, d.category, d.tags, d.summary, d.related_topics, d.path, d.url
+     FROM chunks c JOIN documents d ON d.path = c.document_path
+     WHERE d.path = ? AND d.visibility = 'public' ORDER BY c.position ASC`
+  ).bind(primary.path).all();
+  const complete = [];
+  let characters = 0;
+  for (const chunk of result.results || []) {
+    if (characters + chunk.content.length > config.retrievalMaxContextChars) break;
+    complete.push(chunk);
+    characters += chunk.content.length;
+  }
+  return { ...retrieval, chunks: complete.length ? complete : projectChunks, sources: [primary] };
 }
 
 export default {
@@ -184,7 +199,7 @@ export default {
       const intent = classifyQuestionIntent(question);
       const retrieved = await retrieveKnowledge(retrievalQuery, env, config,
         retrievalQuery === baseRetrievalQuery ? { lexicalMatches } : undefined);
-      const retrieval = focusRetrievalForIntent(retrieved, intent);
+      const retrieval = await focusRetrievalForIntent(retrieved, intent, env, config);
       const recommendationEngine = new RecommendationEngine(metadataService, config);
       const recommendations = await recommendationEngine.recommend({ sources: retrieval.sources });
       const followUpQuestions = recommendationEngine.followUpQuestions({ sources: retrieval.sources, intent, question });

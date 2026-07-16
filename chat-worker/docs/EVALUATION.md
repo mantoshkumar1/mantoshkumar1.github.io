@@ -20,7 +20,7 @@ Dataset version: `2026-07-15`
 | Colleague persona | 100 | Architecture, validation, automation, release intelligence, project trade-offs, capabilities, and confidentiality. |
 | Founder persona | 60 | Commercial fit, platform and automation problems, release risk, evidence systems, and contact flow. |
 
-All **542 of 542 cases** and **9,366 of 9,366 objective assertions** pass in [`../eval/results/latest.json`](../eval/results/latest.json). The 542 labelled cases combine 72 focused regressions with 470 recruiter, student, curious visitor, spouse, colleague, and founder questions. The spouse persona adds plain-language, playful, skeptical, and typo-tolerant questions from a visitor who does not know Mantosh's work.
+All **552 of 552 cases** and **9,616 of 9,616 objective assertions** pass in [`../eval/results/latest.json`](../eval/results/latest.json). The 552 labelled cases combine 72 focused regressions with 480 recruiter, student, curious visitor, spouse, colleague, and founder questions. The spouse persona adds plain-language, playful, skeptical, and typo-tolerant questions from a visitor who does not know Mantosh's work.
 
 The first persona run passed 434 of 519 cases. Its 85 failures clustered around natural navigation wording, public location and employer paraphrases, work-authorization nuance, casual capability questions, conversational recovery, and privacy or prompt-injection variants. The routes and evidence boundaries were then tightened; the final result above is the post-fix run.
 
@@ -38,7 +38,7 @@ Depending on the case, the evaluator checks:
 - refusal confidence and absence of unsupported generation;
 - safe output without executable markup or unapproved links.
 
-Persona cases are generated from committed, reviewable question cohorts in [`../eval/persona-cases.mjs`](../eval/persona-cases.mjs). Each cohort has exactly ten questions; import-time guards enforce 100 recruiter, 100 student, 100 curious-visitor, 100 colleague, and 60 founder cases.
+Persona cases are generated from committed, reviewable question cohorts in [`../eval/persona-cases.mjs`](../eval/persona-cases.mjs). Each cohort has exactly ten questions; import-time guards enforce 110 recruiter, 100 student, 100 curious-visitor, 100 colleague, and 60 founder cases.
 
 The evaluator imports the same Worker entry point used in production. D1, Vectorize, and Workers AI are replaced with controlled fixtures so the suite is deterministic, free to run, and suitable for a required pull-request gate.
 

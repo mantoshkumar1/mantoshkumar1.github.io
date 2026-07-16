@@ -45,6 +45,7 @@ const recruiter = [
   cases("recruiter", "work-authorization", ["Can he work in the USA?", "Is Mantosh authorized to work in the United States?", "Can Mantosh work in Canada?", "Is he authorized to work in India?", "Where is Mantosh authorized to work?", "What countries can he legally work in?", "Does he need sponsorship in the USA?", "Can he worki in Dubai?", "Can Mantosh work in the UAE?", "What is his published work authorization?"], { intent: "public-profile-fact", expected: social(["work authorization"]) }),
   cases("recruiter", "current-role", ["Where does Mantosh work currently?", "Who does he work for now?", "What company is Mantosh at?", "Is he currently at Nokia?", "What's Mantosh's current employer?", "Where is he employed?", "Which company employs Mantosh?", "Tell me his current workplace", "Who is Mantosh working for?", "What is his current company?"], { intent: "public-profile-fact", expected: social(["Nokia"]) }),
   cases("recruiter", "achievements", ["What are Mantosh's verified achievements?", "Summarize his documented accomplishments", "Which recognitions appear in his public profile?", "What academic highlights has he published?", "What engineering recognition is documented?", "Give me a concise view of his awards and education", "Which career milestones are publicly supported?", "What evidence supports his achievement claims?", "What stands out in his documented career story?", "Summarize his documented academic and engineering achievements"], { intent: "achievement", sourceKey: "about-mantosh", expected: grounded(["systems-oriented engineer"]) })
+  ,cases("recruiter", "ownership", ["What has Mantosh personally owned?", "What did Mantosh personally lead?", "Which parts of the migration were his responsibility?", "What was he personally responsible for?", "Separate Mantosh's contribution from the team's work.", "What did Mantosh himself deliver?", "Where is his individual ownership documented?", "Which migration responsibilities belonged to Mantosh?", "What were Mantosh's personal contributions?", "What engineering work can be attributed directly to him?"], { intent: "ownership", sourceKey: "legacy-validation-framework-migration", expected: { kind: "grounded", includes: ["shared-library layer", "CI/CD integration", "dashboard", "Team context"], excludes: [...SAFE_EXCLUDES, "M.Sc.", "GATE", "Heroes of Tomorrow", "personally owned a"], maxAnswerChars: 1500 } })
 ].flat();
 
 const student = [
@@ -117,7 +118,7 @@ const founder = [
 ].flat();
 
 export const PERSONA_CASES = Object.freeze([...recruiter, ...student, ...curious, ...spouse, ...colleague, ...founder]);
-export const PERSONA_TARGETS = Object.freeze({ recruiter: 100, student: 100, curious: 100, spouse: 10, colleague: 100, founder: 60 });
+export const PERSONA_TARGETS = Object.freeze({ recruiter: 110, student: 100, curious: 100, spouse: 10, colleague: 100, founder: 60 });
 
 for (const [persona, target] of Object.entries(PERSONA_TARGETS)) {
   const actual = PERSONA_CASES.filter((entry) => entry.persona === persona).length;

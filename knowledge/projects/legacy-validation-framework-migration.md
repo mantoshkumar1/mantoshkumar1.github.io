@@ -4,7 +4,7 @@ slug: "legacy-validation-framework-migration"
 category: "project"
 tags: [platform-engineering, migration, test-automation, ci-cd, distributed-validation, optical-networking]
 summary: "Firsthand case study on leading a six-month migration of thousands of validation tests to a distributed CI/CD platform while release validation continued."
-last_updated: "2026-07-15"
+last_updated: "2026-07-16"
 related_topics: [validation-platform-optical-networking, engineering-capabilities, workflow-automation]
 visibility: "public"
 url: "/projects/legacy-validation-framework-migration.html"
@@ -18,11 +18,13 @@ Mantosh Kumar led a two-person, approximately six-month migration of a legacy au
 
 ## Mantosh's contribution
 
-- Migrated the entire shared-library layer.
+- Led the two-person migration effort.
+- Owned and migrated the entire shared-library layer.
 - Owned integration with the distributed validation platform and CI/CD workflows.
 - Participated in the full migration while the other engineer focused primarily on individual test scripts.
-- Built a dashboard for migration progress, ownership, and synchronization.
-- Kept migrated components aligned with continuing legacy-framework changes.
+- Owned and built the dashboard for migration progress, ownership, and synchronization.
+- Owned synchronization that kept migrated components aligned with continuing legacy-framework changes.
+- Led cutover validation through scenario, result, coverage, and execution-time comparisons with legacy-framework engineers.
 - Delivered code walkthroughs and training for the receiving team.
 
 Together, the two engineers migrated thousands of test cases across sanity, smoke, and regression suites.

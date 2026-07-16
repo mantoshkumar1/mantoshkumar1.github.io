@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
   "datasetVersion": "2026-07-15",
-  "datasetSha256": "c8973d575c7aa1d58e68dd655099d22b1ad8895b93f4aca057d09db1a6cd44b7",
-  "cases": 542,
-  "passedCases": 542,
+  "datasetSha256": "b8671444f54d27ae7550f1cfd63087db2735854826e7717f63f39c2f56b46b88",
+  "cases": 552,
+  "passedCases": 552,
   "passRate": 100,
   "assertions": {
-    "total": 9366,
-    "passed": 9366
+    "total": 9616,
+    "passed": 9616
   },
   "categories": {
     "social": {
@@ -35,8 +35,8 @@
       "passed": 6
     },
     "persona-recruiter": {
-      "cases": 100,
-      "passed": 100
+      "cases": 110,
+      "passed": 110
     },
     "persona-student": {
       "cases": 100,
@@ -61,9 +61,9 @@
   },
   "personas": {
     "recruiter": {
-      "target": 100,
-      "cases": 100,
-      "passed": 100
+      "target": 110,
+      "cases": 110,
+      "passed": 110
     },
     "student": {
       "target": 100,
