@@ -90,7 +90,15 @@ Only recommend improvements that strengthen my engineering brand.
 
 Determine whether this should become part of the Ask Mantosh knowledge base. If yes, recommend a title, tags, summary, keywords, and related documents.
 
-### 11. Final actions
+### 11. Protect the Ask Mantosh vision
+
+Treat Ask Mantosh as an intelligent navigation and explanation layer for Mantosh's published engineering work, never as a general-purpose AI assistant.
+
+Before implementing any Ask Mantosh enhancement, check it against [`VISION.md`](VISION.md). It must help visitors understand Mantosh's work, engineering decisions, experience, evidence, or fit, or help them navigate the published website. Friendly greetings, jokes, clarification, and light conversation are allowed only as supporting interactions.
+
+Stop and challenge the user before implementing a proposal that would materially broaden Ask Mantosh into a general chatbot, weaken its evidence boundary, add unsupported or private information, create engagement for its own sake, imitate ChatGPT without portfolio value, or add complexity and visual clutter without improving visitor understanding. Explain the conflict and recommend the narrowest aligned alternative. Do not let incremental feature requests dilute the product's purpose.
+
+### 12. Final actions
 
 Always finish with this checklist:
 

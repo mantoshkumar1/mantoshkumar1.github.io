@@ -77,6 +77,9 @@ metadata even if the generated Markdown reaches its output-length limit.
 
 ## Extension rules
 
+- Apply the product-vision gate in [`../../VISION.md`](../../VISION.md) before implementation. Ask Mantosh is an intelligent navigation and explanation layer for Mantosh's published engineering work, not a general-purpose AI assistant.
+- Reject or narrow enhancements whose primary value is general capability, novelty, engagement, or imitation of ChatGPT rather than understanding, explaining, or navigating Mantosh's published evidence.
+- Preserve friendly greetings, jokes, clarification, and light conversation as supporting interactions. Clearly unrelated requests receive one concise scope redirect without citations, related reading, evidence UI, or generated follow-up.
 - Conversation memory is appended only as bounded visitor context; it never
   becomes evidence about Mantosh.
 - Related content and suggested questions come from retrieved metadata, not
