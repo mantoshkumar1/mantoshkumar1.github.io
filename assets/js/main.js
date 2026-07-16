@@ -279,6 +279,7 @@ class ConversationView {
 class AskMantoshApp {
   constructor(elements) {
     this.elements = elements; this.messages = []; this.id = 0; this.controller = null; this.generation = 0;
+    this.emptyStatusTimer = null;
     this.storageKey = "ask-mantosh-conversation-v1";
     this.conversationId = this.newConversationId();
     this.view = new ConversationView({ ...elements, markdown: new MarkdownService() }); this.view.getMessage = (id) => this.messages.find((message) => String(message.id) === String(id));
@@ -397,7 +398,15 @@ class AskMantoshApp {
     this.ask(assistant.question, { retryAssistant: assistant });
   }
   async ask(rawQuestion, { retryAssistant = null } = {}) {
-    const question = rawQuestion.trim(); if (!question) return; this.open();
+    const question = rawQuestion.trim();
+    if (!question) {
+      clearTimeout(this.emptyStatusTimer);
+      this.view.setStatus("Type a question first.");
+      this.emptyStatusTimer = setTimeout(() => { if (!this.controller) this.view.setStatus(""); }, 1800);
+      this.elements.input.focus();
+      return;
+    }
+    clearTimeout(this.emptyStatusTimer); this.emptyStatusTimer = null; this.open();
     if (this.controller) this.controller.abort();
     const generation = this.generation;
     const assistant = retryAssistant || (this.add("user", question), this.add("assistant", "", { question, sources: [], attemptErrors: [] }));

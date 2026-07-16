@@ -185,6 +185,10 @@ test("Ask Mantosh opens with a compact, portfolio-wide welcome state", async ({ 
   await expect(panel.locator(".ask-mantosh-audience-chip")).toHaveCount(0);
   await expect(panel.locator("#ask-mantosh-input")).toHaveAttribute("placeholder", "Ask about my work...");
 
+  await panel.locator("#ask-mantosh-input").press("Enter");
+  await expect(panel.locator("#ask-mantosh-status")).toHaveText("Type a question first.");
+  await expect(panel.locator(".ask-mantosh-message.user")).toHaveCount(0);
+
   await panel.locator("#ask-mantosh-input").fill("Hi");
   await panel.locator("#ask-mantosh-input").press("Enter");
   await expect.poll(() => submittedQuestion).toBe("Hi");
