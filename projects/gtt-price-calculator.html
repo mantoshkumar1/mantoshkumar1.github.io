@@ -46,7 +46,7 @@
 
 <title>GTT Price Calculator for Indian Stock Orders | Mantosh Kumar</title>
     <script src="../assets/js/theme-init.js?v=20260713-1"></script>
-    <link rel="stylesheet" href="../assets/css/style.css?v=20260716-5" />
+    <link rel="stylesheet" href="../assets/css/style.css?v=20260716-6" />
   </head>
   <body>
     <a class="skip-link" href="#main-content">Skip to main content</a>
@@ -77,10 +77,21 @@
               <a class="button secondary" href="../projects/">All projects</a>
             </div>
           </header>
+          <p class="project-question"><strong>This page answers:</strong>How do you turn error-prone order preparation into a transparent calculation without crossing into trade execution?</p>
 
           <section class="resume-section">
             <h2>Problem</h2>
-            <p>Setting up a Good Till Triggered (GTT) order can involve checking the trigger distance, rounding the price correctly, and translating an investment amount into shares. This tool brings those steps together for Indian stock-market orders and shows the candidate values before anything is entered with a broker.</p>
+            <p>Preparing a Good Till Triggered order requires consistent trigger-distance, rounding, amount, and share calculations before values are entered with a broker.</p>
+          </section>
+
+          <section class="resume-section">
+            <h2>Challenge</h2>
+            <p>The rules must remain understandable and reviewable, yet broker policies can change. The tool also has to coordinate related inputs without implying that a calculated value is current market data or an executable order.</p>
+          </section>
+
+          <section class="resume-section">
+            <h2>My Contribution</h2>
+            <p>I built the calculation logic and Streamlit interaction that validate price input, apply visible distance and rounding rules, and synchronize investment amount with share count while keeping brokerage access outside the system.</p>
           </section>
 
           <section class="resume-section">
@@ -129,6 +140,11 @@
           </section>
 
           <section class="resume-section">
+            <h2>Outcome</h2>
+            <div class="project-comparison"><div><small>Before</small><p>Trigger distance, rounding, amount, and share calculations were separate manual preparation steps.</p></div><span class="project-comparison-arrow" aria-hidden="true">→</span><div><small>After</small><p>One reviewable workflow prepares candidate buy and sell values without accessing an account or placing a trade.</p></div></div>
+          </section>
+
+          <section class="resume-section">
             <h2>Trade-offs and limits</h2>
             <ul class="case-study-list">
               <li>Broker rules and allowed tick sizes can change; the repository contains hard-coded assumptions rather than a versioned authoritative rules source.</li>
@@ -137,9 +153,8 @@
               <li>The hosted Streamlit app currently redirects through Streamlit authentication, so some visitors may be asked to sign in before using it.</li>
               <li>This utility is not financial advice and does not guarantee that a broker will accept a calculated value.</li>
             </ul>
-            <p class="evidence-note"><strong>Evidence:</strong> public source, README, license, and repository metadata reviewed July 12, 2026. No claims are made about trading outcomes, usage, current broker-policy accuracy, or production scale.</p>
-            <a class="section-link" href="https://github.com/mantoshkumar1/gtt-price-calculator" target="_blank" rel="noreferrer">Review the repository <span aria-hidden="true">↗</span></a>
           </section>
+          <section class="resume-section project-evidence"><h2>Evidence</h2><div class="project-evidence-list"><div><strong>Public source</strong><span>The calculation, validation, callbacks, README, requirements, and license are inspectable.</span></div><div><strong>Architecture boundary</strong><span>The diagram above shows calculation separated from broker credentials and execution.</span></div></div><p class="evidence-note">No claims are made about trading outcomes, usage, current broker-policy accuracy, or production scale.</p><a class="section-link" href="https://github.com/mantoshkumar1/gtt-price-calculator" target="_blank" rel="noreferrer">Review the repository <span aria-hidden="true">↗</span></a></section>
           <section class="project-demonstrates">
             <h2>What This Project Demonstrates</h2>
             <div class="project-demonstrates-grid">
@@ -154,6 +169,7 @@
             <h2>Reflection</h2>
             <p>I would keep the visible calculation and the boundary between preparation and trade execution. I would not treat the current implementation as complete today without automated boundary tests, pinned dependencies, and a versioned authoritative source for broker rules; those controls matter more than adding another convenience feature.</p>
           </section>
+          <nav class="project-related" aria-label="Related project knowledge"><h2>Continue Exploring</h2><div class="project-related-grid"><a href="workflow-automation-toolkit.html"><strong>Related Project</strong><span>Workflow Automation Toolkit</span></a><a href="../insights/complexity-changes-address.html"><strong>Related Insight</strong><span>Complexity changes address</span></a><a href="../insights/engineering-philosophy.html"><strong>Engineering Principle</strong><span>Keep evidence close to claims</span></a><a href="../#ask-mantosh"><strong>Ask Mantosh</strong><span>Ask about the calculator’s boundaries</span></a></div></nav>
           <div class="inline-cta">
             <p><strong>Have a workflow that needs clearer rules and fewer manual calculations?</strong></p>
             <div class="inline-cta-actions">
@@ -164,6 +180,6 @@
         </article>
       </div>
     </main>
-    <script src="/assets/js/ask-mantosh-widget.js?v=20260716-5"></script>
+    <script src="/assets/js/ask-mantosh-widget.js?v=20260716-6"></script>
   </body>
 </html>

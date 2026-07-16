@@ -9,7 +9,7 @@ Every pull request runs the deterministic static audits, 70 Worker tests, the 54
 The browser checks cover:
 
 - the main recruiter path from home through experience, projects, résumé, and contact;
-- whole-card project and Insight navigation;
+- whole-card project and Insight navigation, plus the guiding question, evidence, capability, reflection, and connected-reading structure on all six project case studies;
 - all five appearance choices, horizontal overflow, header clearance, and visible primary actions;
 - automated WCAG 2 A/AA checks with Axe on the five critical pages and every explicit theme;
 - newsletter form validation, résumé resources, and copy-email fallback;
@@ -21,7 +21,7 @@ Failure evidence includes screenshots, videos, traces, and a browser report reta
 
 The generated public artifact fails the release when any HTML page exceeds 36 KB, CSS exceeds 100 KB, JavaScript exceeds 60 KB in total, an image exceeds 180 KB, or the public artifact excluding the résumé PDF exceeds 1 MB.
 
-At the time this document was updated, the measured maxima were 22,964-byte HTML, 80,221-byte CSS, 42,712 bytes of JavaScript, and a 585,688-byte public artifact excluding the PDF.
+At the time this document was updated, the measured maxima were 25,835-byte HTML, 82,614-byte CSS, 42,712 bytes of JavaScript, and a 599,745-byte public artifact excluding the PDF.
 
 These are transfer-size guardrails, not Core Web Vitals measurements. This repository does not currently claim automated LCP, INP, or CLS results from a production trace.
 

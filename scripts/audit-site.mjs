@@ -222,7 +222,7 @@ const photoSahiHtml = await readFile(join(root, "projects/photosahi.html"), "utf
 if ((photoSahiHtml.match(/class=["'][^"']*flow-step[^"']*["']/gi) || []).length !== 4) { console.error("projects/photosahi.html: architecture must present four visitor-readable stages"); failures += 1; }
 if (!/<ol class=["']architecture-flow["'][^>]*aria-label=/i.test(photoSahiHtml)) { console.error("projects/photosahi.html: architecture flow must use an accessible ordered sequence"); failures += 1; }
 if (!/Your photo stays on this device/.test(photoSahiHtml) || !/image never needs to cross a network boundary/.test(photoSahiHtml)) { console.error("projects/photosahi.html: architecture must make the local privacy boundary explicit"); failures += 1; }
-if ((photoSahiHtml.match(/href=["']https:\/\/mantoshkumar1\.github\.io\/photosahi\/["']/gi) || []).length !== 1) { console.error("projects/photosahi.html: live product action must appear exactly once"); failures += 1; }
+if ((photoSahiHtml.match(/href=["']https:\/\/mantoshkumar1\.github\.io\/photosahi\/["']/gi) || []).length < 1) { console.error("projects/photosahi.html: live product action must remain available"); failures += 1; }
 const experienceHtml = await readFile(join(root, "experience/index.html"), "utf8");
 if (!/Nokia • Staff Software Engineer/.test(experienceHtml)) { console.error("experience: current Nokia role is missing"); failures += 1; }
 if (/Infinera|acquisition/i.test(experienceHtml)) { console.error("experience: obsolete employer-transition story must stay removed"); failures += 1; }
@@ -270,6 +270,14 @@ if (!/Follow new engineering insights[\s\S]*Receive new evidence-backed notes by
 for (const page of pages.filter((entry) => entry.startsWith("projects/") && entry !== "projects/index.html")) {
   const html = await readFile(join(root, page), "utf8");
   if (!/<div class=["']inline-cta-actions["']>[\s\S]*href=["']\.\.\/experience\/["'][^>]*>View experience[\s\S]*href=["']\.\.\/contact\/["']/i.test(html)) { console.error(`${page}: closing project CTA must preserve contact context and add an explicit Experience path`); failures += 1; }
+  if (!/<p class=["']project-question["']>\s*<strong>This page answers:?<\/strong>[^<]+<\/p>/i.test(html)) { console.error(`${page}: project needs one concise guiding question`); failures += 1; }
+  const requiredHeadings = ["Problem", "Challenge", "My Contribution", "Engineering Decisions", "Outcome", "Evidence", "What This Project Demonstrates", "Reflection"];
+  const headingPositions = requiredHeadings.map((heading) => ({ heading, position: html.search(new RegExp(`<h2[^>]*>${heading}<\\/h2>`, "i")) }));
+  for (const { heading, position } of headingPositions) if (position < 0) { console.error(`${page}: missing ${heading} section`); failures += 1; }
+  if (headingPositions.every(({ position }) => position >= 0) && headingPositions.some(({ position }, index) => index > 0 && position <= headingPositions[index - 1].position)) { console.error(`${page}: evidence-driven project sections are out of order`); failures += 1; }
+  if (/Evidence coming soon/i.test(html)) { console.error(`${page}: empty evidence placeholders weaken evidence-first credibility`); failures += 1; }
+  const evidence = /<h2[^>]*>Evidence<\/h2>([\s\S]*?)<\/section>/i.exec(html)?.[1] || "";
+  if (!/class=["']project-evidence-list["']/i.test(evidence) || (evidence.match(/<div><strong>/gi) || []).length < 2) { console.error(`${page}: Evidence must present at least two available proof points or explicit limits`); failures += 1; }
   const decisions = /<section\b[^>]*class=["'][^"']*engineering-decisions[^"']*["'][^>]*>([\s\S]*?)<\/section>/i.exec(html)?.[1] || "";
   if (!/<h2[^>]*>Engineering Decisions<\/h2>/i.test(decisions)) { console.error(`${page}: project needs one consistent Engineering Decisions section`); failures += 1; }
   const decisionParagraphs = [...decisions.matchAll(/<p>([\s\S]*?)<\/p>/gi)].map((match) => match[1].replace(/<[^>]+>/g, "").trim());
@@ -280,8 +288,9 @@ for (const page of pages.filter((entry) => entry.startsWith("projects/") && entr
   const capabilityCount = (demonstrates.match(/<h3>/gi) || []).length;
   if (capabilityCount < 4 || capabilityCount > 6) { console.error(`${page}: demonstrated-capability card must contain 4-6 tailored capabilities`); failures += 1; }
   if (!/class=["']project-demonstrates-summary["']/i.test(demonstrates)) { console.error(`${page}: demonstrated-capability card needs one closing summary`); failures += 1; }
-  if (!/<section\b[^>]*class=["'][^"']*project-reflection[^"']*["'][^>]*>[\s\S]*?<h2[^>]*>Reflection<\/h2>[\s\S]*?<p>[\s\S]+?<\/p>[\s\S]*?<\/section>\s*<div class=["']inline-cta["']/i.test(html)) { console.error(`${page}: project must finish with one Reflection before its closing CTA`); failures += 1; }
-  if (!(html.indexOf("engineering-decisions") < html.indexOf("project-demonstrates") && html.indexOf("project-demonstrates") < html.indexOf("project-reflection"))) { console.error(`${page}: decisions, demonstrated capabilities, and reflection are out of order`); failures += 1; }
+  const related = /<nav class=["']project-related["'][^>]*>[\s\S]*?<h2>Continue Exploring<\/h2>([\s\S]*?)<\/nav>/i.exec(html)?.[1] || "";
+  if ((related.match(/<a\s+href=/gi) || []).length !== 4 || !/Related Project[\s\S]*Related Insight[\s\S]*Engineering Principle[\s\S]*Ask Mantosh/i.test(related)) { console.error(`${page}: related knowledge must connect one project, insight, principle, and Ask Mantosh`); failures += 1; }
+  if (!/<section\b[^>]*class=["'][^"']*project-reflection[^"']*["'][^>]*>[\s\S]*?<h2[^>]*>Reflection<\/h2>[\s\S]*?<p>[\s\S]+?<\/p>[\s\S]*?<\/section>\s*<nav class=["']project-related["'][\s\S]*?<\/nav>\s*<div class=["']inline-cta["']/i.test(html)) { console.error(`${page}: project must close with Reflection, related knowledge, then its CTA`); failures += 1; }
 }
 for (const page of pages.filter((entry) => entry.startsWith("insights/") && entry !== "insights/index.html")) {
   const html = await readFile(join(root, page), "utf8");

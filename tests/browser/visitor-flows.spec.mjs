@@ -12,7 +12,14 @@ const criticalPages = [
 
 async function expectNoHorizontalOverflow(page) {
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
-  expect(overflow, "page must not overflow the viewport horizontally").toBeLessThanOrEqual(1);
+  const offenders = overflow > 1 ? await page.evaluate(() => [...document.querySelectorAll("body *")]
+    .filter((element) => {
+      const bounds = element.getBoundingClientRect();
+      return bounds.right > document.documentElement.clientWidth + 1 || bounds.left < -1;
+    })
+    .slice(0, 8)
+    .map((element) => `${element.tagName.toLowerCase()}.${element.className || ""}(${(element.textContent || "").trim().slice(0, 45)})`)) : [];
+  expect(overflow, `page must not overflow the viewport horizontally; offenders: ${offenders.join(", ")}`).toBeLessThanOrEqual(1);
 }
 
 async function expectMainBelowHeader(page) {
@@ -94,6 +101,10 @@ test("project and insight cards expose their primary detail destinations", async
   }
   for (const destination of projectDestinations) {
     await page.goto(`/projects/${destination}`);
+    await expect(page.locator(".project-question")).toContainText("This page answers:");
+    for (const heading of ["Problem", "Challenge", "My Contribution", "Outcome", "Evidence"]) {
+      await expect(page.getByRole("heading", { name: heading, exact: true })).toBeVisible();
+    }
     const decisions = page.locator(".engineering-decisions");
     await expect(decisions.getByRole("heading", { name: "Engineering Decisions" })).toBeVisible();
     expect(await decisions.locator("h3").count()).toBeGreaterThanOrEqual(3);
@@ -102,6 +113,14 @@ test("project and insight cards expose their primary detail destinations", async
     expect(await demonstrates.locator("h3").count()).toBeGreaterThanOrEqual(4);
     await expect(demonstrates.locator(".project-demonstrates-summary")).toBeVisible();
     await expect(page.locator(".project-reflection").getByRole("heading", { name: "Reflection" })).toBeVisible();
+    expect(await page.locator(".project-evidence-list > div").count()).toBeGreaterThanOrEqual(2);
+    const related = page.locator(".project-related");
+    await expect(related.getByRole("heading", { name: "Continue Exploring" })).toBeVisible();
+    await expect(related.locator("a")).toHaveCount(4);
+    await expect(related).toContainText("Related Project");
+    await expect(related).toContainText("Related Insight");
+    await expect(related).toContainText("Engineering Principle");
+    await expect(related).toContainText("Ask Mantosh");
   }
   await page.goto("/projects/");
   await projects.nth(1).locator(".project-detail-link").click();
