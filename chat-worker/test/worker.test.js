@@ -607,6 +607,7 @@ test("keeps authenticated knowledge synchronization independent of visitor AI qu
     body: JSON.stringify({ action: "upsert", document: {
       path: "knowledge/faq/about-mantosh.md", checksum: "b".repeat(64), title: "About Mantosh", slug: "about-mantosh", category: "faq",
       tags: ["hiring"], summary: "An evidence-backed profile.", last_updated: "2026-07-12", related_topics: ["experience"], visibility: "public", url: "/experience/",
+      facts: { location: "Toronto, Canada", time_zone: "America/Toronto" },
       chunks: [{ id: "about-mantosh-chunk", content: "Mantosh has documented engineering experience." }]
     } })
   }), indexEnv);
