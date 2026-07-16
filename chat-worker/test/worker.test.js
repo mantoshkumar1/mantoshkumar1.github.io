@@ -3,7 +3,7 @@ import test from "node:test";
 import { formatError, formatSuccess } from "../src/formatter.js";
 import { verifyGitHubOidcToken } from "../src/github-oidc.js";
 import { AnalyticsService, RecommendationEngine, SearchRouter } from "../src/intelligence/index.js";
-import worker from "../src/index.js";
+import worker, { focusRetrievalForIntent } from "../src/index.js";
 import { audienceInstructions, buildPrompt, buildSystemPrompt, classifyQuestionIntent, conciseAchievementResponse, expandRetrievalQuery, isSubjectiveProfileQuestion, scoreRetrievalConfidence } from "../src/prompt/index.js";
 import { assessLexicalRelevance } from "../src/retrieval.js";
 
@@ -1048,6 +1048,22 @@ test("keeps technical-skills and value-fit responses distinct", () => {
   assert.match(fitPrompt.input, /intent="fit"/);
   assert.match(fitPrompt.input, /engineering environments and problems/);
   assert.match(fitPrompt.input, /Do not repeat a generic biography/);
+});
+
+test("routes skills and fit to their authoritative published sources", async () => {
+  const documents = {
+    "knowledge/experience/engineering-capabilities.md": { title: "Engineering Capabilities and Technical Skills", slug: "engineering-capabilities", category: "experience", path: "knowledge/experience/engineering-capabilities.md", url: "/experience/" },
+    "knowledge/resume/professional-experience.md": { title: "Mantosh Kumar Résumé: Professional Experience", slug: "mantosh-kumar-professional-experience", category: "resume", path: "knowledge/resume/professional-experience.md", url: "/resume/" }
+  };
+  const env = { KNOWLEDGE_DB: { prepare: () => ({ bind: (path) => ({ all: async () => ({ results: [{ chunk_id: `${documents[path].slug}-1`, content: `Evidence from ${documents[path].title}.`, tags: "[]", summary: "Published evidence.", related_topics: "[]", ...documents[path] }] }) }) }) } };
+  const generic = { chunks: [{ path: "knowledge/faq/about-mantosh.md" }], sources: [{ path: "knowledge/faq/about-mantosh.md" }], confidence: "high", metrics: {} };
+  const config = { retrievalMaxContextChars: 8_000 };
+  const skills = await focusRetrievalForIntent(generic, "skills", env, config);
+  const fit = await focusRetrievalForIntent(generic, "fit", env, config);
+  assert.equal(skills.sources[0].label, "Experience: Engineering Capabilities and Technical Skills");
+  assert.equal(skills.sources[0].path, "knowledge/experience/engineering-capabilities.md");
+  assert.equal(fit.sources[0].label, "Resume: Mantosh Kumar Résumé: Professional Experience");
+  assert.equal(fit.sources[0].path, "knowledge/resume/professional-experience.md");
 });
 
 test("gives engineering ownership questions a contribution-safe response contract", () => {

@@ -11,7 +11,7 @@ import { enforceRateLimit } from "./rate-limit.js";
 import { assessLexicalRelevance, retrieveKnowledge, searchLexicalKnowledge } from "./retrieval.js";
 import { parseChatRequest } from "./validation.js";
 
-const ANSWER_POLICY_VERSION = "visitor-intent-v44-self-contained-context";
+const ANSWER_POLICY_VERSION = "visitor-intent-v45-resume-evidence";
 const RETRYABLE_MODEL_OUTPUT_CODES = new Set(["workers_ai_invalid_response", "empty_model_response", "invalid_model_response", "uncited_model_response"]);
 
 async function generateVerifiedResponse({ env, config, prompt, formatOptions }) {
@@ -79,7 +79,38 @@ function coverageBand(coverage) {
   return "coverage_70_100";
 }
 
-async function focusRetrievalForIntent(retrieval, intent, env, config) {
+export async function focusRetrievalForIntent(retrieval, intent, env, config) {
+  const preferredPath = {
+    skills: "knowledge/experience/engineering-capabilities.md",
+    fit: "knowledge/resume/professional-experience.md"
+  }[intent];
+  if (preferredPath) {
+    const result = await env.KNOWLEDGE_DB.prepare(
+      `SELECT c.chunk_id, c.content, d.title, d.slug, d.category, d.tags, d.summary, d.related_topics, d.path, d.url
+       FROM chunks c JOIN documents d ON d.path = c.document_path
+       WHERE d.path = ? AND d.visibility = 'public' ORDER BY c.position ASC`
+    ).bind(preferredPath).all();
+    const complete = [];
+    let characters = 0;
+    for (const chunk of result.results || []) {
+      if (characters + chunk.content.length > config.retrievalMaxContextChars) break;
+      complete.push(chunk);
+      characters += chunk.content.length;
+    }
+    if (complete.length) {
+      const document = complete[0];
+      const category = document.category[0].toUpperCase() + document.category.slice(1).replaceAll("-", " ");
+      return {
+        ...retrieval,
+        chunks: complete,
+        sources: [{
+          title: document.title, slug: document.slug, category: document.category,
+          label: `${category}: ${document.title}`, url: document.url, summary: document.summary,
+          tags: document.tags, related_topics: document.related_topics, path: document.path
+        }]
+      };
+    }
+  }
   if (intent !== "ownership") return retrieval;
   const projectChunks = retrieval.chunks.filter((chunk) => chunk.category === "project");
   if (!projectChunks.length) return retrieval;
