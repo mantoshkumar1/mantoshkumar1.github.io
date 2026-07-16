@@ -11,7 +11,7 @@ import { enforceRateLimit } from "./rate-limit.js";
 import { assessLexicalRelevance, retrieveKnowledge, searchLexicalKnowledge } from "./retrieval.js";
 import { parseChatRequest } from "./validation.js";
 
-const ANSWER_POLICY_VERSION = "visitor-intent-v36-output-recovery";
+const ANSWER_POLICY_VERSION = "visitor-intent-v37-engineering-ownership";
 const RETRYABLE_MODEL_OUTPUT_CODES = new Set(["workers_ai_invalid_response", "empty_model_response", "invalid_model_response", "uncited_model_response"]);
 
 async function generateVerifiedResponse({ env, config, prompt, formatOptions }) {
@@ -77,6 +77,14 @@ function coverageBand(coverage) {
   if (coverage < 0.4) return "coverage_1_39";
   if (coverage < 0.7) return "coverage_40_69";
   return "coverage_70_100";
+}
+
+function focusRetrievalForIntent(retrieval, intent) {
+  if (intent !== "ownership") return retrieval;
+  const projectChunks = retrieval.chunks.filter((chunk) => chunk.category === "project");
+  if (!projectChunks.length) return retrieval;
+  const paths = new Set(projectChunks.map((chunk) => chunk.path));
+  return { ...retrieval, chunks: projectChunks, sources: retrieval.sources.filter((source) => paths.has(source.path)) };
 }
 
 export default {
@@ -174,8 +182,9 @@ export default {
       await enforceFreeUsageLimit(env, config);
       const retrievalQuery = expandRetrievalQuery(question, baseRetrievalQuery);
       const intent = classifyQuestionIntent(question);
-      const retrieval = await retrieveKnowledge(retrievalQuery, env, config,
+      const retrieved = await retrieveKnowledge(retrievalQuery, env, config,
         retrievalQuery === baseRetrievalQuery ? { lexicalMatches } : undefined);
+      const retrieval = focusRetrievalForIntent(retrieved, intent);
       const recommendationEngine = new RecommendationEngine(metadataService, config);
       const recommendations = await recommendationEngine.recommend({ sources: retrieval.sources });
       const followUpQuestions = recommendationEngine.followUpQuestions({ sources: retrieval.sources, intent, question });

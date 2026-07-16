@@ -116,6 +116,17 @@ export const SOURCE_FIXTURES = Object.freeze({
     content: "AI-assisted tools organize failure evidence and surface patterns for engineering review. Root cause, build health, and release risk remain accountable engineering judgment.",
     answer: "## Answer\nAI-assisted tools organize failure evidence and surface patterns for review; they do not declare root cause or release health. Those conclusions remain accountable engineering judgment. [Project: Validation Platform and Release Intelligence](/projects/validation-platform-optical-networking.html)"
   }),
+  "legacy-validation-framework-migration": fixture({
+    title: "Migrating a Legacy Framework Containing Thousands of Tests to a Distributed CI/CD Platform",
+    slug: "legacy-validation-framework-migration",
+    category: "project",
+    path: "knowledge/projects/legacy-validation-framework-migration.md",
+    url: "/projects/legacy-validation-framework-migration.html",
+    tags: ["platform-migration", "technical-leadership"],
+    summary: "A live migration of thousands of validation tests to a distributed CI/CD platform.",
+    content: "Mantosh led a two-person migration. He migrated the complete shared-library layer, owned distributed-platform and CI/CD integration, built the migration dashboard, maintained synchronization, and led cutover validation and knowledge transfer. The second engineer primarily migrated individual test scripts.",
+    answer: "## Personally owned\n- Led the two-person migration and owned distributed-platform and CI/CD integration.\n- Migrated the complete shared-library layer and built the synchronization dashboard.\n- Led cutover validation and team knowledge transfer. [Project: Migrating a Legacy Framework Containing Thousands of Tests to a Distributed CI/CD Platform](/projects/legacy-validation-framework-migration.html)\n## Team context\nThe second engineer primarily migrated individual test scripts; together they migrated thousands of tests.\n## Sources\n- [Project: Migrating a Legacy Framework Containing Thousands of Tests to a Distributed CI/CD Platform](/projects/legacy-validation-framework-migration.html)"
+  }),
   "complexity-changes-address": fixture({
     title: "In Distributed Systems, Complexity Changes Address",
     slug: "complexity-changes-address",

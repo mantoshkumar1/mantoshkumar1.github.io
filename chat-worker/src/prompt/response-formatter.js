@@ -54,8 +54,9 @@ function restoreCollapsedMarkdown(answer, sectionNames) {
 function normalizeGroundedAnswer(answer, followUpQuestions = []) {
   const answerBlock = /<answer>\s*([\s\S]*?)\s*<\/answer>/i.exec(answer);
   const responseBlock = /(?:<response>|&lt;response&gt;)\s*([\s\S]*?)\s*(?:<\/response>|&lt;\/response&gt;)/i.exec(answer);
-  const sectionNames = ["Answer", "Summary", "In brief", "Highlights", "Context", "Best fit", "Where Mantosh can help", "Relevant evidence", "Patterns in Published Work", "A sensible next step", "What matters", "How Mantosh's experience applies", "Practical next steps", "Limits", "Detailed Explanation", "Engineering Decisions", "Trade-offs", "Lessons Learned", "Related Articles", "Related Projects", "Sources", "Follow-up Questions"];
+  const sectionNames = ["Answer", "Summary", "In brief", "Highlights", "Context", "Best fit", "Personally owned", "Team context", "Where Mantosh can help", "Relevant evidence", "Patterns in Published Work", "A sensible next step", "What matters", "How Mantosh's experience applies", "Practical next steps", "Limits", "Detailed Explanation", "Engineering Decisions", "Trade-offs", "Lessons Learned", "Related Articles", "Related Projects", "Sources", "Follow-up Questions"];
   let normalized = collapseRepeatedFallback(removePromptControlLeak(answerBlock?.[1] || responseBlock?.[1] || answer)).trim();
+  normalized = normalized.replace(/^\s*\{#[A-Za-z][\w-]*\}\s*$/gm, "");
   normalized = restoreCollapsedMarkdown(normalized, sectionNames).replace(/^[•▪◦]\s+/gm, "- ");
   for (const section of sectionNames) {
     normalized = normalized.replace(new RegExp(`^#{0,2}\\s*${section}\\s*$`, "gim"), `## ${section}`);
@@ -64,7 +65,7 @@ function normalizeGroundedAnswer(answer, followUpQuestions = []) {
     /^##\s+(Engineering Decisions|Trade-offs|Lessons Learned|Related Articles|Related Projects)\s*\n\s*(?:Not discussed(?: in the retrieved documents)?\.?|Not available\.?)\s*(?=^##\s+|$)/gim,
     ""
   ).replace(/\n{3,}/g, "\n\n").trim();
-  const firstHeading = normalized.search(/^##\s+(?:Answer|In brief|Highlights|What matters|Summary)\s*$/im);
+  const firstHeading = normalized.search(/^##\s+(?:Answer|In brief|Highlights|Personally owned|What matters|Summary)\s*$/im);
   if (firstHeading >= 0) normalized = normalized.slice(firstHeading).trim();
   else normalized = `## Answer\n${normalized}`;
   const followUpHeading = /^##\s+Follow-up Questions\s*$/im;

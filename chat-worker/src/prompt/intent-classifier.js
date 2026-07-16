@@ -1,6 +1,7 @@
 const SUBJECTIVE_PROFILE_PATTERN = /\b(?:genius|brilliant|smart|impressive|exceptional|great engineer|good engineer|really good|actually good|overrated)\b/i;
 const ACHIEVEMENT_PATTERN = /\b(?:achievement|achievements|accomplishment|accomplishments|award|awards|recognition|honou?rs?|career story|his story|journey|education|academic|gate|heroes of tomorrow|something interesting about (?:mantosh|him))\b/i;
 const DETAILED_RESPONSE_PATTERN = /\b(?:in detail|detailed|deep dive|deeply|comprehensive|thorough|step[- ]by[- ]step|full explanation|explain fully|long answer)\b/i;
+const OWNERSHIP_PATTERN = /\b(?:(?:what|which) (?:has|did|does) (?:mantosh|he) (?:personally )?(?:own|owned|lead|led|deliver|delivered)|what (?:was|were) (?:mantosh|he) (?:personally )?responsible for|(?:mantosh(?:'s)?|his) (?:personal )?(?:ownership|contribution|contributions|responsibilities)|what (?:parts?|work|systems?|projects?) did (?:mantosh|he) (?:personally )?(?:own|build|lead|deliver))\b/i;
 
 const PROFILE_PATTERNS = [
   /\b(?:who is|tell me about|about)\s+(?:this (?:guy|person|engineer)|mantosh|him)\b/i,
@@ -22,6 +23,7 @@ const PROBLEM_PATTERNS = [
 
 export function classifyQuestionIntent(question) {
   const value = String(question || "").trim();
+  if (OWNERSHIP_PATTERN.test(value)) return "ownership";
   if (ACHIEVEMENT_PATTERN.test(value)) return "achievement";
   if (PROFILE_PATTERNS.some((pattern) => pattern.test(value))) return "profile";
   if (PROBLEM_PATTERNS.some((pattern) => pattern.test(value))) return "problem";
@@ -40,6 +42,16 @@ export function responseModeInstructions(intent, detailed = false) {
   const lengthInstruction = detailed
     ? "The visitor explicitly requested depth. Keep the answer body before Sources under 220 words."
     : "The visitor did not request depth. Keep the answer body before Sources under 160 words.";
+  if (intent === "ownership") {
+    return [
+      "Visitor intent: understand Mantosh's personal engineering ownership and distinguish it from team contributions.",
+      "Use these headings in this order: `## Personally owned`, `## Team context`, `## Sources`, `## Follow-up Questions`.",
+      "Lead with concrete systems, integrations, technical decisions, delivery responsibilities, or operational responsibilities explicitly attributed to Mantosh.",
+      "State Mantosh's ownership in natural third-person language. Clearly distinguish his work from what the team delivered, and preserve collaborators' contributions when the source describes them.",
+      "Degrees, awards, rankings, employment, and technologies are not engineering ownership. Do not use them as evidence for this question.",
+      "Use at most four concise bullets and keep the answer body before Sources under 140 words. Do not infer sole ownership from participation."
+    ].join("\n");
+  }
   if (intent === "achievement") {
     return [
       "Visitor intent: explicitly understand Mantosh's verified achievements, awards, education, or career story.",
@@ -92,6 +104,7 @@ export function audienceInstructions(audience) {
 
 export function expandRetrievalQuery(question, conversationQuery = question) {
   const intent = classifyQuestionIntent(question);
+  if (intent === "ownership") return `Mantosh personal engineering ownership contribution led migration integration shared libraries CI/CD dashboard project decisions ${conversationQuery}`;
   if (intent === "achievement") return `Mantosh Verified Achievements Awards Education GATE Top 1% Technical University of Munich Heroes of Tomorrow ${conversationQuery}`;
   if (intent !== "profile") return conversationQuery;
   return `About Mantosh Where His Experience Can Help Engineering Capabilities Technical Skills ${conversationQuery}`;

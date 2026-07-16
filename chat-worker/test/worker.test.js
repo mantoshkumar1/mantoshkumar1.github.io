@@ -982,6 +982,9 @@ test("classifies visitor questions into profile, problem, and direct response mo
   assert.equal(classifyQuestionIntent("This guy is genius?"), "profile");
   assert.equal(classifyQuestionIntent("Is this engineer overrated?"), "profile");
   assert.equal(classifyQuestionIntent("What are Mantosh's achievements?"), "achievement");
+  assert.equal(classifyQuestionIntent("What has Mantosh personally owned?"), "ownership");
+  assert.equal(classifyQuestionIntent("What was he personally responsible for?"), "ownership");
+  assert.equal(classifyQuestionIntent("What were his contributions?"), "ownership");
   assert.equal(classifyQuestionIntent("Tell me his career story and awards"), "achievement");
   assert.equal(classifyQuestionIntent("We have a slow release workflow. What should we improve?"), "problem");
   assert.equal(classifyQuestionIntent("Why did PhotoSahi avoid a backend?"), "direct");
@@ -1009,7 +1012,40 @@ test("expands only profile retrieval with verified capability vocabulary", () =>
   assert.match(expandRetrievalQuery("What kind of guy he is?"), /^About Mantosh Where His Experience Can Help Engineering Capabilities Technical Skills/i);
   const achievementQuery = expandRetrievalQuery("What are his achievements?", "What are his achievements?");
   assert.match(achievementQuery, /^Mantosh Verified Achievements Awards Education GATE Top 1%/i);
+  const ownershipQuery = expandRetrievalQuery("What has Mantosh personally owned?");
+  assert.match(ownershipQuery, /^Mantosh personal engineering ownership contribution led migration integration/i);
   assert.equal(expandRetrievalQuery("Why no PhotoSahi backend?", "Why no PhotoSahi backend?"), "Why no PhotoSahi backend?");
+});
+
+test("gives engineering ownership questions a contribution-safe response contract", () => {
+  const prompt = buildPrompt({
+    question: "What has Mantosh personally owned?",
+    retrieval: {
+      chunks: [{ path: "knowledge/projects/legacy-validation-framework-migration.md", content: "Mantosh led integration and migrated shared libraries.", title: "Legacy Validation Framework Migration", summary: "A live migration.", tags: "migration", category: "project", url: "/projects/legacy-validation-framework-migration.html" }],
+      sources: [{ title: "Legacy Validation Framework Migration", slug: "legacy-validation-framework-migration", category: "project", label: "Project: Legacy Validation Framework Migration", path: "knowledge/projects/legacy-validation-framework-migration.md", url: "/projects/legacy-validation-framework-migration.html" }]
+    }
+  });
+  assert.match(prompt.input, /<response_mode intent="ownership" audience="general">/);
+  assert.match(prompt.input, /Degrees, awards, rankings, employment, and technologies are not engineering ownership/);
+  assert.match(prompt.input, /natural third-person language/);
+  assert.match(prompt.input, /distinguish his work from what the team delivered/i);
+  assert.match(prompt.input, /Do not infer sole ownership from participation/);
+  const followUps = new RecommendationEngine(null, {}).followUpQuestions({ sources: [], intent: "ownership", question: "What has Mantosh personally owned?" });
+  assert.deepEqual(followUps, [
+    "Which decisions did Mantosh make during the migration?",
+    "What outcomes did his ownership produce?",
+    "Which project best demonstrates his leadership?"
+  ]);
+  const source = { title: "Legacy Validation Framework Migration", label: "Project: Legacy Validation Framework Migration", category: "project", url: "/projects/legacy-validation-framework-migration.html" };
+  const formatted = formatSuccess({ output_text: [
+    "{#docs}",
+    "## Personally owned",
+    "Mantosh owned the platform and CI/CD integration. [Project: Legacy Validation Framework Migration](/projects/legacy-validation-framework-migration.html)",
+    "## Team context",
+    "The team migrated thousands of tests."
+  ].join("\n") }, [source], { followUpQuestions: followUps });
+  assert.match(formatted.answer, /^## Personally owned/);
+  assert.doesNotMatch(formatted.answer, /\{#docs\}|^## Answer/m);
 });
 
 test("gives explicit achievement questions a concise non-promotional response contract", () => {

@@ -24,6 +24,13 @@ export class RecommendationEngine {
   followUpQuestions({ sources, intent = "direct", question = "" }) {
     const askedFit = /\b(?:fit|hire|help|value|best suited|new team)\b/i.test(question);
     const askedEvidence = /\b(?:project|evidence|demonstrate|prove|example)\b/i.test(question);
+    if (intent === "ownership") {
+      return [
+        "Which decisions did Mantosh make during the migration?",
+        "What outcomes did his ownership produce?",
+        "Which project best demonstrates his leadership?"
+      ];
+    }
     if (intent === "achievement") {
       return [
         "Which projects best demonstrate Mantosh's engineering work?",
