@@ -1022,6 +1022,16 @@ test("keeps deterministic follow-up questions concise and grammatical", () => {
     "Where could this experience add value?"
   ]);
   assert.ok(questions.every((question) => question.length <= 72 && question.endsWith("?")));
+  assert.deepEqual(new RecommendationEngine(null, {}).followUpQuestions({ sources: [], intent: "skills", question: "What are Mantosh's strongest technical skills?" }), [
+    "Which projects best demonstrate these skills?",
+    "What has Mantosh personally owned?",
+    "Where could Mantosh add the most value?"
+  ]);
+  assert.deepEqual(new RecommendationEngine(null, {}).followUpQuestions({ sources: [], intent: "fit", question: "Where could Mantosh add the most value?" }), [
+    "Which projects best demonstrate this fit?",
+    "What has Mantosh personally owned?",
+    "What outcomes did his work produce?"
+  ]);
 });
 
 test("expands only profile retrieval with verified capability vocabulary", () => {

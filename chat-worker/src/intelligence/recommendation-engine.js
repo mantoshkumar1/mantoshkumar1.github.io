@@ -38,6 +38,20 @@ export class RecommendationEngine {
         "What has Mantosh personally owned?"
       ];
     }
+    if (intent === "skills") {
+      return [
+        "Which projects best demonstrate these skills?",
+        "What has Mantosh personally owned?",
+        "Where could Mantosh add the most value?"
+      ];
+    }
+    if (intent === "fit") {
+      return [
+        "Which projects best demonstrate this fit?",
+        "What has Mantosh personally owned?",
+        "What outcomes did his work produce?"
+      ];
+    }
     if (intent === "profile") {
       if (askedFit) {
         return ["Which projects best demonstrate his fit?", "What has Mantosh personally owned?", "What outcomes did his work produce?"];
