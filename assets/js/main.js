@@ -342,8 +342,14 @@ class AskMantoshApp {
   }
   updateExportAvailability() {
     const hasAssistantRecord = this.messages.some((message) => message.role === "assistant" && (message.text.trim() || message.error));
-    this.elements.exportButton.hidden = !hasAssistantRecord;
-    this.elements.exportButton.disabled = Boolean(this.controller);
+    const isGenerating = Boolean(this.controller);
+    const unavailableMessage = "Available when the answer finishes.";
+    this.elements.exportButton.hidden = !hasAssistantRecord && !isGenerating;
+    this.elements.exportButton.setAttribute("aria-disabled", String(isGenerating));
+    this.elements.exportButton.setAttribute("aria-label", isGenerating ? `Export conversation as TXT. ${unavailableMessage}` : "Export conversation as TXT");
+    this.elements.exportButton.title = isGenerating ? unavailableMessage : "Export visible conversation as TXT";
+    if (isGenerating) this.elements.exportButton.dataset.tooltip = unavailableMessage;
+    else delete this.elements.exportButton.dataset.tooltip;
   }
   exportConversation() {
     if (this.controller) return;

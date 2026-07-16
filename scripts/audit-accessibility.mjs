@@ -80,7 +80,8 @@ for (const exportFeature of ["exportConversation()", 'type: "text/plain;charset=
   if (!client.includes(exportFeature)) failures.push(`Ask Mantosh text-export flow missing ${exportFeature}`);
 }
 if (!client.includes('message.role === "assistant" && (message.text.trim() || message.error)')) failures.push("Ask Mantosh export must include completed answers and visible failures");
-if (!client.includes("if (this.controller) return;") || !client.includes("exportButton.disabled = Boolean(this.controller)")) failures.push("Ask Mantosh must not export an incomplete streaming response");
+if (!client.includes("if (this.controller) return;") || !client.includes('setAttribute("aria-disabled", String(isGenerating))')) failures.push("Ask Mantosh must keep incomplete export non-actionable but keyboard-focusable while streaming");
+if (!client.includes("Available when the answer finishes.") || !css.includes('.ask-mantosh-export[aria-disabled="true"]:focus-visible::after')) failures.push("Ask Mantosh must explain temporary export unavailability on hover and keyboard focus");
 if (!client.includes("attemptErrors") || !client.includes("[Previous attempt failed:")) failures.push("Ask Mantosh exports must preserve failed retry attempts");
 if (!client.includes("data-retry-id") || !client.includes("retryAssistant")) failures.push("Ask Mantosh retries must reuse the failed response instead of duplicating the visitor question");
 if (!/ask-mantosh-reading-link[^`]*target=\\"_blank\\"|target=\\"_blank\\"[^`]*ask-mantosh-reading-link/.test(client)) failures.push("Ask Mantosh related-reading links must preserve the current conversation tab");

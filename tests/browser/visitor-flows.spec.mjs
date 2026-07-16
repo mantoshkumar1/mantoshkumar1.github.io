@@ -258,6 +258,33 @@ test("Ask Mantosh preserves minimized history, exports it, and clears deliberate
   await expect(page.locator(".ask-mantosh-message")).toHaveCount(0);
 });
 
+test("Ask Mantosh explains why TXT export is temporarily unavailable", async ({ page }) => {
+  await page.route("https://ask-mantosh.mantoshk234.workers.dev/**", async (route) => {
+    await new Promise((resolve) => setTimeout(resolve, 500));
+    await route.fulfill({
+      contentType: "application/json",
+      body: JSON.stringify({ answer: "## Answer\nA grounded answer.", sources: [], followUpQuestions: [], confidence: "high", success: true })
+    });
+  });
+  await page.goto("/");
+  await page.getByRole("button", { name: "Ask Mantosh" }).click();
+  await page.locator("#ask-mantosh-input").fill("What work does Mantosh do?");
+  await page.getByRole("button", { name: "Send message" }).click();
+
+  const exportButton = page.locator("#ask-mantosh-export");
+  await expect(exportButton).toBeVisible();
+  await expect(exportButton).toHaveAttribute("aria-disabled", "true");
+  await expect(exportButton).toHaveAttribute("title", "Available when the answer finishes.");
+  await expect(exportButton).toHaveAttribute("aria-label", "Export conversation as TXT. Available when the answer finishes.");
+  await exportButton.focus();
+  await expect.poll(() => exportButton.evaluate((button) => getComputedStyle(button, "::after").opacity)).toBe("1");
+
+  await expect(page.locator(".ask-mantosh-message.assistant")).toContainText("A grounded answer.");
+  await expect(exportButton).toHaveAttribute("aria-disabled", "false");
+  await expect(exportButton).toHaveAttribute("title", "Export visible conversation as TXT");
+  await expect(exportButton).toHaveAttribute("aria-label", "Export conversation as TXT");
+});
+
 test("Ask Mantosh errors remain readable in every appearance mode", async ({ page }) => {
   let attempts = 0;
   await page.route("https://ask-mantosh.mantoshk234.workers.dev/**", async (route) => {
