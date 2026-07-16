@@ -350,6 +350,7 @@ class AskMantoshApp {
     this.elements.exportButton.title = isGenerating ? unavailableMessage : "Export visible conversation as TXT";
     if (isGenerating) this.elements.exportButton.dataset.tooltip = unavailableMessage;
     else delete this.elements.exportButton.dataset.tooltip;
+    this.elements.send.disabled = isGenerating;
   }
   exportConversation() {
     if (this.controller) return;
@@ -383,7 +384,7 @@ class AskMantoshApp {
     if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
     if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
   }
-  resize() { const { input, send } = this.elements; input.style.height = "auto"; input.style.height = `${Math.min(input.scrollHeight, 150)}px`; send.disabled = !input.value.trim(); }
+  resize() { const { input } = this.elements; input.style.height = "auto"; input.style.height = `${Math.min(input.scrollHeight, 150)}px`; }
   add(role, text, extra = {}) { const message = { id: ++this.id, role, text, ...extra }; this.messages.push(message); this.view.add(message); this.saveSession(); return message; }
   retry(messageId) {
     const assistant = this.messages.find((message) => String(message.id) === String(messageId) && message.role === "assistant");

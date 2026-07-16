@@ -1783,7 +1783,7 @@ body.ask-mantosh-open {
   border-radius: 14px;
   padding: 0.85rem 1rem;
   color: white;
-  background: var(--primary);
+  background: #2563eb;
   font-weight: 600;
   cursor: pointer;
   transition: background 0.2s ease, transform 0.2s ease;
@@ -1791,7 +1791,7 @@ body.ask-mantosh-open {
 
 .ask-mantosh-send:hover,
 .ask-mantosh-send:focus-visible {
-  background: var(--primary-hover);
+  background: #1d4ed8;
   transform: translateY(-1px);
   outline: none;
 }
@@ -3330,6 +3330,9 @@ html[data-theme="light"] .ask-mantosh-answer pre { background: #eef2f7; }
 html[data-theme="light"] .ask-mantosh-source::after { background: #fff; }
 html[data-theme="light"] .ask-mantosh-jump { background: #e8f1fd; }
 html[data-theme="light"] .ask-mantosh-error { border-color: #be123c; background: #fff1f2; color: #881337; }
+html[data-theme="light"] .ask-mantosh-send { background: #075fbd; }
+html[data-theme="light"] .ask-mantosh-send:hover,
+html[data-theme="light"] .ask-mantosh-send:focus-visible { background: #054e9d; }
 html[data-theme="light"] .appearance-control select { color-scheme: light; }
 
 html[data-theme="soft"] {
@@ -3379,6 +3382,9 @@ html[data-theme="soft"] .ask-mantosh-answer pre { background: #eee5d8; }
 html[data-theme="soft"] .ask-mantosh-source::after { background: #fffaf2; }
 html[data-theme="soft"] .ask-mantosh-jump { background: #f0dfcc; }
 html[data-theme="soft"] .ask-mantosh-error { border-color: #b42318; background: #fff0ed; color: #7a271a; }
+html[data-theme="soft"] .ask-mantosh-send { background: #8a4b16; }
+html[data-theme="soft"] .ask-mantosh-send:hover,
+html[data-theme="soft"] .ask-mantosh-send:focus-visible { background: #6f390d; }
 html[data-theme="soft"] .appearance-control select { color-scheme: light; }
 
 html[data-theme="contrast"] {
@@ -3427,6 +3433,9 @@ html[data-theme="contrast"] .capability-section {
 html[data-theme="contrast"] :focus-visible { outline-color: #ffde59; }
 html[data-theme="contrast"] .appearance-control select { border-color: #fff; background: #000; color: #fff; }
 html[data-theme="contrast"] .ask-mantosh-error { border-color: #ff8080; background: #450000; color: #fff; }
+html[data-theme="contrast"] .ask-mantosh-send,
+html[data-theme="contrast"] .ask-mantosh-send:hover,
+html[data-theme="contrast"] .ask-mantosh-send:focus-visible { background: #fff; color: #000; }
 
 @media (prefers-color-scheme: light) {
   html:not([data-theme]) {
