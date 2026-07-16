@@ -252,7 +252,7 @@ class ConversationView {
       const safe = this.safeUrl(item.url);
       if (safe === "#" || seen.has(safe)) return false;
       seen.add(safe); return true;
-    }).slice(0, 4);
+    }).slice(0, 2);
   }
 
   setSuggestions(questions, onAsk, compact = false) {

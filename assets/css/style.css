@@ -1926,7 +1926,7 @@ body.ask-mantosh-open {
 .ask-mantosh-reading-link { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: .4rem; min-width: 0; min-height: 2.5rem; padding: .35rem .5rem; border: 1px solid rgba(255,255,255,.09); border-radius: 8px; color: var(--text); background: rgba(255,255,255,.025); text-decoration: none; transition: border-color .12s ease, background-color .12s ease, transform .12s ease; }
 .ask-mantosh-reading-link:hover, .ask-mantosh-reading-link:focus-visible { transform: translateY(-1px); border-color: rgba(59,130,246,.5); background: rgba(59,130,246,.07); outline: none; }
 .ask-mantosh-reading-link > span:first-child { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
-.ask-mantosh-reading-link strong { grid-column: 1; overflow: hidden; font-size: .7rem; line-height: 1.25; text-overflow: ellipsis; white-space: nowrap; }
+.ask-mantosh-reading-link strong { display: block; grid-column: 1; margin: 0; color: var(--text); font-size: .7rem; font-weight: 650; line-height: 1.3; letter-spacing: 0; overflow-wrap: anywhere; text-transform: none; white-space: normal; }
 .ask-mantosh-reading-link > span:last-child { grid-column: 2; color: var(--muted); font-size: .78rem; }
 .ask-mantosh-follow-ups > div { display: flex; flex-wrap: wrap; gap: .4rem; }
 .ask-mantosh-follow-ups .ask-mantosh-chip { text-align: left; }

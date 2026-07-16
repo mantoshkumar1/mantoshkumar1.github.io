@@ -193,7 +193,7 @@ test("Ask Mantosh opens with a compact, portfolio-wide welcome state", async ({ 
   await expect(answer.locator("strong", { hasText: "Validation Platform" })).toBeVisible();
   await expect(answer).not.toContainText("**Validation Platform**");
   await expect(answer.getByRole("heading", { name: "Related reading" })).toBeVisible();
-  await expect(answer.locator(".ask-mantosh-reading-link")).toHaveCount(4);
+  await expect(answer.locator(".ask-mantosh-reading-link")).toHaveCount(2);
   const nextQuestions = panel.locator("#ask-mantosh-suggestions");
   await expect(nextQuestions.getByText("Try asking next", { exact: true })).toHaveCount(0);
   await expect(nextQuestions.locator(".ask-mantosh-chip")).toHaveCount(1);
