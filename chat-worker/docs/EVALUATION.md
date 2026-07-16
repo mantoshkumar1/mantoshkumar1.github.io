@@ -20,7 +20,7 @@ Dataset version: `2026-07-15`
 | Colleague persona | 100 | Architecture, validation, automation, release intelligence, project trade-offs, capabilities, and confidentiality. |
 | Founder persona | 60 | Commercial fit, platform and automation problems, release risk, evidence systems, and contact flow. |
 
-All **553 of 553 cases** and **9,678 of 9,678 objective assertions** pass in [`../eval/results/latest.json`](../eval/results/latest.json). The 553 labelled cases combine 73 focused regressions with 480 recruiter, student, curious visitor, spouse, colleague, and founder questions. The spouse persona adds plain-language, playful, skeptical, and typo-tolerant questions from a visitor who does not know Mantosh's work.
+All **553 of 553 cases** and **9,701 of 9,701 objective assertions** pass in [`../eval/results/latest.json`](../eval/results/latest.json). The 553 labelled cases combine 73 focused regressions with 480 recruiter, student, curious visitor, spouse, colleague, and founder questions. The spouse persona adds plain-language, playful, skeptical, and typo-tolerant questions from a visitor who does not know Mantosh's work.
 
 The first persona run passed 434 of 519 cases. Its 85 failures clustered around natural navigation wording, public location and employer paraphrases, work-authorization nuance, casual capability questions, conversational recovery, and privacy or prompt-injection variants. The routes and evidence boundaries were then tightened; the final result above is the post-fix run.
 

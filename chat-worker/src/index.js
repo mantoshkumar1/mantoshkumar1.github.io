@@ -11,7 +11,7 @@ import { enforceRateLimit } from "./rate-limit.js";
 import { assessLexicalRelevance, retrieveKnowledge, searchLexicalKnowledge } from "./retrieval.js";
 import { parseChatRequest } from "./validation.js";
 
-const ANSWER_POLICY_VERSION = "visitor-intent-v42-human-language";
+const ANSWER_POLICY_VERSION = "visitor-intent-v43-readable-ownership";
 const RETRYABLE_MODEL_OUTPUT_CODES = new Set(["workers_ai_invalid_response", "empty_model_response", "invalid_model_response", "uncited_model_response"]);
 
 async function generateVerifiedResponse({ env, config, prompt, formatOptions }) {
@@ -217,15 +217,17 @@ export default {
 
       if (intent === "ownership") {
         const facts = await metadataService.profileFacts();
+        const summary = facts?.ownership_summary;
         const highlights = facts?.ownership_highlights;
         const teamContext = facts?.ownership_team_context;
         const source = retrieval.sources[0];
-        if (Array.isArray(highlights) && highlights.length && typeof teamContext === "string" && source?.url) {
+        if (typeof summary === "string" && Array.isArray(highlights) && highlights.length && typeof teamContext === "string" && source?.url) {
           analytics.trackAggregatesInBackground(ctx, [["post_gate_outcome", "grounded_answer"]]);
           const answer = [
-            "## Personally owned",
+            "## Mantosh's ownership", summary,
+            "", "## What he personally delivered",
             ...highlights.map((item) => `- ${item}.`),
-            "", "## Team context", teamContext,
+            "", "## What the team delivered", teamContext,
             "", "## Sources", `- [${source.label}](${source.url})`,
             "", "## Follow-up Questions", ...followUpQuestions.map((item) => `- ${item}`)
           ].join("\n");

@@ -54,7 +54,8 @@ export function responseModeInstructions(intent, detailed = false) {
   if (intent === "ownership") {
     return [
       "Visitor intent: understand Mantosh's personal engineering ownership and distinguish it from team contributions.",
-      "Use these headings in this order: `## Personally owned`, `## Team context`, `## Sources`, `## Follow-up Questions`.",
+      "Use these headings in this order: `## Mantosh's ownership`, `## What he personally delivered`, `## What the team delivered`, `## Sources`, `## Follow-up Questions`.",
+      "Start with one plain-language sentence that summarizes the scope of Mantosh's ownership before listing details.",
       "Lead with concrete systems, integrations, technical decisions, delivery responsibilities, or operational responsibilities explicitly attributed to Mantosh.",
       "State Mantosh's ownership in natural third-person language. Clearly distinguish his work from what the team delivered, and preserve collaborators' contributions when the source describes them.",
       "Degrees, awards, rankings, employment, and technologies are not engineering ownership. Do not use them as evidence for this question.",
