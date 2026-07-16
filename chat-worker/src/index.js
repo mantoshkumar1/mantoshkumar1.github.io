@@ -11,7 +11,23 @@ import { enforceRateLimit } from "./rate-limit.js";
 import { assessLexicalRelevance, retrieveKnowledge, searchLexicalKnowledge } from "./retrieval.js";
 import { parseChatRequest } from "./validation.js";
 
-const ANSWER_POLICY_VERSION = "visitor-intent-v35-hiring-journey";
+const ANSWER_POLICY_VERSION = "visitor-intent-v36-output-recovery";
+const RETRYABLE_MODEL_OUTPUT_CODES = new Set(["workers_ai_invalid_response", "empty_model_response", "invalid_model_response", "uncited_model_response"]);
+
+async function generateVerifiedResponse({ env, config, prompt, formatOptions }) {
+  let firstFailureCode = null;
+  for (let attempt = 1; attempt <= 2; attempt += 1) {
+    try {
+      const response = await createResponse({ env, config, instructions: prompt.instructions, input: prompt.input });
+      return { result: formatResponse(response, formatOptions), recoveredFrom: firstFailureCode };
+    } catch (error) {
+      if (attempt === 2 || !RETRYABLE_MODEL_OUTPUT_CODES.has(error?.code)) throw error;
+      firstFailureCode = error.code;
+      console.warn(JSON.stringify({ event: "ask_mantosh_model_output_retry", code: error.code, attempt }));
+    }
+  }
+  throw new Error("Model output retry ended unexpectedly.");
+}
 
 function json(body, status, origin, extraHeaders = {}) {
   const headers = corsHeaders(origin);
@@ -196,16 +212,18 @@ export default {
 
       const prompt = buildPrompt({ question, retrieval, memory: conversation, audience });
       analytics.trackAggregatesInBackground(ctx, [["post_gate_outcome", "grounded_answer"]]);
-      const streamMetadata = { sources: prompt.sources, recommendations: recommendations.all, relatedArticles: recommendations.articles, relatedProjects: recommendations.projects, relatedNotes: recommendations.notes, followUpQuestions, suggestedQuestions: followUpQuestions, confidence: retrieval.confidence, confidenceDetails, conversationId, cache: "miss" };
+      const formatOptions = { sources: prompt.sources, confidence: retrieval.confidence, maxAnswerChars: config.maxAnswerChars, recommendations, followUpQuestions, conversationId, subjectiveProfile: isSubjectiveProfileQuestion(question) };
       if (wantsStream) {
-        const response = await createResponse({ env, config, instructions: prompt.instructions, input: prompt.input });
-        const result = { ...formatResponse(response, { sources: prompt.sources, confidence: retrieval.confidence, maxAnswerChars: config.maxAnswerChars, recommendations, followUpQuestions, conversationId, subjectiveProfile: isSubjectiveProfileQuestion(question) }), confidenceDetails, cache: "miss" };
+        const generated = await generateVerifiedResponse({ env, config, prompt, formatOptions });
+        const result = { ...generated.result, confidenceDetails, cache: "miss" };
+        if (generated.recoveredFrom) analytics.trackInBackground(ctx, "model_output_recovered", generated.recoveredFrom);
         analytics.trackInBackground(ctx, "knowledge_answer", retrieval.sources.map((source) => source.category).join(","));
         ctx?.waitUntil?.(memory.recordTurn({ conversationId, question, answer: result.answer, sources: result.sources }));
         return eventStream([{ type: "metadata", data: result }, { type: "response.output_text.delta", data: { delta: result.answer } }, { type: "done", data: {} }], origin);
       }
-      const response = await createResponse({ env, config, instructions: prompt.instructions, input: prompt.input });
-      const result = { ...formatResponse(response, { sources: prompt.sources, confidence: retrieval.confidence, maxAnswerChars: config.maxAnswerChars, recommendations, followUpQuestions, conversationId, subjectiveProfile: isSubjectiveProfileQuestion(question) }), confidenceDetails, cache: "miss" };
+      const generated = await generateVerifiedResponse({ env, config, prompt, formatOptions });
+      const result = { ...generated.result, confidenceDetails, cache: "miss" };
+      if (generated.recoveredFrom) analytics.trackInBackground(ctx, "model_output_recovered", generated.recoveredFrom);
       analytics.trackInBackground(ctx, "knowledge_answer", retrieval.sources.map((source) => source.category).join(","));
       ctx?.waitUntil?.(memory.recordTurn({ conversationId, question, answer: result.answer, sources: result.sources }));
       if (cacheKey) writeCachedJson("response", cacheKey, { ...result, conversationId: undefined, cache: undefined }, config.responseCacheTtlSeconds, ctx);

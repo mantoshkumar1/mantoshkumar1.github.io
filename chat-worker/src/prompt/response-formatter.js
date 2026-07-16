@@ -107,6 +107,21 @@ function citedSources(answer, sources) {
   return cited.length ? cited : sources.slice(0, 1);
 }
 
+function canonicalizePublishedLinks(answer, sources) {
+  const siteOrigin = "https://mantoshkumar1.github.io";
+  const sourcesByPath = new Map(sources.filter((source) => source.url).map((source) => {
+    const url = new URL(source.url, siteOrigin);
+    return [url.pathname, source.url];
+  }));
+  return answer.replace(/\[([^\]]*)\]\(([^)\s]+)(\s+[^)]*)?\)/g, (markdown, label, href, title = "") => {
+    try {
+      const url = new URL(href, siteOrigin);
+      if (url.origin !== siteOrigin || !sourcesByPath.has(url.pathname)) return markdown;
+      return `[${label}](${sourcesByPath.get(url.pathname)}${title})`;
+    } catch { return markdown; }
+  });
+}
+
 function validateSafeModelOutput(answer, sources) {
   if (/<\/?(?:script|style|iframe|object|embed)\b|\bon\w+\s*=|(?:javascript|data):/i.test(answer)) {
     throw new AppError(500, "invalid_model_response", "The AI service returned an invalid response.");
@@ -125,7 +140,10 @@ export function formatResponse(response, { sources, confidence, maxAnswerChars =
   const rawAnswer = extractOutputText(response);
   if (!rawAnswer) throw new AppError(500, "empty_model_response", "The AI service returned no answer.");
   const retrievedSources = deduplicateSources(sources);
-  const normalizedAnswer = addSubjectiveFraming(normalizeGroundedAnswer(rawAnswer, followUpQuestions), subjectiveProfile);
+  const normalizedAnswer = canonicalizePublishedLinks(
+    addSubjectiveFraming(normalizeGroundedAnswer(rawAnswer, followUpQuestions), subjectiveProfile),
+    retrievedSources
+  );
   if (normalizedAnswer.replace(/^##\s+Answer\s*/i, "").trimStart().startsWith(NO_KNOWLEDGE_ANSWER)) {
     return {
       answer: `## Answer\n${NO_KNOWLEDGE_ANSWER}`,

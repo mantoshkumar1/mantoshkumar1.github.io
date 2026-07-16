@@ -13,7 +13,7 @@ This document is the canonical description of what is deployed. Architecture pro
 | Health | `https://ask-mantosh.mantoshk234.workers.dev/health` | Unauthenticated service health without configuration details |
 | Knowledge indexing | `POST /internal/index` | GitHub OIDC or manual recovery token only; intentionally unavailable to browsers through CORS |
 
-Last verified Worker deployment: `074a03ea-5030-4998-ad70-c85cd299bf1b`. The active deployed answer-policy cache namespace is `visitor-intent-v35-hiring-journey`.
+Last verified Worker deployment: `7e851176-0838-4c5b-8221-3b1e4904801e`. The active answer-policy cache namespace is `visitor-intent-v36-output-recovery`.
 
 ## Published inventory
 
@@ -74,7 +74,7 @@ The committed production configuration uses:
 - 450 AI-bearing requests per UTC day through D1;
 - six retained conversation turns and a 24-hour session TTL.
 
-Cloudflare Cache API stores eligible embeddings, retrieval candidates, and first-turn answers for 15, 5, and 10 minutes respectively. The optional `CACHE_VERSION` KV binding is not configured in the committed production file, so knowledge-index invalidation currently relies on TTL expiry and the fallback version. Answer-policy changes explicitly advance `ANSWER_POLICY_VERSION`—currently `visitor-intent-v35-hiring-journey` in source—and first-turn answer keys include the effective presentation mode, preventing optional API modes from sharing cached responses. This is an explicit known limitation, not an undocumented guarantee.
+Cloudflare Cache API stores eligible embeddings, retrieval candidates, and first-turn answers for 15, 5, and 10 minutes respectively. The optional `CACHE_VERSION` KV binding is not configured in the committed production file, so knowledge-index invalidation currently relies on TTL expiry and the fallback version. Answer-policy changes explicitly advance `ANSWER_POLICY_VERSION`—currently `visitor-intent-v36-output-recovery` in source—and first-turn answer keys include the effective presentation mode, preventing optional API modes from sharing cached responses. This is an explicit known limitation, not an undocumented guarantee.
 
 ## Security and privacy controls
 
@@ -99,7 +99,7 @@ The repository currently enforces:
 - internal link, fragment, and asset validation;
 - documentation drift checks;
 - autonomous content-lane counts and explicit zero-content states;
-- 72 Worker contract, deterministic social, light-banter, navigation, knowledge-backed public-profile fact, privacy-boundary, confidence-based lexical relevance gating, privacy-safe aggregate telemetry, transcript-derived scope routing, and achievement routing, natural profile-language routing, security, quota isolation, OIDC, retrieval, concise and explicitly detailed response modes, collapsed-Markdown repair, prompt, citation-repair, unsupported-answer source suppression, repetition and control-tag sanitization, verification-failure messaging, and failure-path tests;
+- 74 Worker contract, deterministic social, light-banter, navigation, knowledge-backed public-profile fact, privacy-boundary, confidence-based lexical relevance gating, privacy-safe aggregate telemetry, transcript-derived scope routing, and achievement routing, natural profile-language routing, security, quota isolation, OIDC, retrieval, concise and explicitly detailed response modes, collapsed-Markdown repair, prompt, citation normalization and repair, one-shot invalid-output recovery, unsupported-answer source suppression, repetition and control-tag sanitization, verification-failure messaging, and failure-path tests;
 - 541 labelled Ask Mantosh evaluation cases with 9,344 objective assertions: 71 focused regressions plus 470 recruiter, student, curious-visitor, spouse, colleague, and founder questions covering social, navigation, unsupported, achievement, grounded-answer, and adversarial behavior;
 - a whole-site coverage audit that fails when any public HTML route lacks reviewed evidence, deterministic navigation, or a documented no-index exclusion;
 - static UI guards for immediate safe Markdown rendering.

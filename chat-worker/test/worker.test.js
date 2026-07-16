@@ -482,6 +482,26 @@ test("returns frontend-compatible SSE events with source metadata", async (t) =>
   assert.match(body, /PhotoSahi answer/);
 });
 
+test("retries one rejected model response before returning a verified answer", async () => {
+  let generationCalls = 0;
+  const recoveringEnv = {
+    ...env,
+    AI: { run: async (model) => {
+      if (model.includes("bge-m3")) return { data: [[0.1, 0.2]] };
+      generationCalls += 1;
+      return generationCalls === 1
+        ? { response: "Read [an unsupported source](https://example.com/claim)." }
+        : { response: "PhotoSahi answer [Project: PhotoSahi](/projects/photosahi.html)" };
+    } }
+  };
+  const response = await worker.fetch(request({ question: "What is PhotoSahi?" }), recoveringEnv);
+  const payload = await response.json();
+  assert.equal(response.status, 200);
+  assert.equal(payload.success, true);
+  assert.equal(generationCalls, 2);
+  assert.match(payload.answer, /PhotoSahi answer/);
+});
+
 test("handles a Workers AI timeout", async () => {
   const timedOutEnv = { ...env, AI: { run: async () => new Promise(() => {}) } };
   const response = await worker.fetch(request({ question: "What is PhotoSahi?" }), { ...timedOutEnv, AI_TIMEOUT_MS: "1" });
@@ -1081,6 +1101,14 @@ test("still rejects a model-authored link outside retrieved evidence", () => {
     { output_text: "Read [an unsupported source](https://example.com/claim)." },
     [{ title: "About Mantosh", label: "FAQ: About Mantosh", category: "faq", url: "/experience/" }]
   ), (error) => error.code === "invalid_model_response");
+});
+
+test("canonicalizes an absolute published citation instead of rejecting it", () => {
+  const result = formatSuccess(
+    { output_text: "PhotoSahi keeps processing local [Project: PhotoSahi](https://mantoshkumar1.github.io/projects/photosahi.html)." },
+    [{ title: "PhotoSahi", label: "Project: PhotoSahi", category: "project", url: "/projects/photosahi.html" }]
+  );
+  assert.match(result.answer, /\[Project: PhotoSahi\]\(\/projects\/photosahi\.html\)/);
 });
 
 test("presents rejected model output as a concise verification failure", () => {
