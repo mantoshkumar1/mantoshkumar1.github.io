@@ -13,7 +13,7 @@ This document is the canonical description of what is deployed. Architecture pro
 | Health | `https://ask-mantosh.mantoshk234.workers.dev/health` | Unauthenticated service health without configuration details |
 | Knowledge indexing | `POST /internal/index` | GitHub OIDC or manual recovery token only; intentionally unavailable to browsers through CORS |
 
-Last verified Worker deployment: `bb915d49-2759-4ff6-942d-526aa380c24e`. The active answer-policy cache namespace is `visitor-intent-v43-readable-ownership`.
+Last verified Worker deployment: `ebdf547c-0ff2-41d5-bbe7-7ee2772900a7`. The active answer-policy cache namespace is `visitor-intent-v44-self-contained-context`.
 
 ## Published inventory
 
@@ -100,7 +100,7 @@ The repository currently enforces:
 - documentation drift checks;
 - autonomous content-lane counts and explicit zero-content states;
 - 78 Worker contract, deterministic social, light-banter, visitor-local and profile-location date/time utility, navigation, knowledge-backed public-profile fact, privacy-boundary, confidence-based lexical relevance gating, privacy-safe aggregate telemetry, transcript-derived scope routing, achievement and engineering-ownership routing, natural profile-language routing, security, quota isolation, OIDC, retrieval, concise and explicitly detailed response modes, collapsed-Markdown repair, prompt, citation normalization and repair, one-shot invalid-output recovery, unsupported-answer source suppression, repetition and control-tag sanitization, verification-failure messaging, and failure-path tests;
-- 553 labelled Ask Mantosh evaluation cases with 9,701 objective assertions covering 73 focused regressions plus recruiter, student, curious-visitor, spouse, colleague, and founder questions across social, navigation, unsupported, achievement, ownership, grounded-answer, and adversarial behavior;
+- 553 labelled Ask Mantosh evaluation cases with 9,702 objective assertions covering 73 focused regressions plus recruiter, student, curious-visitor, spouse, colleague, and founder questions across social, navigation, unsupported, achievement, ownership, grounded-answer, and adversarial behavior;
 - a whole-site coverage audit that fails when any public HTML route lacks reviewed evidence, deterministic navigation, or a documented no-index exclusion;
 - static UI guards for immediate safe Markdown rendering.
 - 20 Playwright browser checks across desktop and mobile Chromium covering critical-page rendering, the recruiter path, evidence-driven project structure and cross-links, project and Insight navigation, newsletter validation, résumé and contact fallbacks, all appearance choices with Axe WCAG scans, randomized and page-aware Ask Mantosh prompts, evidence-navigation metadata, and Ask Mantosh minimize, export, and deliberate-clear behavior;

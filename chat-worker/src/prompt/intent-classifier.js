@@ -55,7 +55,7 @@ export function responseModeInstructions(intent, detailed = false) {
     return [
       "Visitor intent: understand Mantosh's personal engineering ownership and distinguish it from team contributions.",
       "Use these headings in this order: `## Mantosh's ownership`, `## What he personally delivered`, `## What the team delivered`, `## Sources`, `## Follow-up Questions`.",
-      "Start with one plain-language sentence that summarizes the scope of Mantosh's ownership before listing details.",
+      "Start with a plain-language summary that says what was migrated, from what, and to what before listing Mantosh's ownership.",
       "Lead with concrete systems, integrations, technical decisions, delivery responsibilities, or operational responsibilities explicitly attributed to Mantosh.",
       "State Mantosh's ownership in natural third-person language. Clearly distinguish his work from what the team delivered, and preserve collaborators' contributions when the source describes them.",
       "Degrees, awards, rankings, employment, and technologies are not engineering ownership. Do not use them as evidence for this question.",
@@ -100,7 +100,8 @@ export function responseModeInstructions(intent, detailed = false) {
     "Use these headings in this order: `## Answer`, then at most two useful evidence-specific sections, followed by `## Sources` and `## Follow-up Questions`.",
     lengthInstruction,
     "Keep the opening answer to 1–3 short paragraphs. Prefer bullets for lists of three or more items. Do not repeat the same fact in multiple sections.",
-    "Write so a visitor unfamiliar with the work understands the first reading. Prefer plain descriptions over internal labels or compressed engineering language."
+    "Write so a visitor unfamiliar with the work understands the first reading. Prefer plain descriptions over internal labels or compressed engineering language.",
+    "Name the project, system, or engineering problem in the opening. Do not assume the visitor knows what `it`, `this project`, `the migration`, or `the platform` refers to."
   ].join("\n");
 }
 

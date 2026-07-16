@@ -11,7 +11,7 @@ import { enforceRateLimit } from "./rate-limit.js";
 import { assessLexicalRelevance, retrieveKnowledge, searchLexicalKnowledge } from "./retrieval.js";
 import { parseChatRequest } from "./validation.js";
 
-const ANSWER_POLICY_VERSION = "visitor-intent-v43-readable-ownership";
+const ANSWER_POLICY_VERSION = "visitor-intent-v44-self-contained-context";
 const RETRYABLE_MODEL_OUTPUT_CODES = new Set(["workers_ai_invalid_response", "empty_model_response", "invalid_model_response", "uncited_model_response"]);
 
 async function generateVerifiedResponse({ env, config, prompt, formatOptions }) {
