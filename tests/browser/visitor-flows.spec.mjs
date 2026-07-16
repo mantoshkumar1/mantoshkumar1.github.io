@@ -174,12 +174,15 @@ test("Ask Mantosh errors remain readable in every appearance mode", async ({ pag
   await page.getByRole("button", { name: "Send message" }).click();
 
   const error = page.locator(".ask-mantosh-error");
+  const userLabel = page.locator(".ask-mantosh-message.user header > span");
   await expect(error).toContainText("The AI service returned an invalid response.");
   await expect(error.getByRole("button", { name: "Try again" })).toBeVisible();
   for (const theme of ["light", "dark", "soft", "contrast"]) {
     await page.locator("#appearance-select").selectOption(theme);
     await page.waitForTimeout(300);
     await expect(error).toBeVisible();
+    if (theme === "light") await expect(userLabel).toHaveCSS("color", "rgb(7, 95, 189)");
+    if (theme === "soft") await expect(userLabel).toHaveCSS("color", "rgb(138, 75, 22)");
     await assertNoSeriousAccessibilityViolations(page, `Ask Mantosh error-${theme}-${test.info().project.name}`);
   }
 });
