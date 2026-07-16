@@ -54,7 +54,7 @@ function restoreCollapsedMarkdown(answer, sectionNames) {
 function normalizeGroundedAnswer(answer, followUpQuestions = []) {
   const answerBlock = /<answer>\s*([\s\S]*?)\s*<\/answer>/i.exec(answer);
   const responseBlock = /(?:<response>|&lt;response&gt;)\s*([\s\S]*?)\s*(?:<\/response>|&lt;\/response&gt;)/i.exec(answer);
-  const sectionNames = ["Answer", "Summary", "In brief", "Highlights", "Context", "Best fit", "Mantosh's ownership", "What he personally delivered", "What the team delivered", "Personally owned", "Team context", "Where Mantosh can help", "Relevant evidence", "Patterns in Published Work", "A sensible next step", "What matters", "How Mantosh's experience applies", "Practical next steps", "Limits", "Detailed Explanation", "Engineering Decisions", "Trade-offs", "Lessons Learned", "Related Articles", "Related Projects", "Sources", "Follow-up Questions"];
+  const sectionNames = ["Answer", "Summary", "In brief", "Highlights", "Context", "Best fit", "Strongest documented capabilities", "Technical toolkit", "Where Mantosh adds the most value", "Why this fit", "Mantosh's ownership", "What he personally delivered", "What the team delivered", "Personally owned", "Team context", "Where Mantosh can help", "Relevant evidence", "Patterns in Published Work", "A sensible next step", "What matters", "How Mantosh's experience applies", "Practical next steps", "Limits", "Detailed Explanation", "Engineering Decisions", "Trade-offs", "Lessons Learned", "Related Articles", "Related Projects", "Sources", "Follow-up Questions"];
   let normalized = collapseRepeatedFallback(removePromptControlLeak(answerBlock?.[1] || responseBlock?.[1] || answer)).trim();
   normalized = normalized.replace(/^\s*\{#[A-Za-z][\w-]*\}\s*$/gm, "");
   normalized = restoreCollapsedMarkdown(normalized, sectionNames).replace(/^[•▪◦]\s+/gm, "- ");
@@ -65,7 +65,7 @@ function normalizeGroundedAnswer(answer, followUpQuestions = []) {
     /^##\s+(Engineering Decisions|Trade-offs|Lessons Learned|Related Articles|Related Projects)\s*\n\s*(?:Not discussed(?: in the retrieved documents)?\.?|Not available\.?)\s*(?=^##\s+|$)/gim,
     ""
   ).replace(/\n{3,}/g, "\n\n").trim();
-  const firstHeading = normalized.search(/^##\s+(?:Answer|In brief|Highlights|Mantosh's ownership|Personally owned|What matters|Summary)\s*$/im);
+  const firstHeading = normalized.search(/^##\s+(?:Answer|In brief|Highlights|Strongest documented capabilities|Where Mantosh adds the most value|Mantosh's ownership|Personally owned|What matters|Summary)\s*$/im);
   if (firstHeading >= 0) normalized = normalized.slice(firstHeading).trim();
   else normalized = `## Answer\n${normalized}`;
   const followUpHeading = /^##\s+Follow-up Questions\s*$/im;

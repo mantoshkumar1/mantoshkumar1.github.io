@@ -18,7 +18,7 @@ Last verified Worker deployment: `ebdf547c-0ff2-41d5-bbe7-7ee2772900a7`. The act
 ## Published inventory
 
 - SEO-configured public pages: home, projects index, six project case studies, Insights index, six engineering articles and notes, experience, résumé, contact, a live Buttondown email subscription with RSS, accessibility statement, and custom 404.
-- 15 public Ask Mantosh documents: six project sources, six Insights sources, two résumé-backed experience and academic-achievement sources, and one evidence-backed profile and fit guide.
+- 16 public Ask Mantosh documents: six project sources, six Insights sources, two résumé-backed experience and academic-achievement sources, one role-by-role résumé source, and one evidence-backed profile and fit guide.
 - Whole-site Ask Mantosh coverage: 13 evidence-bearing routes, seven deterministic utility destinations, and nine explicit no-index legacy or error routes cover all 29 public HTML routes.
 - One résumé PDF served for in-browser preview and explicit download.
 - Sitemap, RSS feed, `robots.txt`, `llms.txt`, JSON-LD, Open Graph, Twitter Card, manifest, icons, and a 1200×630 social image.
@@ -99,8 +99,8 @@ The repository currently enforces:
 - internal link, fragment, and asset validation;
 - documentation drift checks;
 - autonomous content-lane counts and explicit zero-content states;
-- 78 Worker contract, deterministic social, light-banter, visitor-local and profile-location date/time utility, navigation, knowledge-backed public-profile fact, privacy-boundary, confidence-based lexical relevance gating, privacy-safe aggregate telemetry, transcript-derived scope routing, achievement and engineering-ownership routing, natural profile-language routing, security, quota isolation, OIDC, retrieval, concise and explicitly detailed response modes, collapsed-Markdown repair, prompt, citation normalization and repair, one-shot invalid-output recovery, unsupported-answer source suppression, repetition and control-tag sanitization, verification-failure messaging, and failure-path tests;
-- 553 labelled Ask Mantosh evaluation cases with 9,704 objective assertions covering 73 focused regressions plus recruiter, student, curious-visitor, spouse, colleague, and founder questions across social, navigation, unsupported, achievement, ownership, grounded-answer, and adversarial behavior;
+- 79 Worker contract, deterministic social, light-banter, visitor-local and profile-location date/time utility, navigation, knowledge-backed public-profile fact, privacy-boundary, confidence-based lexical relevance gating, privacy-safe aggregate telemetry, transcript-derived scope routing, achievement and engineering-ownership routing, distinct technical-skills and value-fit response modes, natural profile-language routing, security, quota isolation, OIDC, retrieval, concise and explicitly detailed response modes, collapsed-Markdown repair, prompt, citation normalization and repair, one-shot invalid-output recovery, unsupported-answer source suppression, repetition and control-tag sanitization, verification-failure messaging, and failure-path tests;
+- 554 labelled Ask Mantosh evaluation cases with 9,734 objective assertions covering 74 focused regressions plus recruiter, student, curious-visitor, spouse, colleague, and founder questions across social, navigation, unsupported, achievement, ownership, skills, fit, grounded-answer, and adversarial behavior;
 - a whole-site coverage audit that fails when any public HTML route lacks reviewed evidence, deterministic navigation, or a documented no-index exclusion;
 - static UI guards for immediate safe Markdown rendering.
 - 20 Playwright browser checks across desktop and mobile Chromium covering critical-page rendering, the recruiter path, evidence-driven project structure and cross-links, project and Insight navigation, newsletter validation, résumé and contact fallbacks, all appearance choices with Axe WCAG scans, randomized and page-aware Ask Mantosh prompts, evidence-navigation metadata, and Ask Mantosh minimize, export, and deliberate-clear behavior;
@@ -109,7 +109,7 @@ The repository currently enforces:
 
 ## Known limits
 
-- Only 15 public knowledge documents are indexed; outside deterministic greetings, courtesies, light banter, and navigation, Ask Mantosh keeps answers within published evidence and clearly redirects unsupported topics.
+- Only 16 public knowledge documents are indexed; outside deterministic greetings, courtesies, light banter, and navigation, Ask Mantosh keeps answers within published evidence and clearly redirects unsupported topics.
 - Public evidence has no fabricated employer metrics or inferred organizational outcomes.
 - The Worker uses the Cloudflare free allocation and may return a clear 429 when safety or provider limits are reached.
 - There is no authenticated user account, durable personal profile, staging environment declared in this repository, formal accessibility conformance audit, human-rated response benchmark, live-production retrieval benchmark, or automated production Core Web Vitals trace.

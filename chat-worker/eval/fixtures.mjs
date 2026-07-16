@@ -53,6 +53,47 @@ export const SOURCE_FIXTURES = Object.freeze({
       "- [Faq: About Mantosh and Where His Experience Can Help](/experience/)"
     ].join("\n")
   }),
+  "engineering-capabilities": fixture({
+    title: "Engineering Capabilities and Technical Skills",
+    slug: "engineering-capabilities",
+    category: "experience",
+    path: "knowledge/experience/engineering-capabilities.md",
+    url: "/experience/",
+    tags: ["platform-engineering", "automation", "python", "backend-systems", "networking"],
+    summary: "Résumé-backed capability groups and technical skills.",
+    content: "Mantosh has role-backed experience across platform engineering and automation, Python and Django backend systems, networking and distributed validation, and operational intelligence. His toolkit includes Python, Django, PostgreSQL, CI/CD, SDN, NFV, Wireshark, and 3GPP.",
+    answer: [
+      "## Strongest documented capabilities",
+      "- Platform engineering and automation, including validation infrastructure and CI/CD workflows.",
+      "- Python and Django backend systems with REST APIs and PostgreSQL.",
+      "- Networking and distributed validation across SDN, NFV, protocol analysis, and telecom systems.",
+      "- Operational intelligence through observability, quality analytics, and failure investigation. [Experience: Engineering Capabilities and Technical Skills](/experience/)",
+      "## Technical toolkit",
+      "Python, Django, PostgreSQL, Linux, CI/CD, SDN, NFV, Wireshark, and 3GPP.",
+      "## Sources",
+      "- [Experience: Engineering Capabilities and Technical Skills](/experience/)"
+    ].join("\n")
+  }),
+  "mantosh-kumar-professional-experience": fixture({
+    title: "Mantosh Kumar Résumé: Professional Experience",
+    slug: "mantosh-kumar-professional-experience",
+    category: "resume",
+    path: "knowledge/resume/professional-experience.md",
+    url: "/resume/",
+    tags: ["professional-experience", "platform-engineering", "automation", "backend-systems", "networking"],
+    summary: "Role-by-role public résumé evidence.",
+    content: "Mantosh's résumé documents platform and validation work at Nokia, Python and Django backend work at KI Labs, SDN and NFV research at Siemens, modem automation at Intel, packet-core simulation at Cisco, and integration work at Aricent.",
+    answer: [
+      "## Where Mantosh adds the most value",
+      "- Modernizing validation infrastructure and moving engineering workflows onto reusable platforms.",
+      "- Replacing repeated investigation and reporting work with automation and operational intelligence.",
+      "- Building Python backend systems where workflow design, APIs, and data models must work together.",
+      "## Why this fit",
+      "This is the best-supported fit across his role-by-role work in platform engineering, automation, backend development, networking, and validation. [Resume: Mantosh Kumar Résumé: Professional Experience](/resume/)",
+      "## Sources",
+      "- [Resume: Mantosh Kumar Résumé: Professional Experience](/resume/)"
+    ].join("\n")
+  }),
   "gate-cs-top-one-percent": fixture({
     title: "GATE CS & IT Top-1% Achievement and TUM Admission Context",
     slug: "gate-cs-top-one-percent",

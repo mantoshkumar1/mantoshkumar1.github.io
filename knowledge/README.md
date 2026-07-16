@@ -14,7 +14,7 @@ with `_` are intentionally not indexed.
 
 ## Current public corpus
 
-As of 2026-07-15, the public index contains 15 source documents:
+As of 2026-07-16, the public index contains 16 source documents:
 
 - `Project: Evidence-First Engineering Knowledge System`
 - `Project: PhotoSahi`
@@ -30,6 +30,7 @@ As of 2026-07-15, the public index contains 15 source documents:
 - `Note: Engineering Ownership Before Escalation`
 - `Experience: Engineering Capabilities and Technical Skills`
 - `Experience: GATE CS & IT Top-1% Achievement and TUM Admission Context`
+- `Resume: Mantosh Kumar Résumé: Professional Experience`
 - `FAQ: About Mantosh and Where His Experience Can Help`
 
 Each source has one clear topic, a factual summary, retrieval tags, related
@@ -40,11 +41,12 @@ reindex for manual workflow runs.
 ## Whole-site coverage
 
 Ask Mantosh uses all relevant reviewed website content without treating interface
-copy as evidence. Project case studies, Insights, experience, capabilities,
-achievements, and public profile facts are retrieved from the source documents
-above. Home, Projects, Insights, résumé, contact, newsletter, and accessibility
-requests use deterministic navigation. Error pages and legacy redirects are
-explicitly excluded from evidence.
+copy as evidence. Project case studies, Insights, role-by-role résumé evidence,
+experience, capabilities, achievements, and public profile facts are retrieved
+from the source documents above. Direct commands to open the résumé still use
+deterministic navigation. Home, Projects, Insights, contact, newsletter, and
+accessibility requests also use deterministic navigation. Error pages and legacy
+redirects are explicitly excluded from evidence.
 
 [`site-coverage.json`](site-coverage.json) records those utility and non-evidence
 routes. `node scripts/audit-ask-mantosh-coverage.mjs` discovers every public HTML

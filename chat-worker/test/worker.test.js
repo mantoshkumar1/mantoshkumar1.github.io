@@ -985,7 +985,8 @@ test("classifies visitor questions into profile, problem, and direct response mo
   assert.equal(classifyQuestionIntent("What is he like?"), "profile");
   assert.equal(classifyQuestionIntent("How would you describe Mantosh?"), "profile");
   assert.equal(classifyQuestionIntent("How can Mantosh help my engineering team?"), "profile");
-  assert.equal(classifyQuestionIntent("Where could Mantosh add the most value?"), "profile");
+  assert.equal(classifyQuestionIntent("Where could Mantosh add the most value?"), "fit");
+  assert.equal(classifyQuestionIntent("What are Mantosh's strongest technical skills?"), "skills");
   assert.equal(classifyQuestionIntent("What kind of engineering work does Mantosh do?"), "profile");
   assert.equal(classifyQuestionIntent("This guy is genius?"), "profile");
   assert.equal(classifyQuestionIntent("Is this engineer overrated?"), "profile");
@@ -1031,7 +1032,22 @@ test("expands only profile retrieval with verified capability vocabulary", () =>
   assert.match(achievementQuery, /^Mantosh Verified Achievements Awards Education GATE Top 1%/i);
   const ownershipQuery = expandRetrievalQuery("What has Mantosh personally owned?");
   assert.match(ownershipQuery, /^Mantosh personal engineering ownership contribution led migration integration/i);
+  assert.match(expandRetrievalQuery("What are Mantosh's strongest technical skills?"), /^Engineering Capabilities and Technical Skills résumé role-backed/i);
+  assert.match(expandRetrievalQuery("Where could Mantosh add the most value?"), /^Mantosh professional experience where documented experience is most relevant/i);
   assert.equal(expandRetrievalQuery("Why no PhotoSahi backend?", "Why no PhotoSahi backend?"), "Why no PhotoSahi backend?");
+});
+
+test("keeps technical-skills and value-fit responses distinct", () => {
+  const source = { title: "Published résumé evidence", slug: "resume", category: "resume", label: "Resume: Published résumé evidence", path: "knowledge/resume/professional-experience.md", url: "/resume/" };
+  const retrieval = { chunks: [{ ...source, content: "Role-backed platform, backend, networking, and automation experience.", summary: "Public résumé evidence.", tags: "skills experience" }], sources: [source] };
+  const skillsPrompt = buildPrompt({ question: "What are Mantosh's strongest technical skills?", retrieval });
+  const fitPrompt = buildPrompt({ question: "Where could Mantosh add the most value?", retrieval });
+  assert.match(skillsPrompt.input, /intent="skills"/);
+  assert.match(skillsPrompt.input, /Answer the skills question immediately/);
+  assert.match(skillsPrompt.input, /Do not use the headings `In brief` or `Best fit`/);
+  assert.match(fitPrompt.input, /intent="fit"/);
+  assert.match(fitPrompt.input, /engineering environments and problems/);
+  assert.match(fitPrompt.input, /Do not repeat a generic biography/);
 });
 
 test("gives engineering ownership questions a contribution-safe response contract", () => {

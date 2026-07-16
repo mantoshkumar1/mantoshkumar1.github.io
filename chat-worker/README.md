@@ -87,7 +87,7 @@ curl -i http://localhost:8787/chat \
   --data '{"question":"Why did you build PhotoSahi without a backend?"}'
 ```
 
-Run `npm test`; it executes the unit/contract tests and the 553 labelled-case offline evaluation: 73 focused regressions plus 480 recruiter, student, curious-visitor, spouse, colleague, and founder questions. The current result contains 9,704 objective assertions. Run only that evaluation with `npm run evaluate`. The committed evidence and methodology are documented in [`docs/EVALUATION.md`](docs/EVALUATION.md). Test the deployed Worker with:
+Run `npm test`; it executes the unit/contract tests and the 554 labelled-case offline evaluation: 74 focused regressions plus 480 recruiter, student, curious-visitor, spouse, colleague, and founder questions. The current result contains 9,734 objective assertions. Run only that evaluation with `npm run evaluate`. The committed evidence and methodology are documented in [`docs/EVALUATION.md`](docs/EVALUATION.md). Test the deployed Worker with:
 
 ```bash
 curl -i https://ask-mantosh.mantoshk234.workers.dev/chat \

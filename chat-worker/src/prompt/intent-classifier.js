@@ -12,6 +12,19 @@ const OWNERSHIP_PATTERNS = [
   /\bwhat engineering work (?:can be|is) attributed directly to (?:mantosh|him)\b/i
 ];
 
+const SKILLS_PATTERNS = [
+  /\b(?:strongest|key|main|top|core)\s+(?:documented\s+)?(?:technical\s+)?(?:skills|capabilities|strengths)\b/i,
+  /\bwhat\s+(?:are|is)\s+(?:mantosh(?:'s|’s)|his)\s+(?:technical\s+)?(?:skills|capabilities|strengths)\b/i,
+  /\bwhich\s+(?:technical\s+)?(?:skills|capabilities)\s+does\s+(?:mantosh|he)\s+(?:have|bring)\b/i
+];
+
+const FIT_PATTERNS = [
+  /\bwhere\s+(?:could|can|would)\s+(?:mantosh|he)\s+add\s+(?:the\s+most\s+)?value\b/i,
+  /\bwhere\s+(?:is|would)\s+(?:mantosh|he)\s+(?:be\s+)?(?:most\s+)?valuable\b/i,
+  /\bwhat\s+(?:kind|type)s?\s+of\s+(?:team|role|problem|work)\s+(?:is|would be)\s+(?:mantosh|he)\s+(?:best\s+)?(?:suited|fit)\s+for\b/i,
+  /\bwhat\s+(?:is|would be)\s+(?:mantosh(?:'s|’s)|his)\s+best\s+fit\b/i
+];
+
 const PROFILE_PATTERNS = [
   /\b(?:who is|tell me about|about)\s+(?:this (?:guy|person|engineer)|mantosh|him)\b/i,
   /\bwhat\s+(?:kind|type|sort)\s+of\s+(?:guy|person|engineer)\b/i,
@@ -34,6 +47,8 @@ export function classifyQuestionIntent(question) {
   const value = String(question || "").trim();
   if (OWNERSHIP_PATTERNS.some((pattern) => pattern.test(value))) return "ownership";
   if (ACHIEVEMENT_PATTERN.test(value)) return "achievement";
+  if (SKILLS_PATTERNS.some((pattern) => pattern.test(value))) return "skills";
+  if (FIT_PATTERNS.some((pattern) => pattern.test(value))) return "fit";
   if (PROFILE_PATTERNS.some((pattern) => pattern.test(value))) return "profile";
   if (PROBLEM_PATTERNS.some((pattern) => pattern.test(value))) return "problem";
   return "direct";
@@ -72,6 +87,28 @@ export function responseModeInstructions(intent, detailed = false) {
       "Use at most three concise highlight bullets. For a question about one achievement, use one direct highlight and at most one context sentence.",
       "Explain context without hype, ranking inflation, or implying that an achievement proves role suitability. Explain GATE's prestige or exam administration only when the visitor explicitly asks what GATE is or why it matters.",
       "Keep the answer body before Sources under 90 words. Include only achievements explicitly supported by retrieved documents."
+    ].join("\n");
+  }
+  if (intent === "skills") {
+    return [
+      "Visitor intent: understand Mantosh's strongest documented technical capability areas, not receive a biography or a list of suitable jobs.",
+      "Use these headings in this order: `## Strongest documented capabilities`, `## Technical toolkit`, `## Sources`, `## Follow-up Questions`.",
+      "Answer the skills question immediately. Do not open with years of experience, employer history, location, or a generic professional summary.",
+      "Under `Strongest documented capabilities`, use three or four concise bullets that group related skills and say what kind of work documents each capability.",
+      "Under `Technical toolkit`, give one compact categorized line or at most three bullets. Do not dump every technology in the résumé.",
+      "Treat `strongest` as repeated, role-backed documented experience—not an objective proficiency ranking. Never claim mastery or expert status.",
+      "Keep the answer body before Sources under 130 words. Do not use the headings `In brief` or `Best fit`."
+    ].join("\n");
+  }
+  if (intent === "fit") {
+    return [
+      "Visitor intent: understand the engineering environments and problems where Mantosh's documented experience could add the most value.",
+      "Use these headings in this order: `## Where Mantosh adds the most value`, `## Why this fit`, `## Sources`, `## Follow-up Questions`.",
+      "Start with three concise, problem-oriented bullets. Describe the organizational or engineering situation, not merely a technology list.",
+      "Under `Why this fit`, connect those situations to specific role or project evidence in no more than two sentences.",
+      "Do not repeat a generic biography, employer list, or the same `In brief` and `Best fit` profile template.",
+      "Use cautious language such as `best-supported fit` or `documented experience is most relevant`; do not promise outcomes or availability.",
+      "Keep the answer body before Sources under 130 words."
     ].join("\n");
   }
   if (intent === "profile") {
@@ -121,6 +158,8 @@ export function expandRetrievalQuery(question, conversationQuery = question) {
   const intent = classifyQuestionIntent(question);
   if (intent === "ownership") return `Mantosh personal engineering ownership contribution led migration integration shared libraries CI/CD dashboard project decisions ${conversationQuery}`;
   if (intent === "achievement") return `Mantosh Verified Achievements Awards Education GATE Top 1% Technical University of Munich Heroes of Tomorrow ${conversationQuery}`;
+  if (intent === "skills") return `Engineering Capabilities and Technical Skills résumé role-backed platform engineering automation Python Django backend networking distributed validation operational intelligence ${conversationQuery}`;
+  if (intent === "fit") return `Mantosh professional experience where documented experience is most relevant engineering platforms validation infrastructure workflow automation backend operational intelligence ${conversationQuery}`;
   if (intent !== "profile") return conversationQuery;
   return `About Mantosh Where His Experience Can Help Engineering Capabilities Technical Skills ${conversationQuery}`;
 }
