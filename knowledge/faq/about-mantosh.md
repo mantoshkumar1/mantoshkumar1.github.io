@@ -19,6 +19,8 @@ fact_experience_years: "More than 14 years"
 fact_target_roles: [Staff Engineer, Principal Engineer]
 fact_capabilities: [Platform engineering, Engineering automation, Backend systems, Networking, Distributed validation, Operational intelligence]
 fact_skills: [Python, Java, C++, SQL, PostgreSQL, Django, REST APIs, Linux, Git, CI/CD, SDN, NFV]
+fact_ownership_highlights: [Led the two-person migration effort, Migrated the entire shared-library layer, Integrated the distributed validation platform with CI/CD workflows, Built the dashboard that tracked migration progress and kept responsibilities clear, Kept the migrated framework up to date while engineers continued changing the legacy framework, Before retiring the old framework checked both systems side by side. The same tests were run in both and the results and execution times were compared with legacy-framework engineers, Delivered code walkthroughs and training for the receiving team]
+fact_ownership_team_context: "Together the two engineers migrated thousands of test cases across sanity smoke and regression suites. The other engineer focused primarily on migrating individual test scripts."
 ---
 
 # About Mantosh and Where His Experience Can Help

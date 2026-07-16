@@ -11,7 +11,7 @@ import { enforceRateLimit } from "./rate-limit.js";
 import { assessLexicalRelevance, retrieveKnowledge, searchLexicalKnowledge } from "./retrieval.js";
 import { parseChatRequest } from "./validation.js";
 
-const ANSWER_POLICY_VERSION = "visitor-intent-v40-plain-ownership";
+const ANSWER_POLICY_VERSION = "visitor-intent-v41-reviewed-ownership";
 const RETRYABLE_MODEL_OUTPUT_CODES = new Set(["workers_ai_invalid_response", "empty_model_response", "invalid_model_response", "uncited_model_response"]);
 
 async function generateVerifiedResponse({ env, config, prompt, formatOptions }) {
@@ -213,6 +213,36 @@ export default {
         return wantsStream
           ? eventStream([{ type: "metadata", data: result }, { type: "response.output_text.delta", data: { delta: result.answer } }, { type: "done", data: {} }], origin)
           : json(result, 200, origin);
+      }
+
+      if (intent === "ownership") {
+        const facts = await metadataService.profileFacts();
+        const highlights = facts?.ownership_highlights;
+        const teamContext = facts?.ownership_team_context;
+        const source = retrieval.sources[0];
+        if (Array.isArray(highlights) && highlights.length && typeof teamContext === "string" && source?.url) {
+          analytics.trackAggregatesInBackground(ctx, [["post_gate_outcome", "grounded_answer"]]);
+          const answer = [
+            "## Personally owned",
+            ...highlights.map((item) => `- ${item}.`),
+            "", "## Team context", teamContext,
+            "", "## Sources", `- [${source.label}](${source.url})`,
+            "", "## Follow-up Questions", ...followUpQuestions.map((item) => `- ${item}`)
+          ].join("\n");
+          const sources = [source];
+          const result = {
+            answer, sources, relatedArticles: recommendations.articles, relatedProjects: recommendations.projects,
+            relatedNotes: recommendations.notes, recommendations: recommendations.all, followUpQuestions,
+            suggestedQuestions: followUpQuestions, confidence: retrieval.confidence, confidenceDetails,
+            conversationId, action: null, success: true, cache: "miss"
+          };
+          analytics.trackInBackground(ctx, "knowledge_answer", source.category);
+          ctx?.waitUntil?.(memory.recordTurn({ conversationId, question, answer, sources }));
+          if (cacheKey) writeCachedJson("response", cacheKey, { ...result, conversationId: undefined, cache: undefined }, config.responseCacheTtlSeconds, ctx);
+          return wantsStream
+            ? eventStream([{ type: "metadata", data: result }, { type: "response.output_text.delta", data: { delta: answer } }, { type: "done", data: {} }], origin)
+            : json(result, 200, origin);
+        }
       }
 
       const conciseAchievement = conciseAchievementResponse(question, retrieval.sources);

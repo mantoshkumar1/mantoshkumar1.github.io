@@ -122,6 +122,11 @@ async function evaluateCase(entry) {
     check("one retrieval embedding", calls.embeddings === 1, `received ${calls.embeddings}`);
     check("deterministic answer", calls.generation === 0, `received ${calls.generation} generation calls`);
     check("one evidence source", actualSlugs.length === 1);
+  } else if (expected.kind === "deterministic-grounded") {
+    check("one retrieval embedding", calls.embeddings === 1, `received ${calls.embeddings}`);
+    check("no generation", calls.generation === 0, `received ${calls.generation}`);
+    check("readable Markdown", /^##\s+/m.test(payload.answer || ""));
+    check("canonical citation", urls.includes(source.row.url), `missing ${source.row.url}`);
   } else if (expected.kind === "grounded") {
     check("one retrieval embedding", calls.embeddings === 1, `received ${calls.embeddings}`);
     check("one generation", calls.generation === 1, `received ${calls.generation}`);
