@@ -267,8 +267,12 @@ test("Ask Mantosh preserves minimized history, exports it, and clears deliberate
 });
 
 test("Ask Mantosh explains why TXT export is temporarily unavailable", async ({ page }) => {
+  let requests = 0;
+  let releaseResponse;
+  const responseReady = new Promise((resolve) => { releaseResponse = resolve; });
   await page.route("https://ask-mantosh.mantoshk234.workers.dev/**", async (route) => {
-    await new Promise((resolve) => setTimeout(resolve, 500));
+    requests += 1;
+    await responseReady;
     await route.fulfill({
       contentType: "application/json",
       body: JSON.stringify({ answer: "## Answer\nA grounded answer.", sources: [], followUpQuestions: [], confidence: "high", success: true })
@@ -284,10 +288,22 @@ test("Ask Mantosh explains why TXT export is temporarily unavailable", async ({ 
   await expect(exportButton).toHaveAttribute("aria-disabled", "true");
   await expect(exportButton).toHaveAttribute("title", "Available when the answer finishes.");
   await expect(exportButton).toHaveAttribute("aria-label", "Export conversation as TXT. Available when the answer finishes.");
-  await exportButton.focus();
+  await exportButton.hover();
   await expect.poll(() => exportButton.evaluate((button) => getComputedStyle(button, "::after").opacity)).toBe("1");
 
+  const input = page.locator("#ask-mantosh-input");
+  await input.fill("What did Mantosh personally own?");
+  await page.getByRole("button", { name: "Send message" }).click();
+  await expect(page.locator("#ask-mantosh-status")).toHaveText("Please wait for the current answer.");
+  await expect(input).toHaveValue("What did Mantosh personally own?");
+  await input.press("Enter");
+  await expect(page.locator("#ask-mantosh-status")).toHaveText("Please wait for the current answer.");
+  await expect(input).toHaveValue("What did Mantosh personally own?");
+  await expect(page.locator(".ask-mantosh-message.user")).toHaveCount(1);
+
+  releaseResponse();
   await expect(page.locator(".ask-mantosh-message.assistant")).toContainText("A grounded answer.");
+  expect(requests).toBe(1);
   await expect(exportButton).toHaveAttribute("aria-disabled", "false");
   await expect(exportButton).toHaveAttribute("title", "Export visible conversation as TXT");
   await expect(exportButton).toHaveAttribute("aria-label", "Export conversation as TXT");

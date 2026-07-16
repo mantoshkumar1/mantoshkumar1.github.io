@@ -350,7 +350,6 @@ class AskMantoshApp {
     this.elements.exportButton.title = isGenerating ? unavailableMessage : "Export visible conversation as TXT";
     if (isGenerating) this.elements.exportButton.dataset.tooltip = unavailableMessage;
     else delete this.elements.exportButton.dataset.tooltip;
-    this.elements.send.disabled = isGenerating;
   }
   exportConversation() {
     if (this.controller) return;
@@ -398,17 +397,27 @@ class AskMantoshApp {
     assistant.followUps = [];
     this.ask(assistant.question, { retryAssistant: assistant });
   }
+  showTemporaryStatus(message) {
+    clearTimeout(this.emptyStatusTimer);
+    this.view.setStatus(message);
+    this.emptyStatusTimer = setTimeout(() => {
+      this.view.setStatus(this.controller ? "Searching published engineering knowledge…" : "");
+      this.emptyStatusTimer = null;
+    }, 1800);
+  }
   async ask(rawQuestion, { retryAssistant = null } = {}) {
     const question = rawQuestion.trim();
+    if (this.controller) {
+      this.showTemporaryStatus("Please wait for the current answer.");
+      this.elements.input.focus();
+      return;
+    }
     if (!question) {
-      clearTimeout(this.emptyStatusTimer);
-      this.view.setStatus("Type a question first.");
-      this.emptyStatusTimer = setTimeout(() => { if (!this.controller) this.view.setStatus(""); }, 1800);
+      this.showTemporaryStatus("Type a question first.");
       this.elements.input.focus();
       return;
     }
     clearTimeout(this.emptyStatusTimer); this.emptyStatusTimer = null; this.open();
-    if (this.controller) this.controller.abort();
     const generation = this.generation;
     const assistant = retryAssistant || (this.add("user", question), this.add("assistant", "", { question, sources: [], attemptErrors: [] }));
     if (retryAssistant) this.view.updateAssistant(assistant, { streaming: true });
