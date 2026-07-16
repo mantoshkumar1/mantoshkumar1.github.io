@@ -31,6 +31,24 @@ Together, the two engineers migrated thousands of test cases across sanity, smok
 
 The legacy validation path remained live while the migration dashboard controlled ownership, dependencies, and synchronization. Shared libraries moved before dependent scripts. Equivalent scenarios, results, coverage, and execution time formed the readiness gate before the distributed CI/CD platform replaced the legacy framework.
 
+## Engineering decisions
+
+### Migrate while development continued
+
+Freezing the legacy framework would have simplified synchronization but interrupted ongoing product work and release validation. Parallel operation increased coordination cost while protecting delivery continuity.
+
+### Solve migration visibility early
+
+A centralized dashboard tracked progress, ownership, and synchronization before the effort became too large to coordinate informally. Maintaining it added process overhead but reduced ambiguity across the six-month migration.
+
+### Migrate shared libraries before individual tests
+
+The common library layer moved first because every migrated test depended on those foundations. Visible test-count progress was slower initially in exchange for less duplicated work and downstream rework.
+
+### Use equivalence—not volume—as the cutover gate
+
+Thousands of migrated tests did not prove readiness. Scenario, result, coverage, and execution-time comparisons, verified with legacy-framework engineers, made operational equivalence the retirement criterion.
+
 ## Cutover evidence
 
 - Equivalent scenarios were executed through both frameworks.
@@ -55,6 +73,10 @@ The legacy framework was retired after cutover. Validation execution, logs, hist
 - Evidence-based cutover through scenario, result, coverage, and execution-time comparisons.
 - Operational continuity through a sequenced six-month replacement effort.
 - Knowledge transfer through legacy-expert verification and receiving-team training.
+
+## Reflection
+
+The core decisions remain sound: keep delivery running, migrate shared foundations first, and require behavioral equivalence before retirement. A future migration should automate more synchronization and comparison evidence where confidentiality and platform constraints allow.
 
 ## Evidence boundary
 

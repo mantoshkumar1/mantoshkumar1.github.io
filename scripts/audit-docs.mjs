@@ -106,8 +106,8 @@ for (const [content, label] of [[state, "system state"], [workerReadme, "Worker 
   requireText(content, `${assertionLabel} objective assertions`, label);
 }
 for (const [content, label] of [[knowledgeSystemPage, "knowledge-system case study"], [knowledgeSystemSource, "knowledge-system source"]]) {
-  requireText(content, "Sixteen", label);
-  requireText(content, "eight visitor journeys", label);
+  requireText(content, "Twenty", label);
+  requireText(content, "ten visitor journeys", label);
 }
 requireText(workerDocsIndex, "EVALUATION.md", "Worker documentation map");
 requireText(workerReadme, "npm run evaluate", "Worker README");

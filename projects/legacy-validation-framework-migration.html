@@ -47,7 +47,7 @@
 <!-- seo:page {"title":"Legacy Validation Framework Migration | Mantosh Kumar","description":"How Mantosh Kumar led a six-month migration of thousands of optical-networking validation tests to a distributed CI/CD platform while release validation continued.","kind":"project","entityName":"Legacy Validation Framework Migration","dateModified":"2026-07-15","breadcrumbs":[{"name":"Projects","path":"/projects/"}]} -->
     <title>Legacy Validation Framework Migration | Mantosh Kumar</title>
     <script src="../assets/js/theme-init.js?v=20260713-1"></script>
-    <link rel="stylesheet" href="../assets/css/style.css?v=20260716-4" />
+    <link rel="stylesheet" href="../assets/css/style.css?v=20260716-5" />
   </head>
   <body>
     <a class="skip-link" href="#main-content">Skip to main content</a>
@@ -124,6 +124,16 @@
             </figure>
           </section>
 
+          <section class="resume-section engineering-decisions">
+            <h2>Engineering Decisions</h2>
+            <div class="decision-grid">
+              <div><h3>Migrate while development continued</h3><p>Freezing the legacy framework would have simplified synchronization, but it would also have interrupted ongoing product work and release validation. I chose parallel operation and treated every relevant legacy change as migration work until cutover. This increased coordination cost, but protected delivery continuity.</p></div>
+              <div><h3>Solve migration visibility early</h3><p>I created a centralized dashboard for progress, ownership, and synchronization before the project became too large to coordinate informally. A shared view made drift and responsibility visible without depending on repeated status reconstruction. Maintaining the dashboard added process overhead, but reduced ambiguity across the six-month effort.</p></div>
+              <div><h3>Migrate shared libraries before individual tests</h3><p>I prioritized the common library layer because every migrated test depended on those foundations. This reduced duplicated adaptation work and gave the second engineer a more stable base for moving individual scripts. The trade-off was slower visible test-count progress at the beginning in exchange for less downstream rework.</p></div>
+              <div><h3>Use equivalence—not volume—as the cutover gate</h3><p>Thousands of migrated tests did not by themselves prove that the replacement was ready. We compared scenarios, results, coverage, and execution time, with legacy-framework engineers verifying the preserved behavior. This made retirement more deliberate, but prevented progress metrics from being mistaken for operational readiness.</p></div>
+            </div>
+          </section>
+
           <section class="resume-section">
             <h2>Cutover validation</h2>
             <p>Before retiring the legacy framework:</p>
@@ -175,6 +185,11 @@
             <p class="project-demonstrates-summary">This project demonstrates my ability to lead a live platform migration while balancing technical execution, operational continuity, and organizational adoption.</p>
           </section>
 
+          <section class="project-reflection">
+            <h2>Reflection</h2>
+            <p>I would make the same core decisions: keep delivery running, migrate shared foundations first, and require behavioral equivalence before retirement. With today’s knowledge, I would automate more of the synchronization and comparison evidence where confidentiality and platform constraints allow, so the dashboard records fewer manually reconciled signals.</p>
+          </section>
+
           <div class="inline-cta">
             <p><strong>Planning a live platform migration?</strong></p>
             <div class="inline-cta-actions">
@@ -185,6 +200,6 @@
         </article>
       </div>
     </main>
-    <script src="/assets/js/ask-mantosh-widget.js?v=20260716-4"></script>
+    <script src="/assets/js/ask-mantosh-widget.js?v=20260716-5"></script>
   </body>
 </html>

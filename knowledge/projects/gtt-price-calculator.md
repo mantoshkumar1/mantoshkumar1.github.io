@@ -28,7 +28,17 @@ The GTT Trigger Price Calculator helps a visitor prepare candidate buy and sell 
 
 ## Engineering decisions
 
-The calculation remains a short inspectable function. The application has no broker API, account authentication, trade execution, or live-price integration. It treats calculation and execution as separate responsibilities.
+### Keep the pricing rule visible
+
+Thresholds, distance calculations, and rounding stay in a short inspectable function. This keeps assumptions reviewable, with the trade-off that hard-coded rules can become stale.
+
+### Separate calculation from trading
+
+The application has no broker API, account authentication, trade execution, or live-price integration. It prepares values for human review, sacrificing convenience to reduce security, compliance, and execution risk.
+
+### Synchronize amount and share inputs conservatively
+
+Either amount or share count can drive the paired value. The interface tracks the latest input and uses floor operations, adding state coordination to avoid silently inconsistent values or unavailable precision.
 
 ## Trade-offs and limits
 
@@ -44,6 +54,10 @@ The calculation remains a short inspectable function. The application has no bro
 - Transparent computation that keeps assumptions inspectable.
 - Boundary design that separates value preparation from brokerage access and order execution.
 - Risk-aware engineering that documents stale-rule, dependency, testing, and deployment limitations.
+
+## Reflection
+
+The visible calculation and boundary between preparation and trade execution remain appropriate. A stronger version should add automated boundary tests, pinned dependencies, and a versioned authoritative rules source before adding convenience features.
 
 ## Public evidence
 

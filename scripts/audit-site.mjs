@@ -270,11 +270,18 @@ if (!/Follow new engineering insights[\s\S]*Receive new evidence-backed notes by
 for (const page of pages.filter((entry) => entry.startsWith("projects/") && entry !== "projects/index.html")) {
   const html = await readFile(join(root, page), "utf8");
   if (!/<div class=["']inline-cta-actions["']>[\s\S]*href=["']\.\.\/experience\/["'][^>]*>View experience[\s\S]*href=["']\.\.\/contact\/["']/i.test(html)) { console.error(`${page}: closing project CTA must preserve contact context and add an explicit Experience path`); failures += 1; }
-  const demonstrates = /<section\b[^>]*class=["'][^"']*project-demonstrates[^"']*["'][^>]*>([\s\S]*?)<\/section>\s*<div class=["']inline-cta["']/i.exec(html)?.[1] || "";
-  if (!/<h2[^>]*>What This Project Demonstrates<\/h2>/i.test(demonstrates)) { console.error(`${page}: project must end with a What This Project Demonstrates section before its closing CTA`); failures += 1; }
+  const decisions = /<section\b[^>]*class=["'][^"']*engineering-decisions[^"']*["'][^>]*>([\s\S]*?)<\/section>/i.exec(html)?.[1] || "";
+  if (!/<h2[^>]*>Engineering Decisions<\/h2>/i.test(decisions)) { console.error(`${page}: project needs one consistent Engineering Decisions section`); failures += 1; }
+  const decisionParagraphs = [...decisions.matchAll(/<p>([\s\S]*?)<\/p>/gi)].map((match) => match[1].replace(/<[^>]+>/g, "").trim());
+  if (decisionParagraphs.length < 3 || decisionParagraphs.length > 6) { console.error(`${page}: Engineering Decisions must contain 3-6 decisions`); failures += 1; }
+  if (decisionParagraphs.some((paragraph) => (paragraph.match(/[.!?](?:\s|$)/g) || []).length < 3)) { console.error(`${page}: every engineering decision must explain the choice, rationale, and trade-off concisely`); failures += 1; }
+  const demonstrates = /<section\b[^>]*class=["'][^"']*project-demonstrates[^"']*["'][^>]*>([\s\S]*?)<\/section>/i.exec(html)?.[1] || "";
+  if (!/<h2[^>]*>What This Project Demonstrates<\/h2>/i.test(demonstrates)) { console.error(`${page}: project needs a What This Project Demonstrates section`); failures += 1; }
   const capabilityCount = (demonstrates.match(/<h3>/gi) || []).length;
   if (capabilityCount < 4 || capabilityCount > 6) { console.error(`${page}: demonstrated-capability card must contain 4-6 tailored capabilities`); failures += 1; }
   if (!/class=["']project-demonstrates-summary["']/i.test(demonstrates)) { console.error(`${page}: demonstrated-capability card needs one closing summary`); failures += 1; }
+  if (!/<section\b[^>]*class=["'][^"']*project-reflection[^"']*["'][^>]*>[\s\S]*?<h2[^>]*>Reflection<\/h2>[\s\S]*?<p>[\s\S]+?<\/p>[\s\S]*?<\/section>\s*<div class=["']inline-cta["']/i.test(html)) { console.error(`${page}: project must finish with one Reflection before its closing CTA`); failures += 1; }
+  if (!(html.indexOf("engineering-decisions") < html.indexOf("project-demonstrates") && html.indexOf("project-demonstrates") < html.indexOf("project-reflection"))) { console.error(`${page}: decisions, demonstrated capabilities, and reflection are out of order`); failures += 1; }
 }
 for (const page of pages.filter((entry) => entry.startsWith("insights/") && entry !== "insights/index.html")) {
   const html = await readFile(join(root, page), "utf8");

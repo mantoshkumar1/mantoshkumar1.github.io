@@ -94,10 +94,14 @@ test("project and insight cards expose their primary detail destinations", async
   }
   for (const destination of projectDestinations) {
     await page.goto(`/projects/${destination}`);
+    const decisions = page.locator(".engineering-decisions");
+    await expect(decisions.getByRole("heading", { name: "Engineering Decisions" })).toBeVisible();
+    expect(await decisions.locator("h3").count()).toBeGreaterThanOrEqual(3);
     const demonstrates = page.locator(".project-demonstrates");
     await expect(demonstrates.getByRole("heading", { name: "What This Project Demonstrates" })).toBeVisible();
     expect(await demonstrates.locator("h3").count()).toBeGreaterThanOrEqual(4);
     await expect(demonstrates.locator(".project-demonstrates-summary")).toBeVisible();
+    await expect(page.locator(".project-reflection").getByRole("heading", { name: "Reflection" })).toBeVisible();
   }
   await page.goto("/projects/");
   await projects.nth(1).locator(".project-detail-link").click();

@@ -27,12 +27,23 @@ Repeated validation execution, scattered quality signals, and release decisions 
 - Comparable release-health snapshots designed for longitudinal review.
 - Different reporting horizons for immediate decisions and longer-term patterns.
 
-## Engineering principles
+## Engineering decisions
 
-- Evidence before generation for AI-assisted outputs.
-- Stable signal definitions for trend comparison.
-- Human judgment preserved for ambiguous failures and release-risk decisions.
-- Insight over information in longer-horizon reviews: patterns, recurring risks, and useful decisions—not a status-by-status recap.
+### Evidence before generation
+
+AI-assisted failure investigation stays tied to execution artifacts. Thin evidence remains uncertainty rather than invented causality, limiting automation to preserve accountable review.
+
+### Keep release snapshots comparable
+
+Stable identifiers and signal definitions make release reports useful as operational history. This creates a governance cost because casual definition changes can break trend meaning.
+
+### Preserve judgment at the boundary
+
+Repeatable execution, evidence gathering, and organization are automated while ambiguous protocol, hardware, and release-risk decisions remain human responsibilities. The hardest decisions intentionally remain accountable engineering work.
+
+### Prefer insight over information
+
+Immediate release reporting and longer-horizon review serve different decisions. Historical views prioritize patterns, recurring risks, and interventions rather than repeating every status line.
 
 ## Related public material
 
@@ -46,6 +57,10 @@ Repeated validation execution, scattered quality signals, and release decisions 
 - Operational intelligence through comparable release snapshots and longer-term pattern review.
 - Human-in-the-loop automation that organizes evidence without replacing accountable engineering judgment.
 - Decision support focused on useful signals rather than additional status information.
+
+## Reflection
+
+Evidence, stable signals, and human judgment remain the right platform boundaries. Signal ownership, definition changes, and missing-data visibility should be explicit from the start because longitudinal intelligence is trustworthy only while the history remains comparable.
 
 ## Evidence boundary
 

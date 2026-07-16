@@ -46,7 +46,7 @@
 
 <title>Workflow Automation Toolkit | Mantosh Kumar</title>
     <script src="../assets/js/theme-init.js?v=20260713-1"></script>
-    <link rel="stylesheet" href="../assets/css/style.css?v=20260716-4" />
+    <link rel="stylesheet" href="../assets/css/style.css?v=20260716-5" />
   </head>
   <body>
     <a class="skip-link" href="#main-content">Skip to main content</a>
@@ -124,20 +124,20 @@
             </ul>
           </section>
 
-          <section class="resume-section">
-            <h2>Engineering decisions</h2>
+          <section class="resume-section engineering-decisions">
+            <h2>Engineering Decisions</h2>
             <div class="decision-grid">
               <div>
                 <h3>Local processing</h3>
-                <p>Document operations run on the user's machine, avoiding mandatory uploads to an external service.</p>
+                <p>I kept document operations on the user’s machine because the tasks did not require shared server state. This avoids mandatory uploads and keeps sensitive files outside a new service boundary. The trade-off is local installation complexity and reliance on system dependencies such as Poppler.</p>
               </div>
               <div>
                 <h3>Task-sized tools</h3>
-                <p>Separate commands keep unrelated workflows isolated while allowing common file and PDF behavior to be shared.</p>
+                <p>I separated compression, conversion, merging, snapshots, and image reduction into focused commands instead of building one large interface. Each utility stays easier to understand and change while common file behavior can still be reused. The cost is a less unified installation and discovery experience.</p>
               </div>
               <div>
                 <h3>Explicit inputs</h3>
-                <p>CLI arguments define source paths, output locations, quality, and target sizes instead of hiding behavior behind a remote interface.</p>
+                <p>I exposed source paths, output locations, quality, and target sizes as explicit command inputs. This makes repeated workflows scriptable and keeps important behavior visible to the operator. It asks more of first-time users than a polished graphical interface would.</p>
               </div>
             </div>
           </section>
@@ -164,6 +164,10 @@
             </div>
             <p class="project-demonstrates-summary">This project demonstrates my ability to recognize recurring friction and turn it into focused, privacy-conscious tools with understandable behavior.</p>
           </section>
+          <section class="project-reflection">
+            <h2>Reflection</h2>
+            <p>I would keep the local-first boundary and focused-command approach because they match the privacy and repeatability needs of these workflows. Today I would unify installation, pin dependencies, and add regression tests before expanding format support; reliability and onboarding now matter more than adding another utility.</p>
+          </section>
           <div class="inline-cta">
             <p><strong>Need repetitive engineering work turned into a dependable tool?</strong></p>
             <div class="inline-cta-actions">
@@ -174,6 +178,6 @@
         </article>
       </div>
     </main>
-    <script src="/assets/js/ask-mantosh-widget.js?v=20260716-4"></script>
+    <script src="/assets/js/ask-mantosh-widget.js?v=20260716-5"></script>
   </body>
 </html>

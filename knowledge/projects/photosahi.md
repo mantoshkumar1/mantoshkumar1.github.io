@@ -22,7 +22,9 @@ resizes, and adjusts it, the selected photo preset is applied, and the result is
 downloaded directly. Photos are processed locally and are not uploaded to a
 backend.
 
-## Why there is no backend
+## Engineering decisions
+
+### Keep image processing in the browser
 
 A backend was unnecessary for the core use case. It would add latency,
 operating cost, and trust concerns around sensitive photo uploads. Keeping the
@@ -33,6 +35,14 @@ The trade-off is that the browser must handle more image-processing complexity
 and resource use. The implementation therefore focuses on efficient canvas
 operations and careful image handling so the UI remains responsive on desktop
 and mobile devices.
+
+### Optimize for immediate local interaction
+
+Local Canvas operations avoid network round trips for cropping, resizing, and enhancement. The trade-off is that large images and lower-powered devices must be handled within the browser rather than scaled with server capacity.
+
+### Prefer a focused workflow over a general editor
+
+PhotoSahi is organized around passport and visa photo preparation instead of exposing every possible image control. The narrower workflow reduces decision load but supports fewer use cases than a general editor.
 
 ## Engineering lessons
 
@@ -48,3 +58,7 @@ matters as much as technical correctness.
 - Product thinking that turns document-photo constraints into a focused workflow.
 - Performance judgment that uses local Canvas operations while acknowledging device and compatibility constraints.
 - User experience design for a guided, mobile-friendly image-processing sequence.
+
+## Reflection
+
+A browser-first architecture remains appropriate because privacy and immediacy are central to the workflow. Broader preset verification, compatibility testing, background controls, and first-use guidance should come before considering a backend; the current limitations are product-quality gaps, not evidence that local processing is the wrong boundary.

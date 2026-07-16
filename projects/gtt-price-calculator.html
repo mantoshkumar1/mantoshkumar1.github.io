@@ -46,7 +46,7 @@
 
 <title>GTT Price Calculator for Indian Stock Orders | Mantosh Kumar</title>
     <script src="../assets/js/theme-init.js?v=20260713-1"></script>
-    <link rel="stylesheet" href="../assets/css/style.css?v=20260716-4" />
+    <link rel="stylesheet" href="../assets/css/style.css?v=20260716-5" />
   </head>
   <body>
     <a class="skip-link" href="#main-content">Skip to main content</a>
@@ -119,13 +119,13 @@
             </ul>
           </section>
 
-          <section class="resume-section">
-            <h2>Engineering decisions</h2>
-            <ul class="case-study-list">
-              <li><strong>Keep the rule visible.</strong> The calculation stays in a short, inspectable Python function, so its thresholds, rounding operation, and fallback behavior can be reviewed directly in <code>app.py</code>.</li>
-              <li><strong>Keep calculation separate from trading.</strong> The application does not connect to a brokerage account, place a trade, retrieve a live market price, or collect credentials. The visitor verifies the result before using it.</li>
-              <li><strong>Keep amount and share inputs synchronized.</strong> Streamlit callbacks track which value changed last, clear the paired field, and calculate the corresponding value with conservative floor operations.</li>
-            </ul>
+          <section class="resume-section engineering-decisions">
+            <h2>Engineering Decisions</h2>
+            <div class="decision-grid">
+              <div><h3>Keep the pricing rule visible</h3><p>I kept thresholds, distance calculations, and rounding in a short inspectable function rather than hiding them behind a service. A user can review how candidate values are produced before relying on them. The trade-off is that hard-coded rules can become stale and require explicit verification.</p></div>
+              <div><h3>Separate calculation from trading</h3><p>I chose not to connect the utility to a brokerage account, live market feed, or order-placement API. This avoids credentials and keeps the tool within the narrower responsibility of preparing values for human review. It sacrifices convenience, but materially reduces security, compliance, and execution risk.</p></div>
+              <div><h3>Synchronize amount and share inputs conservatively</h3><p>I allowed either amount or share count to drive the other value because both are natural starting points for the user. The interface tracks the latest input and uses floor operations so the derived value does not imply unavailable precision. This state coordination adds complexity, but prevents two editable fields from silently disagreeing.</p></div>
+            </div>
           </section>
 
           <section class="resume-section">
@@ -150,6 +150,10 @@
             </div>
             <p class="project-demonstrates-summary">This project demonstrates my ability to turn a narrow, error-prone calculation into a reviewable tool with explicit operating boundaries.</p>
           </section>
+          <section class="project-reflection">
+            <h2>Reflection</h2>
+            <p>I would keep the visible calculation and the boundary between preparation and trade execution. I would not treat the current implementation as complete today without automated boundary tests, pinned dependencies, and a versioned authoritative source for broker rules; those controls matter more than adding another convenience feature.</p>
+          </section>
           <div class="inline-cta">
             <p><strong>Have a workflow that needs clearer rules and fewer manual calculations?</strong></p>
             <div class="inline-cta-actions">
@@ -160,6 +164,6 @@
         </article>
       </div>
     </main>
-    <script src="/assets/js/ask-mantosh-widget.js?v=20260716-4"></script>
+    <script src="/assets/js/ask-mantosh-widget.js?v=20260716-5"></script>
   </body>
 </html>

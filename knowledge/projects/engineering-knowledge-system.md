@@ -29,11 +29,11 @@ Mantosh built this website as a static engineering publication and evidence-back
 
 ### Evidence before generation
 
-The Worker does not answer from general model memory when retrieval has no sufficiently grounded public source. It returns a clear no-evidence response instead.
+The Worker does not answer from general model memory when retrieval has no sufficiently grounded public source. It returns a clear no-evidence response instead. This reduces answer coverage, but makes supported responses inspectable.
 
 ### Deterministic conversation and navigation before inference
 
-Simple greetings, thanks, and farewells receive concise conversational replies without retrieval or AI. Commands for Home, Projects, Insights, Experience, Resume, Contact, Newsletter, Accessibility, named projects, and the latest article are routed directly without a generative model call. This reduces latency, cost, and ambiguity.
+Simple greetings, thanks, and farewells receive concise conversational replies without retrieval or AI. Commands for Home, Projects, Insights, Experience, Resume, Contact, Newsletter, Accessibility, named projects, and the latest article are routed directly without a generative model call. This reduces latency, cost, and ambiguity, with the trade-off of maintaining a narrow routing layer without making it a brittle keyword chatbot.
 
 Every public HTML route has an explicit Ask Mantosh role. Evidence-bearing project, Insight, experience, achievement, capability, skill, and profile content maps to reviewed knowledge documents. Utility pages map to deterministic navigation. Error pages and legacy redirects are documented no-index exclusions. A CI audit fails if a future page has no classification.
 
@@ -43,13 +43,13 @@ The reviewed `about-mantosh` knowledge document is the canonical source for publ
 
 ### Separate trust boundaries
 
-The browser holds no provider or indexing secret. Visitor chat, knowledge indexing, AI provider access, and public content are separated. Index synchronization uses GitHub OIDC, with a manually managed token retained only for recovery.
+The browser holds no provider or indexing secret. Visitor chat, knowledge indexing, AI provider access, and public content are separated. Index synchronization uses GitHub OIDC, with a manually managed token retained only for recovery. This adds deployment machinery, but keeps authority aligned with the risk of each operation.
 
 Visitors can export the visible conversation as a local text file. The export contains only the displayed questions and answers—not conversation identifiers, hidden response metadata, or provider details.
 
 ### Automated release confidence
 
-Release gates check static generation, SEO, discoverability, internal links, accessibility semantics and preferences, documentation drift, content-lane inventory, Worker contract and security behaviors, and evaluation-result drift. Sixteen Playwright checks exercise eight visitor journeys in desktop and mobile Chromium, including the recruiter path, themes with Axe WCAG scans, forms, contact fallback, and Ask Mantosh session controls. Generated asset budgets guard page weight before publication.
+Release gates check static generation, SEO, discoverability, internal links, accessibility semantics and preferences, documentation drift, content-lane inventory, Worker contract and security behaviors, and evaluation-result drift. Twenty Playwright checks exercise ten visitor journeys in desktop and mobile Chromium, including the recruiter path, themes with Axe WCAG scans, forms, contact fallback, project-decision presentation, and Ask Mantosh session controls. Generated asset budgets guard page weight before publication.
 
 After GitHub Pages deploys, a revision-aware smoke check verifies the exact commit, homepage, published evaluation evidence, RSS feed, Ask Mantosh health, and deterministic newsletter navigation. Browser artifacts are retained for diagnosis. These checks do not claim a formal accessibility audit, cross-browser coverage, human visual approval, or production Core Web Vitals measurements.
 
@@ -79,6 +79,10 @@ The site uses GitHub Pages rather than a custom domain and Cloudflare's free all
 - Trust-boundary design separating public clients, deployment identity, stored knowledge, and model access.
 - Release engineering that turns content, accessibility, performance, assistant behavior, and production health into automated gates.
 - User-centered systems thinking that adapts presentation for different audiences without changing the evidence base.
+
+## Reflection
+
+The evidence-first boundary and deterministic routing remain the right decisions because they make the system useful without turning the portfolio into an ungrounded chatbot. A staging environment and human-rated live-retrieval evaluation should be introduced earlier in a future iteration; the controlled suite detects regressions but does not measure real visitor preference or production recall.
 
 ## Evidence boundary
 

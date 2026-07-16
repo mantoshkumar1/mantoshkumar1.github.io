@@ -25,7 +25,7 @@ Last verified Worker deployment: `9d9a65c3-7b76-4ff9-81c0-be52e9a29cd5`. The act
 - A visitor-controlled Auto, Light, Dark, Soft, and High contrast appearance setting. Soft is the first-visit default; an early initializer prevents a dark-theme flash, explicit choices persist on the device, and Auto follows the operating system.
 - English remains the authoritative content language. Pages expose standard language metadata and selectable text for browser translation; the site does not infer language from location or load a third-party translation widget.
 - Single-destination Insight cards expose the whole card as one link, while project cards preserve separate case-study, product, and source destinations. Long-form Insight pages use a compact reading rhythm distinct from broader landing-page spacing.
-- Page density is intentional: homepage sections render at their real height without synthetic off-screen placeholders; landing, case-study, article, and mobile shells use separate compact spacing scales so the next useful decision arrives sooner without reducing touch-target size.
+- Page density is intentional: homepage sections render at their real height without synthetic off-screen placeholders; landing, case-study, article, and mobile shells use separate compact spacing scales so the next useful decision arrives sooner without reducing touch-target size. Every project case study presents three to six evidence-backed engineering decisions with rationale and trade-offs, followed by transferable capabilities and an honest reflection.
 
 ## Visitor flows
 

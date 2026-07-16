@@ -24,15 +24,15 @@ The repository uses task-specific Python command-line utilities. Individual tool
 
 ### Local processing
 
-Document operations run on the user's machine. The PDF compression documentation identifies avoiding sensitive-document uploads as a motivation for building the local tool.
+Document operations run on the user's machine because the tasks do not require shared server state. This avoids mandatory uploads, with the trade-off of local installation complexity and system dependencies such as Poppler.
 
 ### Task-sized commands
 
-Each workflow is isolated in its own module with its own command-line arguments and dependencies. Shared helpers reduce duplication across file and PDF operations.
+Each workflow is isolated in its own module with its own command-line arguments and dependencies. Shared helpers reduce duplication across file and PDF operations. This keeps commands understandable but creates a less unified installation and discovery experience.
 
 ### Explicit configuration
 
-Commands accept inputs such as source paths, destination directories, quality settings, and requested PDF sizes.
+Commands accept inputs such as source paths, destination directories, quality settings, and requested PDF sizes. Explicit configuration makes workflows scriptable but asks more of first-time users than a graphical interface.
 
 ## Documented utilities
 
@@ -57,6 +57,10 @@ Commands accept inputs such as source paths, destination directories, quality se
 - Composable tool design through focused commands and shared file-processing behavior.
 - Explicit interfaces for paths, quality, target sizes, and outputs.
 - Pragmatic engineering that documents dependencies and incomplete areas without overstating maturity.
+
+## Reflection
+
+The local-first boundary and focused-command approach remain appropriate for these workflows. A stronger next iteration should unify installation, pin dependencies, and add regression tests before expanding format support.
 
 ## Public evidence
 

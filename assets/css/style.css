@@ -1504,6 +1504,19 @@ body.ask-mantosh-open {
   background: linear-gradient(145deg, rgba(59, 130, 246, 0.08), rgba(255, 255, 255, 0.025));
 }
 
+.engineering-decisions .decision-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.engineering-decisions .decision-grid > div,
+.engineering-decisions .decision-grid > article {
+  border-top: 2px solid rgba(59, 130, 246, 0.5);
+}
+
+.engineering-decisions .decision-grid h3 {
+  margin-top: 0;
+}
+
 .project-demonstrates > h2 {
   margin-top: 0;
 }
@@ -1544,7 +1557,27 @@ body.ask-mantosh-open {
   line-height: 1.55;
 }
 
+.project-reflection {
+  margin-top: 1rem;
+  padding: 1.15rem 1.25rem;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.project-reflection h2 {
+  margin: 0 0 0.55rem;
+  font-size: clamp(1.25rem, 2.4vw, 1.6rem);
+}
+
+.project-reflection p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
 @media (max-width: 640px) {
+  .engineering-decisions .decision-grid,
   .project-demonstrates-grid { grid-template-columns: 1fr; }
 }
 

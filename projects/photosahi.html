@@ -50,7 +50,7 @@
 
 
 <script src="../assets/js/theme-init.js?v=20260713-1"></script>
-<link rel="stylesheet" href="../assets/css/style.css?v=20260716-4" />
+<link rel="stylesheet" href="../assets/css/style.css?v=20260716-5" />
     <style>
       .project-shell {
         width: min(calc(100% - 2.5rem), 1180px);
@@ -463,20 +463,20 @@
           </div>
         </section>
 
-        <section class="content-card section-block" aria-labelledby="decisions-title">
+        <section class="content-card section-block engineering-decisions" aria-labelledby="decisions-title">
           <h2 id="decisions-title">Engineering Decisions</h2>
           <div class="decision-grid">
             <article class="decision">
-              <h3>Browser-only processing</h3>
-              <p>Local canvas operations avoid mandatory uploads, backend latency, server cost, and an unnecessary trust boundary.</p>
+              <h3>Keep image processing in the browser</h3>
+              <p>I chose browser-side processing because the core transformations do not require server state. Images stay in browser memory, avoiding mandatory uploads, backend latency, operating cost, and an unnecessary trust boundary. The trade-off is that device capability and browser behavior become part of the product’s operating envelope.</p>
             </article>
             <article class="decision">
-              <h3>Performance</h3>
-              <p>Canvas operations keep common transformations immediate across desktop and mobile browsers.</p>
+              <h3>Optimize for immediate local interaction</h3>
+              <p>I used local Canvas operations so cropping, resizing, and enhancement can respond without a network round trip. That makes the workflow feel direct on common desktop and mobile browsers. It also means large images and lower-powered devices must be handled carefully rather than scaled by adding server capacity.</p>
             </article>
             <article class="decision">
-              <h3>Privacy and trade-offs</h3>
-              <p>Local processing improves privacy, but device capability and browser compatibility become product constraints.</p>
+              <h3>Prefer a focused workflow over a general editor</h3>
+              <p>I shaped the product around passport and visa photo preparation instead of exposing every possible image control. A narrower sequence reduces decision load and keeps technical operations connected to the user’s actual task. The trade-off is less flexibility for use cases outside document-photo preparation.</p>
             </article>
           </div>
           <p class="evidence-note"><strong>Next improvements:</strong> verify more document presets, refine background controls and previews, and improve first-use guidance.</p>
@@ -491,6 +491,10 @@
             <div><h3>User Experience</h3><p>Organized a technical image-processing pipeline into a guided, mobile-friendly sequence.</p></div>
           </div>
           <p class="project-demonstrates-summary">This project demonstrates my ability to make privacy, architecture, performance, and usability reinforce one another in a browser product.</p>
+        </section>
+        <section class="project-reflection">
+          <h2>Reflection</h2>
+          <p>I would still choose a browser-first architecture because privacy and immediacy are central to this workflow. With today’s knowledge, I would invest earlier in broader preset verification, compatibility testing, background controls, and first-use guidance before considering any backend—the current limitations are product-quality gaps, not evidence that local processing was the wrong boundary.</p>
         </section>
         <div class="inline-cta">
           <p><strong>Need a privacy-first browser product that avoids unnecessary data collection?</strong></p>
@@ -511,6 +515,6 @@
         </div>
       </div>
     </footer>
-    <script src="/assets/js/ask-mantosh-widget.js?v=20260716-4"></script>
+    <script src="/assets/js/ask-mantosh-widget.js?v=20260716-5"></script>
   </body>
 </html>
