@@ -428,10 +428,10 @@ class AskMantoshApp {
   contextualFollowUps(message) {
     const generated = this.followUps(message.text); if (generated.length) return generated;
     const value = `${message.question || ""} ${message.sources?.map((source) => source.title).join(" ") || ""}`.toLowerCase();
-    if (/photosahi|photo|privacy|browser-side/.test(value)) return ["Why was PhotoSahi built without a backend?", "How does PhotoSahi protect privacy?", "Which trade-offs shaped its browser-only design?"];
-    if (/migration|validation|rollout|regression/.test(value)) return ["Why was the migration difficult?", "How was cutover validated?", "What changed after the migration?"];
-    if (/skill|experience|engineer|hire|python/.test(value)) return ["Which projects best demonstrate those skills?", "How does Mantosh approach automation?", "Where can I review his engineering experience?"];
-    return ["Which project should I explore first?", "What are Mantosh's strongest technical skills?", "How does Mantosh approach repeated engineering work?"];
+    if (/photosahi|photo|privacy|browser-side/.test(value)) return ["What did Mantosh personally own?", "Which skills does PhotoSahi demonstrate?", "Where could this experience add value?"];
+    if (/migration|validation|rollout|regression/.test(value)) return ["What did Mantosh personally own?", "What outcomes did the migration produce?", "Which skills does this project demonstrate?"];
+    if (/skill|experience|engineer|hire|python/.test(value)) return ["Where could Mantosh add the most value?", "Which projects best demonstrate his fit?", "What has Mantosh personally owned?"];
+    return ["Which project best demonstrates Mantosh's fit?", "What has Mantosh personally owned?", "Where could Mantosh add the most value?"];
   }
 }
 

@@ -21,28 +21,36 @@ export class RecommendationEngine {
     };
   }
 
-  followUpQuestions({ sources, intent = "direct" }) {
+  followUpQuestions({ sources, intent = "direct", question = "" }) {
+    const askedFit = /\b(?:fit|hire|help|value|best suited|new team)\b/i.test(question);
+    const askedEvidence = /\b(?:project|evidence|demonstrate|prove|example)\b/i.test(question);
     if (intent === "achievement") {
       return [
-        "What was Mantosh's GATE result?",
-        "How did GATE relate to Mantosh's TUM admission journey?",
-        "Which engineering awards has Mantosh received?"
+        "Which projects best demonstrate Mantosh's engineering work?",
+        "Where could Mantosh add the most value?",
+        "What has Mantosh personally owned?"
       ];
     }
     if (intent === "profile") {
+      if (askedFit) {
+        return ["Which projects best demonstrate his fit?", "What has Mantosh personally owned?", "What outcomes did his work produce?"];
+      }
+      if (askedEvidence) {
+        return ["What has Mantosh personally owned?", "Where could Mantosh add the most value?", "What outcomes did his work produce?"];
+      }
       return [
-        "What engineering problems is Mantosh best suited to solve?",
-        "Which projects best demonstrate Mantosh's work?",
-        "How does Mantosh approach automation and platform engineering?"
+        "Where could Mantosh add the most value?",
+        "Which projects best demonstrate his fit?",
+        "What has Mantosh personally owned?"
       ];
     }
     const category = sources[0]?.category || "";
     if (category === "project") {
-      return ["What decisions shaped this project?", "What trade-offs mattered most?", "What changed after it was delivered?"];
+      return ["What did Mantosh personally own?", "What outcomes did this project produce?", "Which skills does this project demonstrate?"];
     }
     if (["article", "note", "architecture-note"].includes(category)) {
-      return ["What is the main engineering lesson?", "How can this idea be applied?", "Which related project demonstrates it?"];
+      return ["Which project demonstrates this thinking?", "How does this reflect Mantosh's approach?", "Where could this approach add value?"];
     }
-    return ["Which projects best demonstrate this experience?", "How does Mantosh approach automation?", "Where can I review his experience?"];
+    return ["What has Mantosh personally owned?", "Which projects prove this experience?", "Where could this experience add value?"];
   }
 }

@@ -937,9 +937,9 @@ test("keeps deterministic follow-up questions concise and grammatical", () => {
     intent: "direct"
   });
   assert.deepEqual(questions, [
-    "Which projects best demonstrate this experience?",
-    "How does Mantosh approach automation?",
-    "Where can I review his experience?"
+    "What has Mantosh personally owned?",
+    "Which projects prove this experience?",
+    "Where could this experience add value?"
   ]);
   assert.ok(questions.every((question) => question.length <= 72 && question.endsWith("?")));
 });
@@ -970,9 +970,9 @@ test("gives explicit achievement questions a concise non-promotional response co
   assert.match(prompt.input, /under 90 words/i);
   const followUps = new RecommendationEngine(null, {}).followUpQuestions({ sources: [], intent: "achievement" });
   assert.deepEqual(followUps, [
-    "What was Mantosh's GATE result?",
-    "How did GATE relate to Mantosh's TUM admission journey?",
-    "Which engineering awards has Mantosh received?"
+    "Which projects best demonstrate Mantosh's engineering work?",
+    "Where could Mantosh add the most value?",
+    "What has Mantosh personally owned?"
   ]);
 });
 
@@ -994,12 +994,14 @@ test("gives profile questions a hiring-oriented, evidence-safe response contract
   assert.match(prompt.input, /subjective labels such as genius/i);
   assert.match(prompt.input, /answer as a public professional profile/i);
   assert.match(prompt.input, /Do not infer private personality/i);
-  const followUps = new RecommendationEngine(null, {}).followUpQuestions({ sources: [], intent: "profile" });
+  const followUps = new RecommendationEngine(null, {}).followUpQuestions({ sources: [], intent: "profile", question: "What kind of engineering work does Mantosh do?" });
   assert.deepEqual(followUps, [
-    "What engineering problems is Mantosh best suited to solve?",
-    "Which projects best demonstrate Mantosh's work?",
-    "How does Mantosh approach automation and platform engineering?"
+    "Where could Mantosh add the most value?",
+    "Which projects best demonstrate his fit?",
+    "What has Mantosh personally owned?"
   ]);
+  assert.equal(new RecommendationEngine(null, {}).followUpQuestions({ sources: [], intent: "profile", question: "Where could Mantosh add the most value?" })[0], "Which projects best demonstrate his fit?");
+  assert.equal(new RecommendationEngine(null, {}).followUpQuestions({ sources: [], intent: "profile", question: "Which projects demonstrate his work?" })[0], "What has Mantosh personally owned?");
 });
 
 test("gives visitor problems practical guidance with explicit limits", () => {

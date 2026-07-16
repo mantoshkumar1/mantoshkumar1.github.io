@@ -11,7 +11,7 @@ import { enforceRateLimit } from "./rate-limit.js";
 import { assessLexicalRelevance, retrieveKnowledge, searchLexicalKnowledge } from "./retrieval.js";
 import { parseChatRequest } from "./validation.js";
 
-const ANSWER_POLICY_VERSION = "visitor-intent-v33-general";
+const ANSWER_POLICY_VERSION = "visitor-intent-v34-hiring-journey";
 
 function json(body, status, origin, extraHeaders = {}) {
   const headers = corsHeaders(origin);
@@ -162,7 +162,7 @@ export default {
         retrievalQuery === baseRetrievalQuery ? { lexicalMatches } : undefined);
       const recommendationEngine = new RecommendationEngine(metadataService, config);
       const recommendations = await recommendationEngine.recommend({ sources: retrieval.sources });
-      const followUpQuestions = recommendationEngine.followUpQuestions({ sources: retrieval.sources, intent });
+      const followUpQuestions = recommendationEngine.followUpQuestions({ sources: retrieval.sources, intent, question });
       const confidenceDetails = new ConfidenceScorer().score(retrieval);
       analytics.trackInBackground(ctx, retrieval.sources.length ? "knowledge_search" : "knowledge_gap", question);
 
