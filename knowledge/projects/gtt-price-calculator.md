@@ -38,6 +38,13 @@ The calculation remains a short inspectable function. The application has no bro
 - The configured Streamlit deployment redirected to authentication during the 2026-07-12 review, so public live-demo availability is not established.
 - The utility is not financial advice and does not guarantee broker acceptance.
 
+## What this project demonstrates
+
+- Rule modeling through explicit trigger-distance, rounding, and synchronization behavior.
+- Transparent computation that keeps assumptions inspectable.
+- Boundary design that separates value preparation from brokerage access and order execution.
+- Risk-aware engineering that documents stale-rule, dependency, testing, and deployment limitations.
+
 ## Public evidence
 
 Source repository: https://github.com/mantoshkumar1/gtt-price-calculator

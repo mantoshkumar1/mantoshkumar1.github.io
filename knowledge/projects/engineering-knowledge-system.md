@@ -65,12 +65,20 @@ After GitHub Pages deploys, a revision-aware smoke check verifies the exact comm
 
 - SEO-configured public pages and structured discoverability files.
 - A reviewed public Ask Mantosh knowledge corpus, including this source.
-- Sixty-five Worker tests covering contracts, deterministic social and achievement routing, confidence-based lexical relevance gating, privacy-safe aggregate telemetry, quotas, OIDC, retrieval, prompting, citation repair, subjective questions, explicit achievement gating, and failure paths, plus sixteen desktop/mobile browser checks.
+- Seventy Worker tests covering contracts, deterministic social and achievement routing, confidence-based lexical relevance gating, privacy-safe aggregate telemetry, quotas, OIDC, retrieval, prompting, audience-presentation isolation, citation repair, subjective questions, explicit achievement gating, and failure paths, plus twenty desktop/mobile browser checks.
 - A committed offline evaluation result that currently records 541 of 541 cases and 9,344 of 9,344 objective assertions passing.
 
 ## Current limits
 
 The site uses GitHub Pages rather than a custom domain and Cloudflare's free allocation. The repository declares no staging environment, formal accessibility conformance audit, human-rated response benchmark, or live-production retrieval benchmark. Controlled fixtures do not measure live Vectorize recall or human preference. No claim is made about external adoption, traffic, revenue, or organizational impact.
+
+## What this project demonstrates
+
+- Evidence-bound AI engineering through reviewed sources, explicit confidence, approved citations, and safe refusal.
+- Platform architecture spanning publishing, indexing, retrieval, conversation, and navigation.
+- Trust-boundary design separating public clients, deployment identity, stored knowledge, and model access.
+- Release engineering that turns content, accessibility, performance, assistant behavior, and production health into automated gates.
+- User-centered systems thinking that adapts presentation for different audiences without changing the evidence base.
 
 ## Evidence boundary
 

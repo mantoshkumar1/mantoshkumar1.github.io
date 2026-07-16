@@ -40,3 +40,11 @@ Image processing needs careful attention to quality, cropping, and edge cases.
 The Canvas API is powerful, but browser compatibility and performance need to
 be considered from the beginning. In a highly procedural task, user experience
 matters as much as technical correctness.
+
+## What this project demonstrates
+
+- Privacy-first design by removing an unnecessary image-upload boundary.
+- Browser engineering for local cropping, resizing, enhancement, and download.
+- Product thinking that turns document-photo constraints into a focused workflow.
+- Performance judgment that uses local Canvas operations while acknowledging device and compatibility constraints.
+- User experience design for a guided, mobile-friendly image-processing sequence.

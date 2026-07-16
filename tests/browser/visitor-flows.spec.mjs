@@ -87,9 +87,19 @@ test("project and insight cards expose their primary detail destinations", async
   await page.goto("/projects/");
   const projects = page.locator(".project-card");
   await expect(projects).toHaveCount(6);
+  const projectDestinations = [];
   for (let index = 0; index < await projects.count(); index += 1) {
     await expect(projects.nth(index).locator(".project-detail-link")).toHaveAttribute("href", /.+/);
+    projectDestinations.push(await projects.nth(index).locator(".project-detail-link").getAttribute("href"));
   }
+  for (const destination of projectDestinations) {
+    await page.goto(`/projects/${destination}`);
+    const demonstrates = page.locator(".project-demonstrates");
+    await expect(demonstrates.getByRole("heading", { name: "What This Project Demonstrates" })).toBeVisible();
+    expect(await demonstrates.locator("h3").count()).toBeGreaterThanOrEqual(4);
+    await expect(demonstrates.locator(".project-demonstrates-summary")).toBeVisible();
+  }
+  await page.goto("/projects/");
   await projects.nth(1).locator(".project-detail-link").click();
   await expect(page).toHaveURL(/\/projects\/photosahi\.html$/);
 

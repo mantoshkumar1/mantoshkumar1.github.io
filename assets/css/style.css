@@ -1496,6 +1496,58 @@ body.ask-mantosh-open {
   outline: none;
 }
 
+.project-demonstrates {
+  margin-top: 2rem;
+  padding: clamp(1.15rem, 2.5vw, 1.6rem);
+  border: 1px solid rgba(59, 130, 246, 0.28);
+  border-radius: 18px;
+  background: linear-gradient(145deg, rgba(59, 130, 246, 0.08), rgba(255, 255, 255, 0.025));
+}
+
+.project-demonstrates > h2 {
+  margin-top: 0;
+}
+
+.project-demonstrates-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.7rem;
+  margin-top: 1rem;
+}
+
+.project-demonstrates-grid > div {
+  padding: 0.85rem 0.9rem;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 12px;
+  background: rgba(6, 11, 18, 0.24);
+}
+
+.project-demonstrates-grid h3 {
+  margin: 0 0 0.28rem;
+  color: var(--text);
+  font-size: 0.92rem;
+}
+
+.project-demonstrates-grid p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.84rem;
+  line-height: 1.5;
+}
+
+.project-demonstrates-summary {
+  margin: 1rem 0 0;
+  padding-left: 0.85rem;
+  border-left: 2px solid var(--primary);
+  color: var(--text);
+  font-weight: 650;
+  line-height: 1.55;
+}
+
+@media (max-width: 640px) {
+  .project-demonstrates-grid { grid-template-columns: 1fr; }
+}
+
 .ask-mantosh-messages {
   flex: 1;
   min-height: 0;
