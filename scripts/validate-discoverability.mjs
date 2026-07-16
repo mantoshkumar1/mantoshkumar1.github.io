@@ -3,7 +3,7 @@ import { resolve } from "node:path";
 
 const root = resolve(import.meta.dirname, "..");
 const origin = "https://mantoshkumar1.github.io";
-const pages = ["index.html", "projects/index.html", "insights/index.html", "insights/engineering-philosophy.html", "insights/why-does-this-still-require-me.html", "experience/index.html", "resume/index.html", "contact/index.html", "projects/photosahi.html", "projects/workflow-automation-toolkit.html", "projects/gtt-price-calculator.html", "projects/validation-platform-optical-networking.html"];
+const pages = ["index.html", "projects/index.html", "insights/index.html", "insights/engineering-philosophy.html", "insights/why-does-this-still-require-me.html", "experience/index.html", "resume/index.html", "contact/index.html", "projects/photosahi.html", "projects/workflow-automation-toolkit.html", "projects/gtt-price-calculator.html", "projects/validation-platform-optical-networking.html", "projects/legacy-validation-framework-migration.html"];
 let failures = 0;
 
 function check(condition, message) {

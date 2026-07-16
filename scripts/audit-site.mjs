@@ -2,7 +2,7 @@ import { access, readFile, stat } from "node:fs/promises";
 import { join, resolve } from "node:path";
 
 const root = resolve(import.meta.dirname, "..");
-const pages = ["index.html", "projects/index.html", "insights/index.html", "insights/engineering-philosophy.html", "insights/why-does-this-still-require-me.html", "insights/release-reports-as-operational-history.html", "insights/complexity-changes-address.html", "insights/blockchain-without-a-master-branch.html", "insights/ownership-before-escalation.html", "experience/index.html", "resume/index.html", "contact/index.html", "newsletter/index.html", "accessibility/index.html", "projects/engineering-knowledge-system.html", "projects/photosahi.html", "projects/workflow-automation-toolkit.html", "projects/gtt-price-calculator.html", "projects/validation-platform-optical-networking.html"];
+const pages = ["index.html", "projects/index.html", "insights/index.html", "insights/engineering-philosophy.html", "insights/why-does-this-still-require-me.html", "insights/release-reports-as-operational-history.html", "insights/complexity-changes-address.html", "insights/blockchain-without-a-master-branch.html", "insights/ownership-before-escalation.html", "experience/index.html", "resume/index.html", "contact/index.html", "newsletter/index.html", "accessibility/index.html", "projects/engineering-knowledge-system.html", "projects/photosahi.html", "projects/workflow-automation-toolkit.html", "projects/gtt-price-calculator.html", "projects/validation-platform-optical-networking.html", "projects/legacy-validation-framework-migration.html"];
 const requirements = [
   [/<meta\s+charset=/i, "charset"], [/<meta\s+name=["']viewport["']/i, "viewport"], [/<meta\s+name=["']description["']/i, "description"],
   [/<link\s+rel=["']canonical["']/i, "canonical"], [/<meta\s+name=["']robots["']/i, "robots"], [/<meta\s+property=["']og:title["']/i, "Open Graph"],
@@ -122,7 +122,7 @@ if (/<span>Experience\s*<span[^>]*>→<\/span><\/span>/i.test(homeHtml)) { conso
 if (/class=["'][^"']*section-link[^"']*["'][^>]*>\s*View Experience/i.test(homeHtml)) { console.error("homepage: redundant View Experience link must stay removed"); failures += 1; }
 if (!/href=["']projects\/["'][^>]*>View all projects/i.test(homeHtml)) { console.error("homepage: selected projects need a scalable route to the complete portfolio"); failures += 1; }
 if (!/class=["']value-strip["']/i.test(homeHtml)) { console.error("homepage: staff impact summary strip is missing"); failures += 1; }
-if (!/5 documented projects across platforms, automation, and applied engineering/.test(homeHtml)) { console.error("homepage: project evidence line is stale"); failures += 1; }
+if (!/6 documented projects across platforms, automation, and applied engineering/.test(homeHtml)) { console.error("homepage: project evidence line is stale"); failures += 1; }
 if (!/<div class=["']hero-buttons["']>[\s\S]*href=["']#systems["'][^>]*>See projects[\s\S]*href=["']experience\/["'][^>]*>View experience[\s\S]*href=["']contact\/["'][^>]*>Discuss a role[\s\S]*<\/div>/i.test(homeHtml)) { console.error("homepage: recruiter actions must lead to projects, experience, and role discussion"); failures += 1; }
 if (/<div class=["']hero-buttons["']>[\s\S]*View résumé PDF[\s\S]*<\/div>/i.test(homeHtml)) { console.error("homepage: résumé PDF must not displace the Experience path in the primary recruiter actions"); failures += 1; }
 const homeProjectPosition = homeHtml.indexOf('id="systems"');
@@ -149,7 +149,7 @@ if ((knowledgeSystemHtml.match(/class=["']architecture-boundaries["']/gi) || [])
 if (!/\.architecture-steps\s*\{[^}]*grid-template-columns:\s*repeat\(5,\s*minmax\(0,\s*1fr\)\)/is.test(stylesheet) || !/@media\s*\(max-width:\s*760px\)[\s\S]*?\.architecture-steps\s*\{[^}]*grid-template-columns:\s*1fr/is.test(stylesheet) || !/@media\s*\(max-width:\s*760px\)[\s\S]*?\.architecture-steps li\s*\{[^}]*grid-template-columns:\s*4rem\s+minmax\(0,\s*1fr\)/is.test(stylesheet)) { console.error("stylesheet: project architecture must remain readable across desktop and mobile"); failures += 1; }
 if (!/<h1>Systems and tools I’ve built<\/h1>/.test(projectsHtml)) { console.error("projects: page title must describe the work plainly"); failures += 1; }
 if (!/<div class=["']inline-cta["']>[\s\S]*<strong>Evaluating fit\?<\/strong>[\s\S]*href=["']\.\.\/experience\/["'][^>]*>View experience[\s\S]*href=["']\.\.\/contact\/["'][^>]*>Discuss a role or project/i.test(projectsHtml)) { console.error("projects: evaluating-fit CTA must offer Experience and contact without losing its current prompt"); failures += 1; }
-for (const [page, html, expectedCards] of [["index.html", homeHtml, 3], ["projects/index.html", projectsHtml, 5]]) {
+for (const [page, html, expectedCards] of [["index.html", homeHtml, 3], ["projects/index.html", projectsHtml, 6]]) {
   const projectCards = [...html.matchAll(/<article\b[^>]*class=["'][^"']*project-card[^"']*["'][^>]*>([\s\S]*?)<\/article>/gi)];
   if (projectCards.length !== expectedCards) { console.error(`${page}: expected ${expectedCards} fully clickable project cards, found ${projectCards.length}`); failures += 1; }
   for (const card of projectCards) {

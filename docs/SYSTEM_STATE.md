@@ -17,9 +17,9 @@ Last verified Worker deployment: `7eff67ce-8a39-460f-9147-1e2a3a447c0c`. The act
 
 ## Published inventory
 
-- SEO-configured public pages: home, projects index, five project case studies, Insights index, six engineering articles and notes, experience, résumé, contact, a live Buttondown email subscription with RSS, accessibility statement, and custom 404.
-- 14 public Ask Mantosh documents: five project sources, six Insights sources, two résumé-backed experience and academic-achievement sources, and one evidence-backed profile and fit guide.
-- Whole-site Ask Mantosh coverage: 12 evidence-bearing routes, seven deterministic utility destinations, and nine explicit no-index legacy or error routes cover all 28 public HTML routes.
+- SEO-configured public pages: home, projects index, six project case studies, Insights index, six engineering articles and notes, experience, résumé, contact, a live Buttondown email subscription with RSS, accessibility statement, and custom 404.
+- 15 public Ask Mantosh documents: six project sources, six Insights sources, two résumé-backed experience and academic-achievement sources, and one evidence-backed profile and fit guide.
+- Whole-site Ask Mantosh coverage: 13 evidence-bearing routes, seven deterministic utility destinations, and nine explicit no-index legacy or error routes cover all 29 public HTML routes.
 - One résumé PDF served for in-browser preview and explicit download.
 - Sitemap, RSS feed, `robots.txt`, `llms.txt`, JSON-LD, Open Graph, Twitter Card, manifest, icons, and a 1200×630 social image.
 - A visitor-controlled Auto, Light, Dark, Soft, and High contrast appearance setting. Soft is the first-visit default; an early initializer prevents a dark-theme flash, explicit choices persist on the device, and Auto follows the operating system.

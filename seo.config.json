@@ -231,6 +231,16 @@
         { "name": "Projects", "path": "/projects/" }
       ]
     },
+    "/projects/legacy-validation-framework-migration.html": {
+      "title": "Legacy Validation Framework Migration | Mantosh Kumar",
+      "description": "How Mantosh Kumar led a six-month migration of thousands of optical-networking validation tests to a distributed CI/CD platform while release validation continued.",
+      "kind": "project",
+      "entityName": "Legacy Validation Framework Migration",
+      "dateModified": "2026-07-15",
+      "breadcrumbs": [
+        { "name": "Projects", "path": "/projects/" }
+      ]
+    },
     "/404.html": {
       "title": "Page Not Found | Mantosh Kumar",
       "description": "The requested page could not be found.",

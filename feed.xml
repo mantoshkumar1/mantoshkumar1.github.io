@@ -18,6 +18,16 @@
     <summary>Architecture case study for a production engineering publication with grounded AI retrieval, Cloudflare Workers, D1, Vectorize, and automated release gates.</summary>
   </entry>
   <entry>
+    <title>Legacy Validation Framework Migration</title>
+    <id>https://mantoshkumar1.github.io/projects/legacy-validation-framework-migration.html</id>
+    <link href="https://mantoshkumar1.github.io/projects/legacy-validation-framework-migration.html" />
+    <published>2026-07-15T12:00:00Z</published>
+    <updated>2026-07-15T12:00:00Z</updated>
+    <author><name>Mantosh Kumar</name></author>
+    <category term="project-case-study" />
+    <summary>How Mantosh Kumar led a six-month migration of thousands of optical-networking validation tests to a distributed CI/CD platform while release validation continued.</summary>
+  </entry>
+  <entry>
     <title>PhotoSahi: Privacy-First Browser Photo Processing</title>
     <id>https://mantoshkumar1.github.io/projects/photosahi.html</id>
     <link href="https://mantoshkumar1.github.io/projects/photosahi.html" />

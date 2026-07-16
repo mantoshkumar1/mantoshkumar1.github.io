@@ -5,6 +5,7 @@ const criticalPages = [
   ["home", "/", "Turn engineering friction into reusable systems"],
   ["experience", "/experience/", "14+ years across engineering environments"],
   ["projects", "/projects/", "Systems and tools I’ve built"],
+  ["migration case study", "/projects/legacy-validation-framework-migration.html", "Migrating a legacy framework"],
   ["resume", "/resume/", "Mantosh Kumar"],
   ["contact", "/contact/", "Discuss a Staff or Principal Engineer role"]
 ];
@@ -85,7 +86,7 @@ test("recruiter path connects home, experience, projects, resume, and contact", 
 test("project and insight cards expose their primary detail destinations", async ({ page }) => {
   await page.goto("/projects/");
   const projects = page.locator(".project-card");
-  await expect(projects).toHaveCount(5);
+  await expect(projects).toHaveCount(6);
   for (let index = 0; index < await projects.count(); index += 1) {
     await expect(projects.nth(index).locator(".project-detail-link")).toHaveAttribute("href", /.+/);
   }

@@ -14,13 +14,14 @@ with `_` are intentionally not indexed.
 
 ## Current public corpus
 
-As of 2026-07-15, the public index contains 14 source documents:
+As of 2026-07-15, the public index contains 15 source documents:
 
 - `Project: Evidence-First Engineering Knowledge System`
 - `Project: PhotoSahi`
 - `Project: Workflow Automation Toolkit`
 - `Project: GTT Trigger Price Calculator`
 - `Project: Validation Platform and Release Intelligence`
+- `Project: Legacy Validation Framework Migration`
 - `Note: Engineering Philosophy: Build Leverage, Not Just Software`
 - `Article: Why Does This Still Require Me?`
 - `Note: Release Reports as Operational History`
