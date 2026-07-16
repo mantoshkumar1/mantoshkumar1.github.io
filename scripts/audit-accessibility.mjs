@@ -66,7 +66,7 @@ if (!/id=["']ask-mantosh-minimize["'][^>]+aria-label=["']Minimize Ask Mantosh; c
 if (!/id=["']ask-mantosh-clear["'][^>]+aria-label=["']Close Ask Mantosh and clear conversation["']/.test(widget)) failures.push("Ask Mantosh needs an explicit close-and-clear control");
 if (/ask-mantosh-limit-note/.test(widget)) failures.push("Ask Mantosh must show quota details only when a limit is reached");
 if (!client.includes('setAttribute("aria-busy"') || !client.includes('setAttribute("aria-live"')) failures.push("Ask Mantosh missing quiet streaming announcements");
-if (!client.includes("renderBasic(markdown, target)") || !client.includes("this.renderBasic(markdown, target);")) failures.push("Ask Mantosh missing immediate safe Markdown fallback");
+if (!client.includes("renderBasic(markdown, target)") || !client.includes("this.renderBasic(markdown, target);") || !client.includes('document.createElement("strong")')) failures.push("Ask Mantosh missing immediate safe Markdown fallback with semantic emphasis");
 if (!client.includes('stripResponseSections(text) { return text.replace(/\\n*##\\s+(?:Sources|Follow-up Questions)')) failures.push("Ask Mantosh must remove source and follow-up payloads from the reading pane");
 if (!client.includes('this.view.setSuggestions(message.error ? [] : message.followUps, (question) => this.ask(question), "Try asking next");') || !client.includes("data-suggestion")) failures.push("Ask Mantosh must replace welcome suggestions with persistent answer-specific follow-ups");
 if (client.includes("ask-mantosh-follow-ups")) failures.push("Ask Mantosh must not bury duplicate follow-up chips inside the reading area");

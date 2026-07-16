@@ -40,18 +40,22 @@ class MarkdownService {
   constructor() { this.loader = null; }
 
   appendInline(target, text) {
-    const linkPattern = /\[([^\]]+)\]\(([^)\s]+)\)/g;
+    const inlinePattern = /\[([^\]]+)\]\(([^)\s]+)\)|\*\*([^*\n]+)\*\*/g;
     let cursor = 0;
-    for (const match of text.matchAll(linkPattern)) {
+    for (const match of text.matchAll(inlinePattern)) {
       target.append(document.createTextNode(text.slice(cursor, match.index)));
-      try {
-        const url = new URL(match[2], window.location.origin);
-        if (url.origin !== window.location.origin && url.protocol !== "https:") throw new Error("Unsupported link");
-        const link = document.createElement("a");
-        link.href = url.href; link.textContent = match[1];
-        if (url.origin !== window.location.origin) { link.target = "_blank"; link.rel = "noopener noreferrer"; }
-        target.append(link);
-      } catch { target.append(document.createTextNode(match[1])); }
+      if (match[3]) {
+        const strong = document.createElement("strong"); strong.textContent = match[3]; target.append(strong);
+      } else {
+        try {
+          const url = new URL(match[2], window.location.origin);
+          if (url.origin !== window.location.origin && url.protocol !== "https:") throw new Error("Unsupported link");
+          const link = document.createElement("a");
+          link.href = url.href; link.textContent = match[1];
+          if (url.origin !== window.location.origin) { link.target = "_blank"; link.rel = "noopener noreferrer"; }
+          target.append(link);
+        } catch { target.append(document.createTextNode(match[1])); }
+      }
       cursor = match.index + match[0].length;
     }
     target.append(document.createTextNode(text.slice(cursor)));

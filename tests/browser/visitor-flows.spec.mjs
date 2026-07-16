@@ -157,6 +157,7 @@ test("contact offers a working copy-email fallback", async ({ page, context }) =
 test("Ask Mantosh opens with a compact, portfolio-wide welcome state", async ({ page }) => {
   let submittedQuestion = "";
   let submittedAudience = "";
+  await page.route("https://cdn.jsdelivr.net/**", (route) => route.abort());
   await page.route("https://ask-mantosh.mantoshk234.workers.dev/**", async (route) => {
     const request = JSON.parse(route.request().postData());
     submittedQuestion = request.question;
@@ -164,7 +165,7 @@ test("Ask Mantosh opens with a compact, portfolio-wide welcome state", async ({ 
     await route.fulfill({
       contentType: "application/json",
       body: JSON.stringify({
-        answer: "A concise evidence-backed answer.",
+        answer: "Key published work includes:\n\n- **Validation Platform**: Centralized distributed validation and release evidence.",
         sources: [{ label: "Project: Validation Platform", title: "Validation Platform", category: "project", url: "/projects/validation-platform-optical-networking.html", summary: "Published project documentation." }],
         recommendations: [{ title: "Migration Case Study", category: "project", url: "/projects/legacy-validation-framework-migration.html" }, { title: "Engineering experience", category: "experience", url: "/experience/" }],
         followUpQuestions: ["How was cutover validated?", "What changed after migration?"],
@@ -196,6 +197,8 @@ test("Ask Mantosh opens with a compact, portfolio-wide welcome state", async ({ 
   await expect.poll(() => submittedAudience).toBe("engineer");
   await expect(panel.locator(".ask-mantosh-message.user")).toContainText(submittedQuestion);
   const answer = panel.locator(".ask-mantosh-message.assistant");
+  await expect(answer.locator("strong", { hasText: "Validation Platform" })).toBeVisible();
+  await expect(answer).not.toContainText("**Validation Platform**");
   await expect(answer.getByRole("heading", { name: "Related reading" })).toBeVisible();
   await expect(answer.locator(".ask-mantosh-reading-link")).toHaveCount(4);
   const nextQuestions = panel.locator("#ask-mantosh-suggestions");
