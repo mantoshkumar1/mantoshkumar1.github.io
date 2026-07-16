@@ -355,6 +355,38 @@ test("reads changeable profile facts from the knowledge service instead of Worke
   assert.equal(route.response.answer, "Mantosh currently works at Future Employer.");
 });
 
+test("answers curious-spouse questions briefly without retrieval, AI, or irrelevant sources", async () => {
+  const deterministicEnv = {
+    ...env,
+    AI: { run: async () => { throw new Error("No AI call is expected for spouse-style deterministic questions"); } },
+    KNOWLEDGE_INDEX: { query: async () => { throw new Error("No retrieval is expected for spouse-style deterministic questions"); } }
+  };
+  for (const [question, expected] of [
+    ["wat he do?", "In simple terms"],
+    ["Explain his job like I am 10", "In simple terms"],
+    ["I dont understand. what does he actually do?", "In simple terms"],
+    ["Is he really good or just good at making websites?", "hardly an impartial judge"],
+    ["Is he a nerd?", "nerd certification"],
+    ["Does he ever stop working?", "off-screen life"],
+    ["Can he fix my wifi?", "router"]
+  ]) {
+    const response = await worker.fetch(request({ question }), deterministicEnv);
+    const payload = await response.json();
+    assert.equal(response.status, 200);
+    assert.match(payload.answer, new RegExp(expected, "i"));
+    assert.deepEqual(payload.sources, []);
+    assert.deepEqual(payload.recommendations, []);
+  }
+
+  const response = await worker.fetch(request({ question: "What has he built that I can actually use?" }), deterministicEnv);
+  const payload = await response.json();
+  assert.match(payload.answer, /PhotoSahi/);
+  assert.equal(payload.action.type, "navigate");
+  assert.equal(payload.action.url, "https://mantoshkumar1.github.io/photosahi/");
+  assert.equal(Object.hasOwn(payload.action, "answer"), false);
+  assert.deepEqual(payload.sources, []);
+});
+
 test("answers natural broad-profile wording from published engineering evidence", async () => {
   const profileEnv = {
     ...env,

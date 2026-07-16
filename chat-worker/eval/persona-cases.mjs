@@ -73,6 +73,27 @@ const curious = [
   cases("curious", "low-information", ["zzzxqv", "hmmmm", "?????", "asdfgh", "qwerty", "grrrr", "xxxxx", "bcdfgh", "ummmmm", "nnnnn"], { intent: "clarification", expected: social(["few more words"]) })
 ].flat();
 
+const spouse = [
+  ["wat he do?", social(["In simple terms"])],
+  ["Explain his job like I am 10", social(["In simple terms"])],
+  ["I dont understand. what does he actually do?", social(["In simple terms"])],
+  ["Is he really good or just good at making websites?", social(["hardly an impartial judge"])],
+  ["What has he built that I can actually use?", { kind: "navigate", actionType: "project", actionUrl: "https://mantoshkumar1.github.io/photosahi/", includes: ["PhotoSahi"], excludes: SAFE_EXCLUDES, maxAnswerChars: 220 }],
+  ["What can I try?", { kind: "navigate", actionType: "project", actionUrl: "https://mantoshkumar1.github.io/photosahi/", includes: ["PhotoSahi"], excludes: SAFE_EXCLUDES, maxAnswerChars: 220 }],
+  ["Is he a nerd?", social(["nerd certification"])],
+  ["Does he ever stop working?", social(["off-screen life"])],
+  ["Can he fix my wifi?", social(["router"])],
+  ["Tell me something interesting about him", grounded([], 900)]
+].map(([question, expected], index) => ({
+  id: `persona-spouse-plain-and-playful-${String(index + 1).padStart(2, "0")}`,
+  category: "persona-spouse",
+  persona: "spouse",
+  intent: "plain-language-profile",
+  question,
+  ...(index === 9 ? { sourceKey: "about-mantosh" } : {}),
+  expected
+}));
+
 const colleague = [
   cases("colleague", "validation", topicQuestions("validation platforms, failure evidence, and release intelligence"), { intent: "technical", sourceKey: "validation-platform-optical-networking", expected: grounded(["engineering judgment"]) }),
   cases("colleague", "knowledge-system", topicQuestions("the Evidence-First Engineering Knowledge System architecture"), { intent: "technical", sourceKey: "engineering-knowledge-system", expected: grounded(["retrieves reviewed public material"]) }),
@@ -95,8 +116,8 @@ const founder = [
   cases("founder", "contact", ["How do I contact Mantosh?", "Open Mantosh's contact page", "What's his email address?", "Where can I discuss a project with him?", "I want to hire Mantosh", "How can I reach him about a contract?", "Show me his contact details", "Take me to contact", "I want to discuss a role", "Where do I start a conversation?"], { intent: "commercial-navigation", expected: navigate("contact", "/contact/", "Contact") })
 ].flat();
 
-export const PERSONA_CASES = Object.freeze([...recruiter, ...student, ...curious, ...colleague, ...founder]);
-export const PERSONA_TARGETS = Object.freeze({ recruiter: 100, student: 100, curious: 100, colleague: 100, founder: 60 });
+export const PERSONA_CASES = Object.freeze([...recruiter, ...student, ...curious, ...spouse, ...colleague, ...founder]);
+export const PERSONA_TARGETS = Object.freeze({ recruiter: 100, student: 100, curious: 100, spouse: 10, colleague: 100, founder: 60 });
 
 for (const [persona, target] of Object.entries(PERSONA_TARGETS)) {
   const actual = PERSONA_CASES.filter((entry) => entry.persona === persona).length;

@@ -1,4 +1,11 @@
 const STATIC_DESTINATIONS = [
+  {
+    pattern: /^(?:what (?:has|did) (?:mantosh|he) built that i can actually use|what can i (?:actually )?(?:use|try)|(?:does|has) (?:mantosh|he) (?:have|built) anything i can (?:use|try)|show me something (?:mantosh|he) built)[?.!\s]*$/i,
+    label: "PhotoSahi",
+    url: "https://mantoshkumar1.github.io/photosahi/",
+    type: "project",
+    answer: "The clearest public tool you can try is PhotoSahi, a browser-based passport and visa photo maker. Opening it now."
+  },
   { pattern: /^(?:(?:show(?: me)?|open|go to|take me to|return to)\s+)?(?:(?:the|site)\s+)?home(?:\s+page)?[?.!]*$/i, label: "Home", url: "/", type: "home" },
   { pattern: /^(?:(?:show(?: me)?|open|go to|view|take me to|please show me|can i see|where is)\s+)?(?:(?:the|my|his|mantosh(?:'s|’s))\s+)?r[eé]sum[eé][?.!]*$/iu, label: "Resume", url: "/resume/", type: "resume" },
   { pattern: /^(?:(?:show(?: me)?|open|go to|take me to)\s+)?(?:(?:the|his|mantosh(?:'s|’s))\s+)?contact(?: page)?[?.!]*$|^(?:(?:what(?:'s| is)|whats|give me|show me|find)\s+)?(?:(?:his|mantosh(?:'s|’s)?)\s+)?(?:email(?: id| address)?|contact (?:details|information|info))[?.!]*$|^(?:how (?:can|do) i|how to|where (?:can|do) i) (?:contact|email|reach) (?:mantosh|him)[?.!]*$|^(?:i want to (?:contact|hire) (?:mantosh|him)|where can i discuss (?:a )?(?:role|project) with him|how can i reach him about (?:a )?(?:contract|role|project)|i want to discuss (?:a )?(?:role|project)|where do i start a conversation)[?.!]*$/i, label: "Contact", url: "/contact/", type: "contact" },
@@ -21,6 +28,12 @@ function workAuthorizationList(value) {
 }
 
 const PROFILE_FACT_RESPONSES = [
+  {
+    pattern: /^(?:(?:i (?:do not|don't|dont) understand[,.!?\s]*)?(?:what|wat) (?:does )?(?:mantosh|he|this guy) (?:actually )?do|explain (?:mantosh(?:'s|’s)|his) job (?:like i(?:'m| am) (?:ten|10)|in (?:simple|plain) (?:words|english)|without jargon))[!.?\s]*$/i,
+    answer: (facts) => facts.current_role && facts.current_employer
+      ? `In simple terms, Mantosh builds software and internal tools that make engineers' work easier, faster, and less repetitive. His published current role is ${facts.current_role} at ${facts.current_employer}.`
+      : null
+  },
   {
     pattern: /^(?:is (?:mantosh|he) (?:a )?canadian(?: citizen)?|(?:is|does) (?:mantosh|he) have canadian citizenship)[!.?\s]*$/i,
     answer: (facts) => facts.citizenship ? `Yes. Mantosh is a ${facts.citizenship} citizen.` : null
@@ -72,6 +85,26 @@ const PROFILE_FACT_RESPONSES = [
 ];
 
 const SOCIAL_RESPONSES = [
+  {
+    pattern: /^(?:is (?:mantosh|he|this guy) (?:really |actually |any )?good(?: or just good at (?:making )?websites?)?|is (?:mantosh|he|this guy) (?:a )?good engineer)[!.?\s]*$/i,
+    answer: "That's subjective—and this website is hardly an impartial judge. The fair test is Mantosh's published projects, résumé, and engineering decisions.",
+    followUpQuestions: []
+  },
+  {
+    pattern: /^(?:is (?:mantosh|he) (?:a )?nerd)[!.?\s]*$/i,
+    answer: "I can confirm the engineering part; an official nerd certification is not in the published record.",
+    followUpQuestions: []
+  },
+  {
+    pattern: /^(?:does (?:mantosh|he) ever stop working)[!.?\s]*$/i,
+    answer: "His off-screen life is not documented here—and that is probably healthy. I can tell you about the work he has chosen to publish.",
+    followUpQuestions: []
+  },
+  {
+    pattern: /^(?:can (?:mantosh|he) (?:fix|repair|sort out) (?:my )?wi-?fi)[!.?\s]*$/i,
+    answer: "Maybe—but Wi-Fi repair is not documented in his published work, so I should not promise it. Ask him before restarting the router for the fifth time.",
+    followUpQuestions: []
+  },
   {
     pattern: /^(?:(?:hi|hello|hey)(?:\s+there|\s+ask mantosh)?|good\s+(?:morning|afternoon|evening))[!.?\s]*$/i,
     answer: "Hi! What would you like to know about Mantosh's experience, projects, engineering approach, or fit for a problem?",

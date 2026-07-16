@@ -40,9 +40,9 @@ function eventStream(events, origin) {
 }
 
 function navigationResponse(destination, conversationId) {
-  const { pattern: _pattern, type: destinationType, ...target } = destination;
+  const { pattern: _pattern, type: destinationType, answer, ...target } = destination;
   return {
-    answer: `Opening ${destination.label}.`, sources: [], relatedArticles: [], relatedProjects: [], relatedNotes: [], recommendations: [],
+    answer: answer || `Opening ${destination.label}.`, sources: [], relatedArticles: [], relatedProjects: [], relatedNotes: [], recommendations: [],
     followUpQuestions: [], suggestedQuestions: [], confidence: "high", conversationId,
     action: { type: "navigate", destinationType, ...target }, success: true
   };
