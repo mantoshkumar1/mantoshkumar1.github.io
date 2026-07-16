@@ -36,17 +36,13 @@ export class RecommendationEngine {
         "How does Mantosh approach automation and platform engineering?"
       ];
     }
-    const candidates = [];
-    for (const source of sources) {
-      let tags = Array.isArray(source.tags) ? source.tags : [];
-      if (typeof source.tags === "string") {
-        try { tags = JSON.parse(source.tags); } catch { tags = []; }
-      }
-      const focus = tags[0] || source.title;
-      candidates.push(`What does ${source.title} explain about ${focus}?`);
-      candidates.push(`What engineering decisions are documented in ${source.title}?`);
-      candidates.push(`What trade-offs does ${source.title} describe?`);
+    const category = sources[0]?.category || "";
+    if (category === "project") {
+      return ["What decisions shaped this project?", "What trade-offs mattered most?", "What changed after it was delivered?"];
     }
-    return [...new Set(candidates)].slice(0, 3);
+    if (["article", "note", "architecture-note"].includes(category)) {
+      return ["What is the main engineering lesson?", "How can this idea be applied?", "Which related project demonstrates it?"];
+    }
+    return ["Which projects best demonstrate this experience?", "How does Mantosh approach automation?", "Where can I review his experience?"];
   }
 }

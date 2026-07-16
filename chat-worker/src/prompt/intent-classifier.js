@@ -5,6 +5,7 @@ const DETAILED_RESPONSE_PATTERN = /\b(?:in detail|detailed|deep dive|deeply|comp
 const PROFILE_PATTERNS = [
   /\b(?:who is|tell me about|about)\s+(?:this (?:guy|person|engineer)|mantosh|him)\b/i,
   /\bwhat\s+(?:kind|type|sort)\s+of\s+(?:guy|person|engineer)\b/i,
+  /\bwhat\s+(?:kind|type|sort)\s+of\s+engineering\s+work\s+does\s+(?:mantosh|he)\s+do\b/i,
   /\bwhat(?:'s| is)\s+(?:mantosh|he|this (?:guy|person|engineer))\s+like\b/i,
   /\b(?:how would you describe|describe)\s+(?:mantosh|him|this (?:guy|person|engineer))\b/i,
   /\b(?:what does|what can|how can)\s+(?:mantosh|he|this (?:guy|person|engineer))\b/i,

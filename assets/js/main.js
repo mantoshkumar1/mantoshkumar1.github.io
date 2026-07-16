@@ -301,7 +301,11 @@ class AskMantoshApp {
       });
       this.id = this.messages.reduce((highest, message) => Math.max(highest, Number(message.id) || 0), 0);
       const latestAssistant = [...this.messages].reverse().find((message) => message.role === "assistant");
-      if (latestAssistant?.followUps?.length) this.view.setSuggestions(latestAssistant.followUps, (question) => this.ask(question), true);
+      if (latestAssistant?.followUps?.length) {
+        latestAssistant.followUps = this.usableFollowUps(latestAssistant.followUps);
+        if (!latestAssistant.followUps.length) latestAssistant.followUps = this.contextualFollowUps(latestAssistant);
+        this.view.setSuggestions(latestAssistant.followUps, (question) => this.ask(question), true);
+      }
       return this.messages.length > 0;
     } catch { return false; }
   }
@@ -404,7 +408,8 @@ class AskMantoshApp {
     } finally { if (this.controller === controller) { this.controller = null; } }
   }
   finish(message) {
-    message.followUps = message.followUps?.length ? message.followUps : this.contextualFollowUps(message);
+    message.followUps = this.usableFollowUps(message.followUps);
+    if (!message.followUps.length) message.followUps = this.contextualFollowUps(message);
     message.text = this.stripResponseSections(message.text);
     this.view.setStreaming(false);
     this.view.updateAssistant(message);
@@ -415,6 +420,11 @@ class AskMantoshApp {
   }
   stripResponseSections(text) { return text.replace(/\n*##\s+(?:Sources|Follow-up Questions)\s*\n[\s\S]*$/i, "").trim(); }
   followUps(text) { const match = /^##\s+Follow-up Questions\s*$([\s\S]*?)(?=^##\s+|$)/im.exec(text); return match ? match[1].split("\n").map((line) => line.replace(/^\s*(?:[-*]|\d+[.)])\s+/, "").trim()).filter((line) => line.endsWith("?")).slice(0, 3) : []; }
+  usableFollowUps(questions) {
+    return (questions || []).map((question) => String(question || "").trim())
+      .filter((question) => question.endsWith("?") && question.length <= 72 && question.split(/\s+/).length <= 12)
+      .slice(0, 3);
+  }
   contextualFollowUps(message) {
     const generated = this.followUps(message.text); if (generated.length) return generated;
     const value = `${message.question || ""} ${message.sources?.map((source) => source.title).join(" ") || ""}`.toLowerCase();

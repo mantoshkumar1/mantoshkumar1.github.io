@@ -919,6 +919,7 @@ test("classifies visitor questions into profile, problem, and direct response mo
   assert.equal(classifyQuestionIntent("What is he like?"), "profile");
   assert.equal(classifyQuestionIntent("How would you describe Mantosh?"), "profile");
   assert.equal(classifyQuestionIntent("How can Mantosh help my engineering team?"), "profile");
+  assert.equal(classifyQuestionIntent("What kind of engineering work does Mantosh do?"), "profile");
   assert.equal(classifyQuestionIntent("This guy is genius?"), "profile");
   assert.equal(classifyQuestionIntent("Is this engineer overrated?"), "profile");
   assert.equal(classifyQuestionIntent("What are Mantosh's achievements?"), "achievement");
@@ -927,6 +928,20 @@ test("classifies visitor questions into profile, problem, and direct response mo
   assert.equal(classifyQuestionIntent("Why did PhotoSahi avoid a backend?"), "direct");
   assert.equal(isSubjectiveProfileQuestion("This guy is genius?"), true);
   assert.equal(isSubjectiveProfileQuestion("Tell me about his experience"), false);
+});
+
+test("keeps deterministic follow-up questions concise and grammatical", () => {
+  const engine = new RecommendationEngine(null, {});
+  const questions = engine.followUpQuestions({
+    sources: [{ title: "About Mantosh and Where His Experience Can Help", category: "faq", tags: ["staff-software-engineer"] }],
+    intent: "direct"
+  });
+  assert.deepEqual(questions, [
+    "Which projects best demonstrate this experience?",
+    "How does Mantosh approach automation?",
+    "Where can I review his experience?"
+  ]);
+  assert.ok(questions.every((question) => question.length <= 72 && question.endsWith("?")));
 });
 
 test("expands only profile retrieval with verified capability vocabulary", () => {

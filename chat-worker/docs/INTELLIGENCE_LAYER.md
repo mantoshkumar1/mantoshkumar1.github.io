@@ -53,7 +53,7 @@ without calling the AI model.
 ## Recommendation and analytics privacy
 
 Recommendations are selected from indexed public document `tags` and
-`related_topics`; the model does not invent them. The click endpoint hashes its
+`related_topics`; the model does not invent them. Follow-up questions use short, category-aware templates rather than interpolating document titles or tags. The click endpoint hashes its
 document identifier before storing an event counter. Search analytics likewise
 hash the normalized topic dimension. Relevance-gate telemetry uses only
 code-defined, allowlisted labels for outcomes, lexical coverage bands,
