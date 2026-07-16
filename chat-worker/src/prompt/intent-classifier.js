@@ -59,6 +59,8 @@ export function responseModeInstructions(intent, detailed = false) {
       "State Mantosh's ownership in natural third-person language. Clearly distinguish his work from what the team delivered, and preserve collaborators' contributions when the source describes them.",
       "Degrees, awards, rankings, employment, and technologies are not engineering ownership. Do not use them as evidence for this question.",
       "Summarize every distinct ownership area explicitly supported by the primary project source; do not stop after the first example.",
+      "Use plain language that a non-engineer can understand immediately. Prefer `kept both frameworks aligned` over `owned synchronization`, and explain the final comparison checks instead of saying `led cutover validation`.",
+      "Avoid compressed corporate language. Use short sentences and familiar verbs such as built, migrated, compared, checked, taught, and led.",
       "Use up to six concise bullets and keep the answer body before Sources under 170 words. Do not infer sole ownership from participation."
     ].join("\n");
   }

@@ -23,8 +23,8 @@ Mantosh Kumar led a two-person, approximately six-month migration of a legacy au
 - Owned integration with the distributed validation platform and CI/CD workflows.
 - Participated in the full migration while the other engineer focused primarily on individual test scripts.
 - Owned and built the dashboard for migration progress, ownership, and synchronization.
-- Owned synchronization that kept migrated components aligned with continuing legacy-framework changes.
-- Led cutover validation through scenario, result, coverage, and execution-time comparisons with legacy-framework engineers.
+- Kept the migrated framework up to date while engineers continued changing the legacy framework.
+- Before retiring the legacy framework, coordinated the final checks: both systems ran equivalent scenarios, results and execution times were compared, and legacy-framework engineers confirmed that the required test coverage was preserved.
 - Delivered code walkthroughs and training for the receiving team.
 
 Together, the two engineers migrated thousands of test cases across sanity, smoke, and regression suites.

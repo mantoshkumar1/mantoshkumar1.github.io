@@ -1040,6 +1040,8 @@ test("gives engineering ownership questions a contribution-safe response contrac
   assert.match(prompt.input, /distinguish his work from what the team delivered/i);
   assert.match(prompt.input, /Do not infer sole ownership from participation/);
   assert.match(prompt.input, /every distinct ownership area explicitly supported/i);
+  assert.match(prompt.input, /plain language that a non-engineer can understand immediately/i);
+  assert.match(prompt.input, /explain the final comparison checks instead of saying `led cutover validation`/i);
   const followUps = new RecommendationEngine(null, {}).followUpQuestions({ sources: [], intent: "ownership", question: "What has Mantosh personally owned?" });
   assert.deepEqual(followUps, [
     "Which decisions did Mantosh make during the migration?",
