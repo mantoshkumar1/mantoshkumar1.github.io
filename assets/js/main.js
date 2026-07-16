@@ -230,7 +230,6 @@ class ConversationView {
     if (!message.error) {
       const related = this.relatedReading(message);
       if (related.length) meta.insertAdjacentHTML("beforeend", `<section class=\"ask-mantosh-related\"><h4>Related reading</h4><div class=\"ask-mantosh-reading-list\">${related.map((item) => `<a href=\"${this.safeUrl(item.url)}\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"ask-mantosh-reading-link\"><span>${this.escape(item.category || "Read")}</span><strong>${this.escape(item.title)}</strong><span aria-hidden=\"true\">→</span></a>`).join("")}</div></section>`);
-      if (message.followUps?.length) meta.insertAdjacentHTML("beforeend", `<section class=\"ask-mantosh-follow-ups\"><h4>Suggested follow-up</h4><div>${message.followUps.slice(0, 3).map((question) => `<button class=\"ask-mantosh-chip\" type=\"button\" data-suggestion=\"${this.escape(question)}\">${this.escape(question)}</button>`).join("")}</div></section>`);
       if (message.sources?.length) {
         const sourceList = message.sources.map((source) => `<a class=\"ask-mantosh-source\" href=\"${this.safeUrl(source.url)}\" target=\"_blank\" rel=\"noopener noreferrer\" data-summary=\"${this.escape(source.summary || "Published engineering knowledge")}\"><span aria-hidden=\"true\">✓</span><span>${this.escape(source.label)}</span></a>`).join("");
         meta.insertAdjacentHTML("beforeend", `<footer class=\"ask-mantosh-sources\"><h4>Grounded in</h4><div>${sourceList}</div></footer>`);
@@ -252,9 +251,10 @@ class ConversationView {
     }).slice(0, 4);
   }
 
-  setSuggestions(questions, onAsk) {
+  setSuggestions(questions, onAsk, label = "") {
     this.followUps = (questions || []).map((question) => question.replace(/(\babout\s+[a-z]+)-([a-z]+\?)/gi, "$1 $2").replace(/\?+\s*$/, "?"));
-    this.suggestions.hidden = !this.followUps.length; this.suggestions.innerHTML = this.followUps.map((question) => `<button class=\"ask-mantosh-chip\" type=\"button\" data-suggestion=\"${this.escape(question)}\">${this.escape(question)}</button>`).join("");
+    this.suggestions.hidden = !this.followUps.length;
+    this.suggestions.innerHTML = `${label && this.followUps.length ? `<p>${this.escape(label)}</p>` : ""}<div>${this.followUps.map((question) => `<button class=\"ask-mantosh-chip\" type=\"button\" data-suggestion=\"${this.escape(question)}\">${this.escape(question)}</button>`).join("")}</div>`;
     this.onAsk = onAsk;
   }
   handleAction(event) {
@@ -298,6 +298,8 @@ class AskMantoshApp {
         if (message.role === "assistant") this.view.updateAssistant(message, { focus: false });
       });
       this.id = this.messages.reduce((highest, message) => Math.max(highest, Number(message.id) || 0), 0);
+      const latestAssistant = [...this.messages].reverse().find((message) => message.role === "assistant");
+      if (latestAssistant?.followUps?.length) this.view.setSuggestions(latestAssistant.followUps, (question) => this.ask(question), "Try asking next");
       return this.messages.length > 0;
     } catch { return false; }
   }
@@ -434,7 +436,7 @@ class AskMantoshApp {
     message.text = this.stripResponseSections(message.text);
     this.view.setStreaming(false);
     this.view.updateAssistant(message);
-    this.view.setSuggestions([], (question) => this.ask(question));
+    this.view.setSuggestions(message.error ? [] : message.followUps, (question) => this.ask(question), "Try asking next");
     this.saveSession();
     this.updateExportAvailability();
     const announcement = message.error ? "Answer unavailable." : "Answer ready.";

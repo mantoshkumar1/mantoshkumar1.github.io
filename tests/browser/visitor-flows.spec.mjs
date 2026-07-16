@@ -198,11 +198,13 @@ test("Ask Mantosh opens with a compact, portfolio-wide welcome state", async ({ 
   const answer = panel.locator(".ask-mantosh-message.assistant");
   await expect(answer.getByRole("heading", { name: "Related reading" })).toBeVisible();
   await expect(answer.locator(".ask-mantosh-reading-link")).toHaveCount(4);
-  await expect(answer.getByRole("heading", { name: "Suggested follow-up" })).toBeVisible();
-  await expect(answer.getByRole("button", { name: "How was cutover validated?" })).toBeVisible();
+  const nextQuestions = panel.locator("#ask-mantosh-suggestions");
+  await expect(nextQuestions.getByText("Try asking next", { exact: true })).toBeVisible();
+  await expect(nextQuestions.locator(".ask-mantosh-chip")).toHaveCount(2);
+  await expect(nextQuestions.getByRole("button", { name: "How was cutover validated?" })).toBeVisible();
   await expect(answer.getByRole("heading", { name: "Grounded in" })).toBeVisible();
   await expect(answer.locator(".ask-mantosh-source")).toContainText("Project: Validation Platform");
-  await answer.getByRole("button", { name: "How was cutover validated?" }).click();
+  await nextQuestions.getByRole("button", { name: "How was cutover validated?" }).click();
   await expect.poll(() => submittedQuestion).toBe("How was cutover validated?");
   await expect(panel.locator(".ask-mantosh-message.user").last()).toContainText("How was cutover validated?");
 });
@@ -245,6 +247,8 @@ test("Ask Mantosh preserves minimized history, exports it, and clears deliberate
   await page.getByRole("button", { name: "Ask Mantosh" }).click();
   await expect(page.locator(".ask-mantosh-message.user")).toContainText("How do I subscribe?");
   await expect(page.getByRole("button", { name: "Audience: Recruiter" })).toBeVisible();
+  await expect(page.locator("#ask-mantosh-suggestions").getByText("Try asking next", { exact: true })).toBeVisible();
+  await expect(page.locator("#ask-mantosh-suggestions .ask-mantosh-chip")).toHaveCount(3);
 
   const downloadPromise = page.waitForEvent("download");
   await page.getByRole("button", { name: /Export conversation/ }).click();
