@@ -1,9 +1,40 @@
 /* Ask Mantosh: isolated vanilla-JS chat client. External rendering libraries are lazy-loaded. */
-const EMPTY_QUESTIONS = [
-  "What are Mantosh’s strongest engineering skills?",
+const PORTFOLIO_QUESTIONS = [
+  "Which project should I explore first?",
   "How did Mantosh modernize validation infrastructure?",
-  "Which project should I explore first?"
+  "What problems has Mantosh solved with Python?",
+  "Tell me about Mantosh's engineering experience.",
+  "What are Mantosh's strongest technical skills?"
 ];
+
+const PAGE_QUESTIONS = {
+  "/projects/legacy-validation-framework-migration.html": ["Why was this migration difficult?", "How was rollout coordinated?", "What changed after migration?"],
+  "/projects/photosahi.html": ["Why was PhotoSahi built without a backend?", "How does PhotoSahi protect privacy?", "How does browser-side image processing work?"],
+  "/projects/validation-platform-optical-networking.html": ["What problem does the validation platform solve?", "How does it investigate failures?", "How does it improve release decisions?"],
+  "/projects/gtt-price-calculator.html": ["What does the GTT calculator help investors check?", "What safety boundaries does it preserve?", "Why is the calculation kept separate from trading?"],
+  "/projects/workflow-automation-toolkit.html": ["Which workflows does the toolkit automate?", "Why does it process files locally?", "How does it preserve user control?"],
+  "/projects/engineering-knowledge-system.html": ["How does Ask Mantosh stay grounded in evidence?", "Why combine lexical and semantic retrieval?", "How is unsupported content prevented?"]
+};
+
+const DEFAULT_READING = [
+  { title: "Projects", url: "/projects/", category: "Portfolio" },
+  { title: "Engineering experience", url: "/experience/", category: "Experience" },
+  { title: "Engineering notes", url: "/insights/", category: "Insights" },
+  { title: "Résumé", url: "/resume/", category: "Résumé" }
+];
+
+function shuffled(values) {
+  const copy = [...values];
+  for (let index = copy.length - 1; index > 0; index -= 1) {
+    const swap = Math.floor(Math.random() * (index + 1));
+    [copy[index], copy[swap]] = [copy[swap], copy[index]];
+  }
+  return copy;
+}
+
+function welcomeQuestions(pathname) {
+  return PAGE_QUESTIONS[pathname] || shuffled(PORTFOLIO_QUESTIONS).slice(0, 3);
+}
 
 class MarkdownService {
   constructor() { this.loader = null; }
@@ -154,8 +185,8 @@ class ConversationView {
     this.messages.innerHTML = "";
     const empty = document.createElement("section");
     empty.className = "ask-mantosh-empty";
-    empty.innerHTML = "<p>Answers are grounded in published projects, case studies, and engineering notes.</p>";
-    this.messages.append(empty); this.setSuggestions(EMPTY_QUESTIONS, onAsk); this.updateJump();
+    empty.innerHTML = "<p>Grounded in published projects, case studies, and engineering notes.</p>";
+    this.messages.append(empty); this.setSuggestions(welcomeQuestions(window.location.pathname), onAsk); this.updateJump();
   }
 
   add(message) {
@@ -196,16 +227,29 @@ class ConversationView {
     if (message.action?.type === "navigate" && message.action.url) {
       meta.insertAdjacentHTML("beforeend", `<a class=\"button secondary\" href=\"${this.safeUrl(message.action.url)}\" target=\"_blank\" rel=\"noopener noreferrer\">Open ${this.escape(message.action.label || "page")} <span aria-hidden=\"true\">↗</span></a>`);
     }
-    if (message.sources?.length) {
-      const sourceList = message.sources.map((source) => `<a class=\"ask-mantosh-source\" href=\"${this.safeUrl(source.url)}\" target=\"_blank\" rel=\"noopener noreferrer\" data-summary=\"${this.escape(source.summary || "Published engineering knowledge") }\"><span>${this.escape(source.label)}</span></a>`).join("");
-      meta.insertAdjacentHTML("beforeend", `<section class=\"ask-mantosh-sources\"><h4>Sources</h4><div>${sourceList}</div></section>`);
-      const groups = [["Related projects", ["project"]], ["Related articles", ["article"]], ["Related engineering notes", ["note"]]];
-      groups.forEach(([title, categories]) => {
-        const related = message.sources.filter((source) => categories.includes(source.category));
-        if (related.length) meta.insertAdjacentHTML("beforeend", `<section class=\"ask-mantosh-related\"><h4>${title}</h4><div class=\"ask-mantosh-related-grid\">${related.map((source) => `<a href=\"${this.safeUrl(source.url)}\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"ask-mantosh-related-card\"><span>${this.escape(source.category)}</span><strong>${this.escape(source.title)}</strong><p>${this.escape(source.summary || "Open source")}</p></a>`).join("")}</div></section>`);
-      });
+    if (!message.error) {
+      const related = this.relatedReading(message);
+      if (related.length) meta.insertAdjacentHTML("beforeend", `<section class=\"ask-mantosh-related\"><h4>Related reading</h4><div class=\"ask-mantosh-reading-list\">${related.map((item) => `<a href=\"${this.safeUrl(item.url)}\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"ask-mantosh-reading-link\"><span>${this.escape(item.category || "Read")}</span><strong>${this.escape(item.title)}</strong><span aria-hidden=\"true\">→</span></a>`).join("")}</div></section>`);
+      if (message.followUps?.length) meta.insertAdjacentHTML("beforeend", `<section class=\"ask-mantosh-follow-ups\"><h4>Suggested follow-up</h4><div>${message.followUps.slice(0, 3).map((question) => `<button class=\"ask-mantosh-chip\" type=\"button\" data-suggestion=\"${this.escape(question)}\">${this.escape(question)}</button>`).join("")}</div></section>`);
+      if (message.sources?.length) {
+        const sourceList = message.sources.map((source) => `<a class=\"ask-mantosh-source\" href=\"${this.safeUrl(source.url)}\" target=\"_blank\" rel=\"noopener noreferrer\" data-summary=\"${this.escape(source.summary || "Published engineering knowledge")}\"><span aria-hidden=\"true\">✓</span><span>${this.escape(source.label)}</span></a>`).join("");
+        meta.insertAdjacentHTML("beforeend", `<footer class=\"ask-mantosh-sources\"><h4>Grounded in</h4><div>${sourceList}</div></footer>`);
+      }
     }
     if (meta.childElementCount) node.append(meta);
+  }
+
+  relatedReading(message) {
+    const candidates = [...(message.recommendations || [])];
+    if (message.action?.url) candidates.unshift({ title: message.action.label || "Open page", url: message.action.url, category: message.action.destinationType || "Page" });
+    candidates.push(...DEFAULT_READING);
+    const seen = new Set();
+    return candidates.filter((item) => {
+      if (!item?.url || !item.title) return false;
+      const safe = this.safeUrl(item.url);
+      if (safe === "#" || seen.has(safe)) return false;
+      seen.add(safe); return true;
+    }).slice(0, 4);
   }
 
   setSuggestions(questions, onAsk) {
@@ -221,6 +265,7 @@ class ConversationView {
       if (content) navigator.clipboard?.writeText(content).then(() => { const label = copy.textContent; copy.textContent = "Copied"; setTimeout(() => { copy.textContent = label; }, 1200); });
     }
     const retry = event.target.closest("[data-retry]"); if (retry) this.onAsk?.(retry.dataset.retry);
+    const suggestion = event.target.closest("[data-suggestion]"); if (suggestion) this.onAsk?.(suggestion.dataset.suggestion);
   }
   escape(value) { const div = document.createElement("div"); div.textContent = value || ""; return div.innerHTML; }
   safeUrl(value) { try { const url = new URL(value, window.location.origin); return url.protocol === "https:" || url.origin === window.location.origin ? url.href : "#"; } catch { return "#"; } }
@@ -242,7 +287,7 @@ class AskMantoshApp {
       if (/^[a-zA-Z0-9_-]{16,128}$/.test(snapshot.conversationId || "")) this.conversationId = snapshot.conversationId;
       this.messages = snapshot.messages.slice(-20)
         .filter((message) => message && ["user", "assistant"].includes(message.role) && typeof message.text === "string")
-        .map((message) => ({ ...message, sources: Array.isArray(message.sources) ? message.sources : [] }));
+        .map((message) => ({ ...message, sources: Array.isArray(message.sources) ? message.sources : [], recommendations: Array.isArray(message.recommendations) ? message.recommendations : [], followUps: Array.isArray(message.followUps) ? message.followUps : [] }));
       this.messages.forEach((message) => {
         if (message.role === "assistant" && !message.text && !message.error) message.error = "The previous response was interrupted. Try again.";
         this.view.add(message);
@@ -254,7 +299,7 @@ class AskMantoshApp {
   }
   saveSession() {
     try {
-      const messages = this.messages.slice(-20).map(({ id, role, text, question, sources, error, action }) => ({ id, role, text, question, sources, error, action }));
+      const messages = this.messages.slice(-20).map(({ id, role, text, question, sources, recommendations, followUps, error, action }) => ({ id, role, text, question, sources, recommendations, followUps, error, action }));
       window.sessionStorage.setItem(this.storageKey, JSON.stringify({ conversationId: this.conversationId, messages }));
     } catch { /* Chat remains usable when storage is unavailable. */ }
   }
@@ -266,6 +311,7 @@ class AskMantoshApp {
     input.addEventListener("input", () => this.resize()); input.addEventListener("keydown", (event) => { if (event.key === "Enter" && !event.shiftKey) { event.preventDefault(); this.ask(input.value); } });
     document.addEventListener("keydown", (event) => { if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") { event.preventDefault(); this.open(); } if (event.key === "Escape" && !panel.hidden) this.close(); });
     panel.addEventListener("keydown", (event) => this.trapFocus(event));
+    this.view.onAsk = (question) => this.ask(question);
     if (!this.loadSession()) this.view.showEmpty((question) => this.ask(question));
     this.updateExportAvailability();
     this.resize();
@@ -327,6 +373,7 @@ class AskMantoshApp {
         if (generation !== this.generation) return;
         if (type === "metadata") {
           assistant.sources = data.sources || [];
+          assistant.recommendations = data.recommendations || [];
           assistant.followUps = data.followUpQuestions || data.suggestedQuestions || [];
           assistant.action = data.action || null;
           if (/^[a-zA-Z0-9_-]{16,128}$/.test(data.conversationId || "")) this.conversationId = data.conversationId;
@@ -349,11 +396,10 @@ class AskMantoshApp {
     } finally { if (this.controller === controller) { this.controller = null; } }
   }
   finish(message) {
-    message.followUps = message.followUps?.length ? message.followUps : this.followUps(message.text);
+    message.followUps = message.followUps?.length ? message.followUps : this.contextualFollowUps(message);
     message.text = this.stripResponseSections(message.text);
     this.view.setStreaming(false);
     this.view.updateAssistant(message);
-    // Keep the reading area clear after an answer. Suggestions belong only to the empty welcome state.
     this.view.setSuggestions([], (question) => this.ask(question));
     this.saveSession();
     this.updateExportAvailability();
@@ -363,6 +409,14 @@ class AskMantoshApp {
   }
   stripResponseSections(text) { return text.replace(/\n*##\s+(?:Sources|Follow-up Questions)\s*\n[\s\S]*$/i, "").trim(); }
   followUps(text) { const match = /^##\s+Follow-up Questions\s*$([\s\S]*?)(?=^##\s+|$)/im.exec(text); return match ? match[1].split("\n").map((line) => line.replace(/^\s*(?:[-*]|\d+[.)])\s+/, "").trim()).filter((line) => line.endsWith("?")).slice(0, 3) : []; }
+  contextualFollowUps(message) {
+    const generated = this.followUps(message.text); if (generated.length) return generated;
+    const value = `${message.question || ""} ${message.sources?.map((source) => source.title).join(" ") || ""}`.toLowerCase();
+    if (/photosahi|photo|privacy|browser-side/.test(value)) return ["Why was PhotoSahi built without a backend?", "How does PhotoSahi protect privacy?", "Which trade-offs shaped its browser-only design?"];
+    if (/migration|validation|rollout|regression/.test(value)) return ["Why was the migration difficult?", "How was cutover validated?", "What changed after the migration?"];
+    if (/skill|experience|engineer|hire|python/.test(value)) return ["Which projects best demonstrate those skills?", "How does Mantosh approach automation?", "Where can I review his engineering experience?"];
+    return ["Which project should I explore first?", "What are Mantosh's strongest technical skills?", "How does Mantosh approach repeated engineering work?"];
+  }
 }
 
 const initializeAskMantosh = () => {

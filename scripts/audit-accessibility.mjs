@@ -68,7 +68,7 @@ if (/ask-mantosh-limit-note/.test(widget)) failures.push("Ask Mantosh must show 
 if (!client.includes('setAttribute("aria-busy"') || !client.includes('setAttribute("aria-live"')) failures.push("Ask Mantosh missing quiet streaming announcements");
 if (!client.includes("renderBasic(markdown, target)") || !client.includes("this.renderBasic(markdown, target);")) failures.push("Ask Mantosh missing immediate safe Markdown fallback");
 if (!client.includes('stripResponseSections(text) { return text.replace(/\\n*##\\s+(?:Sources|Follow-up Questions)')) failures.push("Ask Mantosh must remove source and follow-up payloads from the reading pane");
-if (!client.includes("Suggestions belong only to the empty welcome state") || !client.includes("this.view.setSuggestions([], (question) => this.ask(question));")) failures.push("Ask Mantosh must clear suggestion chips after every answer");
+if (!client.includes("this.view.setSuggestions([], (question) => this.ask(question));") || !client.includes("ask-mantosh-follow-ups") || !client.includes("data-suggestion")) failures.push("Ask Mantosh must replace welcome suggestions with clickable answer-specific follow-ups");
 if (/setSuggestions\(message\.followUps/.test(client)) failures.push("Ask Mantosh must not repopulate follow-up chips over the reading area");
 for (const historyFeature of ["ask-mantosh-conversation-v1", "window.sessionStorage.getItem", "window.sessionStorage.setItem", "conversationId", 'contentType.includes("application/json")']) {
   if (!client.includes(historyFeature)) failures.push(`Ask Mantosh recovery flow missing ${historyFeature}`);
@@ -80,7 +80,7 @@ for (const exportFeature of ["exportConversation()", 'type: "text/plain;charset=
   if (!client.includes(exportFeature)) failures.push(`Ask Mantosh text-export flow missing ${exportFeature}`);
 }
 if (!client.includes('message.role === "assistant" && message.text.trim()')) failures.push("Ask Mantosh export must remain hidden until a completed answer exists");
-if (!/ask-mantosh-related-card[^`]*target=\\"_blank\\"|target=\\"_blank\\"[^`]*ask-mantosh-related-card/.test(client)) failures.push("Ask Mantosh related links must preserve the current conversation tab");
+if (!/ask-mantosh-reading-link[^`]*target=\\"_blank\\"|target=\\"_blank\\"[^`]*ask-mantosh-reading-link/.test(client)) failures.push("Ask Mantosh related-reading links must preserve the current conversation tab");
 if (!/message\.action\?\.type === "navigate"/.test(client)) failures.push("Ask Mantosh must render direct navigation responses without crashing");
 for (const themeFeature of ["mantosh-appearance", "appearance-select", "prefers-color-scheme: light", "localStorage.setItem", 'value="soft"', 'value="contrast"']) {
   if (!widget.includes(themeFeature)) failures.push(`appearance control missing ${themeFeature}`);

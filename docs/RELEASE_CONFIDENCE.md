@@ -4,7 +4,7 @@ The site uses layered checks because no single test can protect content, navigat
 
 ## Before deployment
 
-Every pull request runs the deterministic static audits, 68 Worker tests, the 541-case Ask Mantosh evaluation, and 18 browser checks: nine visitor journeys in desktop Chromium and a mobile Chromium viewport.
+Every pull request runs the deterministic static audits, 68 Worker tests, the 541-case Ask Mantosh evaluation, and 20 browser checks: ten visitor journeys in desktop Chromium and a mobile Chromium viewport.
 
 The browser checks cover:
 
@@ -13,7 +13,7 @@ The browser checks cover:
 - all five appearance choices, horizontal overflow, header clearance, and visible primary actions;
 - automated WCAG 2 A/AA checks with Axe on the five critical pages and every explicit theme;
 - newsletter form validation, résumé resources, and copy-email fallback;
-- Ask Mantosh response rendering, minimize-and-resume history, text export, and deliberate close-and-clear behavior using a controlled response fixture.
+- Ask Mantosh response rendering, randomized portfolio prompts, page-aware project prompts, related reading, clickable follow-ups, grounded-source labels, minimize-and-resume history, text export, and deliberate close-and-clear behavior using a controlled response fixture.
 
 Failure evidence includes screenshots, videos, traces, and a browser report retained by GitHub Actions for 14 days. Full-page screenshots are review artifacts, not brittle pixel-perfect approval baselines.
 

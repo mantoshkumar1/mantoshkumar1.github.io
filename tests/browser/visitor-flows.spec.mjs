@@ -127,7 +127,13 @@ test("Ask Mantosh opens with a compact, portfolio-wide welcome state", async ({ 
     submittedQuestion = JSON.parse(route.request().postData()).question;
     await route.fulfill({
       contentType: "application/json",
-      body: JSON.stringify({ answer: "A concise evidence-backed answer.", sources: [], followUpQuestions: [], confidence: "high", success: true })
+      body: JSON.stringify({
+        answer: "A concise evidence-backed answer.",
+        sources: [{ label: "Project: Validation Platform", title: "Validation Platform", category: "project", url: "/projects/validation-platform-optical-networking.html", summary: "Published project documentation." }],
+        recommendations: [{ title: "Migration Case Study", category: "project", url: "/projects/legacy-validation-framework-migration.html" }, { title: "Engineering experience", category: "experience", url: "/experience/" }],
+        followUpQuestions: ["How was cutover validated?", "What changed after migration?"],
+        confidence: "high", success: true
+      })
     });
   });
   await page.goto("/");
@@ -135,16 +141,38 @@ test("Ask Mantosh opens with a compact, portfolio-wide welcome state", async ({ 
 
   const panel = page.locator("#ask-mantosh-panel");
   await expect(panel.getByRole("heading", { name: "Ask Mantosh" })).toBeVisible();
-  await expect(panel.getByText("Ask about my projects, engineering decisions, and experience.", { exact: true })).toBeVisible();
-  await expect(panel.getByText("Answers are grounded in published projects, case studies, and engineering notes.", { exact: true })).toBeVisible();
+  await expect(panel.getByText("Ask about my projects, engineering decisions, automation, distributed systems, and experience.", { exact: true })).toBeVisible();
+  await expect(panel.getByText("Grounded in published projects, case studies, and engineering notes.", { exact: true })).toBeVisible();
   await expect(panel.getByText("Published Engineering Knowledge", { exact: true })).toHaveCount(0);
   await expect(panel.getByText("Explore the evidence behind the work.", { exact: true })).toHaveCount(0);
   await expect(panel.locator(".ask-mantosh-chip")).toHaveCount(3);
-  await expect(panel.locator("#ask-mantosh-input")).toHaveAttribute("placeholder", "Ask about my work…");
+  await expect(panel.locator("#ask-mantosh-input")).toHaveAttribute("placeholder", "Ask about my work...");
 
-  await panel.getByRole("button", { name: "How did Mantosh modernize validation infrastructure?" }).click();
-  await expect.poll(() => submittedQuestion).toBe("How did Mantosh modernize validation infrastructure?");
+  const firstQuestion = await panel.locator(".ask-mantosh-suggestions .ask-mantosh-chip").first().textContent();
+  await panel.locator(".ask-mantosh-suggestions .ask-mantosh-chip").first().click();
+  await expect.poll(() => submittedQuestion).toBe(firstQuestion);
   await expect(panel.locator(".ask-mantosh-message.user")).toContainText(submittedQuestion);
+  const answer = panel.locator(".ask-mantosh-message.assistant");
+  await expect(answer.getByRole("heading", { name: "Related reading" })).toBeVisible();
+  await expect(answer.locator(".ask-mantosh-reading-link")).toHaveCount(4);
+  await expect(answer.getByRole("heading", { name: "Suggested follow-up" })).toBeVisible();
+  await expect(answer.getByRole("button", { name: "How was cutover validated?" })).toBeVisible();
+  await expect(answer.getByRole("heading", { name: "Grounded in" })).toBeVisible();
+  await expect(answer.locator(".ask-mantosh-source")).toContainText("Project: Validation Platform");
+  await answer.getByRole("button", { name: "How was cutover validated?" }).click();
+  await expect.poll(() => submittedQuestion).toBe("How was cutover validated?");
+  await expect(panel.locator(".ask-mantosh-message.user").last()).toContainText("How was cutover validated?");
+});
+
+test("Ask Mantosh prioritizes page-specific questions on project pages", async ({ page }) => {
+  await page.goto("/projects/photosahi.html");
+  await page.getByRole("button", { name: "Ask Mantosh" }).click();
+  const suggestions = page.locator(".ask-mantosh-suggestions .ask-mantosh-chip");
+  await expect(suggestions).toHaveText([
+    "Why was PhotoSahi built without a backend?",
+    "How does PhotoSahi protect privacy?",
+    "How does browser-side image processing work?"
+  ]);
 });
 
 test("Ask Mantosh preserves minimized history, exports it, and clears deliberately", async ({ page }) => {
