@@ -11,7 +11,7 @@ import { enforceRateLimit } from "./rate-limit.js";
 import { assessLexicalRelevance, retrieveKnowledge, searchLexicalKnowledge } from "./retrieval.js";
 import { parseChatRequest } from "./validation.js";
 
-const ANSWER_POLICY_VERSION = "visitor-intent-v34-hiring-journey";
+const ANSWER_POLICY_VERSION = "visitor-intent-v35-hiring-journey";
 
 function json(body, status, origin, extraHeaders = {}) {
   const headers = corsHeaders(origin);

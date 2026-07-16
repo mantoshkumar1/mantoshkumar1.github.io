@@ -919,6 +919,7 @@ test("classifies visitor questions into profile, problem, and direct response mo
   assert.equal(classifyQuestionIntent("What is he like?"), "profile");
   assert.equal(classifyQuestionIntent("How would you describe Mantosh?"), "profile");
   assert.equal(classifyQuestionIntent("How can Mantosh help my engineering team?"), "profile");
+  assert.equal(classifyQuestionIntent("Where could Mantosh add the most value?"), "profile");
   assert.equal(classifyQuestionIntent("What kind of engineering work does Mantosh do?"), "profile");
   assert.equal(classifyQuestionIntent("This guy is genius?"), "profile");
   assert.equal(classifyQuestionIntent("Is this engineer overrated?"), "profile");

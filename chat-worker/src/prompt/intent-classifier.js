@@ -9,6 +9,7 @@ const PROFILE_PATTERNS = [
   /\bwhat(?:'s| is)\s+(?:mantosh|he|this (?:guy|person|engineer))\s+like\b/i,
   /\b(?:how would you describe|describe)\s+(?:mantosh|him|this (?:guy|person|engineer))\b/i,
   /\b(?:what does|what can|how can)\s+(?:mantosh|he|this (?:guy|person|engineer))\b/i,
+  /\bwhere\s+(?:could|can)\s+(?:mantosh|he)\s+add\s+(?:the\s+most\s+)?value\b/i,
   /\b(?:hire|hiring|contract|consultant|candidate|fit for|strengths|skills|experience)\b/i,
   SUBJECTIVE_PROFILE_PATTERN
 ];
