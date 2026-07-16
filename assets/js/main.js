@@ -116,12 +116,12 @@ class MarkdownService {
 class ChatApi {
   constructor(url) { this.url = url; }
 
-  async stream(question, conversationId, signal, onEvent) {
+  async stream(question, conversationId, audience, signal, onEvent) {
     if (!this.url) throw new Error("Ask Mantosh is not configured yet.");
     const response = await fetch(this.url, {
       method: "POST", signal,
       headers: { "Content-Type": "application/json", Accept: "text/event-stream" },
-      body: JSON.stringify({ question, conversationId })
+      body: JSON.stringify({ question, conversationId, audience })
     });
     if (!response.ok || !response.body) {
       const payload = await response.json().catch(() => ({}));
@@ -275,6 +275,9 @@ class AskMantoshApp {
   constructor(elements) {
     this.elements = elements; this.messages = []; this.id = 0; this.controller = null; this.generation = 0;
     this.storageKey = "ask-mantosh-conversation-v1";
+    this.audienceKey = "ask-mantosh-audience-v1";
+    this.audiences = { recruiter: "Recruiter", "hiring-manager": "Hiring Manager", engineer: "Engineer", student: "Student" };
+    this.audience = "";
     this.conversationId = this.newConversationId();
     this.view = new ConversationView({ ...elements, markdown: new MarkdownService() }); this.view.getMessage = (id) => this.messages.find((message) => String(message.id) === String(id));
     this.api = new ChatApi(elements.panel.dataset.apiUrl || window.ASK_MANTOSH_API_URL || "");
@@ -284,6 +287,7 @@ class AskMantoshApp {
     try {
       const snapshot = JSON.parse(window.sessionStorage.getItem(this.storageKey) || "null");
       if (!snapshot || !Array.isArray(snapshot.messages)) return false;
+      if (this.audiences[snapshot.audience]) this.audience = snapshot.audience;
       if (/^[a-zA-Z0-9_-]{16,128}$/.test(snapshot.conversationId || "")) this.conversationId = snapshot.conversationId;
       this.messages = snapshot.messages.slice(-20)
         .filter((message) => message && ["user", "assistant"].includes(message.role) && typeof message.text === "string")
@@ -300,19 +304,23 @@ class AskMantoshApp {
   saveSession() {
     try {
       const messages = this.messages.slice(-20).map(({ id, role, text, question, sources, recommendations, followUps, error, action }) => ({ id, role, text, question, sources, recommendations, followUps, error, action }));
-      window.sessionStorage.setItem(this.storageKey, JSON.stringify({ conversationId: this.conversationId, messages }));
+      window.sessionStorage.setItem(this.storageKey, JSON.stringify({ conversationId: this.conversationId, audience: this.audience, messages }));
     } catch { /* Chat remains usable when storage is unavailable. */ }
   }
   init() {
-    const { toggle, exportButton, minimize, clear, backdrop, panel, form, input, send, suggestions } = this.elements;
+    const { toggle, exportButton, minimize, clear, backdrop, panel, form, input, send, suggestions, audienceSelector, audienceBadge } = this.elements;
     toggle.addEventListener("click", () => this.open()); exportButton.addEventListener("click", () => this.exportConversation()); minimize.addEventListener("click", () => this.close()); clear.addEventListener("click", () => this.clearConversation()); backdrop.addEventListener("click", () => this.close());
     form.addEventListener("submit", (event) => { event.preventDefault(); this.ask(input.value); });
     suggestions.addEventListener("click", (event) => { const button = event.target.closest("[data-suggestion]"); if (button) this.ask(button.dataset.suggestion); });
+    audienceSelector.addEventListener("click", (event) => { const button = event.target.closest("[data-audience]"); if (button) this.setAudience(button.dataset.audience); });
+    audienceBadge.addEventListener("click", () => this.showAudienceSelector());
     input.addEventListener("input", () => this.resize()); input.addEventListener("keydown", (event) => { if (event.key === "Enter" && !event.shiftKey) { event.preventDefault(); this.ask(input.value); } });
     document.addEventListener("keydown", (event) => { if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") { event.preventDefault(); this.open(); } if (event.key === "Escape" && !panel.hidden) this.close(); });
     panel.addEventListener("keydown", (event) => this.trapFocus(event));
     this.view.onAsk = (question) => this.ask(question);
+    this.loadAudience();
     if (!this.loadSession()) this.view.showEmpty((question) => this.ask(question));
+    this.syncAudienceUi();
     this.updateExportAvailability();
     this.resize();
   }
@@ -321,11 +329,36 @@ class AskMantoshApp {
   clearConversation() {
     if (this.messages.length && !window.confirm("Close Ask Mantosh and clear this conversation?")) return;
     this.generation += 1;
-    this.controller?.abort(); this.controller = null; this.messages = []; this.id = 0; this.conversationId = this.newConversationId();
-    try { window.sessionStorage.removeItem(this.storageKey); } catch { /* The visible conversation can still be cleared. */ }
+    this.controller?.abort(); this.controller = null; this.messages = []; this.id = 0; this.conversationId = this.newConversationId(); this.audience = "";
+    try { window.sessionStorage.removeItem(this.storageKey); window.localStorage.removeItem(this.audienceKey); } catch { /* The visible conversation can still be cleared. */ }
     this.view.nodes.clear(); this.view.setStreaming(false); this.view.setStatus(""); this.view.showEmpty((question) => this.ask(question));
     this.updateExportAvailability();
     this.elements.input.value = ""; this.resize(); this.close();
+    this.syncAudienceUi();
+  }
+  loadAudience() {
+    try { const stored = window.localStorage.getItem(this.audienceKey); if (this.audiences[stored]) this.audience = stored; } catch { /* Audience can still be selected for this page view. */ }
+  }
+  setAudience(audience) {
+    if (!this.audiences[audience]) return;
+    this.audience = audience;
+    try { window.localStorage.setItem(this.audienceKey, audience); } catch { /* Local persistence is optional. */ }
+    this.saveSession(); this.syncAudienceUi(); this.elements.input.focus();
+    this.view.setStatus(`Answers tailored for ${this.audiences[audience].toLowerCase()}s.`);
+    window.setTimeout(() => { if (this.view.status.textContent.startsWith("Answers tailored")) this.view.setStatus(""); }, 1800);
+  }
+  showAudienceSelector() {
+    this.elements.audienceSelector.hidden = false;
+    this.elements.audienceBadge.setAttribute("aria-expanded", "true");
+    this.elements.audienceSelector.querySelector("[data-audience]")?.focus();
+  }
+  syncAudienceUi() {
+    const selected = Boolean(this.audience && this.audiences[this.audience]);
+    this.elements.audienceSelector.hidden = selected;
+    this.elements.audienceBadge.hidden = !selected;
+    this.elements.audienceBadge.setAttribute("aria-expanded", "false");
+    this.elements.audienceLabel.textContent = selected ? this.audiences[this.audience] : "";
+    this.elements.audienceSelector.querySelectorAll("[data-audience]").forEach((button) => button.setAttribute("aria-pressed", String(button.dataset.audience === this.audience)));
   }
   updateExportAvailability() {
     this.elements.exportButton.hidden = !this.messages.some((message) => message.role === "assistant" && message.text.trim());
@@ -361,6 +394,7 @@ class AskMantoshApp {
   add(role, text, extra = {}) { const message = { id: ++this.id, role, text, ...extra }; this.messages.push(message); this.view.add(message); this.saveSession(); return message; }
   async ask(rawQuestion) {
     const question = rawQuestion.trim(); if (!question) return; this.open();
+    if (!this.audience) { this.showAudienceSelector(); this.view.setStatus("Choose an audience first."); return; }
     if (this.controller) this.controller.abort();
     const generation = this.generation;
     const user = this.add("user", question); const assistant = this.add("assistant", "", { question, sources: [] });
@@ -369,7 +403,7 @@ class AskMantoshApp {
     const render = () => { frameId = 0; this.view.updateAssistant(assistant, { streaming: true }); };
     const cancelPendingRender = () => { if (frameId) { cancelAnimationFrame(frameId); frameId = 0; } };
     try {
-      await this.api.stream(question, this.conversationId, controller.signal, (type, data) => {
+      await this.api.stream(question, this.conversationId, this.audience, controller.signal, (type, data) => {
         if (generation !== this.generation) return;
         if (type === "metadata") {
           assistant.sources = data.sources || [];
@@ -422,7 +456,7 @@ class AskMantoshApp {
 const initializeAskMantosh = () => {
   document.querySelector("[data-year]")?.replaceChildren(String(new Date().getFullYear()));
   const byId = (id) => document.getElementById(id);
-  const elements = { toggle: byId("ask-mantosh-toggle"), exportButton: byId("ask-mantosh-export"), minimize: byId("ask-mantosh-minimize"), clear: byId("ask-mantosh-clear"), backdrop: byId("ask-mantosh-backdrop"), panel: byId("ask-mantosh-panel"), form: byId("ask-mantosh-form"), input: byId("ask-mantosh-input"), send: byId("ask-mantosh-send"), messages: byId("ask-mantosh-messages"), suggestions: byId("ask-mantosh-suggestions"), jump: byId("ask-mantosh-jump"), status: byId("ask-mantosh-status") };
+  const elements = { toggle: byId("ask-mantosh-toggle"), exportButton: byId("ask-mantosh-export"), minimize: byId("ask-mantosh-minimize"), clear: byId("ask-mantosh-clear"), backdrop: byId("ask-mantosh-backdrop"), panel: byId("ask-mantosh-panel"), form: byId("ask-mantosh-form"), input: byId("ask-mantosh-input"), send: byId("ask-mantosh-send"), messages: byId("ask-mantosh-messages"), suggestions: byId("ask-mantosh-suggestions"), jump: byId("ask-mantosh-jump"), status: byId("ask-mantosh-status"), audienceSelector: byId("ask-mantosh-audience-selector"), audienceBadge: byId("ask-mantosh-audience-badge"), audienceLabel: byId("ask-mantosh-audience-label") };
   if (Object.values(elements).every(Boolean)) {
     const app = new AskMantoshApp(elements);
     app.init();

@@ -123,8 +123,11 @@ test("contact offers a working copy-email fallback", async ({ page, context }) =
 
 test("Ask Mantosh opens with a compact, portfolio-wide welcome state", async ({ page }) => {
   let submittedQuestion = "";
+  let submittedAudience = "";
   await page.route("https://ask-mantosh.mantoshk234.workers.dev/**", async (route) => {
-    submittedQuestion = JSON.parse(route.request().postData()).question;
+    const request = JSON.parse(route.request().postData());
+    submittedQuestion = request.question;
+    submittedAudience = request.audience;
     await route.fulfill({
       contentType: "application/json",
       body: JSON.stringify({
@@ -146,11 +149,18 @@ test("Ask Mantosh opens with a compact, portfolio-wide welcome state", async ({ 
   await expect(panel.getByText("Published Engineering Knowledge", { exact: true })).toHaveCount(0);
   await expect(panel.getByText("Explore the evidence behind the work.", { exact: true })).toHaveCount(0);
   await expect(panel.locator(".ask-mantosh-chip")).toHaveCount(3);
+  await expect(panel.getByText("Who are you?", { exact: true })).toBeVisible();
+  await expect(panel.locator(".ask-mantosh-audience-chip")).toHaveCount(4);
   await expect(panel.locator("#ask-mantosh-input")).toHaveAttribute("placeholder", "Ask about my work...");
+
+  await panel.getByRole("button", { name: "Engineer", exact: true }).click();
+  await expect(panel.getByRole("button", { name: "Audience: Engineer" })).toBeVisible();
+  await expect(panel.locator("#ask-mantosh-audience-selector")).toBeHidden();
 
   const firstQuestion = await panel.locator(".ask-mantosh-suggestions .ask-mantosh-chip").first().textContent();
   await panel.locator(".ask-mantosh-suggestions .ask-mantosh-chip").first().click();
   await expect.poll(() => submittedQuestion).toBe(firstQuestion);
+  await expect.poll(() => submittedAudience).toBe("engineer");
   await expect(panel.locator(".ask-mantosh-message.user")).toContainText(submittedQuestion);
   const answer = panel.locator(".ask-mantosh-message.assistant");
   await expect(answer.getByRole("heading", { name: "Related reading" })).toBeVisible();
@@ -188,6 +198,7 @@ test("Ask Mantosh preserves minimized history, exports it, and clears deliberate
   });
   await page.goto("/");
   await page.getByRole("button", { name: "Ask Mantosh" }).click();
+  await page.getByRole("button", { name: "Recruiter", exact: true }).click();
   await page.locator("#ask-mantosh-input").fill("How do I subscribe?");
   await page.getByRole("button", { name: "Send message" }).click();
   await expect(page.locator(".ask-mantosh-message.assistant")).toContainText("Opening Newsletter");
@@ -200,6 +211,7 @@ test("Ask Mantosh preserves minimized history, exports it, and clears deliberate
   await expect(page.locator("#ask-mantosh-panel")).toBeHidden();
   await page.getByRole("button", { name: "Ask Mantosh" }).click();
   await expect(page.locator(".ask-mantosh-message.user")).toContainText("How do I subscribe?");
+  await expect(page.getByRole("button", { name: "Audience: Recruiter" })).toBeVisible();
 
   const downloadPromise = page.waitForEvent("download");
   await page.getByRole("button", { name: /Export conversation/ }).click();
@@ -211,6 +223,7 @@ test("Ask Mantosh preserves minimized history, exports it, and clears deliberate
   await expect(page.locator("#ask-mantosh-panel")).toBeHidden();
   await page.getByRole("button", { name: "Ask Mantosh" }).click();
   await expect(page.locator(".ask-mantosh-empty")).toBeVisible();
+  await expect(page.getByText("Who are you?", { exact: true })).toBeVisible();
   await expect(page.locator(".ask-mantosh-message")).toHaveCount(0);
 });
 
@@ -224,6 +237,7 @@ test("Ask Mantosh errors remain readable in every appearance mode", async ({ pag
   });
   await page.goto("/");
   await page.getByRole("button", { name: "Ask Mantosh" }).click();
+  await page.getByRole("button", { name: "Student", exact: true }).click();
   await page.locator("#ask-mantosh-input").fill("What are the hobbies of Mantosh?");
   await page.getByRole("button", { name: "Send message" }).click();
 

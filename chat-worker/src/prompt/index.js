@@ -1,4 +1,5 @@
 export { buildPrompt } from "./prompt-builder.js";
+export { audienceInstructions } from "./intent-classifier.js";
 export { scoreRetrievalConfidence } from "./confidence-scorer.js";
 export { isAnswerable, unavailableResponse } from "./guardrails.js";
 export { formatResponse, formatError } from "./response-formatter.js";

@@ -4,7 +4,7 @@ The site uses layered checks because no single test can protect content, navigat
 
 ## Before deployment
 
-Every pull request runs the deterministic static audits, 68 Worker tests, the 541-case Ask Mantosh evaluation, and 20 browser checks: ten visitor journeys in desktop Chromium and a mobile Chromium viewport.
+Every pull request runs the deterministic static audits, 70 Worker tests, the 541-case Ask Mantosh evaluation, and 20 browser checks: ten visitor journeys in desktop Chromium and a mobile Chromium viewport.
 
 The browser checks cover:
 
@@ -13,7 +13,7 @@ The browser checks cover:
 - all five appearance choices, horizontal overflow, header clearance, and visible primary actions;
 - automated WCAG 2 A/AA checks with Axe on the five critical pages and every explicit theme;
 - newsletter form validation, résumé resources, and copy-email fallback;
-- Ask Mantosh response rendering, randomized portfolio prompts, page-aware project prompts, related reading, clickable follow-ups, grounded-source labels, minimize-and-resume history, text export, and deliberate close-and-clear behavior using a controlled response fixture.
+- Ask Mantosh audience selection and persistence, response rendering, randomized portfolio prompts, page-aware project prompts, related reading, clickable follow-ups, grounded-source labels, minimize-and-resume history, text export, and deliberate close-and-clear behavior using a controlled response fixture.
 
 Failure evidence includes screenshots, videos, traces, and a browser report retained by GitHub Actions for 14 days. Full-page screenshots are review artifacts, not brittle pixel-perfect approval baselines.
 
@@ -21,7 +21,7 @@ Failure evidence includes screenshots, videos, traces, and a browser report reta
 
 The generated public artifact fails the release when any HTML page exceeds 36 KB, CSS exceeds 100 KB, JavaScript exceeds 60 KB in total, an image exceeds 180 KB, or the public artifact excluding the résumé PDF exceeds 1 MB.
 
-At the time this document was updated, the measured maxima were 20,236-byte HTML, 75,767-byte CSS, 33,351 bytes of JavaScript, and a 534,075-byte public artifact excluding the PDF.
+At the time this document was updated, the measured maxima were 20,485-byte HTML, 78,426-byte CSS, 42,712 bytes of JavaScript, and a 569,031-byte public artifact excluding the PDF.
 
 These are transfer-size guardrails, not Core Web Vitals measurements. This repository does not currently claim automated LCP, INP, or CLS results from a production trace.
 

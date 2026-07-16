@@ -1,6 +1,7 @@
 import { badRequest } from "./errors.js";
 
 const MAX_BODY_BYTES = 16 * 1024;
+const AUDIENCES = new Set(["recruiter", "hiring-manager", "engineer", "student"]);
 
 export async function parseChatRequest(request, config) {
   const contentType = request.headers.get("Content-Type") || "";
@@ -43,5 +44,9 @@ export async function parseChatRequest(request, config) {
   if (!/^[a-zA-Z0-9_-]{16,128}$/.test(conversationId)) {
     throw badRequest("conversationId must be 16-128 URL-safe characters.");
   }
-  return { question, conversationId };
+  const audience = typeof body.audience === "string" ? body.audience.trim().toLowerCase() : "recruiter";
+  if (!AUDIENCES.has(audience)) {
+    throw badRequest("audience must be recruiter, hiring-manager, engineer, or student.");
+  }
+  return { question, conversationId, audience };
 }

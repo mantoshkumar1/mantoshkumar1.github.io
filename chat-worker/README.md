@@ -6,7 +6,7 @@ Production backend for the static personal website chat UI. The deployed service
 POST /chat (or `POST /` for the deployed Worker root URL)
 Content-Type: application/json
 
-{"question":"Why did you build PhotoSahi without a backend?"}
+{"question":"Why did you build PhotoSahi without a backend?","audience":"engineer"}
 ```
 
 Successful responses always have this shape:
@@ -38,14 +38,15 @@ Grounded responses contain `answer`, `sources`, `relatedArticles`,
 
 Every request takes this path before a Workers AI generation call:
 
-1. Validate or create a client-held `conversationId`.
+1. Validate or create a client-held `conversationId` and validate the optional presentation audience (`recruiter`, `hiring-manager`, `engineer`, or `student`).
 2. Load the bounded session memory and expand retrieval only with the most recent visitor topic.
 3. Route deterministic commands for Home, Projects, Insights, Experience, Resume, Contact, Newsletter, Accessibility, named projects, and the latest article directly to a page. These return `action: { type: "navigate", ... }` and do not call the AI model.
    Greetings, courtesies, capability questions, and a small set of harmless banter also receive deterministic replies so the assistant stays human without becoming an ungrounded general chatbot.
 4. Search D1 lexical knowledge before consuming an AI allowance. Questions with lexical evidence continue; sufficiently specific zero-match questions receive a short scope boundary. Short or ambiguous zero-match questions continue to semantic retrieval.
 5. Use hybrid retrieval for questions that need an answer, then calculate retrieval evidence confidence.
 6. Build metadata-only recommendations and three follow-up questions from public tags and related topics. This requires no generative call.
-7. Cache eligible first-turn responses by normalized question and knowledge version. Multi-turn responses are never shared through this cache.
+7. Apply audience-specific presentation instructions without changing the retrieval query or retrieved documents.
+8. Cache eligible first-turn responses by normalized question, audience, and knowledge version. Multi-turn responses are never shared through this cache.
 
 Session records use the same D1 database as the knowledge index, expire after 24 hours by default, and are keyed only by a random conversation ID. Analytics aggregate daily hashed dimensions; they never store IP addresses or raw question text. Apply the new migration whenever provisioning or updating the Worker:
 

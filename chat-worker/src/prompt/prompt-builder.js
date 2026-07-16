@@ -1,7 +1,7 @@
 import { deduplicateSources, sourceLabel } from "./citation-builder.js";
 import { escapeXmlText } from "./guardrails.js";
 import { buildSystemPrompt } from "./system-prompt.js";
-import { classifyQuestionIntent, isDetailedResponseRequested, responseModeInstructions } from "./intent-classifier.js";
+import { audienceInstructions, classifyQuestionIntent, isDetailedResponseRequested, responseModeInstructions } from "./intent-classifier.js";
 
 function formatDocument(chunk, index) {
   const label = sourceLabel(chunk);
@@ -18,7 +18,7 @@ function formatDocument(chunk, index) {
   ].join("\n");
 }
 
-export function buildPrompt({ question, retrieval, memory = { summary: "", messages: [] } }) {
+export function buildPrompt({ question, retrieval, memory = { summary: "", messages: [] }, audience = "recruiter" }) {
   const intent = classifyQuestionIntent(question);
   const detailed = isDetailedResponseRequested(question);
   const seenContent = new Set();
@@ -46,8 +46,9 @@ export function buildPrompt({ question, retrieval, memory = { summary: "", messa
       conversation || "No earlier conversation context.",
       "</conversation_memory>",
       "",
-      `<response_mode intent="${intent}">`,
+      `<response_mode intent="${intent}" audience="${audience}">`,
       responseModeInstructions(intent, detailed),
+      audienceInstructions(audience),
       "</response_mode>",
       "",
       "<retrieved_documents>",

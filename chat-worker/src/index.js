@@ -11,7 +11,7 @@ import { enforceRateLimit } from "./rate-limit.js";
 import { assessLexicalRelevance, retrieveKnowledge, searchLexicalKnowledge } from "./retrieval.js";
 import { parseChatRequest } from "./validation.js";
 
-const ANSWER_POLICY_VERSION = "visitor-intent-v31";
+const ANSWER_POLICY_VERSION = "visitor-intent-v32-audience";
 
 function json(body, status, origin, extraHeaders = {}) {
   const headers = corsHeaders(origin);
@@ -93,7 +93,7 @@ export default {
         return json({ error: { code: "not_found", message: "Not found." }, success: false }, 404, origin);
       }
 
-      const { question, conversationId } = await parseChatRequest(request, config);
+      const { question, conversationId, audience } = await parseChatRequest(request, config);
       await enforceRateLimit(request, env, config);
       const memory = new MemoryManager(env.KNOWLEDGE_DB, config);
       const conversation = await memory.load(conversationId);
@@ -116,7 +116,7 @@ export default {
 
       const cacheable = !wantsStream && conversation.messages.length === 0 && !conversation.summary && isCacheableQuestion(question);
       const version = cacheable ? await knowledgeVersion(env, config.cacheVersion) : null;
-      const cacheKey = cacheable ? await fingerprint(`${ANSWER_POLICY_VERSION}:${version}:${question}`) : null;
+      const cacheKey = cacheable ? await fingerprint(`${ANSWER_POLICY_VERSION}:${version}:${audience}:${question}`) : null;
       const cached = cacheKey ? await readCachedJson("response", cacheKey) : null;
       if (cached) {
         const result = { ...cached, conversationId, cache: "hit" };
@@ -194,7 +194,7 @@ export default {
           : json(result, 200, origin);
       }
 
-      const prompt = buildPrompt({ question, retrieval, memory: conversation });
+      const prompt = buildPrompt({ question, retrieval, memory: conversation, audience });
       analytics.trackAggregatesInBackground(ctx, [["post_gate_outcome", "grounded_answer"]]);
       const streamMetadata = { sources: prompt.sources, recommendations: recommendations.all, relatedArticles: recommendations.articles, relatedProjects: recommendations.projects, relatedNotes: recommendations.notes, followUpQuestions, suggestedQuestions: followUpQuestions, confidence: retrieval.confidence, confidenceDetails, conversationId, cache: "miss" };
       if (wantsStream) {
