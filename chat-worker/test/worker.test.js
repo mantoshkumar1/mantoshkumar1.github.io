@@ -138,7 +138,7 @@ test("returns the stable chat contract", async (t) => {
 test("rejects unsupported audience values", async () => {
   const response = await worker.fetch(request({ question: "Why no backend?", audience: "executive" }), env);
   assert.equal(response.status, 400);
-  assert.match((await response.json()).error.message, /audience must be recruiter/);
+  assert.match((await response.json()).error.message, /audience must be general/);
 });
 
 test("returns no unrelated sources when a personal fact is unpublished", async () => {
@@ -946,7 +946,7 @@ test("gives explicit achievement questions a concise non-promotional response co
       sources: [{ title: "About Mantosh", slug: "about-mantosh", category: "faq", label: "FAQ: About Mantosh", url: "/experience/" }]
     }
   });
-  assert.match(prompt.input, /<response_mode intent="achievement" audience="recruiter">/);
+  assert.match(prompt.input, /<response_mode intent="achievement" audience="general">/);
   assert.match(prompt.input, /## Highlights/);
   assert.match(prompt.input, /at most three concise highlight bullets/i);
   assert.match(prompt.input, /one direct highlight and at most one context sentence/i);
@@ -969,7 +969,7 @@ test("gives profile questions a hiring-oriented, evidence-safe response contract
       sources: [{ title: "About Mantosh", slug: "about-mantosh", category: "faq", label: "Faq: About Mantosh", url: "/experience/" }]
     }
   });
-  assert.match(prompt.input, /<response_mode intent="profile" audience="recruiter">/);
+  assert.match(prompt.input, /<response_mode intent="profile" audience="general">/);
   assert.match(prompt.input, /## Best fit/);
   assert.match(prompt.input, /at most two sentences and 45 words/i);
   assert.match(prompt.input, /exactly three one-line bullets of at most 16 words each/i);
@@ -995,7 +995,7 @@ test("gives visitor problems practical guidance with explicit limits", () => {
       sources: [{ title: "Engineering Capabilities", slug: "engineering-capabilities", category: "experience", label: "Experience: Engineering Capabilities", url: "/experience/" }]
     }
   });
-  assert.match(prompt.input, /<response_mode intent="problem" audience="recruiter">/);
+  assert.match(prompt.input, /<response_mode intent="problem" audience="general">/);
   assert.match(prompt.input, /## Practical next steps/);
   assert.match(prompt.input, /did not request depth.*under 160 words/is);
   assert.match(prompt.input, /Never imply a guaranteed result/i);

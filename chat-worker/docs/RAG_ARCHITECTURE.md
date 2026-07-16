@@ -35,7 +35,7 @@ sequenceDiagram
   participant D as D1 FTS5
   participant G as Workers AI Generation
 
-  V->>W: POST /chat {question, audience}
+  V->>W: POST /chat {question}
   W->>W: Validate and normalize
   W->>E: Embed question (audience excluded)
   par Retrieve candidates

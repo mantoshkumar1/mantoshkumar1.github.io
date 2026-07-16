@@ -13,7 +13,7 @@ The browser checks cover:
 - all five appearance choices, horizontal overflow, header clearance, and visible primary actions;
 - automated WCAG 2 A/AA checks with Axe on the five critical pages and every explicit theme;
 - newsletter form validation, résumé resources, and copy-email fallback;
-- Ask Mantosh audience selection and persistence, response rendering, randomized portfolio prompts, page-aware project prompts, related reading, persistent next-question nudges, restored clickable follow-ups, grounded-source labels, minimize-and-resume history, text export, and deliberate close-and-clear behavior using a controlled response fixture.
+- Ask Mantosh first-message submission without onboarding gates, balanced intent-aware response rendering, randomized portfolio prompts, page-aware project prompts, related reading, persistent next-question nudges, restored clickable follow-ups, grounded-source labels, minimize-and-resume history, text export, and deliberate close-and-clear behavior using a controlled response fixture.
 
 Failure evidence includes screenshots, videos, traces, and a browser report retained by GitHub Actions for 14 days. Full-page screenshots are review artifacts, not brittle pixel-perfect approval baselines.
 
@@ -21,7 +21,7 @@ Failure evidence includes screenshots, videos, traces, and a browser report reta
 
 The generated public artifact fails the release when any HTML page exceeds 36 KB, CSS exceeds 100 KB, JavaScript exceeds 60 KB in total, an image exceeds 180 KB, or the public artifact excluding the résumé PDF exceeds 1 MB.
 
-At the time this document was updated, the measured maxima were 25,835-byte HTML, 82,779-byte CSS, 42,962 bytes of JavaScript, and a 600,160-byte public artifact excluding the PDF.
+At the time this document was updated, the measured maxima were 25,835-byte HTML, 81,343-byte CSS, 39,336 bytes of JavaScript, and a 595,098-byte public artifact excluding the PDF.
 
 These are transfer-size guardrails, not Core Web Vitals measurements. This repository does not currently claim automated LCP, INP, or CLS results from a production trace.
 

@@ -79,12 +79,13 @@ export function responseModeInstructions(intent, detailed = false) {
 export function audienceInstructions(audience) {
   const shared = "Audience adaptation changes presentation only. Use the same retrieved evidence and factual claims. Never invent or inflate impact, ownership, business value, experience, or technical detail.";
   const modes = {
+    general: "Audience: general visitor. Give a concise, balanced answer. Let the question determine whether to emphasize overview, ownership, architecture, trade-offs, or explanation; do not assume the visitor's role.",
     recruiter: "Audience: recruiter. Lead with a concise high-level summary, then verified technologies, impact, business value, and years of experience when relevant. Avoid implementation depth unless explicitly requested.",
     "hiring-manager": "Audience: hiring manager. Lead with Mantosh's verified personal ownership, technical decisions, leadership, execution strategy, trade-offs, and outcomes. Attribute individual and team contributions precisely.",
     engineer: "Audience: engineer. Use the most technical version supported by the documents. Prioritize architecture, constraints, trade-offs, implementation details, design decisions, and lessons learned. Assume technical knowledge.",
     student: "Audience: student. Explain the answer in plain language, briefly define unfamiliar technical terms, avoid unnecessary jargon, and emphasize what can be learned from the work."
   };
-  return `${shared}\n${modes[audience] || modes.recruiter}`;
+  return `${shared}\n${modes[audience] || modes.general}`;
 }
 
 export function expandRetrievalQuery(question, conversationQuery = question) {

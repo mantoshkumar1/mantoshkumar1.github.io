@@ -18,7 +18,7 @@ function formatDocument(chunk, index) {
   ].join("\n");
 }
 
-export function buildPrompt({ question, retrieval, memory = { summary: "", messages: [] }, audience = "recruiter" }) {
+export function buildPrompt({ question, retrieval, memory = { summary: "", messages: [] }, audience = "general" }) {
   const intent = classifyQuestionIntent(question);
   const detailed = isDetailedResponseRequested(question);
   const seenContent = new Set();

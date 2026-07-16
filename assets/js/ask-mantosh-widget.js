@@ -101,7 +101,7 @@
     <section class="ask-mantosh-panel" id="ask-mantosh-panel" role="dialog" aria-modal="true" aria-labelledby="ask-mantosh-title" aria-describedby="ask-mantosh-description" data-api-url="https://ask-mantosh.mantoshk234.workers.dev/" hidden>
       <div class="ask-mantosh-header">
         <div class="ask-mantosh-header-content">
-          <div class="ask-mantosh-identity"><span class="ask-mantosh-presence" aria-hidden="true"></span><h2 id="ask-mantosh-title">Ask Mantosh</h2><button class="ask-mantosh-audience-badge" id="ask-mantosh-audience-badge" type="button" aria-controls="ask-mantosh-audience-selector" aria-expanded="false" hidden>Audience: <span id="ask-mantosh-audience-label"></span></button></div>
+          <div class="ask-mantosh-identity"><span class="ask-mantosh-presence" aria-hidden="true"></span><h2 id="ask-mantosh-title">Ask Mantosh</h2></div>
           <p id="ask-mantosh-description">Ask about my projects, engineering decisions, automation, distributed systems, and experience.</p>
         </div>
         <div class="ask-mantosh-header-actions">
@@ -111,15 +111,6 @@
         </div>
       </div>
       <div class="ask-mantosh-body">
-        <section class="ask-mantosh-audience-selector" id="ask-mantosh-audience-selector" aria-labelledby="ask-mantosh-audience-title">
-          <p id="ask-mantosh-audience-title">Who are you?</p>
-          <div class="ask-mantosh-audience-options" role="group" aria-label="Choose how answers are presented">
-            <button type="button" class="ask-mantosh-audience-chip" data-audience="recruiter" aria-pressed="false">Recruiter</button>
-            <button type="button" class="ask-mantosh-audience-chip" data-audience="hiring-manager" aria-pressed="false">Hiring Manager</button>
-            <button type="button" class="ask-mantosh-audience-chip" data-audience="engineer" aria-pressed="false">Engineer</button>
-            <button type="button" class="ask-mantosh-audience-chip" data-audience="student" aria-pressed="false">Student</button>
-          </div>
-        </section>
         <div class="ask-mantosh-conversation"><div class="ask-mantosh-messages" id="ask-mantosh-messages" role="log" aria-live="polite" aria-relevant="additions text" aria-label="Ask Mantosh conversation"></div><button class="ask-mantosh-jump" id="ask-mantosh-jump" type="button" hidden>Jump to latest</button></div>
         <div class="ask-mantosh-suggestions" id="ask-mantosh-suggestions" role="group" aria-label="Suggested questions" hidden></div>
         <div class="ask-mantosh-status" id="ask-mantosh-status" role="status" aria-live="polite"></div>
@@ -133,7 +124,7 @@
     if (clientPromise) return clientPromise;
     clientPromise = new Promise((resolve, reject) => {
       const client = document.createElement("script");
-      client.src = "/assets/js/main.js?v=20260716-5";
+      client.src = "/assets/js/main.js?v=20260716-6";
       client.addEventListener("load", resolve, { once: true });
       client.addEventListener("error", reject, { once: true });
       document.body.append(client);
