@@ -255,10 +255,12 @@ class ConversationView {
     }).slice(0, 4);
   }
 
-  setSuggestions(questions, onAsk, label = "") {
+  setSuggestions(questions, onAsk, compact = false) {
     this.followUps = (questions || []).map((question) => question.replace(/(\babout\s+[a-z]+)-([a-z]+\?)/gi, "$1 $2").replace(/\?+\s*$/, "?"));
+    const visible = compact ? this.followUps.slice(0, 1) : this.followUps;
     this.suggestions.hidden = !this.followUps.length;
-    this.suggestions.innerHTML = `${label && this.followUps.length ? `<p>${this.escape(label)}</p>` : ""}<div>${this.followUps.map((question) => `<button class=\"ask-mantosh-chip\" type=\"button\" data-suggestion=\"${this.escape(question)}\">${this.escape(question)}</button>`).join("")}</div>`;
+    this.suggestions.classList.toggle("is-compact", compact && visible.length > 0);
+    this.suggestions.innerHTML = `<div>${visible.map((question) => `<button class=\"ask-mantosh-chip${compact ? " ask-mantosh-next" : ""}\" type=\"button\" data-suggestion=\"${this.escape(question)}\"><span>${this.escape(question)}</span>${compact ? '<span aria-hidden=\"true\">→</span>' : ""}</button>`).join("")}</div>`;
     this.onAsk = onAsk;
   }
   handleAction(event) {
@@ -299,7 +301,7 @@ class AskMantoshApp {
       });
       this.id = this.messages.reduce((highest, message) => Math.max(highest, Number(message.id) || 0), 0);
       const latestAssistant = [...this.messages].reverse().find((message) => message.role === "assistant");
-      if (latestAssistant?.followUps?.length) this.view.setSuggestions(latestAssistant.followUps, (question) => this.ask(question), "Try asking next");
+      if (latestAssistant?.followUps?.length) this.view.setSuggestions(latestAssistant.followUps, (question) => this.ask(question), true);
       return this.messages.length > 0;
     } catch { return false; }
   }
@@ -406,12 +408,10 @@ class AskMantoshApp {
     message.text = this.stripResponseSections(message.text);
     this.view.setStreaming(false);
     this.view.updateAssistant(message);
-    this.view.setSuggestions(message.error ? [] : message.followUps, (question) => this.ask(question), "Try asking next");
+    this.view.setSuggestions(message.error ? [] : message.followUps, (question) => this.ask(question), true);
     this.saveSession();
     this.updateExportAvailability();
-    const announcement = message.error ? "Answer unavailable." : "Answer ready.";
-    this.view.setStatus(announcement);
-    window.setTimeout(() => { if (this.view.status.textContent === announcement) this.view.setStatus(""); }, 2500);
+    this.view.setStatus("");
   }
   stripResponseSections(text) { return text.replace(/\n*##\s+(?:Sources|Follow-up Questions)\s*\n[\s\S]*$/i, "").trim(); }
   followUps(text) { const match = /^##\s+Follow-up Questions\s*$([\s\S]*?)(?=^##\s+|$)/im.exec(text); return match ? match[1].split("\n").map((line) => line.replace(/^\s*(?:[-*]|\d+[.)])\s+/, "").trim()).filter((line) => line.endsWith("?")).slice(0, 3) : []; }

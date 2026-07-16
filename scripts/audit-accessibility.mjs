@@ -68,7 +68,7 @@ if (/ask-mantosh-limit-note/.test(widget)) failures.push("Ask Mantosh must show 
 if (!client.includes('setAttribute("aria-busy"') || !client.includes('setAttribute("aria-live"')) failures.push("Ask Mantosh missing quiet streaming announcements");
 if (!client.includes("renderBasic(markdown, target)") || !client.includes("this.renderBasic(markdown, target);") || !client.includes('document.createElement("strong")')) failures.push("Ask Mantosh missing immediate safe Markdown fallback with semantic emphasis");
 if (!client.includes('stripResponseSections(text) { return text.replace(/\\n*##\\s+(?:Sources|Follow-up Questions)')) failures.push("Ask Mantosh must remove source and follow-up payloads from the reading pane");
-if (!client.includes('this.view.setSuggestions(message.error ? [] : message.followUps, (question) => this.ask(question), "Try asking next");') || !client.includes("data-suggestion")) failures.push("Ask Mantosh must replace welcome suggestions with persistent answer-specific follow-ups");
+if (!client.includes('this.view.setSuggestions(message.error ? [] : message.followUps, (question) => this.ask(question), true);') || !client.includes("ask-mantosh-next")) failures.push("Ask Mantosh must replace welcome suggestions with one compact answer-specific follow-up");
 if (client.includes("ask-mantosh-follow-ups")) failures.push("Ask Mantosh must not bury duplicate follow-up chips inside the reading area");
 for (const historyFeature of ["ask-mantosh-conversation-v1", "window.sessionStorage.getItem", "window.sessionStorage.setItem", "conversationId", 'contentType.includes("application/json")']) {
   if (!client.includes(historyFeature)) failures.push(`Ask Mantosh recovery flow missing ${historyFeature}`);

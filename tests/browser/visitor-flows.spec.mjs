@@ -195,8 +195,8 @@ test("Ask Mantosh opens with a compact, portfolio-wide welcome state", async ({ 
   await expect(answer.getByRole("heading", { name: "Related reading" })).toBeVisible();
   await expect(answer.locator(".ask-mantosh-reading-link")).toHaveCount(4);
   const nextQuestions = panel.locator("#ask-mantosh-suggestions");
-  await expect(nextQuestions.getByText("Try asking next", { exact: true })).toBeVisible();
-  await expect(nextQuestions.locator(".ask-mantosh-chip")).toHaveCount(2);
+  await expect(nextQuestions.getByText("Try asking next", { exact: true })).toHaveCount(0);
+  await expect(nextQuestions.locator(".ask-mantosh-chip")).toHaveCount(1);
   await expect(nextQuestions.getByRole("button", { name: "How was cutover validated?" })).toBeVisible();
   await expect(answer.getByRole("heading", { name: "Grounded in" })).toBeVisible();
   await expect(answer.locator(".ask-mantosh-source")).toContainText("Project: Validation Platform");
@@ -241,8 +241,8 @@ test("Ask Mantosh preserves minimized history, exports it, and clears deliberate
   await expect(page.locator("#ask-mantosh-panel")).toBeHidden();
   await page.getByRole("button", { name: "Ask Mantosh" }).click();
   await expect(page.locator(".ask-mantosh-message.user")).toContainText("How do I subscribe?");
-  await expect(page.locator("#ask-mantosh-suggestions").getByText("Try asking next", { exact: true })).toBeVisible();
-  await expect(page.locator("#ask-mantosh-suggestions .ask-mantosh-chip")).toHaveCount(3);
+  await expect(page.locator("#ask-mantosh-suggestions").getByText("Try asking next", { exact: true })).toHaveCount(0);
+  await expect(page.locator("#ask-mantosh-suggestions .ask-mantosh-chip")).toHaveCount(1);
 
   const downloadPromise = page.waitForEvent("download");
   await page.getByRole("button", { name: /Export conversation/ }).click();

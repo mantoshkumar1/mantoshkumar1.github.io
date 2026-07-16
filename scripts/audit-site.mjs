@@ -215,7 +215,7 @@ for (const [page, html] of [["index.html", homeHtml], ["projects/index.html", pr
 if (!/href=["']#ask-mantosh["'][^>]*>Try Ask Mantosh/i.test(knowledgeSystemHtml)) { console.error("projects/engineering-knowledge-system.html: primary action must demonstrate Ask Mantosh instead of reloading the website"); failures += 1; }
 const askMantoshClient = await readFile(join(root, "assets/js/main.js"), "utf8");
 if (!/window\.location\.hash === ["']#ask-mantosh["']/.test(askMantoshClient) || !/a\[href=["']#ask-mantosh/.test(askMantoshClient)) { console.error("Ask Mantosh: live-system deep link must open the assistant on click and direct arrival"); failures += 1; }
-if (!/setSuggestions\(message\.error \? \[\] : message\.followUps,[\s\S]*["']Try asking next["']\)/.test(askMantoshClient) || !/latestAssistant\?\.followUps\?\.length[\s\S]*["']Try asking next["']/.test(askMantoshClient)) { console.error("Ask Mantosh: grounded next-question nudges must remain visible after answers and restored sessions"); failures += 1; }
+if (!/setSuggestions\(message\.error \? \[\] : message\.followUps,[\s\S]*true\)/.test(askMantoshClient) || !/latestAssistant\?\.followUps\?\.length[\s\S]*true\)/.test(askMantoshClient)) { console.error("Ask Mantosh: one compact grounded next-question nudge must remain visible after answers and restored sessions"); failures += 1; }
 for (const [page, html] of [["projects/index.html", projectsHtml], ["projects/gtt-price-calculator.html", gttHtml]]) {
   if (!/href=["']https:\/\/gtt-calculator\.streamlit\.app\/["'][^>]*>[^<]*(?:Try|live product)/i.test(html)) { console.error(`${page}: GTT live product link is missing`); failures += 1; }
 }

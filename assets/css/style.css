@@ -1650,10 +1650,8 @@ body.ask-mantosh-open {
 
 .ask-mantosh-suggestions {
   display: grid;
-  gap: 0.32rem;
 }
 
-.ask-mantosh-suggestions > p { margin: 0; color: var(--muted); font-size: 0.7rem; font-weight: 650; }
 .ask-mantosh-suggestions > div { display: flex; flex-wrap: wrap; gap: 0.4rem; }
 
 .ask-mantosh-chip {
@@ -1667,6 +1665,31 @@ body.ask-mantosh-open {
   background: rgba(255, 255, 255, 0.03);
   cursor: pointer;
   transition: border-color 0.12s ease, background-color 0.12s ease, transform 0.12s ease;
+}
+
+.ask-mantosh-suggestions.is-compact > div { display: block; }
+
+.ask-mantosh-next {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-height: 0;
+  padding: 0.42rem 0.65rem;
+  text-align: left;
+}
+
+.ask-mantosh-next > span:first-child {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ask-mantosh-next > span:last-child {
+  margin-left: 0.65rem;
+  color: var(--primary);
+  font-size: 0.95rem;
 }
 
 .ask-mantosh-chip:hover,
@@ -1910,7 +1933,7 @@ body.ask-mantosh-open {
 .ask-mantosh-sources { padding-top: .1rem; }
 .ask-mantosh-source { gap: .3rem; }
 .ask-mantosh-error { display: flex; align-items: center; justify-content: space-between; gap: .6rem; padding: .6rem .7rem; border: 1px solid rgba(248,113,113,.35); border-radius: 10px; color: #fecaca; background: rgba(127,29,29,.18); font-size: .85rem; }.ask-mantosh-error p { margin: 0; }.ask-mantosh-error button { flex: 0 0 auto; border: 1px solid currentColor; border-radius: 7px; padding: .35rem .45rem; background: transparent; color: inherit; font: inherit; cursor: pointer; }
-.ask-mantosh-status { min-height: 1.1rem; color: var(--muted); font-size: .76rem; }.ask-mantosh-status:empty { display: none; }.ask-mantosh-composer-hint { display: flex; flex-wrap: wrap; gap: .5rem; color: var(--muted); font-size: .66rem; opacity: .72; }.ask-mantosh-composer-hint kbd { padding: .06rem .18rem; border: 1px solid var(--border); border-radius: 3px; color: var(--text); font: inherit; }
+.ask-mantosh-status { min-height: 1.1rem; color: var(--muted); font-size: .76rem; }.ask-mantosh-status:empty { display: none; }.ask-mantosh-composer-hint { display: none; }
 @keyframes ask-mantosh-enter { from { opacity: 0; transform: translateY(8px) scale(.985); } to { opacity: 1; transform: translateY(0) scale(1); } }
 @keyframes ask-mantosh-fade-in { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes ask-mantosh-cursor { 50% { opacity: 0; } }
