@@ -24,8 +24,8 @@
     { "id": "social-professional-persona", "category": "social", "intent": "qualified-profile-inference", "question": "tell me what kind of person he is?", "expected": { "kind": "social", "includes": ["published work suggests a pragmatic, systems-oriented engineer", "private personality is not documented"], "excludes": ["response_mode", "## Sources", "Follow-up Questions"], "maxAnswerChars": 260 } },
     { "id": "social-joke", "category": "social", "intent": "banter", "question": "Tell me a joke", "expected": { "kind": "social", "includes": ["repeated manual task"], "maxAnswerChars": 320 } },
     { "id": "social-laughter", "category": "social", "intent": "banter", "question": "lol lol", "expected": { "kind": "social", "includes": ["take that as a laugh"], "excludes": ["provided documents", "response_mode", "</response>"], "maxAnswerChars": 220 } },
-    { "id": "social-challenge", "category": "social", "intent": "banter", "question": "Are you dumb?", "expected": { "kind": "social", "includes": ["Fair challenge"], "maxAnswerChars": 320 } },
-    { "id": "social-challenge-stupid", "category": "social", "intent": "banter", "question": "Are you stupid?", "expected": { "kind": "social", "includes": ["Fair challenge"], "excludes": ["response", "Sources"], "maxAnswerChars": 320 } },
+    { "id": "social-challenge", "category": "social", "intent": "banter", "question": "Are you dumb?", "expected": { "kind": "social", "includes": ["may have misunderstood"], "maxAnswerChars": 320 } },
+    { "id": "social-challenge-stupid", "category": "social", "intent": "banter", "question": "Are you stupid?", "expected": { "kind": "social", "includes": ["may have misunderstood"], "excludes": ["response", "Sources"], "maxAnswerChars": 320 } },
     { "id": "social-low-information", "category": "social", "intent": "clarification", "question": "zzzxqv", "expected": { "kind": "social", "includes": ["couldn't make sense"], "maxAnswerChars": 320 } },
 
     { "id": "navigate-resume", "category": "navigation", "intent": "resume", "question": "Resume", "expected": { "kind": "navigate", "actionType": "resume", "actionUrl": "/resume/", "includes": ["Opening Resume"] } },

@@ -275,7 +275,9 @@ test("handles lightweight banter without retrieval or unsupported claims", async
     ["How are you?", /Running smoothly/i],
     ["Tell me a joke", /repeated manual task/i],
     ["lol lol", /take that as a laugh/i],
-    ["Are you dumb?", /Fair challenge/i],
+    ["Are you dumb?", /Fair criticism/i],
+    ["whythis chat is so dumb?", /may have misunderstood/i],
+    ["That response was terrible", /may have misunderstood/i],
     ["What can you do?", /evidence-based guide/i],
     ["zzzxqv", /couldn't make sense/i]
   ]) {
@@ -284,6 +286,9 @@ test("handles lightweight banter without retrieval or unsupported claims", async
     assert.equal(response.status, 200);
     assert.match(payload.answer, expected);
     assert.deepEqual(payload.sources, []);
+    assert.deepEqual(payload.recommendations, []);
+    assert.deepEqual(payload.relatedProjects, []);
+    if (/dumb|terrible/i.exec(question)) assert.deepEqual(payload.followUpQuestions, []);
   }
 });
 

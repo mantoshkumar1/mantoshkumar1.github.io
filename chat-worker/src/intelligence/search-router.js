@@ -134,13 +134,9 @@ const SOCIAL_RESPONSES = [
     followUpQuestions: []
   },
   {
-    pattern: /^(?:(?:are you|you(?:'re| are)) (?:dumb|stupid|useless)|this is nonsense|that answer was useless|do you know anything|why are you so dull|you failed that question)[!.?\s]*$/i,
-    answer: "Fair challenge. Give me a specific question about Mantosh's work or an engineering problem, and I'll answer from the published evidence—or say clearly when I cannot.",
-    followUpQuestions: [
-      "What kind of engineer is Mantosh?",
-      "What has Mantosh built?",
-      "How could his experience help my team?"
-    ]
+    pattern: /^(?:this is nonsense|do you know anything)[!.?\s]*$/i,
+    answer: "Fair criticism—I may have misunderstood or overcomplicated your question. Try asking it another way, and I'll either answer from Mantosh's published work or clearly say I don't know.",
+    followUpQuestions: []
   }
 ];
 
@@ -197,6 +193,18 @@ const SCOPE_BOUNDARY_RESPONSES = [
 
 function normalize(value) { return value.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim(); }
 
+function isAssistantCriticism(value) {
+  const normalized = normalize(value);
+  const targetsAssistant = /\b(?:you|chat|chatbot|bot|assistant|answer|response)\b/i.test(normalized);
+  const expressesCriticism = /\b(?:dumb|stupid|useless|dull|nonsense|bad|terrible|awful|wrong|failed|missed)\b/i.test(normalized);
+  return targetsAssistant && expressesCriticism;
+}
+
+const ASSISTANT_CRITICISM_RESPONSE = {
+  answer: "Fair criticism—I may have misunderstood or overcomplicated your question. Try asking it another way, and I'll either answer from Mantosh's published work or clearly say I don't know.",
+  followUpQuestions: []
+};
+
 function isLowInformationQuestion(value) {
   const normalized = normalize(value);
   const tokens = normalized.split(" ").filter(Boolean);
@@ -227,6 +235,7 @@ export class SearchRouter {
       const answer = facts ? profileFact.answer(facts) : null;
       if (answer) return { kind: "social", response: { answer, followUpQuestions: [] } };
     }
+    if (isAssistantCriticism(trimmed)) return { kind: "social", response: ASSISTANT_CRITICISM_RESPONSE };
     const social = SOCIAL_RESPONSES.find((response) => response.pattern.test(trimmed));
     if (social) return { kind: "social", response: social };
     if (isLowInformationQuestion(trimmed)) return { kind: "social", response: CLARIFY_RESPONSE };
