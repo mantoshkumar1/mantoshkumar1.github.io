@@ -187,10 +187,8 @@ class ConversationView {
 
   showEmpty(onAsk) {
     this.messages.innerHTML = "";
-    const empty = document.createElement("section");
-    empty.className = "ask-mantosh-empty";
-    empty.innerHTML = "<p>Grounded in published projects, case studies, and engineering notes.</p>";
-    this.messages.append(empty); this.setSuggestions(welcomeQuestions(window.location.pathname), onAsk); this.updateJump();
+    this.setSuggestions(welcomeQuestions(window.location.pathname), onAsk);
+    this.updateJump();
   }
 
   add(message) {

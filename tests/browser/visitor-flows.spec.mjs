@@ -177,7 +177,7 @@ test("Ask Mantosh opens with a compact, portfolio-wide welcome state", async ({ 
   const panel = page.locator("#ask-mantosh-panel");
   await expect(panel.getByRole("heading", { name: "Ask Mantosh" })).toBeVisible();
   await expect(panel.getByText("Explore my published engineering work and decisions.", { exact: true })).toBeVisible();
-  await expect(panel.getByText("Grounded in published projects, case studies, and engineering notes.", { exact: true })).toBeVisible();
+  await expect(panel.getByText("Grounded in published projects, case studies, and engineering notes.", { exact: true })).toHaveCount(0);
   await expect(panel.getByText("Published Engineering Knowledge", { exact: true })).toHaveCount(0);
   await expect(panel.getByText("Explore the evidence behind the work.", { exact: true })).toHaveCount(0);
   await expect(panel.locator(".ask-mantosh-chip")).toHaveCount(3);
@@ -253,7 +253,8 @@ test("Ask Mantosh preserves minimized history, exports it, and clears deliberate
   await page.getByRole("button", { name: /Close Ask Mantosh and clear/ }).click();
   await expect(page.locator("#ask-mantosh-panel")).toBeHidden();
   await page.getByRole("button", { name: "Ask Mantosh" }).click();
-  await expect(page.locator(".ask-mantosh-empty")).toBeVisible();
+  await expect(page.getByText("Explore my published engineering work and decisions.", { exact: true })).toBeVisible();
+  await expect(page.locator("#ask-mantosh-suggestions .ask-mantosh-chip")).toHaveCount(3);
   await expect(page.getByText("Who are you?", { exact: true })).toHaveCount(0);
   await expect(page.locator(".ask-mantosh-message")).toHaveCount(0);
 });
