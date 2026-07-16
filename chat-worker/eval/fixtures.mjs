@@ -124,7 +124,7 @@ export const SOURCE_FIXTURES = Object.freeze({
     url: "/projects/legacy-validation-framework-migration.html",
     tags: ["platform-migration", "technical-leadership"],
     summary: "A live migration of thousands of validation tests to a distributed CI/CD platform.",
-    content: "Mantosh led a two-person migration. He migrated the complete shared-library layer, owned distributed-platform and CI/CD integration, built the migration dashboard, maintained synchronization, and led cutover validation and knowledge transfer. The second engineer primarily migrated individual test scripts.",
+    content: "Mantosh led a two-person migration. He owned and migrated the complete shared-library layer, owned distributed-platform and CI/CD integration, owned and built the migration dashboard, owned synchronization with continuing legacy changes, led cutover validation, and delivered knowledge transfer. The second engineer primarily migrated individual test scripts.",
     answer: "## Personally owned\n- Led the two-person migration and owned distributed-platform and CI/CD integration.\n- Migrated the complete shared-library layer and built the synchronization dashboard.\n- Led cutover validation and team knowledge transfer. [Project: Migrating a Legacy Framework Containing Thousands of Tests to a Distributed CI/CD Platform](/projects/legacy-validation-framework-migration.html)\n## Team context\nThe second engineer primarily migrated individual test scripts; together they migrated thousands of tests.\n## Sources\n- [Project: Migrating a Legacy Framework Containing Thousands of Tests to a Distributed CI/CD Platform](/projects/legacy-validation-framework-migration.html)"
   }),
   "complexity-changes-address": fixture({
