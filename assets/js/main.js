@@ -260,7 +260,7 @@ class ConversationView {
     const visible = compact ? this.followUps.slice(0, 1) : this.followUps;
     this.suggestions.hidden = !this.followUps.length;
     this.suggestions.classList.toggle("is-compact", compact && visible.length > 0);
-    this.suggestions.innerHTML = `<div>${visible.map((question) => `<button class=\"ask-mantosh-chip${compact ? " ask-mantosh-next" : ""}\" type=\"button\" data-suggestion=\"${this.escape(question)}\"><span>${this.escape(question)}</span>${compact ? '<span aria-hidden=\"true\">→</span>' : ""}</button>`).join("")}</div>`;
+    this.suggestions.innerHTML = `<div>${visible.map((question) => `<button class=\"ask-mantosh-chip${compact ? " ask-mantosh-next" : ""}\" type=\"button\" data-suggestion=\"${this.escape(question)}\">${compact ? '<span class=\"ask-mantosh-next-label\">Next question</span>' : ""}<span>${this.escape(question)}</span>${compact ? '<span aria-hidden=\"true\">→</span>' : ""}</button>`).join("")}</div>`;
     this.onAsk = onAsk;
   }
   handleAction(event) {

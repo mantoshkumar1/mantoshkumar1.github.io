@@ -1670,17 +1670,31 @@ body.ask-mantosh-open {
 .ask-mantosh-suggestions.is-compact > div { display: block; }
 
 .ask-mantosh-next {
-  display: flex;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
-  justify-content: space-between;
+  gap: 0.45rem;
   width: 100%;
   min-height: 0;
-  padding: 0.42rem 0.65rem;
+  padding: 0.38rem 0.55rem;
+  border: 0;
+  border-left: 2px solid color-mix(in srgb, var(--primary) 55%, transparent);
+  border-radius: 6px;
   font-size: 0.7rem;
   text-align: left;
+  background: color-mix(in srgb, var(--primary) 5%, transparent);
 }
 
-.ask-mantosh-next > span:first-child {
+.ask-mantosh-next-label {
+  color: var(--muted);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.ask-mantosh-next > span:nth-child(2) {
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1688,7 +1702,6 @@ body.ask-mantosh-open {
 }
 
 .ask-mantosh-next > span:last-child {
-  margin-left: 0.65rem;
   color: var(--primary);
   font-size: 0.95rem;
 }
