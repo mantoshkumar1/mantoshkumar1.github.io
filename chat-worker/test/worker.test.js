@@ -273,7 +273,9 @@ test("handles lightweight banter without retrieval or unsupported claims", async
   };
   for (const [question, expected] of [
     ["How are you?", /Running smoothly/i],
-    ["Tell me a joke", /repeated manual task/i],
+    ["Tell me a joke", /outstanding in his field/i],
+    ["give me a joke", /not a lecture on platform engineering/i],
+    ["Cheer me up", /outstanding in his field/i],
     ["lol lol", /take that as a laugh/i],
     ["Are you dumb?", /Fair criticism/i],
     ["whythis chat is so dumb?", /may have misunderstood/i],

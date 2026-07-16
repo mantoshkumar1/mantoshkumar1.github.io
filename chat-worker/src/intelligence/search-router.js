@@ -120,13 +120,9 @@ const SOCIAL_RESPONSES = [
     followUpQuestions: []
   },
   {
-    pattern: /^(?:tell me (?:a|an) (?:joke|engineering joke)|make me laugh|i(?:'m| am) bored)[!.?\s]*$/i,
-    answer: "A repeated manual task walked into a platform. It never had to walk in again. Want the serious version? Ask why repeated human work is an engineering smell.",
-    followUpQuestions: [
-      "Why is repeated human work an engineering smell?",
-      "How does Mantosh approach automation?",
-      "Which project best shows that approach?"
-    ]
+    pattern: /^(?:(?:tell|give|show|say) me (?:a|an|another|one) (?:joke|funny joke|engineering joke)|(?:tell|give|show|say) (?:a|an|another|one) (?:joke|funny joke|engineering joke)|joke|make me laugh|i(?:'m| am) bored|cheer me up)[!.?\s]*$/i,
+    answer: "Why did the scarecrow get promoted? He was outstanding in his field. And yes—this is intentionally not a lecture on platform engineering.",
+    followUpQuestions: []
   },
   {
     pattern: /^(?:(?:lol|lmao|rofl|(?:ha){2,})(?:[\s!.?,]+|$))+$/i,
