@@ -102,7 +102,7 @@
       <div class="ask-mantosh-header">
         <div class="ask-mantosh-header-content">
           <div class="ask-mantosh-identity"><span class="ask-mantosh-presence" aria-hidden="true"></span><h2 id="ask-mantosh-title">Ask Mantosh</h2></div>
-          <p id="ask-mantosh-description">Ask about my projects, engineering decisions, automation, distributed systems, and experience.</p>
+          <p id="ask-mantosh-description">Ask about my engineering work.</p>
         </div>
         <div class="ask-mantosh-header-actions">
           <button class="ask-mantosh-close ask-mantosh-export" id="ask-mantosh-export" type="button" aria-label="Export conversation as a text file" title="Export visible conversation as TXT" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v10m0 0l-4-4m4 4l4-4M5 19h14"></path></svg><span>TXT</span></button>

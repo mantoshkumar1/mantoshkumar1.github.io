@@ -176,7 +176,7 @@ test("Ask Mantosh opens with a compact, portfolio-wide welcome state", async ({ 
 
   const panel = page.locator("#ask-mantosh-panel");
   await expect(panel.getByRole("heading", { name: "Ask Mantosh" })).toBeVisible();
-  await expect(panel.getByText("Ask about my projects, engineering decisions, automation, distributed systems, and experience.", { exact: true })).toBeVisible();
+  await expect(panel.getByText("Ask about my engineering work.", { exact: true })).toBeVisible();
   await expect(panel.getByText("Grounded in published projects, case studies, and engineering notes.", { exact: true })).toBeVisible();
   await expect(panel.getByText("Published Engineering Knowledge", { exact: true })).toHaveCount(0);
   await expect(panel.getByText("Explore the evidence behind the work.", { exact: true })).toHaveCount(0);
