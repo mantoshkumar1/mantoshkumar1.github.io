@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { formatSuccess } from "../src/formatter.js";
+import { formatError, formatSuccess } from "../src/formatter.js";
 import { verifyGitHubOidcToken } from "../src/github-oidc.js";
 import { AnalyticsService, RecommendationEngine, SearchRouter } from "../src/intelligence/index.js";
 import worker from "../src/index.js";
@@ -1081,6 +1081,11 @@ test("still rejects a model-authored link outside retrieved evidence", () => {
     { output_text: "Read [an unsupported source](https://example.com/claim)." },
     [{ title: "About Mantosh", label: "FAQ: About Mantosh", category: "faq", url: "/experience/" }]
   ), (error) => error.code === "invalid_model_response");
+});
+
+test("presents rejected model output as a concise verification failure", () => {
+  const result = formatError({ code: "invalid_model_response", message: "The AI service returned an invalid response." });
+  assert.equal(result.error.message, "I couldn't safely verify that answer. Please try again.");
 });
 
 test("scores partial retrieval evidence conservatively", () => {

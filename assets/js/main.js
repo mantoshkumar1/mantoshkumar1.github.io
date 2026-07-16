@@ -211,7 +211,7 @@ class ConversationView {
     const node = this.nodes.get(message.id); if (!node) return;
     const answer = node.querySelector(".ask-mantosh-answer");
     let rendered;
-    if (streaming) answer.textContent = message.text;
+    if (streaming) { node.querySelector(".ask-mantosh-response-meta")?.remove(); answer.textContent = message.text; }
     else rendered = this.markdown.render(message.text, answer).catch(() => { answer.textContent = message.text; });
     node.classList.toggle("is-streaming", streaming);
     if (streaming) {
@@ -227,7 +227,7 @@ class ConversationView {
   renderMeta(node, message) {
     node.querySelector(".ask-mantosh-answer")?.parentElement.querySelector(".ask-mantosh-response-meta")?.remove();
     const meta = document.createElement("div"); meta.className = "ask-mantosh-response-meta";
-    if (message.error) meta.innerHTML = `<div class=\"ask-mantosh-error\"><p>${this.escape(message.error)}</p><button type=\"button\" data-retry=\"${this.escape(message.question)}\">Try again</button></div>`;
+    if (message.error) meta.innerHTML = `<div class=\"ask-mantosh-error\"><p>${this.escape(message.error)}</p><button type=\"button\" data-retry-id=\"${this.escape(String(message.id))}\">Try again</button></div>`;
     if (message.action?.type === "navigate" && message.action.url) {
       meta.insertAdjacentHTML("beforeend", `<a class=\"button secondary\" href=\"${this.safeUrl(message.action.url)}\" target=\"_blank\" rel=\"noopener noreferrer\">Open ${this.escape(message.action.label || "page")} <span aria-hidden=\"true\">↗</span></a>`);
     }
@@ -270,7 +270,7 @@ class ConversationView {
       const content = copy.hasAttribute("data-copy-code") ? copy.closest("pre")?.querySelector("code")?.innerText : message?.text;
       if (content) navigator.clipboard?.writeText(content).then(() => { const label = copy.textContent; copy.textContent = "Copied"; setTimeout(() => { copy.textContent = label; }, 1200); });
     }
-    const retry = event.target.closest("[data-retry]"); if (retry) this.onAsk?.(retry.dataset.retry);
+    const retry = event.target.closest("[data-retry-id]"); if (retry) this.onRetry?.(retry.dataset.retryId);
     const suggestion = event.target.closest("[data-suggestion]"); if (suggestion) this.onAsk?.(suggestion.dataset.suggestion);
   }
   escape(value) { const div = document.createElement("div"); div.textContent = value || ""; return div.innerHTML; }
@@ -293,7 +293,7 @@ class AskMantoshApp {
       if (/^[a-zA-Z0-9_-]{16,128}$/.test(snapshot.conversationId || "")) this.conversationId = snapshot.conversationId;
       this.messages = snapshot.messages.slice(-20)
         .filter((message) => message && ["user", "assistant"].includes(message.role) && typeof message.text === "string")
-        .map((message) => ({ ...message, sources: Array.isArray(message.sources) ? message.sources : [], recommendations: Array.isArray(message.recommendations) ? message.recommendations : [], followUps: Array.isArray(message.followUps) ? message.followUps : [] }));
+        .map((message) => ({ ...message, sources: Array.isArray(message.sources) ? message.sources : [], recommendations: Array.isArray(message.recommendations) ? message.recommendations : [], followUps: Array.isArray(message.followUps) ? message.followUps : [], attemptErrors: Array.isArray(message.attemptErrors) ? message.attemptErrors : [] }));
       this.messages.forEach((message) => {
         if (message.role === "assistant" && !message.text && !message.error) message.error = "The previous response was interrupted. Try again.";
         this.view.add(message);
@@ -311,7 +311,7 @@ class AskMantoshApp {
   }
   saveSession() {
     try {
-      const messages = this.messages.slice(-20).map(({ id, role, text, question, sources, recommendations, followUps, error, action }) => ({ id, role, text, question, sources, recommendations, followUps, error, action }));
+      const messages = this.messages.slice(-20).map(({ id, role, text, question, sources, recommendations, followUps, error, action, attemptErrors }) => ({ id, role, text, question, sources, recommendations, followUps, error, action, attemptErrors }));
       window.sessionStorage.setItem(this.storageKey, JSON.stringify({ conversationId: this.conversationId, messages }));
     } catch { /* Chat remains usable when storage is unavailable. */ }
   }
@@ -324,6 +324,7 @@ class AskMantoshApp {
     document.addEventListener("keydown", (event) => { if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") { event.preventDefault(); this.open(); } if (event.key === "Escape" && !panel.hidden) this.close(); });
     panel.addEventListener("keydown", (event) => this.trapFocus(event));
     this.view.onAsk = (question) => this.ask(question);
+    this.view.onRetry = (messageId) => this.retry(messageId);
     if (!this.loadSession()) this.view.showEmpty((question) => this.ask(question));
     this.updateExportAvailability();
     this.resize();
@@ -340,15 +341,22 @@ class AskMantoshApp {
     this.elements.input.value = ""; this.resize(); this.close();
   }
   updateExportAvailability() {
-    this.elements.exportButton.hidden = !this.messages.some((message) => message.role === "assistant" && message.text.trim());
+    const hasAssistantRecord = this.messages.some((message) => message.role === "assistant" && (message.text.trim() || message.error));
+    this.elements.exportButton.hidden = !hasAssistantRecord;
+    this.elements.exportButton.disabled = Boolean(this.controller);
   }
   exportConversation() {
-    const visibleMessages = this.messages.filter((message) => message.text.trim());
+    if (this.controller) return;
+    const visibleMessages = this.messages.filter((message) => message.text.trim() || message.error);
     if (!visibleMessages.some((message) => message.role === "assistant")) return;
     const transcript = [
       "Ask Mantosh conversation",
       "",
-      ...visibleMessages.flatMap((message) => [message.role === "user" ? "You" : "Ask Mantosh", message.text.trim(), ""])
+      ...visibleMessages.flatMap((message) => {
+        const failedAttempts = (message.attemptErrors || []).map((error) => `[Previous attempt failed: ${error}]`);
+        const content = message.text.trim() || `[Error: ${message.error}]`;
+        return [message.role === "user" ? "You" : "Ask Mantosh", ...failedAttempts, content, ""];
+      })
     ].join("\n").trimEnd() + "\n";
     const blob = new Blob([transcript], { type: "text/plain;charset=utf-8" });
     const url = URL.createObjectURL(blob);
@@ -371,13 +379,27 @@ class AskMantoshApp {
   }
   resize() { const { input, send } = this.elements; input.style.height = "auto"; input.style.height = `${Math.min(input.scrollHeight, 150)}px`; send.disabled = !input.value.trim(); }
   add(role, text, extra = {}) { const message = { id: ++this.id, role, text, ...extra }; this.messages.push(message); this.view.add(message); this.saveSession(); return message; }
-  async ask(rawQuestion) {
+  retry(messageId) {
+    const assistant = this.messages.find((message) => String(message.id) === String(messageId) && message.role === "assistant");
+    if (!assistant?.question || this.controller) return;
+    assistant.attemptErrors ||= [];
+    if (assistant.error) assistant.attemptErrors.push(assistant.error);
+    assistant.error = "";
+    assistant.text = "";
+    assistant.sources = [];
+    assistant.recommendations = [];
+    assistant.followUps = [];
+    this.ask(assistant.question, { retryAssistant: assistant });
+  }
+  async ask(rawQuestion, { retryAssistant = null } = {}) {
     const question = rawQuestion.trim(); if (!question) return; this.open();
     if (this.controller) this.controller.abort();
     const generation = this.generation;
-    const user = this.add("user", question); const assistant = this.add("assistant", "", { question, sources: [] });
+    const assistant = retryAssistant || (this.add("user", question), this.add("assistant", "", { question, sources: [], attemptErrors: [] }));
+    if (retryAssistant) this.view.updateAssistant(assistant, { streaming: true });
     this.elements.input.value = ""; this.resize(); this.view.setSuggestions([], () => this.ask()); this.view.setStreaming(true); this.view.setStatus("Searching published engineering knowledge…");
     const controller = new AbortController(); this.controller = controller; let frameId = 0;
+    this.updateExportAvailability();
     const render = () => { frameId = 0; this.view.updateAssistant(assistant, { streaming: true }); };
     const cancelPendingRender = () => { if (frameId) { cancelAnimationFrame(frameId); frameId = 0; } };
     try {
@@ -405,7 +427,7 @@ class AskMantoshApp {
           : (error.message || "I couldn't answer that right now. Please try again.");
         this.finish(assistant);
       }
-    } finally { if (this.controller === controller) { this.controller = null; } }
+    } finally { if (this.controller === controller) { this.controller = null; this.updateExportAvailability(); } }
   }
   finish(message) {
     message.followUps = this.usableFollowUps(message.followUps);

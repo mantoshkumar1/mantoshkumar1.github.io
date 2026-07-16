@@ -259,7 +259,16 @@ test("Ask Mantosh preserves minimized history, exports it, and clears deliberate
 });
 
 test("Ask Mantosh errors remain readable in every appearance mode", async ({ page }) => {
+  let attempts = 0;
   await page.route("https://ask-mantosh.mantoshk234.workers.dev/**", async (route) => {
+    attempts += 1;
+    if (attempts > 1) {
+      await route.fulfill({
+        contentType: "application/json",
+        body: JSON.stringify({ answer: "## Answer\nMantosh's published work supports this answer.", sources: [], followUpQuestions: [], confidence: "high", success: true })
+      });
+      return;
+    }
     await route.fulfill({
       status: 500,
       contentType: "application/json",
@@ -283,4 +292,18 @@ test("Ask Mantosh errors remain readable in every appearance mode", async ({ pag
     if (theme === "soft") await expect(userLabel).toHaveCSS("color", "rgb(138, 75, 22)");
     await assertNoSeriousAccessibilityViolations(page, `Ask Mantosh error-${theme}-${test.info().project.name}`);
   }
+
+  await error.getByRole("button", { name: "Try again" }).click();
+  await expect(page.locator(".ask-mantosh-message.user")).toHaveCount(1);
+  await expect(page.locator(".ask-mantosh-message.assistant")).toHaveCount(1);
+  await expect(page.locator(".ask-mantosh-message.assistant")).toContainText("Mantosh's published work supports this answer.");
+
+  const downloadPromise = page.waitForEvent("download");
+  await page.getByRole("button", { name: /Export conversation/ }).click();
+  const download = await downloadPromise;
+  const stream = await download.createReadStream();
+  let transcript = "";
+  for await (const chunk of stream) transcript += chunk.toString();
+  expect(transcript).toContain("[Previous attempt failed: The AI service returned an invalid response.]");
+  expect(transcript.match(/What are the hobbies of Mantosh\?/g)).toHaveLength(1);
 });

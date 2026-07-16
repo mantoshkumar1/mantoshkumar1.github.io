@@ -158,5 +158,8 @@ export function formatResponse(response, { sources, confidence, maxAnswerChars =
 }
 
 export function formatError(error) {
-  return { answer: "", sources: [], relatedArticles: [], relatedProjects: [], relatedNotes: [], recommendations: [], followUpQuestions: [], suggestedQuestions: [], confidence: "low", success: false, error: { code: error.code, message: error.message } };
+  const message = ["workers_ai_invalid_response", "empty_model_response", "invalid_model_response", "uncited_model_response"].includes(error.code)
+    ? "I couldn't safely verify that answer. Please try again."
+    : error.message;
+  return { answer: "", sources: [], relatedArticles: [], relatedProjects: [], relatedNotes: [], recommendations: [], followUpQuestions: [], suggestedQuestions: [], confidence: "low", success: false, error: { code: error.code, message } };
 }

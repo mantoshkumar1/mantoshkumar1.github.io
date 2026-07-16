@@ -61,7 +61,7 @@ const themeInit = await readFile(join(root, "assets/js/theme-init.js"), "utf8");
 const client = await readFile(join(root, "assets/js/main.js"), "utf8");
 if (!/role=["']dialog["']/.test(widget) || !/aria-modal=["']true["']/.test(widget)) failures.push("Ask Mantosh missing modal dialog semantics");
 if (!/id=["']ask-mantosh-toggle["'][^>]+aria-label=["']Ask Mantosh["']/.test(widget)) failures.push("Ask Mantosh mobile toggle needs an explicit accessible name");
-if (!/id=["']ask-mantosh-export["'][^>]+aria-label=["']Export conversation as a text file["']/.test(widget)) failures.push("Ask Mantosh needs an explicitly named text-export control");
+if (!/id=["']ask-mantosh-export["'][^>]+aria-label=["']Export conversation as TXT["']/.test(widget)) failures.push("Ask Mantosh needs an explicitly named text-export control whose name includes its visible TXT label");
 if (!/id=["']ask-mantosh-minimize["'][^>]+aria-label=["']Minimize Ask Mantosh; conversation will remain available["']/.test(widget)) failures.push("Ask Mantosh needs an explicit conversation-preserving minimize control");
 if (!/id=["']ask-mantosh-clear["'][^>]+aria-label=["']Close Ask Mantosh and clear conversation["']/.test(widget)) failures.push("Ask Mantosh needs an explicit close-and-clear control");
 if (/ask-mantosh-limit-note/.test(widget)) failures.push("Ask Mantosh must show quota details only when a limit is reached");
@@ -79,7 +79,10 @@ for (const clearFeature of ["clearConversation()", "window.sessionStorage.remove
 for (const exportFeature of ["exportConversation()", 'type: "text/plain;charset=utf-8"', "URL.createObjectURL", "URL.revokeObjectURL", "ask-mantosh-conversation-"]) {
   if (!client.includes(exportFeature)) failures.push(`Ask Mantosh text-export flow missing ${exportFeature}`);
 }
-if (!client.includes('message.role === "assistant" && message.text.trim()')) failures.push("Ask Mantosh export must remain hidden until a completed answer exists");
+if (!client.includes('message.role === "assistant" && (message.text.trim() || message.error)')) failures.push("Ask Mantosh export must include completed answers and visible failures");
+if (!client.includes("if (this.controller) return;") || !client.includes("exportButton.disabled = Boolean(this.controller)")) failures.push("Ask Mantosh must not export an incomplete streaming response");
+if (!client.includes("attemptErrors") || !client.includes("[Previous attempt failed:")) failures.push("Ask Mantosh exports must preserve failed retry attempts");
+if (!client.includes("data-retry-id") || !client.includes("retryAssistant")) failures.push("Ask Mantosh retries must reuse the failed response instead of duplicating the visitor question");
 if (!/ask-mantosh-reading-link[^`]*target=\\"_blank\\"|target=\\"_blank\\"[^`]*ask-mantosh-reading-link/.test(client)) failures.push("Ask Mantosh related-reading links must preserve the current conversation tab");
 if (!/message\.action\?\.type === "navigate"/.test(client)) failures.push("Ask Mantosh must render direct navigation responses without crashing");
 for (const themeFeature of ["mantosh-appearance", "appearance-select", "prefers-color-scheme: light", "localStorage.setItem", 'value="soft"', 'value="contrast"']) {

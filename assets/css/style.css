@@ -1422,6 +1422,11 @@ body.ask-mantosh-open {
   display: none;
 }
 
+.ask-mantosh-export:disabled {
+  cursor: wait;
+  opacity: 0.45;
+}
+
 .ask-mantosh-body {
   display: flex;
   flex-direction: column;
