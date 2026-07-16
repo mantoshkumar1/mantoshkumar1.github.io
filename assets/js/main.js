@@ -243,6 +243,7 @@ class ConversationView {
   relatedReading(message) {
     const candidates = [...(message.recommendations || [])];
     if (message.action?.url) candidates.unshift({ title: message.action.label || "Open page", url: message.action.url, category: message.action.destinationType || "Page" });
+    if (!candidates.length && !message.sources?.length) return [];
     candidates.push(...DEFAULT_READING);
     const seen = new Set();
     return candidates.filter((item) => {

@@ -177,11 +177,11 @@ const SOCIAL_RESPONSES = [
 const SCOPE_BOUNDARY_RESPONSES = [
   {
     pattern: /\b(?:weather|temperature|forecast)\b/i,
-    answer: "I don't have live weather data. Ask me about Mantosh's published experience, projects, engineering approach, or fit for your problem."
+    answer: "I’m focused on Mantosh’s published engineering work. Ask about his experience, projects, decisions, or fit for an engineering problem."
   },
   {
     pattern: /\b(?:unrelated quantum physics|world cup|history homework|recommend (?:me )?a movie|tomorrow(?:'s|’s) stock price|diagnose (?:my )?headache|medicine .*headache|book (?:me )?a flight|translate this novel|unrelated crossword)\b/i,
-    answer: "I can't support that from Mantosh's published work. Ask me about his experience, projects, engineering approach, or fit for your problem."
+    answer: "I’m focused on Mantosh’s published engineering work. Ask about his experience, projects, decisions, or fit for an engineering problem."
   },
   {
     pattern: /\binforamatica\b|\binformatica\b/i,
@@ -221,7 +221,7 @@ const SCOPE_BOUNDARY_RESPONSES = [
   },
   {
     pattern: /^(?:give|show|write|share|tell)\s+(?:me\s+)?(?:a\s+)?(?:pasta\s+)?recipe\b/i,
-    answer: "I can't support that from Mantosh's published work. Ask me about his experience, projects, engineering approach, or fit for your problem."
+    answer: "I’m focused on Mantosh’s published engineering work. Ask about his experience, projects, decisions, or fit for an engineering problem."
   }
 ];
 

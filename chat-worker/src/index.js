@@ -169,7 +169,7 @@ export default {
       const lexicalRelevance = assessLexicalRelevance(baseRetrievalQuery, lexicalMatches);
       if (lexicalRelevance.decision === "clearly_unrelated") {
         const result = socialResponse({
-          answer: "That appears outside this website's scope. Ask about Mantosh's experience, projects, engineering approach, or fit for a problem.",
+          answer: "I’m focused on Mantosh’s published engineering work. Ask about his experience, projects, decisions, or fit for an engineering problem.",
           followUpQuestions: [], confidence: "low"
         }, conversationId);
         result.relevanceGate = lexicalRelevance;

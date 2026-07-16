@@ -350,7 +350,7 @@ test("routes transcript scope gaps without retrieval or unsupported expertise", 
     KNOWLEDGE_INDEX: { query: async () => { throw new Error("No retrieval is expected for a scope boundary"); } }
   };
   for (const [question, expected] of [
-    ["what is the weather outside", "I don't have live weather data."],
+    ["what is the weather outside", "I’m focused on Mantosh’s published engineering work."],
     ["how the testing can be performed for Informatica mapping", "Informatica is not documented in Mantosh's published work"],
     ["how source and target load can be tested in inforamatica mapping", "I shouldn't present him as an Informatica authority"]
   ]) {
@@ -561,7 +561,7 @@ test("does not call Workers AI generation when retrieval finds no published know
     return { data: [[0.1, 0.2]] };
   } };
   const response = await worker.fetch(request({ question: "Explain underwater basket weaving" }), noMatchEnv);
-  assert.equal((await response.json()).answer, "That appears outside this website's scope. Ask about Mantosh's experience, projects, engineering approach, or fit for a problem.");
+  assert.equal((await response.json()).answer, "I’m focused on Mantosh’s published engineering work. Ask about his experience, projects, decisions, or fit for an engineering problem.");
   assert.equal(embeddingCalls, 0);
 });
 
