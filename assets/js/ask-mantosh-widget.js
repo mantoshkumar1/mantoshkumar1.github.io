@@ -124,7 +124,7 @@
     if (clientPromise) return clientPromise;
     clientPromise = new Promise((resolve, reject) => {
       const client = document.createElement("script");
-      client.src = "/assets/js/main.js?v=20260715-2";
+      client.src = "/assets/js/main.js?v=20260715-3";
       client.addEventListener("load", resolve, { once: true });
       client.addEventListener("error", reject, { once: true });
       document.body.append(client);
