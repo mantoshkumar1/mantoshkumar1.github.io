@@ -122,11 +122,12 @@ test("contact offers a working copy-email fallback", async ({ page, context }) =
 });
 
 test("Ask Mantosh preserves minimized history, exports it, and clears deliberately", async ({ page }) => {
+  const longAnswer = `Opening Newsletter.\n\n${Array.from({ length: 18 }, (_, index) => `Paragraph ${index + 1} explains a published engineering lesson with enough detail to require scrolling.`).join("\n\n")}`;
   await page.route("https://ask-mantosh.mantoshk234.workers.dev/**", async (route) => {
     await route.fulfill({
       contentType: "application/json",
       body: JSON.stringify({
-        answer: "Opening Newsletter.", sources: [], followUpQuestions: [], suggestedQuestions: [], confidence: "high",
+        answer: longAnswer, sources: [], followUpQuestions: [], suggestedQuestions: [], confidence: "high",
         action: { type: "navigate", destinationType: "newsletter", label: "Newsletter", url: "/newsletter/" }, success: true
       })
     });
@@ -136,6 +137,10 @@ test("Ask Mantosh preserves minimized history, exports it, and clears deliberate
   await page.locator("#ask-mantosh-input").fill("How do I subscribe?");
   await page.getByRole("button", { name: "Send message" }).click();
   await expect(page.locator(".ask-mantosh-message.assistant")).toContainText("Opening Newsletter");
+  await expect.poll(() => page.locator(".ask-mantosh-message.assistant").evaluate((answer) => {
+    const messages = answer.closest(".ask-mantosh-messages");
+    return Math.abs(answer.getBoundingClientRect().top - messages.getBoundingClientRect().top);
+  })).toBeLessThanOrEqual(8);
 
   await page.getByRole("button", { name: /Minimize Ask Mantosh/ }).click();
   await expect(page.locator("#ask-mantosh-panel")).toBeHidden();

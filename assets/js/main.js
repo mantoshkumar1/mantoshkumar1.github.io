@@ -136,6 +136,13 @@ class ConversationView {
 
   isNearBottom() { return this.messages.scrollHeight - this.messages.scrollTop - this.messages.clientHeight < 96; }
   scrollToLatest(force = false) { if (force || this.isNearBottom()) this.messages.scrollTo({ top: this.messages.scrollHeight, behavior: "smooth" }); this.updateJump(); }
+  scrollToMessageStart(node) {
+    const messagesRect = this.messages.getBoundingClientRect();
+    const messageRect = node.getBoundingClientRect();
+    const top = this.messages.scrollTop + messageRect.top - messagesRect.top - 4;
+    this.messages.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+    this.updateJump();
+  }
   updateJump() { this.jump.hidden = this.isNearBottom(); }
   setStatus(text) { this.status.textContent = text; }
   setStreaming(active) {
@@ -165,11 +172,12 @@ class ConversationView {
     if (shouldScroll) this.scrollToLatest(true); else this.updateJump();
   }
 
-  updateAssistant(message, { streaming = false } = {}) {
+  updateAssistant(message, { streaming = false, focus = true } = {}) {
     const node = this.nodes.get(message.id); if (!node) return;
     const answer = node.querySelector(".ask-mantosh-answer");
+    let rendered;
     if (streaming) answer.textContent = message.text;
-    else this.markdown.render(message.text, answer).catch(() => { answer.textContent = message.text; });
+    else rendered = this.markdown.render(message.text, answer).catch(() => { answer.textContent = message.text; });
     node.classList.toggle("is-streaming", streaming);
     if (streaming) {
       if (!node.querySelector(".ask-mantosh-cursor")) answer.insertAdjacentHTML("beforeend", "<span class=\"ask-mantosh-cursor\" aria-hidden=\"true\"></span>");
@@ -177,7 +185,8 @@ class ConversationView {
     } else {
       this.renderMeta(node, message);
     }
-    this.scrollToLatest();
+    if (!streaming && focus) rendered.finally(() => requestAnimationFrame(() => this.scrollToMessageStart(node)));
+    else this.updateJump();
   }
 
   renderMeta(node, message) {
@@ -237,7 +246,7 @@ class AskMantoshApp {
       this.messages.forEach((message) => {
         if (message.role === "assistant" && !message.text && !message.error) message.error = "The previous response was interrupted. Try again.";
         this.view.add(message);
-        if (message.role === "assistant") this.view.updateAssistant(message);
+        if (message.role === "assistant") this.view.updateAssistant(message, { focus: false });
       });
       this.id = this.messages.reduce((highest, message) => Math.max(highest, Number(message.id) || 0), 0);
       return this.messages.length > 0;
