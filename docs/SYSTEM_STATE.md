@@ -13,7 +13,7 @@ This document is the canonical description of what is deployed. Architecture pro
 | Health | `https://ask-mantosh.mantoshk234.workers.dev/health` | Unauthenticated service health without configuration details |
 | Knowledge indexing | `POST /internal/index` | GitHub OIDC or manual recovery token only; intentionally unavailable to browsers through CORS |
 
-Last verified Worker deployment: `7eff67ce-8a39-460f-9147-1e2a3a447c0c`. The active deployed answer-policy cache namespace is `visitor-intent-v30`.
+Last verified Worker deployment: `b5661497-52c5-41f0-b6d7-739feeb8b82e`. The active deployed answer-policy cache namespace is `visitor-intent-v31`.
 
 ## Published inventory
 
@@ -74,7 +74,7 @@ The committed production configuration uses:
 - 450 AI-bearing requests per UTC day through D1;
 - six retained conversation turns and a 24-hour session TTL.
 
-Cloudflare Cache API stores eligible embeddings, retrieval candidates, and first-turn answers for 15, 5, and 10 minutes respectively. The optional `CACHE_VERSION` KV binding is not configured in the committed production file, so knowledge-index invalidation currently relies on TTL expiry and the fallback version. Answer-policy changes explicitly advance `ANSWER_POLICY_VERSION`—currently `visitor-intent-v30` in source—to avoid serving a response cached under an older formatter or routing contract. This is an explicit known limitation, not an undocumented guarantee.
+Cloudflare Cache API stores eligible embeddings, retrieval candidates, and first-turn answers for 15, 5, and 10 minutes respectively. The optional `CACHE_VERSION` KV binding is not configured in the committed production file, so knowledge-index invalidation currently relies on TTL expiry and the fallback version. Answer-policy changes explicitly advance `ANSWER_POLICY_VERSION`—currently `visitor-intent-v31` in source—to avoid serving a response cached under an older formatter or routing contract. This is an explicit known limitation, not an undocumented guarantee.
 
 ## Security and privacy controls
 
