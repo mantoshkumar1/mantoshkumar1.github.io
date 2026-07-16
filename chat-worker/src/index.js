@@ -113,7 +113,7 @@ export default {
       await enforceRateLimit(request, env, config);
       const memory = new MemoryManager(env.KNOWLEDGE_DB, config);
       const conversation = await memory.load(conversationId);
-      const route = await new SearchRouter(metadataService).route(question);
+      const route = await new SearchRouter(metadataService).route(question, { visitorTimeZone: request.cf?.timezone });
       const wantsStream = request.headers.get("Accept")?.includes("text/event-stream");
       if (route.kind === "social" || route.kind === "boundary") {
         const result = socialResponse(route.response, conversationId);

@@ -4,11 +4,12 @@ slug: "about-mantosh"
 category: "faq"
 tags: [staff-software-engineer, principal-engineer, platform-engineering, automation, backend-systems, networking, operational-intelligence, hiring, achievements, awards, education, canadian-citizen, work-authorization, toronto, canada, united-states, india]
 summary: "A concise, evidence-backed guide to Mantosh Kumar's engineering background, strongest documented capability areas, and appropriate ways to assess fit for a role or project."
-last_updated: "2026-07-15"
+last_updated: "2026-07-16"
 related_topics: [engineering-capabilities, workflow-automation, distributed-validation, developer-productivity, quality-analytics, academic-achievements, gate, technical-university-of-munich]
 visibility: "public"
 url: "/experience/"
 fact_location: "Toronto, Canada"
+fact_time_zone: "America/Toronto"
 fact_citizenship: "Canadian"
 fact_work_authorization: [Canada, United States, India]
 fact_current_employer: "Nokia"

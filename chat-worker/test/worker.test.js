@@ -8,7 +8,7 @@ import { audienceInstructions, buildPrompt, buildSystemPrompt, classifyQuestionI
 import { assessLexicalRelevance } from "../src/retrieval.js";
 
 const TEST_PROFILE_FACTS = [
-  ["location", "Toronto, Canada"], ["citizenship", "Canadian"],
+  ["location", "Toronto, Canada"], ["time_zone", "America/Toronto"], ["citizenship", "Canadian"],
   ["work_authorization", ["Canada", "United States", "India"]], ["current_employer", "Nokia"],
   ["current_role", "Staff Software Engineer"], ["employment_history", ["Aricent", "Cisco", "Intel", "Siemens", "KI Labs", "Nokia"]],
   ["experience_years", "More than 14 years"], ["target_roles", ["Staff Engineer", "Principal Engineer"]],
@@ -278,8 +278,8 @@ test("answers everyday date and time questions locally without AI or retrieval",
     KNOWLEDGE_INDEX: { query: async () => { throw new Error("No retrieval is expected for date or time questions"); } }
   };
   for (const [question, expected] of [
-    ["what day it is?", /^Today is .+ in Toronto\.$/],
-    ["What time is it?", /^It is .+ in Toronto\.$/]
+    ["what day it is?", /^For you, today is .+\. For Mantosh in Toronto, Canada, it is .+\.$/],
+    ["What time is it?", /^Your local time is .+\. For Mantosh in Toronto, Canada, it is .+\.$/]
   ]) {
     const response = await worker.fetch(request({ question }), utilityEnv);
     const payload = await response.json();
@@ -287,6 +287,25 @@ test("answers everyday date and time questions locally without AI or retrieval",
     assert.match(payload.answer, expected);
     assert.deepEqual(payload.sources, []);
   }
+});
+
+test("formats visitor time separately from Mantosh's published location", async () => {
+  const router = new SearchRouter({
+    profileFacts: async () => ({ location: "Toronto, Canada", time_zone: "America/Toronto" })
+  });
+  const now = new Date("2026-07-16T15:30:00Z");
+  const result = await router.route("What time is it?", { visitorTimeZone: "Asia/Kolkata", now });
+  assert.equal(result.kind, "social");
+  assert.equal(result.response.answer, "Your local time is 9:00 p.m. GMT+5:30. For Mantosh in Toronto, Canada, it is 11:30 a.m. EDT.");
+});
+
+test("uses Mantosh's Toronto timezone until a published timezone fact is available", async () => {
+  const router = new SearchRouter({ profileFacts: async () => ({ location: "Toronto, Canada" }) });
+  const result = await router.route("What time is it?", {
+    visitorTimeZone: "Asia/Kolkata",
+    now: new Date("2026-07-16T15:30:00Z")
+  });
+  assert.match(result.response.answer, /For Mantosh in Toronto, Canada, it is 11:30 a\.m\. EDT\.$/);
 });
 
 test("handles lightweight banter without retrieval or unsupported claims", async () => {

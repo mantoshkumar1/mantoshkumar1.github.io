@@ -234,16 +234,41 @@ const ASSISTANT_CRITICISM_RESPONSE = {
   followUpQuestions: []
 };
 
-function everydayUtilityResponse(value, now = new Date()) {
+function validTimeZone(value, fallback = "UTC") {
+  if (typeof value !== "string" || !value.trim()) return fallback;
+  try {
+    new Intl.DateTimeFormat("en-CA", { timeZone: value }).format();
+    return value;
+  } catch {
+    return fallback;
+  }
+}
+
+function formatDate(now, timeZone) {
+  return new Intl.DateTimeFormat("en-CA", { timeZone, weekday: "long", year: "numeric", month: "long", day: "numeric" }).format(now);
+}
+
+function formatTime(now, timeZone) {
+  return new Intl.DateTimeFormat("en-CA", { timeZone, hour: "numeric", minute: "2-digit", timeZoneName: "short" }).format(now);
+}
+
+function everydayUtilityResponse(value, { now = new Date(), visitorTimeZone, ownerLocation, ownerTimeZone } = {}) {
+  const visitorZone = validTimeZone(visitorTimeZone);
+  const mantoshZone = validTimeZone(ownerTimeZone, "America/Toronto");
+  const mantoshLocation = ownerLocation || "Toronto, Canada";
   const asksForDate = /^(?:(?:please )?(?:tell|show|give) me )?(?:what day (?:is it|it is)|what(?:'s| is) (?:the )?(?:day|date)(?: today)?|what(?:'s| is) today(?:'s)? date|today(?:'s)? date)[!.?\s]*$/i.test(value);
   if (asksForDate) {
-    const date = new Intl.DateTimeFormat("en-CA", { timeZone: "America/Toronto", weekday: "long", year: "numeric", month: "long", day: "numeric" }).format(now);
-    return { answer: `Today is ${date} in Toronto.`, followUpQuestions: [] };
+    return {
+      answer: `For you, today is ${formatDate(now, visitorZone)}. For Mantosh in ${mantoshLocation}, it is ${formatTime(now, mantoshZone)}.`,
+      followUpQuestions: []
+    };
   }
   const asksForTime = /^(?:(?:please )?(?:tell|show|give) me )?(?:what time is it|what(?:'s| is) the (?:current )?time|current time)[!.?\s]*$/i.test(value);
   if (asksForTime) {
-    const time = new Intl.DateTimeFormat("en-CA", { timeZone: "America/Toronto", hour: "numeric", minute: "2-digit", timeZoneName: "short" }).format(now);
-    return { answer: `It is ${time} in Toronto.`, followUpQuestions: [] };
+    return {
+      answer: `Your local time is ${formatTime(now, visitorZone)}. For Mantosh in ${mantoshLocation}, it is ${formatTime(now, mantoshZone)}.`,
+      followUpQuestions: []
+    };
   }
   return null;
 }
@@ -268,10 +293,14 @@ const CLARIFY_RESPONSE = {
 export class SearchRouter {
   constructor(metadataService) { this.metadataService = metadataService; }
 
-  async route(question) {
+  async route(question, context = {}) {
     const trimmed = question.trim();
-    const utility = everydayUtilityResponse(trimmed);
-    if (utility) return { kind: "social", response: utility };
+    let utility = everydayUtilityResponse(trimmed, context);
+    if (utility) {
+      const facts = await this.metadataService.profileFacts();
+      utility = everydayUtilityResponse(trimmed, { ...context, ownerLocation: facts?.location, ownerTimeZone: facts?.time_zone });
+      return { kind: "social", response: utility };
+    }
     const boundary = SCOPE_BOUNDARY_RESPONSES.find((response) => response.pattern.test(trimmed));
     if (boundary) return { kind: "boundary", response: { ...boundary, followUpQuestions: [], confidence: "low" } };
     const profileFact = PROFILE_FACT_RESPONSES.find((response) => response.pattern.test(trimmed));
