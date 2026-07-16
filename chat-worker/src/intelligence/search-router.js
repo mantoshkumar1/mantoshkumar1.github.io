@@ -86,6 +86,11 @@ const PROFILE_FACT_RESPONSES = [
 
 const SOCIAL_RESPONSES = [
   {
+    pattern: /^(?:(?:you(?:'re| are)?|are you|have you) (?:really )?(?:getting|gotten|become|becoming) better|(?:you(?:'ve| have) )?improved|(?:that(?:'s| is)|this is|much) better)[!.?\s]*$/i,
+    answer: "I think so. I'm getting better at understanding natural questions and giving useful answers about Mantosh without turning every reply into an engineering report.",
+    followUpQuestions: []
+  },
+  {
     pattern: /^(?:is (?:mantosh|he|this guy) (?:really |actually |any )?good(?: or just good at (?:making )?websites?)?|is (?:mantosh|he|this guy) (?:a )?good engineer)[!.?\s]*$/i,
     answer: "That's subjective—and this website is hardly an impartial judge. The fair test is Mantosh's published projects, résumé, and engineering decisions.",
     followUpQuestions: []

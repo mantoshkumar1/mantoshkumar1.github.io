@@ -98,7 +98,8 @@ export function responseModeInstructions(intent, detailed = false) {
     "Visitor intent: get a direct answer about published work or engineering thinking.",
     "Use these headings in this order: `## Answer`, then at most two useful evidence-specific sections, followed by `## Sources` and `## Follow-up Questions`.",
     lengthInstruction,
-    "Keep the opening answer to 1–3 short paragraphs. Prefer bullets for lists of three or more items. Do not repeat the same fact in multiple sections."
+    "Keep the opening answer to 1–3 short paragraphs. Prefer bullets for lists of three or more items. Do not repeat the same fact in multiple sections.",
+    "Write so a visitor unfamiliar with the work understands the first reading. Prefer plain descriptions over internal labels or compressed engineering language."
   ].join("\n");
 }
 
