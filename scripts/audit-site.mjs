@@ -141,6 +141,7 @@ const projectsHtml = await readFile(join(root, "projects/index.html"), "utf8");
 const knowledgeSystemHtml = await readFile(join(root, "projects/engineering-knowledge-system.html"), "utf8");
 const gttHtml = await readFile(join(root, "projects/gtt-price-calculator.html"), "utf8");
 const validationPlatformHtml = await readFile(join(root, "projects/validation-platform-optical-networking.html"), "utf8");
+const migrationHtml = await readFile(join(root, "projects/legacy-validation-framework-migration.html"), "utf8");
 const workflowToolkitHtml = await readFile(join(root, "projects/workflow-automation-toolkit.html"), "utf8");
 const validationPlatformKnowledge = await readFile(join(root, "knowledge/projects/validation-platform-optical-networking.md"), "utf8");
 if (!/<figure class=["']project-architecture["'][^>]*aria-labelledby=["']knowledge-architecture-caption["']/i.test(knowledgeSystemHtml) || !/<figcaption id=["']knowledge-architecture-caption["']/i.test(knowledgeSystemHtml)) { console.error("knowledge system: architecture must use an accessible figure and caption"); failures += 1; }
@@ -160,6 +161,7 @@ for (const [page, html, expectedCards] of [["index.html", homeHtml, 3], ["projec
 for (const [name, html, captionId, boundaryLabel, expectedSteps, requiredBoundary] of [
   ["GTT calculator", gttHtml, "gtt-architecture-caption", "GTT calculator boundaries", 5, /Broker remains separate[\s\S]*No credentials, live prices, account access, or trade execution/i],
   ["validation platform", validationPlatformHtml, "validation-architecture-caption", "Validation platform boundaries", 5, /Accountable judgment[\s\S]*Root cause, build health, and release risk remain engineering decisions/i],
+  ["legacy validation migration", migrationHtml, "migration-architecture-caption", "Legacy validation migration boundaries", 5, /Migration control[\s\S]*Ownership, dependencies, and changes stay synchronized/i],
   ["workflow toolkit", workflowToolkitHtml, "toolkit-architecture-caption", "Workflow Automation Toolkit boundaries", 5, /Local source files[\s\S]*Task-specific commands[\s\S]*Shared utility package/i],
 ]) {
   if (!new RegExp(`<figure class=["']project-architecture["'][^>]*aria-labelledby=["']${captionId}["']`, "i").test(html) || !new RegExp(`<figcaption id=["']${captionId}["']`, "i").test(html)) { console.error(`${name}: architecture must use an accessible figure and caption`); failures += 1; }

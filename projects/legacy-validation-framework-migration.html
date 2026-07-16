@@ -100,6 +100,31 @@
           </section>
 
           <section class="resume-section">
+            <h2>Migration architecture</h2>
+            <figure class="project-architecture" aria-labelledby="migration-architecture-caption">
+              <figcaption id="migration-architecture-caption"><strong>From parallel operation to controlled cutover</strong><span>The legacy path stayed live while synchronization, staged migration, and equivalence checks prepared the replacement.</span></figcaption>
+              <ul class="architecture-boundaries" aria-label="Legacy validation migration boundaries">
+                <li><strong>Legacy path</strong><span>Development and release validation continue</span></li>
+                <li><strong>Migration control</strong><span>Ownership, dependencies, and changes stay synchronized</span></li>
+                <li><strong>New platform</strong><span>Distributed execution and CI/CD become the destination</span></li>
+              </ul>
+              <div class="architecture-lanes">
+                <section class="architecture-lane" aria-labelledby="migration-path-title">
+                  <header><span aria-hidden="true">01</span><div><h3 id="migration-path-title">Controlled replacement path</h3><p>Progress is necessary; equivalent behaviour is the cutover gate.</p></div></header>
+                  <ol class="architecture-steps">
+                    <li><small>Operate</small><strong>Keep live</strong><span>Legacy validation continues</span></li>
+                    <li><small>Control</small><strong>Synchronize</strong><span>Track changes and ownership</span></li>
+                    <li><small>Migrate</small><strong>Move foundations</strong><span>Libraries before scripts</span></li>
+                    <li><small>Verify</small><strong>Compare</strong><span>Scenarios, results, and time</span></li>
+                    <li><small>Cutover</small><strong>Replace</strong><span>Retire the legacy path</span></li>
+                  </ol>
+                </section>
+              </div>
+              <p class="architecture-guardrail"><strong>Cutover guardrail</strong><span>Legacy-framework engineers verify required scenarios before retirement; confidential implementation details remain excluded.</span></p>
+            </figure>
+          </section>
+
+          <section class="resume-section">
             <h2>Cutover validation</h2>
             <p>Before retiring the legacy framework:</p>
             <ul class="case-study-list">

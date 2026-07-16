@@ -27,6 +27,10 @@ Mantosh Kumar led a two-person, approximately six-month migration of a legacy au
 
 Together, the two engineers migrated thousands of test cases across sanity, smoke, and regression suites.
 
+## Migration sequence
+
+The legacy validation path remained live while the migration dashboard controlled ownership, dependencies, and synchronization. Shared libraries moved before dependent scripts. Equivalent scenarios, results, coverage, and execution time formed the readiness gate before the distributed CI/CD platform replaced the legacy framework.
+
 ## Cutover evidence
 
 - Equivalent scenarios were executed through both frameworks.

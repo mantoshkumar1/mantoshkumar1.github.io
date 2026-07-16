@@ -2498,8 +2498,8 @@ main.project-shell > .container > .section-block {
 }
 
 @keyframes premium-enter {
-  from { opacity: 0; transform: translateY(16px); }
-  to { opacity: 1; transform: translateY(0); }
+  from { transform: translateY(16px); }
+  to { transform: translateY(0); }
 }
 
 @keyframes hero-orb-breathe {
@@ -2527,8 +2527,8 @@ main.project-shell > .container > .section-block {
   }
 
   @keyframes premium-fade-reveal {
-    from { opacity: .15; }
-    to { opacity: 1; }
+    from { transform: translateY(.5rem); }
+    to { transform: translateY(0); }
   }
 }
 
