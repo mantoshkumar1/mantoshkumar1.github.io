@@ -271,6 +271,24 @@ test("handles thanks and farewells without claiming missing knowledge", async ()
   }
 });
 
+test("answers everyday date and time questions locally without AI or retrieval", async () => {
+  const utilityEnv = {
+    ...env,
+    AI: { run: async () => { throw new Error("No AI call is expected for date or time questions"); } },
+    KNOWLEDGE_INDEX: { query: async () => { throw new Error("No retrieval is expected for date or time questions"); } }
+  };
+  for (const [question, expected] of [
+    ["what day it is?", /^Today is .+ in Toronto\.$/],
+    ["What time is it?", /^It is .+ in Toronto\.$/]
+  ]) {
+    const response = await worker.fetch(request({ question }), utilityEnv);
+    const payload = await response.json();
+    assert.equal(response.status, 200);
+    assert.match(payload.answer, expected);
+    assert.deepEqual(payload.sources, []);
+  }
+});
+
 test("handles lightweight banter without retrieval or unsupported claims", async () => {
   const socialEnv = {
     ...env,

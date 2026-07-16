@@ -13,7 +13,7 @@ This document is the canonical description of what is deployed. Architecture pro
 | Health | `https://ask-mantosh.mantoshk234.workers.dev/health` | Unauthenticated service health without configuration details |
 | Knowledge indexing | `POST /internal/index` | GitHub OIDC or manual recovery token only; intentionally unavailable to browsers through CORS |
 
-Last verified Worker deployment: `7e851176-0838-4c5b-8221-3b1e4904801e`. The active answer-policy cache namespace is `visitor-intent-v36-output-recovery`.
+Last verified Worker deployment: `b832c162-ce15-45ce-8d2b-f8ee2c188d90`. The active answer-policy cache namespace is `visitor-intent-v36-output-recovery`.
 
 ## Published inventory
 
@@ -99,7 +99,7 @@ The repository currently enforces:
 - internal link, fragment, and asset validation;
 - documentation drift checks;
 - autonomous content-lane counts and explicit zero-content states;
-- 74 Worker contract, deterministic social, light-banter, navigation, knowledge-backed public-profile fact, privacy-boundary, confidence-based lexical relevance gating, privacy-safe aggregate telemetry, transcript-derived scope routing, and achievement routing, natural profile-language routing, security, quota isolation, OIDC, retrieval, concise and explicitly detailed response modes, collapsed-Markdown repair, prompt, citation normalization and repair, one-shot invalid-output recovery, unsupported-answer source suppression, repetition and control-tag sanitization, verification-failure messaging, and failure-path tests;
+- 75 Worker contract, deterministic social, light-banter, everyday date/time utility, navigation, knowledge-backed public-profile fact, privacy-boundary, confidence-based lexical relevance gating, privacy-safe aggregate telemetry, transcript-derived scope routing, and achievement routing, natural profile-language routing, security, quota isolation, OIDC, retrieval, concise and explicitly detailed response modes, collapsed-Markdown repair, prompt, citation normalization and repair, one-shot invalid-output recovery, unsupported-answer source suppression, repetition and control-tag sanitization, verification-failure messaging, and failure-path tests;
 - 541 labelled Ask Mantosh evaluation cases with 9,344 objective assertions: 71 focused regressions plus 470 recruiter, student, curious-visitor, spouse, colleague, and founder questions covering social, navigation, unsupported, achievement, grounded-answer, and adversarial behavior;
 - a whole-site coverage audit that fails when any public HTML route lacks reviewed evidence, deterministic navigation, or a documented no-index exclusion;
 - static UI guards for immediate safe Markdown rendering.

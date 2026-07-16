@@ -234,6 +234,20 @@ const ASSISTANT_CRITICISM_RESPONSE = {
   followUpQuestions: []
 };
 
+function everydayUtilityResponse(value, now = new Date()) {
+  const asksForDate = /^(?:(?:please )?(?:tell|show|give) me )?(?:what day (?:is it|it is)|what(?:'s| is) (?:the )?(?:day|date)(?: today)?|what(?:'s| is) today(?:'s)? date|today(?:'s)? date)[!.?\s]*$/i.test(value);
+  if (asksForDate) {
+    const date = new Intl.DateTimeFormat("en-CA", { timeZone: "America/Toronto", weekday: "long", year: "numeric", month: "long", day: "numeric" }).format(now);
+    return { answer: `Today is ${date} in Toronto.`, followUpQuestions: [] };
+  }
+  const asksForTime = /^(?:(?:please )?(?:tell|show|give) me )?(?:what time is it|what(?:'s| is) the (?:current )?time|current time)[!.?\s]*$/i.test(value);
+  if (asksForTime) {
+    const time = new Intl.DateTimeFormat("en-CA", { timeZone: "America/Toronto", hour: "numeric", minute: "2-digit", timeZoneName: "short" }).format(now);
+    return { answer: `It is ${time} in Toronto.`, followUpQuestions: [] };
+  }
+  return null;
+}
+
 function isLowInformationQuestion(value) {
   const normalized = normalize(value);
   const tokens = normalized.split(" ").filter(Boolean);
@@ -256,6 +270,8 @@ export class SearchRouter {
 
   async route(question) {
     const trimmed = question.trim();
+    const utility = everydayUtilityResponse(trimmed);
+    if (utility) return { kind: "social", response: utility };
     const boundary = SCOPE_BOUNDARY_RESPONSES.find((response) => response.pattern.test(trimmed));
     if (boundary) return { kind: "boundary", response: { ...boundary, followUpQuestions: [], confidence: "low" } };
     const profileFact = PROFILE_FACT_RESPONSES.find((response) => response.pattern.test(trimmed));
