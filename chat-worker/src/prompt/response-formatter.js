@@ -1,5 +1,6 @@
 import { AppError } from "../errors.js";
 import { deduplicateSources } from "./citation-builder.js";
+import { NO_KNOWLEDGE_ANSWER } from "./system-prompt.js";
 
 function extractOutputText(response) {
   if (typeof response.output_text === "string" && response.output_text.trim()) return response.output_text.trim();
@@ -125,6 +126,13 @@ export function formatResponse(response, { sources, confidence, maxAnswerChars =
   if (!rawAnswer) throw new AppError(500, "empty_model_response", "The AI service returned no answer.");
   const retrievedSources = deduplicateSources(sources);
   const normalizedAnswer = addSubjectiveFraming(normalizeGroundedAnswer(rawAnswer, followUpQuestions), subjectiveProfile);
+  if (normalizedAnswer.replace(/^##\s+Answer\s*/i, "").trim() === NO_KNOWLEDGE_ANSWER) {
+    return {
+      answer: `## Answer\n${NO_KNOWLEDGE_ANSWER}`,
+      sources: [], relatedArticles: [], relatedProjects: [], relatedNotes: [], recommendations: [],
+      followUpQuestions: [], suggestedQuestions: [], confidence: "low", conversationId, action, success: true
+    };
+  }
   const canonicalSources = citedSources(normalizedAnswer, retrievedSources);
   const answer = canonicalizeSourceSection(normalizedAnswer, canonicalSources);
   if (answer.length > maxAnswerChars || /(?:<|&lt;)\/?(?:system|instructions|response|response_mode|user_question|conversation_memory|retrieved_documents|document)(?:\s+[^<>&]*)?\s*(?:>|&gt;)/i.test(answer)) {

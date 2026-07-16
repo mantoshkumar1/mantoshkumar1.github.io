@@ -135,6 +135,23 @@ test("returns the stable chat contract", async (t) => {
   assert.equal(payload.success, true);
 });
 
+test("returns no unrelated sources when a personal fact is unpublished", async () => {
+  const fallback = "I can't support that from Mantosh's published work. Ask me about his experience, projects, engineering approach, or fit for your problem.";
+  const fallbackEnv = {
+    ...env,
+    AI: { run: async (model) => model.includes("bge-m3") ? { data: [[0.1, 0.2]] } : { response: fallback } }
+  };
+  const response = await worker.fetch(request({ question: "How many children does Mantosh have?" }), fallbackEnv);
+  assert.equal(response.status, 200);
+  const payload = await response.json();
+  assert.match(payload.answer, /I can't support that from Mantosh's published work/);
+  assert.deepEqual(payload.sources, []);
+  assert.deepEqual(payload.recommendations, []);
+  assert.deepEqual(payload.relatedProjects, []);
+  assert.deepEqual(payload.followUpQuestions, []);
+  assert.equal(payload.confidence, "low");
+});
+
 test("rejects malformed JSON", async () => {
   const response = await worker.fetch(request("{oops"), env);
   assert.equal(response.status, 400);
@@ -728,6 +745,21 @@ test("collapses a repeated unsupported fallback to one readable response", () =>
   const result = formatSuccess({ output_text: Array.from({ length: 12 }, () => fallback).join(" ") }, []);
   assert.equal(result.answer, `## Answer\n${fallback}`);
   assert.equal(result.answer.match(/I can't support/g)?.length, 1);
+});
+
+test("removes unrelated retrieval material from an unsupported answer", () => {
+  const fallback = "I can't support that from Mantosh's published work. Ask me about his experience, projects, engineering approach, or fit for your problem.";
+  const source = { title: "Evidence-First Engineering Knowledge System", label: "Project: Evidence-First Engineering Knowledge System", category: "project", url: "/projects/engineering-knowledge-system.html" };
+  const result = formatSuccess({ output_text: fallback }, [source], {
+    recommendations: { all: [source], articles: [], projects: [source], notes: [] },
+    followUpQuestions: ["What projects has Mantosh published?"]
+  });
+  assert.equal(result.answer, `## Answer\n${fallback}`);
+  assert.deepEqual(result.sources, []);
+  assert.deepEqual(result.recommendations, []);
+  assert.deepEqual(result.relatedProjects, []);
+  assert.deepEqual(result.followUpQuestions, []);
+  assert.equal(result.confidence, "low");
 });
 
 test("fails closed when model output starts with a leaked prompt-control tag", () => {
