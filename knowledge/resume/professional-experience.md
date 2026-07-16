@@ -8,6 +8,7 @@ last_updated: "2026-07-15"
 related_topics: [engineering-capabilities, technical-skills, platform-engineering, backend-development, networking, career-history]
 visibility: "public"
 url: "/resume/"
+resume_pdf_sha256: "d7b15344e1f4015c43b8dae08afdbd535efd869829859a5c73be9f997c666b99"
 ---
 
 # Mantosh Kumar Résumé: Professional Experience

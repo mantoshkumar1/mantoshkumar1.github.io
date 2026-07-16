@@ -98,6 +98,8 @@ Before implementing any Ask Mantosh enhancement, check it against [`VISION.md`](
 
 Stop and challenge the user before implementing a proposal that would materially broaden Ask Mantosh into a general chatbot, weaken its evidence boundary, add unsupported or private information, create engagement for its own sake, imitate ChatGPT without portfolio value, or add complexity and visual clutter without improving visitor understanding. Explain the conflict and recommend the narrowest aligned alternative. Do not let incremental feature requests dilute the product's purpose.
 
+Whenever `resume/Resume-MantoshKumar-MSc-CS.pdf` changes, review the complete PDF and update `knowledge/resume/professional-experience.md` in the same change. Keep the résumé knowledge source factual, retrieval-ready, and free of contact details or unsupported proficiency claims. Update its `last_updated` value and `resume_pdf_sha256` only after confirming that the role history, responsibilities, skills, education, and recognition remain synchronized. Do not publish or merge a résumé change while Ask Mantosh still reflects the previous PDF.
+
 ### 12. Final actions
 
 Always finish with this checklist:

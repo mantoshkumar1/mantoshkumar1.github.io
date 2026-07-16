@@ -1,4 +1,5 @@
 import { access, readFile, readdir } from "node:fs/promises";
+import { createHash } from "node:crypto";
 import { dirname, join, relative, resolve } from "node:path";
 import { PERSONA_CASES } from "../chat-worker/eval/persona-cases.mjs";
 
@@ -45,6 +46,15 @@ async function markdownFiles(directory) {
 
 const siteOrigin = "https://mantoshkumar1.github.io";
 const workerOrigin = "https://ask-mantosh.mantoshk234.workers.dev";
+
+const resumePdf = await readFile(join(root, "resume/Resume-MantoshKumar-MSc-CS.pdf"));
+const resumeKnowledge = await read("knowledge/resume/professional-experience.md");
+const resumePdfSha256 = createHash("sha256").update(resumePdf).digest("hex");
+const recordedResumeSha256 = resumeKnowledge.match(/^resume_pdf_sha256:\s*["']?([a-f0-9]{64})["']?\s*$/m)?.[1];
+if (recordedResumeSha256 !== resumePdfSha256) {
+  failures.push("résumé knowledge is stale: review the updated PDF, refresh knowledge/resume/professional-experience.md, and record its new resume_pdf_sha256");
+}
+
 for (const [content, label] of [[readme, "README"], [state, "system state"]]) requireText(content, siteOrigin, label);
 for (const [content, label] of [[state, "system state"], [workerReadme, "Worker README"], [widget, "shared Ask Mantosh widget"]]) requireText(content, workerOrigin, label);
 requireText(docsIndex, "SYSTEM_STATE.md", "documentation map");

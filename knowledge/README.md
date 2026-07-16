@@ -64,3 +64,15 @@ Before setting `visibility: public`:
 4. Run `node scripts/audit-docs.mjs`, `node scripts/audit-ask-mantosh-coverage.mjs`, the site audits, and Worker tests.
 5. After synchronization, ask one grounded question and one unrelated question;
    verify canonical source labels and the fixed no-evidence response.
+
+## Résumé synchronization rule
+
+`resume/Resume-MantoshKumar-MSc-CS.pdf` and
+`knowledge/resume/professional-experience.md` are one evidence unit. Whenever
+the PDF changes, review the complete résumé and update the knowledge document's
+role history, responsibilities, skills, education, recognition, `last_updated`,
+and `resume_pdf_sha256` as needed. Contact details remain excluded from retrieval.
+
+`node scripts/audit-docs.mjs` compares the committed PDF hash with the reviewed
+hash in the knowledge document. CI fails when the PDF changes without an explicit
+knowledge review, preventing Ask Mantosh from silently serving an older résumé.
