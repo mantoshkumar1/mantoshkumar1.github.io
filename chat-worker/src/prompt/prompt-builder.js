@@ -45,6 +45,7 @@ export function buildPrompt({ question, retrieval, memory = { summary: "", messa
       "<conversation_memory>",
       conversation || "No earlier conversation context.",
       "</conversation_memory>",
+      "The current user question is the only task to answer. Conversation memory supplies context, not an answer template. Do not repeat an earlier response unless the visitor explicitly asks for it.",
       "",
       `<response_mode intent="${intent}" audience="${audience}">`,
       responseModeInstructions(intent, detailed),

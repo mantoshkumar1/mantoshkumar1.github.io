@@ -10,7 +10,7 @@ const requireText = (content, expected, label) => {
   if (!content.includes(expected)) failures.push(`${label}: missing ${expected}`);
 };
 
-const [readme, state, docsIndex, linkedInAudit, knowledgeReadme, workerReadme, workerDocsIndex, maintenance, troubleshooting, workerSource, wrangler, widget, deployWorkflow, seoWorkflow, evaluationDoc, evaluationDatasetText, evaluationResultsText, evaluationPackageText, knowledgeSystemPage, knowledgeSystemSource] = await Promise.all([
+const [readme, state, docsIndex, linkedInAudit, knowledgeReadme, workerReadme, workerDocsIndex, maintenance, troubleshooting, workerSource, wrangler, widget, deployWorkflow, seoWorkflow, evaluationDoc, evaluationDatasetText, evaluationResultsText, evaluationPackageText, knowledgeSystemPage, knowledgeSystemSource, browserTests, playwrightConfig] = await Promise.all([
   read("README.md"),
   read("docs/SYSTEM_STATE.md"),
   read("docs/README.md"),
@@ -30,7 +30,9 @@ const [readme, state, docsIndex, linkedInAudit, knowledgeReadme, workerReadme, w
   read("chat-worker/eval/results/latest.json"),
   read("chat-worker/package.json"),
   read("projects/engineering-knowledge-system.html"),
-  read("knowledge/projects/engineering-knowledge-system.md")
+  read("knowledge/projects/engineering-knowledge-system.md"),
+  read("tests/browser/visitor-flows.spec.mjs"),
+  read("playwright.config.mjs")
 ]);
 
 async function markdownFiles(directory) {
@@ -115,9 +117,12 @@ for (const [content, label] of [[state, "system state"], [workerReadme, "Worker 
   requireText(content, `${caseCount} labelled`, label);
   requireText(content, `${assertionLabel} objective assertions`, label);
 }
+const browserJourneyCount = (browserTests.match(/^test\s*\(/gm) || []).length;
+const browserProjectCount = (playwrightConfig.match(/\bname:\s*"(?:desktop|mobile)-chromium"/g) || []).length;
+const browserCheckCount = browserJourneyCount * browserProjectCount;
 for (const [content, label] of [[knowledgeSystemPage, "knowledge-system case study"], [knowledgeSystemSource, "knowledge-system source"]]) {
-  requireText(content, "Twenty", label);
-  requireText(content, "ten visitor journeys", label);
+  requireText(content, `${browserCheckCount} browser checks`, label);
+  requireText(content, `${browserJourneyCount} visitor journeys`, label);
 }
 requireText(workerDocsIndex, "EVALUATION.md", "Worker documentation map");
 requireText(workerReadme, "npm run evaluate", "Worker README");

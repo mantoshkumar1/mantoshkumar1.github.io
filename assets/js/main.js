@@ -302,8 +302,8 @@ class AskMantoshApp {
       this.id = this.messages.reduce((highest, message) => Math.max(highest, Number(message.id) || 0), 0);
       const latestAssistant = [...this.messages].reverse().find((message) => message.role === "assistant");
       if (latestAssistant?.followUps?.length) {
-        latestAssistant.followUps = this.usableFollowUps(latestAssistant.followUps);
-        if (!latestAssistant.followUps.length) latestAssistant.followUps = this.contextualFollowUps(latestAssistant);
+        latestAssistant.followUps = this.unaskedFollowUps(this.usableFollowUps(latestAssistant.followUps));
+        if (!latestAssistant.followUps.length) latestAssistant.followUps = this.unaskedFollowUps(this.contextualFollowUps(latestAssistant));
         this.view.setSuggestions(latestAssistant.followUps, (question) => this.ask(question), true);
       }
       return this.messages.length > 0;
@@ -454,8 +454,8 @@ class AskMantoshApp {
     } finally { if (this.controller === controller) { this.controller = null; this.updateExportAvailability(); } }
   }
   finish(message) {
-    message.followUps = this.usableFollowUps(message.followUps);
-    if (!message.followUps.length) message.followUps = this.contextualFollowUps(message);
+    message.followUps = this.unaskedFollowUps(this.usableFollowUps(message.followUps));
+    if (!message.followUps.length) message.followUps = this.unaskedFollowUps(this.contextualFollowUps(message));
     message.text = this.stripResponseSections(message.text);
     this.view.setStreaming(false);
     this.view.updateAssistant(message);
@@ -470,6 +470,14 @@ class AskMantoshApp {
     return (questions || []).map((question) => String(question || "").trim())
       .filter((question) => question.endsWith("?") && question.length <= 72 && question.split(/\s+/).length <= 12)
       .slice(0, 3);
+  }
+  followUpKey(question) {
+    const ignored = new Set(["a", "an", "the", "what", "which", "did", "does", "do", "has", "have", "had", "is", "are", "was", "were", "mantosh", "he", "his", "him", "personally", "during", "this", "that"]);
+    return String(question || "").toLowerCase().match(/[a-z0-9]+/g)?.filter((token) => !ignored.has(token)).sort().join(" ") || "";
+  }
+  unaskedFollowUps(questions) {
+    const asked = new Set(this.messages.filter((message) => message.role === "user").map((message) => this.followUpKey(message.text)).filter(Boolean));
+    return (questions || []).filter((question) => !asked.has(this.followUpKey(question))).slice(0, 3);
   }
   contextualFollowUps(message) {
     const generated = this.followUps(message.text); if (generated.length) return generated;

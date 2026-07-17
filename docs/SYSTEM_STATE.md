@@ -1,6 +1,6 @@
 # Production system state
 
-Verified: 2026-07-15
+Verified: 2026-07-17
 
 This document is the canonical description of what is deployed. Architecture proposals and future operating standards in other documents must not be read as already implemented unless they also appear here or in executable configuration.
 
@@ -13,7 +13,7 @@ This document is the canonical description of what is deployed. Architecture pro
 | Health | `https://ask-mantosh.mantoshk234.workers.dev/health` | Unauthenticated service health without configuration details |
 | Knowledge indexing | `POST /internal/index` | GitHub OIDC or manual recovery token only; intentionally unavailable to browsers through CORS |
 
-Last verified Worker deployment: `578d4e62-70b6-4433-b6ca-7dc6c31f5f9b`. The active answer-policy cache namespace is `visitor-intent-v47-resume-evidence`.
+Last verified Worker deployment: `31421b1f-e132-4c66-9ece-d4da0746b42c`. The active answer-policy cache namespace is `visitor-intent-v48-project-routing`.
 
 ## Published inventory
 
@@ -99,11 +99,11 @@ The repository currently enforces:
 - internal link, fragment, and asset validation;
 - documentation drift checks;
 - autonomous content-lane counts and explicit zero-content states;
-- 80 Worker contract, deterministic social, light-banter, visitor-local and profile-location date/time utility, navigation, knowledge-backed public-profile fact, privacy-boundary, confidence-based lexical relevance gating, privacy-safe aggregate telemetry, transcript-derived scope routing, achievement and engineering-ownership routing, authoritative-source routing for distinct technical-skills and value-fit response modes, natural profile-language routing, security, quota isolation, OIDC, retrieval, concise and explicitly detailed response modes, collapsed-Markdown repair, prompt, citation normalization and repair, one-shot invalid-output recovery, unsupported-answer source suppression, repetition and control-tag sanitization, verification-failure messaging, and failure-path tests;
+- 84 Worker contract, deterministic social, light-banter, visitor-local and profile-location date/time utility, navigation, knowledge-backed public-profile fact, privacy-boundary, confidence-based lexical relevance gating, privacy-safe aggregate telemetry, transcript-derived scope routing, achievement, distinct project-evidence, engineering-decision, and engineering-ownership routing, conversation-aware follow-up de-duplication, authoritative-source routing for distinct technical-skills and value-fit response modes, natural profile-language routing, security, quota isolation, OIDC, retrieval, concise and explicitly detailed response modes, collapsed-Markdown repair, prompt, citation normalization and repair, one-shot invalid-output recovery, unsupported-answer source suppression, repetition and control-tag sanitization, verification-failure messaging, and failure-path tests;
 - 554 labelled Ask Mantosh evaluation cases with 9,734 objective assertions covering 74 focused regressions plus recruiter, student, curious-visitor, spouse, colleague, and founder questions across social, navigation, unsupported, achievement, ownership, skills, fit, grounded-answer, and adversarial behavior;
 - a whole-site coverage audit that fails when any public HTML route lacks reviewed evidence, deterministic navigation, or a documented no-index exclusion;
 - static UI guards for immediate safe Markdown rendering.
-- 20 Playwright browser checks across desktop and mobile Chromium covering critical-page rendering, the recruiter path, evidence-driven project structure and cross-links, project and Insight navigation, newsletter validation, résumé and contact fallbacks, all appearance choices with Axe WCAG scans, randomized and page-aware Ask Mantosh prompts, evidence-navigation metadata, and Ask Mantosh minimize, export, and deliberate-clear behavior;
+- 22 Playwright browser checks across desktop and mobile Chromium covering critical-page rendering, the recruiter path, evidence-driven project structure and cross-links, project and Insight navigation, newsletter validation, résumé and contact fallbacks, all appearance choices with Axe WCAG scans, randomized and page-aware Ask Mantosh prompts, evidence-navigation metadata, and Ask Mantosh minimize, export, in-progress submission guidance, error readability, and deliberate-clear behavior;
 - generated artifact budgets of 36 KB per HTML page, 100 KB per CSS file, 60 KB total JavaScript, 180 KB per image, and 1 MB for the public artifact excluding the résumé PDF;
 - a revision-aware post-deployment smoke check for the homepage, published evaluation evidence, RSS feed, Ask Mantosh health, and deterministic newsletter navigation.
 

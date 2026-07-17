@@ -4,7 +4,7 @@ slug: "engineering-knowledge-system"
 category: "project"
 tags: [platform-engineering, retrieval-augmented-generation, cloudflare-workers, d1, vectorize, workers-ai, github-actions, accessibility, security, developer-experience]
 summary: "A production engineering publication and grounded assistant built with GitHub Pages, Cloudflare Workers, hybrid D1 and Vectorize retrieval, evidence-only generation, and automated release gates."
-last_updated: "2026-07-15"
+last_updated: "2026-07-17"
 related_topics: [ask-mantosh, knowledge-systems, hybrid-retrieval, ci-cd, trust-boundaries]
 visibility: "public"
 url: "/projects/engineering-knowledge-system.html"
@@ -49,7 +49,7 @@ Visitors can export the visible conversation as a local text file. The export co
 
 ### Automated release confidence
 
-Release gates check static generation, SEO, discoverability, internal links, accessibility semantics and preferences, documentation drift, content-lane inventory, Worker contract and security behaviors, and evaluation-result drift. Twenty Playwright checks exercise ten visitor journeys in desktop and mobile Chromium, including the recruiter path, themes with Axe WCAG scans, forms, contact fallback, project-decision presentation, and Ask Mantosh session controls. Generated asset budgets guard page weight before publication.
+Release gates check static generation, SEO, discoverability, internal links, accessibility semantics and preferences, documentation drift, content-lane inventory, Worker contract and security behaviors, and evaluation-result drift. The suite runs 22 browser checks across 11 visitor journeys in desktop and mobile Chromium, including the recruiter path, themes with Axe WCAG scans, forms, contact fallback, project-decision presentation, and Ask Mantosh session controls. Generated asset budgets guard page weight before publication.
 
 After GitHub Pages deploys, a revision-aware smoke check verifies the exact commit, homepage, published evaluation evidence, RSS feed, Ask Mantosh health, and deterministic newsletter navigation. Browser artifacts are retained for diagnosis. These checks do not claim a formal accessibility audit, cross-browser coverage, human visual approval, or production Core Web Vitals measurements.
 

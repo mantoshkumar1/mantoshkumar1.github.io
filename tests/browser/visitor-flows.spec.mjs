@@ -229,7 +229,7 @@ test("Ask Mantosh preserves minimized history, exports it, and clears deliberate
     await route.fulfill({
       contentType: "application/json",
       body: JSON.stringify({
-        answer: longAnswer, sources: [], followUpQuestions: [], suggestedQuestions: [], confidence: "high",
+        answer: longAnswer, sources: [], followUpQuestions: ["How do I subscribe?", "Which project best demonstrates Mantosh's fit?"], suggestedQuestions: [], confidence: "high",
         action: { type: "navigate", destinationType: "newsletter", label: "Newsletter", url: "/newsletter/" }, success: true
       })
     });
@@ -250,6 +250,8 @@ test("Ask Mantosh preserves minimized history, exports it, and clears deliberate
   await expect(page.locator(".ask-mantosh-message.user")).toContainText("How do I subscribe?");
   await expect(page.locator("#ask-mantosh-suggestions").getByText("Try asking next", { exact: true })).toHaveCount(0);
   await expect(page.locator("#ask-mantosh-suggestions .ask-mantosh-chip")).toHaveCount(1);
+  await expect(page.locator("#ask-mantosh-suggestions .ask-mantosh-chip")).toContainText("Which project best demonstrates Mantosh's fit?");
+  await expect(page.locator("#ask-mantosh-suggestions .ask-mantosh-chip")).not.toContainText("How do I subscribe?");
 
   const downloadPromise = page.waitForEvent("download");
   await page.getByRole("button", { name: /Export conversation/ }).click();

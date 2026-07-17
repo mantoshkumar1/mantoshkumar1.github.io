@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { formatError, formatSuccess } from "../src/formatter.js";
 import { verifyGitHubOidcToken } from "../src/github-oidc.js";
-import { AnalyticsService, RecommendationEngine, SearchRouter } from "../src/intelligence/index.js";
+import { AnalyticsService, MetadataService, RecommendationEngine, SearchRouter } from "../src/intelligence/index.js";
 import worker, { focusRetrievalForIntent } from "../src/index.js";
 import { audienceInstructions, buildPrompt, buildSystemPrompt, classifyQuestionIntent, conciseAchievementResponse, expandRetrievalQuery, isSubjectiveProfileQuestion, scoreRetrievalConfidence } from "../src/prompt/index.js";
 import { assessLexicalRelevance } from "../src/retrieval.js";
@@ -1006,6 +1006,9 @@ test("classifies visitor questions into profile, problem, and direct response mo
   assert.equal(classifyQuestionIntent("Tell me his career story and awards"), "achievement");
   assert.equal(classifyQuestionIntent("We have a slow release workflow. What should we improve?"), "problem");
   assert.equal(classifyQuestionIntent("Why did PhotoSahi avoid a backend?"), "direct");
+  assert.equal(classifyQuestionIntent("Which projects best demonstrate this fit?"), "projects");
+  assert.equal(classifyQuestionIntent("Tell me about Mantosh's projects"), "projects");
+  assert.equal(classifyQuestionIntent("Which decisions did Mantosh make during the migration?"), "decisions");
   assert.equal(isSubjectiveProfileQuestion("This guy is genius?"), true);
   assert.equal(isSubjectiveProfileQuestion("Tell me about his experience"), false);
 });
@@ -1044,6 +1047,8 @@ test("expands only profile retrieval with verified capability vocabulary", () =>
   assert.match(ownershipQuery, /^Mantosh personal engineering ownership contribution led migration integration/i);
   assert.match(expandRetrievalQuery("What are Mantosh's strongest technical skills?"), /^Engineering Capabilities and Technical Skills résumé role-backed/i);
   assert.match(expandRetrievalQuery("Where could Mantosh add the most value?"), /^Mantosh professional experience where documented experience is most relevant/i);
+  assert.match(expandRetrievalQuery("Which projects best demonstrate this fit?"), /^Legacy Validation Framework Migration Distributed Validation Platform/i);
+  assert.match(expandRetrievalQuery("Which decisions did Mantosh make during the migration?"), /^Legacy Validation Framework Migration Engineering decisions/i);
   assert.equal(expandRetrievalQuery("Why no PhotoSahi backend?", "Why no PhotoSahi backend?"), "Why no PhotoSahi backend?");
 });
 
@@ -1058,6 +1063,44 @@ test("keeps technical-skills and value-fit responses distinct", () => {
   assert.match(fitPrompt.input, /intent="fit"/);
   assert.match(fitPrompt.input, /engineering environments and problems/);
   assert.match(fitPrompt.input, /Do not repeat a generic biography/);
+});
+
+test("answers project and decision questions as distinct current tasks", () => {
+  const source = { title: "Legacy Validation Framework Migration", slug: "legacy-validation-framework-migration", category: "project", label: "Project: Legacy Validation Framework Migration", path: "knowledge/projects/legacy-validation-framework-migration.md", url: "/projects/legacy-validation-framework-migration.html" };
+  const retrieval = { chunks: [{ ...source, content: "Mantosh migrated shared libraries first and required equivalent results before cutover.", summary: "A live migration.", tags: "migration" }], sources: [source] };
+  const projectsPrompt = buildPrompt({ question: "Which projects best demonstrate this fit?", retrieval, memory: { summary: "", messages: [{ role: "assistant", content: "A previous fit answer." }] } });
+  assert.match(projectsPrompt.input, /intent="projects"/);
+  assert.match(projectsPrompt.input, /Name two to four actual project titles/);
+  assert.match(projectsPrompt.input, /Conversation memory supplies context, not an answer template/);
+  const decisionsPrompt = buildPrompt({ question: "Which decisions did Mantosh make during the migration?", retrieval });
+  assert.match(decisionsPrompt.input, /intent="decisions"/);
+  assert.match(decisionsPrompt.input, /choice, why it was made, and the trade-off/);
+});
+
+test("does not suggest questions already asked in the conversation", () => {
+  const followUps = new RecommendationEngine(null, {}).followUpQuestions({
+    sources: [{ category: "project" }],
+    intent: "decisions",
+    question: "Which decisions did Mantosh make during the migration?",
+    previousQuestions: ["What has Mantosh personally owned?", "What changed after the migration?"]
+  });
+  assert.deepEqual(followUps, [
+    "How did Mantosh reduce migration risk?",
+    "What does this project demonstrate?",
+    "How could this experience help a new team?"
+  ]);
+});
+
+test("selects distinct published projects for portfolio evidence answers", async () => {
+  const rows = [
+    { path: "knowledge/projects/legacy-validation-framework-migration.md", title: "Legacy Validation Framework Migration", slug: "legacy-validation-framework-migration", category: "project", summary: "A live migration.", url: "/projects/legacy-validation-framework-migration.html" },
+    { path: "knowledge/projects/validation-platform-optical-networking.md", title: "Validation Platform and Release Intelligence", slug: "validation-platform-optical-networking", category: "project", summary: "Reusable validation infrastructure.", url: "/projects/validation-platform-optical-networking.html" },
+    { path: "knowledge/projects/workflow-automation-toolkit.md", title: "Workflow Automation Toolkit", slug: "workflow-automation-toolkit", category: "project", summary: "Local workflow automation.", url: "/projects/workflow-automation-toolkit.html" }
+  ];
+  const db = { prepare: () => ({ bind: (...bindings) => ({ all: async () => ({ results: bindings.length === 6 ? rows : [] }) }) }) };
+  const projects = await new MetadataService(db).featuredProjects();
+  assert.deepEqual(projects.map((project) => project.title), rows.map((row) => row.title));
+  assert.ok(projects.every((project) => project.label.startsWith("Project: ")));
 });
 
 test("routes skills and fit to their authoritative published sources", async () => {
@@ -1189,6 +1232,12 @@ test("allows a longer concise answer only when the visitor explicitly requests d
 test("wraps an unformatted grounded model answer in a readable heading", () => {
   const result = formatSuccess({ output_text: "A concise grounded answer." }, []);
   assert.equal(result.answer, "## Answer\nA concise grounded answer.");
+});
+
+test("removes a redundant generic heading before a specific answer heading", () => {
+  const result = formatSuccess({ output_text: "## Answer\n## Best project evidence\n- Legacy Validation Framework Migration" }, []);
+  assert.match(result.answer, /^## Best project evidence/);
+  assert.doesNotMatch(result.answer, /^## Answer/m);
 });
 
 test("normalizes literal model bullets into semantic Markdown list items", () => {

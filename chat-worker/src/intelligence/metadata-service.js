@@ -22,6 +22,21 @@ export class MetadataService {
     return row ? toDestination(row) : null;
   }
 
+  async featuredProjects() {
+    if (!this.db) return [];
+    const paths = [
+      "knowledge/projects/legacy-validation-framework-migration.md",
+      "knowledge/projects/validation-platform-optical-networking.md",
+      "knowledge/projects/workflow-automation-toolkit.md"
+    ];
+    const result = await this.db.prepare(
+      `SELECT path, title, slug, category, tags, summary, related_topics, url
+       FROM documents WHERE visibility = 'public' AND path IN (?, ?, ?)
+       ORDER BY CASE path WHEN ? THEN 1 WHEN ? THEN 2 WHEN ? THEN 3 END`
+    ).bind(...paths, ...paths).all();
+    return (result.results || []).map(recommendationSource);
+  }
+
   async profileFacts() {
     if (!this.db) return null;
     const result = await this.db.prepare(
@@ -51,6 +66,11 @@ export class MetadataService {
     const result = await statement.bind(...bindings).all();
     return result.results || [];
   }
+}
+
+function recommendationSource(row) {
+  const category = row.category[0].toUpperCase() + row.category.slice(1).replaceAll("-", " ");
+  return { ...row, label: `${category}: ${row.title}` };
 }
 
 function safeFactValue(value) {

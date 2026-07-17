@@ -1,6 +1,16 @@
 const SUBJECTIVE_PROFILE_PATTERN = /\b(?:genius|brilliant|smart|impressive|exceptional|great engineer|good engineer|really good|actually good|overrated)\b/i;
 const ACHIEVEMENT_PATTERN = /\b(?:achievement|achievements|accomplishment|accomplishments|award|awards|recognition|honou?rs?|career story|his story|journey|education|academic|gate|heroes of tomorrow|something interesting about (?:mantosh|him))\b/i;
 const DETAILED_RESPONSE_PATTERN = /\b(?:in detail|detailed|deep dive|deeply|comprehensive|thorough|step[- ]by[- ]step|full explanation|explain fully|long answer)\b/i;
+const PROJECT_PATTERNS = [
+  /\bwhich projects?\b[^?]*\b(?:demonstrate|show|prove|represent)\b/i,
+  /\b(?:best|strongest|most relevant) projects?\b/i,
+  /\b(?:tell|show|list|explain)\b[^?]*\bmantosh(?:'s|’s)? projects?\b/i
+];
+const DECISION_PATTERNS = [
+  /\b(?:which|what) (?:engineering |technical )?decisions? did (?:mantosh|he) make\b/i,
+  /\bdecisions?\b[^?]*\b(?:migration|project|platform|photosahi|validation)\b/i,
+  /\b(?:migration|project|platform|photosahi|validation)\b[^?]*\b(?:trade-offs?|choices?|decisions?)\b/i
+];
 const OWNERSHIP_PATTERNS = [
   /\b(?:what|which) (?:has|did|does) (?:mantosh|he) (?:personally |himself )?(?:own|owned|lead|led|deliver|delivered)\b/i,
   /\bwhat (?:was|were) (?:mantosh|he) (?:personally )?responsible for\b/i,
@@ -46,6 +56,8 @@ const PROBLEM_PATTERNS = [
 export function classifyQuestionIntent(question) {
   const value = String(question || "").trim();
   if (OWNERSHIP_PATTERNS.some((pattern) => pattern.test(value))) return "ownership";
+  if (PROJECT_PATTERNS.some((pattern) => pattern.test(value))) return "projects";
+  if (DECISION_PATTERNS.some((pattern) => pattern.test(value))) return "decisions";
   if (ACHIEVEMENT_PATTERN.test(value)) return "achievement";
   if (SKILLS_PATTERNS.some((pattern) => pattern.test(value))) return "skills";
   if (FIT_PATTERNS.some((pattern) => pattern.test(value))) return "fit";
@@ -78,6 +90,26 @@ export function responseModeInstructions(intent, detailed = false) {
       "Use plain language that a non-engineer can understand immediately. Prefer `kept both frameworks aligned` over `owned synchronization`, and explain the final comparison checks instead of saying `led cutover validation`.",
       "Avoid compressed corporate language. Use short sentences and familiar verbs such as built, migrated, compared, checked, taught, and led.",
       "Use up to six concise bullets and keep the answer body before Sources under 170 words. Do not infer sole ownership from participation."
+    ].join("\n");
+  }
+  if (intent === "projects") {
+    return [
+      "Visitor intent: identify actual published projects that best support the capability or fit being discussed.",
+      "Use these headings in this order: `## Best project evidence`, `## Why these projects`, `## Sources`, `## Follow-up Questions`.",
+      "Name two to four actual project titles from the retrieved project documents. For each project, state in one concise sentence what engineering capability it demonstrates.",
+      "Do not present job categories, capability areas, responsibilities, or employer work as if they were project names.",
+      "Use the current question as the task. Earlier conversation is context only; do not repeat the previous answer.",
+      "Keep the answer body before Sources under 150 words."
+    ].join("\n");
+  }
+  if (intent === "decisions") {
+    return [
+      "Visitor intent: understand the engineering decisions Mantosh made and the trade-offs behind them.",
+      "Use these headings in this order: `## Engineering decisions`, `## Why they mattered`, `## Sources`, `## Follow-up Questions`.",
+      "For each decision, write a complete plain-language sentence that states the choice, why it was made, and the trade-off where the source supports one.",
+      "Do not turn fragments such as `freeze the legacy framework` into standalone bullets. Do not repeat the same decision under both headings.",
+      "Name the project or migration in the opening so the answer makes sense without earlier conversation.",
+      "Keep the answer body before Sources under 170 words."
     ].join("\n");
   }
   if (intent === "achievement") {
@@ -157,6 +189,8 @@ export function audienceInstructions(audience) {
 export function expandRetrievalQuery(question, conversationQuery = question) {
   const intent = classifyQuestionIntent(question);
   if (intent === "ownership") return `Mantosh personal engineering ownership contribution led migration integration shared libraries CI/CD dashboard project decisions ${conversationQuery}`;
+  if (intent === "projects") return `Legacy Validation Framework Migration Distributed Validation Platform Evidence-First Engineering Knowledge System PhotoSahi Workflow Automation Toolkit projects engineering evidence ${conversationQuery}`;
+  if (intent === "decisions") return `Legacy Validation Framework Migration Engineering decisions migrate while development continued visibility shared libraries equivalence cutover trade-offs ${conversationQuery}`;
   if (intent === "achievement") return `Mantosh Verified Achievements Awards Education GATE Top 1% Technical University of Munich Heroes of Tomorrow ${conversationQuery}`;
   if (intent === "skills") return `Engineering Capabilities and Technical Skills résumé role-backed platform engineering automation Python Django backend networking distributed validation operational intelligence ${conversationQuery}`;
   if (intent === "fit") return `Mantosh professional experience where documented experience is most relevant engineering platforms validation infrastructure workflow automation backend operational intelligence ${conversationQuery}`;

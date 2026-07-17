@@ -11,7 +11,7 @@ import { enforceRateLimit } from "./rate-limit.js";
 import { assessLexicalRelevance, retrieveKnowledge, searchLexicalKnowledge } from "./retrieval.js";
 import { parseChatRequest } from "./validation.js";
 
-const ANSWER_POLICY_VERSION = "visitor-intent-v47-resume-evidence";
+const ANSWER_POLICY_VERSION = "visitor-intent-v48-project-routing";
 const RETRYABLE_MODEL_OUTPUT_CODES = new Set(["workers_ai_invalid_response", "empty_model_response", "invalid_model_response", "uncited_model_response"]);
 
 async function generateVerifiedResponse({ env, config, prompt, formatOptions }) {
@@ -111,7 +111,13 @@ export async function focusRetrievalForIntent(retrieval, intent, env, config) {
       };
     }
   }
-  if (intent !== "ownership") return retrieval;
+  if (intent === "projects") {
+    const projectChunks = retrieval.chunks.filter((chunk) => chunk.category === "project");
+    if (!projectChunks.length) return retrieval;
+    const paths = new Set(projectChunks.map((chunk) => chunk.path));
+    return { ...retrieval, chunks: projectChunks, sources: retrieval.sources.filter((source) => paths.has(source.path)) };
+  }
+  if (!["ownership", "decisions"].includes(intent)) return retrieval;
   const projectChunks = retrieval.chunks.filter((chunk) => chunk.category === "project");
   if (!projectChunks.length) return retrieval;
   const paths = new Set(projectChunks.map((chunk) => chunk.path));
@@ -233,7 +239,8 @@ export default {
       const retrieval = await focusRetrievalForIntent(retrieved, intent, env, config);
       const recommendationEngine = new RecommendationEngine(metadataService, config);
       const recommendations = await recommendationEngine.recommend({ sources: retrieval.sources });
-      const followUpQuestions = recommendationEngine.followUpQuestions({ sources: retrieval.sources, intent, question });
+      const previousQuestions = conversation.messages.filter((message) => message.role === "user").map((message) => message.content);
+      const followUpQuestions = recommendationEngine.followUpQuestions({ sources: retrieval.sources, intent, question, previousQuestions });
       const confidenceDetails = new ConfidenceScorer().score(retrieval);
       analytics.trackInBackground(ctx, retrieval.sources.length ? "knowledge_search" : "knowledge_gap", question);
 
@@ -244,6 +251,38 @@ export default {
         return wantsStream
           ? eventStream([{ type: "metadata", data: result }, { type: "response.output_text.delta", data: { delta: result.answer } }, { type: "done", data: {} }], origin)
           : json(result, 200, origin);
+      }
+
+      if (intent === "projects") {
+        const sources = await metadataService.featuredProjects();
+        if (sources.length) {
+          analytics.trackAggregatesInBackground(ctx, [["post_gate_outcome", "grounded_answer"]]);
+          const answer = [
+            "## Best project evidence",
+            ...sources.map((source) => `- **[${source.title}](${source.url})** — ${source.summary}`),
+            "",
+            "## Why these projects",
+            "Together, they show live platform migration, distributed validation and release intelligence, and practical workflow automation.",
+            "",
+            "## Sources",
+            ...sources.map((source) => `- [${source.label}](${source.url})`),
+            "",
+            "## Follow-up Questions",
+            ...followUpQuestions.map((item) => `- ${item}`)
+          ].join("\n");
+          const result = {
+            answer, sources, relatedArticles: recommendations.articles, relatedProjects: recommendations.projects,
+            relatedNotes: recommendations.notes, recommendations: recommendations.all, followUpQuestions,
+            suggestedQuestions: followUpQuestions, confidence: retrieval.confidence, confidenceDetails,
+            conversationId, action: null, success: true, cache: "miss"
+          };
+          analytics.trackInBackground(ctx, "knowledge_answer", "project");
+          ctx?.waitUntil?.(memory.recordTurn({ conversationId, question, answer, sources }));
+          if (cacheKey) writeCachedJson("response", cacheKey, { ...result, conversationId: undefined, cache: undefined }, config.responseCacheTtlSeconds, ctx);
+          return wantsStream
+            ? eventStream([{ type: "metadata", data: result }, { type: "response.output_text.delta", data: { delta: answer } }, { type: "done", data: {} }], origin)
+            : json(result, 200, origin);
+        }
       }
 
       if (intent === "ownership") {
