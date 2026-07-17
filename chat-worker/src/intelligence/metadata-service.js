@@ -46,6 +46,19 @@ export class MetadataService {
     return entries.length ? Object.fromEntries(entries) : null;
   }
 
+  async outsideNokiaEvidence() {
+    if (!this.db) return null;
+    const path = "knowledge/experience/outside-nokia-experience.md";
+    const [factsResult, document] = await Promise.all([
+      this.db.prepare("SELECT fact_key, fact_value FROM profile_facts WHERE source_path = ? ORDER BY fact_key").bind(path).all(),
+      this.db.prepare("SELECT path, title, slug, category, tags, summary, related_topics, url FROM documents WHERE path = ? AND visibility = 'public' LIMIT 1").bind(path).first()
+    ]);
+    const facts = Object.fromEntries((factsResult.results || []).map((row) => [row.fact_key, safeFactValue(row.fact_value)]));
+    return document && typeof facts.outside_nokia_intro === "string" && Array.isArray(facts.outside_nokia_highlights)
+      ? { intro: facts.outside_nokia_intro, highlights: facts.outside_nokia_highlights, source: recommendationSource(document) }
+      : null;
+  }
+
   async related({ sources, limit }) {
     if (!this.db || !sources.length) return [];
     const paths = sources.map((source) => source.path).filter(Boolean);

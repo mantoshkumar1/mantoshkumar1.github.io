@@ -7,8 +7,8 @@ const MAX_CHUNKS_PER_DOCUMENT = 20;
 const MAX_CHUNK_CHARS = 2_000;
 const CATEGORIES = new Set(["project", "article", "note", "experience", "resume", "faq"]);
 const CATEGORY_DIRECTORIES = Object.freeze({ project: "projects", article: "articles", note: "notes", experience: "experience", resume: "resume", faq: "faq" });
-const PROFILE_FACT_SOURCE = "knowledge/faq/about-mantosh.md";
-const PROFILE_FACT_KEYS = new Set(["location", "time_zone", "citizenship", "work_authorization", "current_employer", "current_role", "employment_history", "experience_years", "target_roles", "capabilities", "skills", "ownership_summary", "ownership_highlights", "ownership_team_context"]);
+const FACT_SOURCES = new Set(["knowledge/faq/about-mantosh.md", "knowledge/experience/outside-nokia-experience.md"]);
+const PROFILE_FACT_KEYS = new Set(["location", "time_zone", "citizenship", "work_authorization", "current_employer", "current_role", "employment_history", "experience_years", "target_roles", "capabilities", "skills", "ownership_summary", "ownership_highlights", "ownership_team_context", "outside_nokia_intro", "outside_nokia_highlights"]);
 
 function isString(value, max = 10_000) {
   return typeof value === "string" && value.length > 0 && value.length <= max;
@@ -45,7 +45,7 @@ function validateDocument(document) {
   }
   const facts = document.facts || {};
   if (!facts || typeof facts !== "object" || Array.isArray(facts)) throw badRequest("Invalid document facts.");
-  if (Object.keys(facts).length && document.path !== PROFILE_FACT_SOURCE) throw badRequest("Profile facts must use the canonical profile source.");
+  if (Object.keys(facts).length && !FACT_SOURCES.has(document.path)) throw badRequest("Facts must use an approved canonical source.");
   for (const [key, factValue] of Object.entries(facts)) {
     const values = Array.isArray(factValue) ? factValue : [factValue];
     if (!PROFILE_FACT_KEYS.has(key) || !values.length || values.length > 24 || values.some((item) => !isString(item, 200))) throw badRequest("Invalid profile fact.");

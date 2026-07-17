@@ -3,7 +3,7 @@ import test from "node:test";
 import { formatError, formatSuccess } from "../src/formatter.js";
 import { verifyGitHubOidcToken } from "../src/github-oidc.js";
 import { AnalyticsService, MetadataService, RecommendationEngine, SearchRouter } from "../src/intelligence/index.js";
-import worker, { focusRetrievalForIntent } from "../src/index.js";
+import worker, { focusRetrievalForIntent, projectEvidenceLines } from "../src/index.js";
 import { audienceInstructions, buildPrompt, buildSystemPrompt, classifyQuestionIntent, conciseAchievementResponse, expandRetrievalQuery, isScopedWorkQuestion, isSubjectiveProfileQuestion, scoreRetrievalConfidence } from "../src/prompt/index.js";
 import { assessLexicalRelevance } from "../src/retrieval.js";
 
@@ -621,6 +621,26 @@ test("keeps authenticated knowledge synchronization independent of visitor AI qu
   assert.equal((await response.json()).indexed, true);
 });
 
+test("accepts deterministic outside-Nokia facts only from their approved knowledge source", async () => {
+  const indexEnv = {
+    ...env,
+    CACHE_VERSION: { put: async () => {} },
+    KNOWLEDGE_INDEX: { upsert: async () => {}, deleteByIds: async () => {} }
+  };
+  const response = await worker.fetch(new Request("https://worker.example/internal/index", {
+    method: "POST",
+    headers: { Authorization: "Bearer indexer-test-token", "Content-Type": "application/json" },
+    body: JSON.stringify({ action: "upsert", document: {
+      path: "knowledge/experience/outside-nokia-experience.md", checksum: "c".repeat(64), title: "Engineering Work Outside Nokia", slug: "engineering-work-outside-nokia", category: "experience",
+      tags: ["career-history"], summary: "Role-by-role evidence.", last_updated: "2026-07-17", related_topics: ["professional-experience"], visibility: "public", url: "/experience/",
+      facts: { outside_nokia_intro: "Verified role evidence.", outside_nokia_highlights: ["KI Labs — Built backend services"] },
+      chunks: [{ id: "outside-nokia-chunk", content: "KI Labs backend evidence." }]
+    } })
+  }), indexEnv);
+  assert.equal(response.status, 200);
+  assert.equal((await response.json()).indexed, true);
+});
+
 test("accepts a signed GitHub OIDC token only for the sync workflow on main", async () => {
   const pair = await crypto.subtle.generateKey({ name: "RSASSA-PKCS1-v1_5", modulusLength: 2048, publicExponent: new Uint8Array([1, 0, 1]), hash: "SHA-256" }, true, ["sign", "verify"]);
   const jwk = { ...(await crypto.subtle.exportKey("jwk", pair.publicKey)), kid: "test-key", use: "sig", alg: "RS256" };
@@ -1009,6 +1029,8 @@ test("classifies visitor questions into profile, problem, and direct response mo
   assert.equal(classifyQuestionIntent("Which projects best demonstrate this fit?"), "projects");
   assert.equal(classifyQuestionIntent("Tell me about Mantosh's projects"), "projects");
   assert.equal(classifyQuestionIntent("Which decisions did Mantosh make during the migration?"), "decisions");
+  assert.equal(classifyQuestionIntent("What did Mantosh build outside Nokia?"), "outside-nokia");
+  assert.equal(classifyQuestionIntent("Describe his non-Nokia work"), "outside-nokia");
   assert.equal(classifyQuestionIntent("What outcomes did his ownership produce?"), "outcomes");
   assert.equal(classifyQuestionIntent("What changed after the migration?"), "outcomes");
   assert.equal(isSubjectiveProfileQuestion("This guy is genius?"), true);
@@ -1053,6 +1075,7 @@ test("expands retrieval without forcing broad questions toward the legacy migrat
   assert.match(expandRetrievalQuery("Which projects best demonstrate this fit?"), /^Legacy Validation Framework Migration Distributed Validation Platform/i);
   assert.match(expandRetrievalQuery("Which decisions did Mantosh make during the migration?"), /^Engineering decisions choices constraints trade-offs/i);
   assert.match(expandRetrievalQuery("What outcomes did his work produce?"), /^Mantosh documented outcomes results systems delivered across professional experience/i);
+  assert.match(expandRetrievalQuery("What did Mantosh build outside Nokia?"), /^Engineering Work Outside Nokia KI Labs Siemens Intel Cisco Aricent/i);
   assert.equal(isScopedWorkQuestion("What outcomes did this project produce?"), true);
   assert.equal(isScopedWorkQuestion("What outcomes did his work produce?"), false);
   assert.equal(expandRetrievalQuery("Why no PhotoSahi backend?", "Why no PhotoSahi backend?"), "Why no PhotoSahi backend?");
@@ -1107,6 +1130,28 @@ test("selects distinct published projects for portfolio evidence answers", async
   const projects = await new MetadataService(db).featuredProjects();
   assert.deepEqual(projects.map((project) => project.title), rows.map((row) => row.title));
   assert.ok(projects.every((project) => project.label.startsWith("Project: ")));
+});
+
+test("renders featured project titles as direct Markdown links compatible with the safe client renderer", () => {
+  const lines = projectEvidenceLines([{ title: "Validation Platform", url: "/projects/validation-platform.html", summary: "Grounded project evidence." }]);
+  assert.deepEqual(lines, ["- [Validation Platform](/projects/validation-platform.html) — Grounded project evidence."]);
+  assert.doesNotMatch(lines[0], /\*\*\[/);
+});
+
+test("loads outside-Nokia evidence as employer-attributed deterministic facts", async () => {
+  const path = "knowledge/experience/outside-nokia-experience.md";
+  const facts = [
+    { fact_key: "outside_nokia_intro", fact_value: JSON.stringify("Verified work outside Nokia.") },
+    { fact_key: "outside_nokia_highlights", fact_value: JSON.stringify(["KI Labs — Backend systems", "Siemens — SDN and NFV research"]) }
+  ];
+  const document = { path, title: "Engineering Work Outside Nokia", slug: "engineering-work-outside-nokia", category: "experience", tags: "[]", summary: "Role evidence.", related_topics: "[]", url: "/experience/" };
+  const db = { prepare: (sql) => ({ bind: () => ({
+    all: async () => ({ results: sql.includes("profile_facts") ? facts : [] }),
+    first: async () => sql.includes("FROM documents") ? document : null
+  }) }) };
+  const evidence = await new MetadataService(db).outsideNokiaEvidence();
+  assert.deepEqual(evidence.highlights, ["KI Labs — Backend systems", "Siemens — SDN and NFV research"]);
+  assert.equal(evidence.source.label, "Experience: Engineering Work Outside Nokia");
 });
 
 test("routes skills and fit to their authoritative published sources", async () => {
