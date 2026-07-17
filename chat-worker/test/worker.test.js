@@ -4,7 +4,7 @@ import { formatError, formatSuccess } from "../src/formatter.js";
 import { verifyGitHubOidcToken } from "../src/github-oidc.js";
 import { AnalyticsService, MetadataService, RecommendationEngine, SearchRouter } from "../src/intelligence/index.js";
 import worker, { focusRetrievalForIntent } from "../src/index.js";
-import { audienceInstructions, buildPrompt, buildSystemPrompt, classifyQuestionIntent, conciseAchievementResponse, expandRetrievalQuery, isSubjectiveProfileQuestion, scoreRetrievalConfidence } from "../src/prompt/index.js";
+import { audienceInstructions, buildPrompt, buildSystemPrompt, classifyQuestionIntent, conciseAchievementResponse, expandRetrievalQuery, isScopedWorkQuestion, isSubjectiveProfileQuestion, scoreRetrievalConfidence } from "../src/prompt/index.js";
 import { assessLexicalRelevance } from "../src/retrieval.js";
 
 const TEST_PROFILE_FACTS = [
@@ -1009,6 +1009,8 @@ test("classifies visitor questions into profile, problem, and direct response mo
   assert.equal(classifyQuestionIntent("Which projects best demonstrate this fit?"), "projects");
   assert.equal(classifyQuestionIntent("Tell me about Mantosh's projects"), "projects");
   assert.equal(classifyQuestionIntent("Which decisions did Mantosh make during the migration?"), "decisions");
+  assert.equal(classifyQuestionIntent("What outcomes did his ownership produce?"), "outcomes");
+  assert.equal(classifyQuestionIntent("What changed after the migration?"), "outcomes");
   assert.equal(isSubjectiveProfileQuestion("This guy is genius?"), true);
   assert.equal(isSubjectiveProfileQuestion("Tell me about his experience"), false);
 });
@@ -1037,18 +1039,22 @@ test("keeps deterministic follow-up questions concise and grammatical", () => {
   ]);
 });
 
-test("expands only profile retrieval with verified capability vocabulary", () => {
+test("expands retrieval without forcing broad questions toward the legacy migration", () => {
   const profileQuery = expandRetrievalQuery("Tell me about this guy", "Tell me about this guy");
   assert.match(profileQuery, /^About Mantosh Where His Experience Can Help Engineering Capabilities Technical Skills/i);
   assert.match(expandRetrievalQuery("What kind of guy he is?"), /^About Mantosh Where His Experience Can Help Engineering Capabilities Technical Skills/i);
   const achievementQuery = expandRetrievalQuery("What are his achievements?", "What are his achievements?");
   assert.match(achievementQuery, /^Mantosh Verified Achievements Awards Education GATE Top 1%/i);
   const ownershipQuery = expandRetrievalQuery("What has Mantosh personally owned?");
-  assert.match(ownershipQuery, /^Mantosh personal engineering ownership contribution led migration integration/i);
+  assert.match(ownershipQuery, /^Mantosh professional experience personally built developed designed led architected/i);
+  assert.doesNotMatch(ownershipQuery, /legacy|shared libraries|dashboard/i);
   assert.match(expandRetrievalQuery("What are Mantosh's strongest technical skills?"), /^Engineering Capabilities and Technical Skills résumé role-backed/i);
   assert.match(expandRetrievalQuery("Where could Mantosh add the most value?"), /^Mantosh professional experience where documented experience is most relevant/i);
   assert.match(expandRetrievalQuery("Which projects best demonstrate this fit?"), /^Legacy Validation Framework Migration Distributed Validation Platform/i);
-  assert.match(expandRetrievalQuery("Which decisions did Mantosh make during the migration?"), /^Legacy Validation Framework Migration Engineering decisions/i);
+  assert.match(expandRetrievalQuery("Which decisions did Mantosh make during the migration?"), /^Engineering decisions choices constraints trade-offs/i);
+  assert.match(expandRetrievalQuery("What outcomes did his work produce?"), /^Mantosh documented outcomes results systems delivered across professional experience/i);
+  assert.equal(isScopedWorkQuestion("What outcomes did this project produce?"), true);
+  assert.equal(isScopedWorkQuestion("What outcomes did his work produce?"), false);
   assert.equal(expandRetrievalQuery("Why no PhotoSahi backend?", "Why no PhotoSahi backend?"), "Why no PhotoSahi backend?");
 });
 
@@ -1119,6 +1125,30 @@ test("routes skills and fit to their authoritative published sources", async () 
   assert.equal(fit.sources[0].path, "knowledge/resume/professional-experience.md");
 });
 
+test("routes broad career ownership and outcomes to role-by-role evidence while preserving scoped projects", async () => {
+  const resume = { title: "Mantosh Kumar Résumé: Professional Experience", slug: "mantosh-kumar-professional-experience", category: "resume", path: "knowledge/resume/professional-experience.md", url: "/resume/" };
+  const env = { KNOWLEDGE_DB: { prepare: () => ({ bind: () => ({ all: async () => ({ results: [{ chunk_id: "resume-1", content: "Nokia, KI Labs, Siemens, Intel, Cisco, and Aricent role evidence.", tags: "[]", summary: "Role-by-role evidence.", related_topics: "[]", ...resume }] }) }) }) } };
+  const project = { title: "PhotoSahi", slug: "photosahi", category: "project", path: "knowledge/projects/photosahi.md", url: "/projects/photosahi.html", label: "Project: PhotoSahi" };
+  const generic = { chunks: [{ ...project, content: "PhotoSahi project evidence." }], sources: [project], confidence: "high", metrics: {} };
+  const config = { retrievalMaxContextChars: 8_000 };
+
+  const broadOwnership = await focusRetrievalForIntent(generic, "ownership", env, config, "What has Mantosh personally owned across his career?");
+  const broadOutcomes = await focusRetrievalForIntent(generic, "outcomes", env, config, "What outcomes did his work produce?");
+  const scopedOwnership = await focusRetrievalForIntent(generic, "ownership", env, config, "What did Mantosh own in this project?");
+
+  assert.equal(broadOwnership.sources[0].path, "knowledge/resume/professional-experience.md");
+  assert.equal(broadOutcomes.sources[0].path, "knowledge/resume/professional-experience.md");
+  assert.equal(scopedOwnership.sources[0].path, "knowledge/projects/photosahi.md");
+});
+
+test("gives outcome questions a non-repetitive evidence contract", () => {
+  const source = { title: "Professional Experience", slug: "professional-experience", category: "resume", label: "Resume: Professional Experience", path: "knowledge/resume/professional-experience.md", url: "/resume/" };
+  const prompt = buildPrompt({ question: "What outcomes did his ownership produce?", retrieval: { chunks: [{ ...source, content: "Role-backed outcomes." }], sources: [source] } });
+  assert.match(prompt.input, /intent="outcomes"/);
+  assert.match(prompt.input, /do not restate responsibilities as outcomes/i);
+  assert.match(prompt.input, /metrics or business results are not published/i);
+});
+
 test("gives engineering ownership questions a contribution-safe response contract", () => {
   const prompt = buildPrompt({
     question: "What has Mantosh personally owned?",
@@ -1137,9 +1167,9 @@ test("gives engineering ownership questions a contribution-safe response contrac
   assert.match(prompt.input, /explain the final comparison checks instead of saying `led cutover validation`/i);
   const followUps = new RecommendationEngine(null, {}).followUpQuestions({ sources: [], intent: "ownership", question: "What has Mantosh personally owned?" });
   assert.deepEqual(followUps, [
-    "Which decisions did Mantosh make during the migration?",
+    "What did Mantosh build outside Nokia?",
     "What outcomes did his ownership produce?",
-    "Which project best demonstrates his leadership?"
+    "Which roles demonstrate backend and networking work?"
   ]);
   const source = { title: "Legacy Validation Framework Migration", label: "Project: Legacy Validation Framework Migration", category: "project", url: "/projects/legacy-validation-framework-migration.html" };
   const formatted = formatSuccess({ output_text: [

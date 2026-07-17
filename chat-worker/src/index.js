@@ -6,12 +6,12 @@ import { handleIndexRequest } from "./indexer.js";
 import { AnalyticsService, ConfidenceScorer, MemoryManager, MetadataService, RecommendationEngine, SearchRouter } from "./intelligence/index.js";
 import { createResponse } from "./ai.js";
 import { enforceFreeUsageLimit, enforceStrictRequestLimit } from "./quota.js";
-import { buildPrompt, classifyQuestionIntent, conciseAchievementResponse, expandRetrievalQuery, formatError, formatResponse, isAnswerable, isSubjectiveProfileQuestion, unavailableResponse } from "./prompt/index.js";
+import { buildPrompt, classifyQuestionIntent, conciseAchievementResponse, expandRetrievalQuery, formatError, formatResponse, isAnswerable, isScopedWorkQuestion, isSubjectiveProfileQuestion, unavailableResponse } from "./prompt/index.js";
 import { enforceRateLimit } from "./rate-limit.js";
 import { assessLexicalRelevance, retrieveKnowledge, searchLexicalKnowledge } from "./retrieval.js";
 import { parseChatRequest } from "./validation.js";
 
-const ANSWER_POLICY_VERSION = "visitor-intent-v48-project-routing";
+const ANSWER_POLICY_VERSION = "visitor-intent-v49-career-breadth";
 const RETRYABLE_MODEL_OUTPUT_CODES = new Set(["workers_ai_invalid_response", "empty_model_response", "invalid_model_response", "uncited_model_response"]);
 
 async function generateVerifiedResponse({ env, config, prompt, formatOptions }) {
@@ -79,10 +79,13 @@ function coverageBand(coverage) {
   return "coverage_70_100";
 }
 
-export async function focusRetrievalForIntent(retrieval, intent, env, config) {
+export async function focusRetrievalForIntent(retrieval, intent, env, config, question = "") {
   const preferredPath = {
     skills: "knowledge/experience/engineering-capabilities.md",
-    fit: "knowledge/resume/professional-experience.md"
+    fit: "knowledge/resume/professional-experience.md",
+    ...(!isScopedWorkQuestion(question) && ["ownership", "decisions", "outcomes"].includes(intent)
+      ? { [intent]: "knowledge/resume/professional-experience.md" }
+      : {})
   }[intent];
   if (preferredPath) {
     const result = await env.KNOWLEDGE_DB.prepare(
@@ -117,7 +120,7 @@ export async function focusRetrievalForIntent(retrieval, intent, env, config) {
     const paths = new Set(projectChunks.map((chunk) => chunk.path));
     return { ...retrieval, chunks: projectChunks, sources: retrieval.sources.filter((source) => paths.has(source.path)) };
   }
-  if (!["ownership", "decisions"].includes(intent)) return retrieval;
+  if (!["ownership", "decisions", "outcomes"].includes(intent)) return retrieval;
   const projectChunks = retrieval.chunks.filter((chunk) => chunk.category === "project");
   if (!projectChunks.length) return retrieval;
   const paths = new Set(projectChunks.map((chunk) => chunk.path));
@@ -236,7 +239,7 @@ export default {
       const intent = classifyQuestionIntent(question);
       const retrieved = await retrieveKnowledge(retrievalQuery, env, config,
         retrievalQuery === baseRetrievalQuery ? { lexicalMatches } : undefined);
-      const retrieval = await focusRetrievalForIntent(retrieved, intent, env, config);
+      const retrieval = await focusRetrievalForIntent(retrieved, intent, env, config, question);
       const recommendationEngine = new RecommendationEngine(metadataService, config);
       const recommendations = await recommendationEngine.recommend({ sources: retrieval.sources });
       const previousQuestions = conversation.messages.filter((message) => message.role === "user").map((message) => message.content);
@@ -291,7 +294,7 @@ export default {
         const highlights = facts?.ownership_highlights;
         const teamContext = facts?.ownership_team_context;
         const source = retrieval.sources[0];
-        if (typeof summary === "string" && Array.isArray(highlights) && highlights.length && typeof teamContext === "string" && source?.url) {
+        if (typeof summary === "string" && Array.isArray(highlights) && highlights.length && typeof teamContext === "string" && source?.path === "knowledge/projects/legacy-validation-framework-migration.md") {
           analytics.trackAggregatesInBackground(ctx, [["post_gate_outcome", "grounded_answer"]]);
           const answer = [
             "## Mantosh's ownership", summary,

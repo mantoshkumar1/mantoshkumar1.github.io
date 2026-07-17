@@ -1,6 +1,8 @@
 const SUBJECTIVE_PROFILE_PATTERN = /\b(?:genius|brilliant|smart|impressive|exceptional|great engineer|good engineer|really good|actually good|overrated)\b/i;
 const ACHIEVEMENT_PATTERN = /\b(?:achievement|achievements|accomplishment|accomplishments|award|awards|recognition|honou?rs?|career story|his story|journey|education|academic|gate|heroes of tomorrow|something interesting about (?:mantosh|him))\b/i;
 const DETAILED_RESPONSE_PATTERN = /\b(?:in detail|detailed|deep dive|deeply|comprehensive|thorough|step[- ]by[- ]step|full explanation|explain fully|long answer)\b/i;
+const OUTCOME_PATTERN = /\b(?:what|which)\b[^?]*\b(?:outcomes?|results?|changed|impact)\b|\b(?:outcomes?|results?|impact)\b[^?]*\b(?:produce|produced|achieve|achieved|deliver|delivered)\b/i;
+const SCOPED_WORK_PATTERN = /\b(?:this|that|the)\s+(?:project|migration|platform|system|work|role)\b|\bthese\s+projects\b|\b(?:legacy|validation framework)\s+migration\b/i;
 const PROJECT_PATTERNS = [
   /\bwhich projects?\b[^?]*\b(?:demonstrate|show|prove|represent)\b/i,
   /\b(?:best|strongest|most relevant) projects?\b/i,
@@ -55,6 +57,7 @@ const PROBLEM_PATTERNS = [
 
 export function classifyQuestionIntent(question) {
   const value = String(question || "").trim();
+  if (OUTCOME_PATTERN.test(value)) return "outcomes";
   if (OWNERSHIP_PATTERNS.some((pattern) => pattern.test(value))) return "ownership";
   if (PROJECT_PATTERNS.some((pattern) => pattern.test(value))) return "projects";
   if (DECISION_PATTERNS.some((pattern) => pattern.test(value))) return "decisions";
@@ -64,6 +67,10 @@ export function classifyQuestionIntent(question) {
   if (PROFILE_PATTERNS.some((pattern) => pattern.test(value))) return "profile";
   if (PROBLEM_PATTERNS.some((pattern) => pattern.test(value))) return "problem";
   return "direct";
+}
+
+export function isScopedWorkQuestion(question) {
+  return SCOPED_WORK_PATTERN.test(String(question || "").trim());
 }
 
 export function isSubjectiveProfileQuestion(question) {
@@ -90,6 +97,16 @@ export function responseModeInstructions(intent, detailed = false) {
       "Use plain language that a non-engineer can understand immediately. Prefer `kept both frameworks aligned` over `owned synchronization`, and explain the final comparison checks instead of saying `led cutover validation`.",
       "Avoid compressed corporate language. Use short sentences and familiar verbs such as built, migrated, compared, checked, taught, and led.",
       "Use up to six concise bullets and keep the answer body before Sources under 170 words. Do not infer sole ownership from participation."
+    ].join("\n");
+  }
+  if (intent === "outcomes") {
+    return [
+      "Visitor intent: understand documented outcomes, changes, or results—not receive another ownership summary.",
+      "Use these headings in this order: `## Documented outcomes`, `## Evidence boundary`, `## Sources`, `## Follow-up Questions`.",
+      "Answer the outcome question directly. Separate completed changes from capabilities demonstrated, and do not restate responsibilities as outcomes.",
+      "When metrics or business results are not published, say so plainly and report only the operational or system changes supported by the documents.",
+      "For a career-wide question, use distinct examples from more than one role when the retrieved evidence supports them.",
+      "Keep the answer body before Sources under 150 words."
     ].join("\n");
   }
   if (intent === "projects") {
@@ -188,9 +205,16 @@ export function audienceInstructions(audience) {
 
 export function expandRetrievalQuery(question, conversationQuery = question) {
   const intent = classifyQuestionIntent(question);
-  if (intent === "ownership") return `Mantosh personal engineering ownership contribution led migration integration shared libraries CI/CD dashboard project decisions ${conversationQuery}`;
+  if (intent === "ownership") return isScopedWorkQuestion(question)
+    ? `Mantosh personal engineering ownership contribution responsibility project decisions ${conversationQuery}`
+    : `Mantosh professional experience personally built developed designed led architected engineering systems across roles ${question}`;
   if (intent === "projects") return `Legacy Validation Framework Migration Distributed Validation Platform Evidence-First Engineering Knowledge System PhotoSahi Workflow Automation Toolkit projects engineering evidence ${conversationQuery}`;
-  if (intent === "decisions") return `Legacy Validation Framework Migration Engineering decisions migrate while development continued visibility shared libraries equivalence cutover trade-offs ${conversationQuery}`;
+  if (intent === "decisions") return isScopedWorkQuestion(question)
+    ? `Engineering decisions choices constraints trade-offs ${conversationQuery}`
+    : `Mantosh engineering decisions choices constraints trade-offs across projects and roles ${question}`;
+  if (intent === "outcomes") return isScopedWorkQuestion(question)
+    ? `documented outcomes results operational changes evidence ${conversationQuery}`
+    : `Mantosh documented outcomes results systems delivered across professional experience ${question}`;
   if (intent === "achievement") return `Mantosh Verified Achievements Awards Education GATE Top 1% Technical University of Munich Heroes of Tomorrow ${conversationQuery}`;
   if (intent === "skills") return `Engineering Capabilities and Technical Skills résumé role-backed platform engineering automation Python Django backend networking distributed validation operational intelligence ${conversationQuery}`;
   if (intent === "fit") return `Mantosh professional experience where documented experience is most relevant engineering platforms validation infrastructure workflow automation backend operational intelligence ${conversationQuery}`;

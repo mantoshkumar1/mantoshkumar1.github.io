@@ -13,7 +13,7 @@ This document is the canonical description of what is deployed. Architecture pro
 | Health | `https://ask-mantosh.mantoshk234.workers.dev/health` | Unauthenticated service health without configuration details |
 | Knowledge indexing | `POST /internal/index` | GitHub OIDC or manual recovery token only; intentionally unavailable to browsers through CORS |
 
-Last verified Worker deployment: `31421b1f-e132-4c66-9ece-d4da0746b42c`. The active answer-policy cache namespace is `visitor-intent-v48-project-routing`.
+Last verified Worker deployment: `31421b1f-e132-4c66-9ece-d4da0746b42c`. The repository answer-policy cache namespace is `visitor-intent-v49-career-breadth`; production adopts it on the next Worker deployment.
 
 ## Published inventory
 
@@ -99,7 +99,7 @@ The repository currently enforces:
 - internal link, fragment, and asset validation;
 - documentation drift checks;
 - autonomous content-lane counts and explicit zero-content states;
-- 84 Worker contract, deterministic social, light-banter, visitor-local and profile-location date/time utility, navigation, knowledge-backed public-profile fact, privacy-boundary, confidence-based lexical relevance gating, privacy-safe aggregate telemetry, transcript-derived scope routing, achievement, distinct project-evidence, engineering-decision, and engineering-ownership routing, conversation-aware follow-up de-duplication, authoritative-source routing for distinct technical-skills and value-fit response modes, natural profile-language routing, security, quota isolation, OIDC, retrieval, concise and explicitly detailed response modes, collapsed-Markdown repair, prompt, citation normalization and repair, one-shot invalid-output recovery, unsupported-answer source suppression, repetition and control-tag sanitization, verification-failure messaging, and failure-path tests;
+- 86 Worker contract, deterministic social, light-banter, visitor-local and profile-location date/time utility, navigation, knowledge-backed public-profile fact, privacy-boundary, confidence-based lexical relevance gating, privacy-safe aggregate telemetry, transcript-derived scope routing, achievement, distinct project-evidence, engineering-decision, career-wide versus project-scoped ownership, and outcome routing, conversation-aware follow-up de-duplication and breadth prompts, authoritative-source routing for distinct technical-skills and value-fit response modes, natural profile-language routing, security, quota isolation, OIDC, retrieval, concise and explicitly detailed response modes, collapsed-Markdown repair, prompt, citation normalization and repair, one-shot invalid-output recovery, unsupported-answer source suppression, repetition and control-tag sanitization, verification-failure messaging, and failure-path tests;
 - 554 labelled Ask Mantosh evaluation cases with 9,734 objective assertions covering 74 focused regressions plus recruiter, student, curious-visitor, spouse, colleague, and founder questions across social, navigation, unsupported, achievement, ownership, skills, fit, grounded-answer, and adversarial behavior;
 - a whole-site coverage audit that fails when any public HTML route lacks reviewed evidence, deterministic navigation, or a documented no-index exclusion;
 - static UI guards for immediate safe Markdown rendering.
