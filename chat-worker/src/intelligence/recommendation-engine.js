@@ -32,11 +32,17 @@ export class RecommendationEngine {
     let candidates;
     if (intent === "ownership") {
       candidates = [
-        "Which decisions did Mantosh make during the migration?",
+        "What did Mantosh build outside Nokia?",
         "What outcomes did his ownership produce?",
-        "Which project best demonstrates his leadership?",
-        "What changed after the migration?",
-        "How could this experience help a new team?"
+        "Which roles demonstrate backend and networking work?",
+        "Which project best demonstrates his leadership?"
+      ];
+    } else if (intent === "outcomes") {
+      candidates = [
+        "What did Mantosh build outside Nokia?",
+        "Which outcomes are supported by public evidence?",
+        "Which decisions best show his engineering judgment?",
+        "Which roles demonstrate backend and networking work?"
       ];
     } else if (intent === "projects") {
       candidates = [

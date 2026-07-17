@@ -8,6 +8,13 @@
   an unrelated question before publishing.
 - Keep chunks concise and document decisions, trade-offs, outcomes, and limits
   under explicit headings.
+- Exercise a multi-turn breadth journey: career overview, career-wide ownership,
+  documented outcomes, one example outside Nokia, backend work, and networking
+  work. Broad questions must not collapse onto one project or repeat the prior
+  answer. Project-scoped follow-ups must remain anchored to that project.
+- Treat the résumé as breadth evidence only. Add a deeper employer case study
+  only after Mantosh reviews the firsthand decisions, constraints, ownership,
+  and outcomes; never infer those details from résumé bullets.
 
 ## Weekly
 
