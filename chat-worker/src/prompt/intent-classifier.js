@@ -3,6 +3,7 @@ const ACHIEVEMENT_PATTERN = /\b(?:achievement|achievements|accomplishment|accomp
 const DETAILED_RESPONSE_PATTERN = /\b(?:in detail|detailed|deep dive|deeply|comprehensive|thorough|step[- ]by[- ]step|full explanation|explain fully|long answer)\b/i;
 const OUTCOME_PATTERN = /\b(?:what|which)\b[^?]*\b(?:outcomes?|results?|changed|impact)\b|\b(?:outcomes?|results?|impact)\b[^?]*\b(?:produce|produced|achieve|achieved|deliver|delivered)\b/i;
 const SCOPED_WORK_PATTERN = /\b(?:this|that|the)\s+(?:project|migration|platform|system|work|role)\b|\bthese\s+projects\b|\b(?:legacy|validation framework)\s+migration\b/i;
+const OUTSIDE_NOKIA_PATTERN = /\b(?:outside|before)\s+nokia\b|\bnon[- ]nokia\b/i;
 const PROJECT_PATTERNS = [
   /\bwhich projects?\b[^?]*\b(?:demonstrate|show|prove|represent)\b/i,
   /\b(?:best|strongest|most relevant) projects?\b/i,
@@ -57,6 +58,7 @@ const PROBLEM_PATTERNS = [
 
 export function classifyQuestionIntent(question) {
   const value = String(question || "").trim();
+  if (OUTSIDE_NOKIA_PATTERN.test(value)) return "outside-nokia";
   if (OUTCOME_PATTERN.test(value)) return "outcomes";
   if (OWNERSHIP_PATTERNS.some((pattern) => pattern.test(value))) return "ownership";
   if (PROJECT_PATTERNS.some((pattern) => pattern.test(value))) return "projects";
@@ -205,6 +207,7 @@ export function audienceInstructions(audience) {
 
 export function expandRetrievalQuery(question, conversationQuery = question) {
   const intent = classifyQuestionIntent(question);
+  if (intent === "outside-nokia") return `Engineering Work Outside Nokia KI Labs Siemens Intel Cisco Aricent backend SDN NFV modem packet-core ${question}`;
   if (intent === "ownership") return isScopedWorkQuestion(question)
     ? `Mantosh personal engineering ownership contribution responsibility project decisions ${conversationQuery}`
     : `Mantosh professional experience personally built developed designed led architected engineering systems across roles ${question}`;

@@ -13,12 +13,12 @@ This document is the canonical description of what is deployed. Architecture pro
 | Health | `https://ask-mantosh.mantoshk234.workers.dev/health` | Unauthenticated service health without configuration details |
 | Knowledge indexing | `POST /internal/index` | GitHub OIDC or manual recovery token only; intentionally unavailable to browsers through CORS |
 
-Last verified Worker deployment: `31421b1f-e132-4c66-9ece-d4da0746b42c`. The repository answer-policy cache namespace is `visitor-intent-v49-career-breadth`; production adopts it on the next Worker deployment.
+Last verified Worker deployment: `20a691b8-d3fb-4e97-a178-e79978e64028`. The repository answer-policy cache namespace is `visitor-intent-v51-outside-nokia-evidence`; production adopts it on the next Worker deployment.
 
 ## Published inventory
 
 - SEO-configured public pages: home, projects index, six project case studies, Insights index, six engineering articles and notes, experience, résumé, contact, a live Buttondown email subscription with RSS, accessibility statement, and custom 404.
-- 16 public Ask Mantosh documents: six project sources, six Insights sources, two résumé-backed experience and academic-achievement sources, one role-by-role résumé source, and one evidence-backed profile and fit guide.
+- 17 public Ask Mantosh documents: six project sources, six Insights sources, three résumé-backed experience and academic-achievement sources, one role-by-role résumé source, and one evidence-backed profile and fit guide.
 - Whole-site Ask Mantosh coverage: 13 evidence-bearing routes, seven deterministic utility destinations, and nine explicit no-index legacy or error routes cover all 29 public HTML routes.
 - One résumé PDF served for in-browser preview and explicit download.
 - Sitemap, RSS feed, `robots.txt`, `llms.txt`, JSON-LD, Open Graph, Twitter Card, manifest, icons, and a 1200×630 social image.
@@ -57,7 +57,7 @@ The chat UI streams the response, immediately renders links, lists, headings, an
 2. A push to `main` triggers `.github/workflows/sync-knowledge.yml` for relevant paths.
 3. GitHub issues a short-lived OIDC token with audience `ask-mantosh-indexer`.
 4. The Worker verifies token signature, repository, workflow, branch, event, audience, and expiry.
-5. The indexer validates, chunks, embeds, and upserts public documents into D1 and Vectorize. Allowlisted facts from the canonical profile document also update D1 `profile_facts`; deletes and renames remove prior records.
+5. The indexer validates, chunks, embeds, and upserts public documents into D1 and Vectorize. Allowlisted facts from approved canonical profile and experience documents also update D1 `profile_facts`; deletes and renames remove prior records.
 6. Draft and private documents remain excluded from public retrieval.
 
 ## Runtime configuration
@@ -99,7 +99,7 @@ The repository currently enforces:
 - internal link, fragment, and asset validation;
 - documentation drift checks;
 - autonomous content-lane counts and explicit zero-content states;
-- 86 Worker contract, deterministic social, light-banter, visitor-local and profile-location date/time utility, navigation, knowledge-backed public-profile fact, privacy-boundary, confidence-based lexical relevance gating, privacy-safe aggregate telemetry, transcript-derived scope routing, achievement, distinct project-evidence, engineering-decision, career-wide versus project-scoped ownership, and outcome routing, conversation-aware follow-up de-duplication and breadth prompts, authoritative-source routing for distinct technical-skills and value-fit response modes, natural profile-language routing, security, quota isolation, OIDC, retrieval, concise and explicitly detailed response modes, collapsed-Markdown repair, prompt, citation normalization and repair, one-shot invalid-output recovery, unsupported-answer source suppression, repetition and control-tag sanitization, verification-failure messaging, and failure-path tests;
+- 89 Worker contract, deterministic social, light-banter, visitor-local and profile-location date/time utility, navigation, knowledge-backed public-profile fact, privacy-boundary, confidence-based lexical relevance gating, privacy-safe aggregate telemetry, transcript-derived scope routing, achievement, clickable distinct project-evidence, engineering-decision, career-wide versus project-scoped ownership, outcome routing, deterministic employer-attributed outside-Nokia evidence, conversation-aware follow-up de-duplication and breadth prompts, authoritative-source routing for distinct technical-skills and value-fit response modes, natural profile-language routing, security, quota isolation, OIDC, retrieval, concise and explicitly detailed response modes, collapsed-Markdown repair, prompt, citation normalization and repair, one-shot invalid-output recovery, unsupported-answer source suppression, repetition and control-tag sanitization, verification-failure messaging, and failure-path tests;
 - 554 labelled Ask Mantosh evaluation cases with 9,734 objective assertions covering 74 focused regressions plus recruiter, student, curious-visitor, spouse, colleague, and founder questions across social, navigation, unsupported, achievement, ownership, skills, fit, grounded-answer, and adversarial behavior;
 - a whole-site coverage audit that fails when any public HTML route lacks reviewed evidence, deterministic navigation, or a documented no-index exclusion;
 - static UI guards for immediate safe Markdown rendering.
@@ -109,7 +109,7 @@ The repository currently enforces:
 
 ## Known limits
 
-- Only 16 public knowledge documents are indexed; outside deterministic greetings, courtesies, light banter, and navigation, Ask Mantosh keeps answers within published evidence and clearly redirects unsupported topics.
+- Only 17 public knowledge documents are indexed; outside deterministic greetings, courtesies, light banter, and navigation, Ask Mantosh keeps answers within published evidence and clearly redirects unsupported topics.
 - Public evidence has no fabricated employer metrics or inferred organizational outcomes.
 - The Worker uses the Cloudflare free allocation and may return a clear 429 when safety or provider limits are reached.
 - There is no authenticated user account, durable personal profile, staging environment declared in this repository, formal accessibility conformance audit, human-rated response benchmark, live-production retrieval benchmark, or automated production Core Web Vitals trace.
