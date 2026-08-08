@@ -59,6 +59,17 @@
         { "name": "Insights", "path": "/insights/" }
       ]
     },
+    "/insights/message-bus-between-ai-agents.html": {
+      "title": "Why Am I Still the Message Bus Between My AI Agents? | Mantosh Kumar",
+      "description": "A survey of the manual-relay problem in multi-vendor AI coding workflows, using an in-progress local tool (DogBuild) as evidence, and what the rest of the market has and hasn't built yet.",
+      "kind": "article",
+      "schemaType": "TechArticle",
+      "datePublished": "2026-08-08",
+      "dateModified": "2026-08-08",
+      "breadcrumbs": [
+        { "name": "Insights", "path": "/insights/" }
+      ]
+    },
     "/insights/release-reports-as-operational-history.html": {
       "title": "Release Reports as Operational History | Mantosh Kumar",
       "description": "How comparable release-health reports can reveal longer-term engineering patterns while AI assistance remains accountable to human judgment.",
