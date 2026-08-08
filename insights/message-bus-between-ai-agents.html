@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- seo:generated:start -->
+    <meta name="description" content="A survey of the manual-relay problem in multi-vendor AI coding workflows, using an in-progress local tool (DogBuild) as evidence, and what the rest of the market has and hasn't built yet." />
+    <meta name="author" content="Mantosh Kumar" />
+    <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1" />
+    <meta name="theme-color" content="#060b12" />
+    <meta name="application-name" content="Mantosh Kumar" />
+    <meta name="apple-mobile-web-app-title" content="Mantosh Kumar" />
+    <link rel="canonical" href="https://mantoshkumar1.github.io/insights/message-bus-between-ai-agents.html" />
+    <link rel="alternate" type="application/rss+xml" title="Mantosh Kumar — Engineering Writing and Systems" href="https://mantoshkumar1.github.io/feed.xml" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta property="og:locale" content="en_CA" />
+    <meta property="og:title" content="Why Am I Still the Message Bus Between My AI Agents? | Mantosh Kumar" />
+    <meta property="og:description" content="A survey of the manual-relay problem in multi-vendor AI coding workflows, using an in-progress local tool (DogBuild) as evidence, and what the rest of the market has and hasn't built yet." />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://mantoshkumar1.github.io/insights/message-bus-between-ai-agents.html" />
+    <meta property="og:site_name" content="Mantosh Kumar" />
+    <meta property="og:image" content="https://mantoshkumar1.github.io/assets/seo/social-default.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Why Am I Still the Message Bus Between My AI Agents? | Mantosh Kumar" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Why Am I Still the Message Bus Between My AI Agents? | Mantosh Kumar" />
+    <meta name="twitter:description" content="A survey of the manual-relay problem in multi-vendor AI coding workflows, using an in-progress local tool (DogBuild) as evidence, and what the rest of the market has and hasn't built yet." />
+    <meta name="twitter:image" content="https://mantoshkumar1.github.io/assets/seo/social-default.jpg" />
+    <meta name="twitter:image:alt" content="Why Am I Still the Message Bus Between My AI Agents? | Mantosh Kumar" />
+    <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","@id":"https://mantoshkumar1.github.io/insights/message-bus-between-ai-agents.html#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://mantoshkumar1.github.io"},{"@type":"ListItem","position":2,"name":"Insights","item":"https://mantoshkumar1.github.io/insights/"},{"@type":"ListItem","position":3,"name":"Why Am I Still the Message Bus Between My AI Agents?","item":"https://mantoshkumar1.github.io/insights/message-bus-between-ai-agents.html"}]},{"@id":"https://mantoshkumar1.github.io/insights/message-bus-between-ai-agents.html#webpage","@type":"TechArticle","name":"Why Am I Still the Message Bus Between My AI Agents? | Mantosh Kumar","description":"A survey of the manual-relay problem in multi-vendor AI coding workflows, using an in-progress local tool (DogBuild) as evidence, and what the rest of the market has and hasn't built yet.","url":"https://mantoshkumar1.github.io/insights/message-bus-between-ai-agents.html","inLanguage":"en","isPartOf":{"@id":"https://mantoshkumar1.github.io/#website"},"breadcrumb":{"@id":"https://mantoshkumar1.github.io/insights/message-bus-between-ai-agents.html#breadcrumb"},"headline":"Why Am I Still the Message Bus Between My AI Agents?","author":{"@type":"Person","name":"Mantosh Kumar","url":"https://mantoshkumar1.github.io"},"datePublished":"2026-08-08","dateModified":"2026-08-08"}]}</script>
+    <script>
+      window.addEventListener("load", () => {
+        const analytics = document.createElement("script");
+        analytics.defer = true;
+        analytics.dataset.domain = "mantoshkumar1.github.io";
+        analytics.src = "https://plausible.io/js/script.js";
+        document.head.append(analytics);
+      }, { once: true });
+    </script>
+    <script defer src="/assets/js/ai-referral-analytics.js"></script>
+    <!-- seo:generated:end -->
+
+<!-- seo:page {"datePublished":"2026-08-08","dateModified":"2026-08-08"} -->
+    <title>Why Am I Still the Message Bus Between My AI Agents? | Mantosh Kumar</title>
+    <script src="../assets/js/theme-init.js?v=20260713-1"></script>
+    <link rel="stylesheet" href="../assets/css/style.css?v=20260716-15" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+    <header class="navbar">
+      <div class="container nav-wrap">
+        <a class="logo" href="../" aria-label="Mantosh Kumar — Home" title="Go to homepage">Mantosh Kumar</a>
+        <nav aria-label="Primary navigation">
+          <a href="../">Home</a>
+          <a href="../projects/">Projects</a>
+          <a href="../insights/" aria-current="page">Insights</a>
+          <a href="../experience/">Experience</a>
+          <a href="../resume/">Resume</a>
+          <a class="nav-cta" href="../contact/">Discuss a role</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="page-shell reading-shell" id="main-content" tabindex="-1">
+      <div class="container">
+        <article class="resume-card case-study reading-page">
+          <header class="resume-header">
+            <p class="eyebrow">Technical article • 5 minute read</p>
+            <h1>Why am I still the message bus between my AI agents?</h1>
+            <p>I still copy context between my AI coding agents by hand — a review finding becomes a prompt, a decision made in one chat gets re-explained in the next. Most of that pain already has a fix.</p>
+            <p>The part that doesn't — the actual handoff — is what I'm building next, and a market review from the day I wrote this (August 2026) says no one else has finished it either.</p>
+          </header>
+
+          <section class="resume-section">
+            <h2>The pattern</h2>
+            <p>I run a strong-reasoning agent for planning and review, a cheaper agent for the actual coding, and sometimes a third for a second opinion — different vendors, no shared session. So I carry context between them by hand: a review finding becomes a prompt, a decision made in one chat gets re-explained in the next.</p>
+            <p>That is the same signal I described in <a href="why-does-this-still-require-me.html">Why Does This Still Require Me?</a>: repeated, structurally identical work is a request for a system, not a habit to get faster at.</p>
+          </section>
+
+          <section class="resume-section">
+            <h2>What already removes most of the pain</h2>
+            <p>Agents don't need to talk to each other directly. They need to read and write the same durable state.</p>
+            <p>I run this on <a href="https://pingstep.dev" target="_blank" rel="noreferrer">PingStep <span aria-hidden="true">↗</span></a>, the monitoring product I'm building:</p>
+            <ul class="case-study-list">
+              <li><strong>One project-state file</strong> every agent reads before acting, ranked below the task and above chat.</li>
+              <li><strong>One operating handbook</strong> binding every tool identically: same durable-work rules, same metadata discipline, same baseline checks, same mandatory closeout.</li>
+              <li><strong>End-to-end traceability</strong>: task → branch → pull request → evidence → merge, so a new agent picks up the full history without me repeating it.</li>
+              <li><strong>Only I perform the final merge</strong>, so process autonomy never becomes production autonomy.</li>
+            </ul>
+            <p>The baseline check before touching anything, six ordinary git commands, not a custom tool: <code>git fetch --prune</code>, <code>git status --short</code>, <code>git branch -vv</code>, <code>git stash list</code>, <code>git rev-parse HEAD</code>, and <code>git rev-parse origin/main</code>.</p>
+            <p><strong>This is how it actually runs</strong>, not a proposal: it has already carried work between independent agent sessions from different vendors with no shared chat history, only the repository. <a href="https://pingstep.dev" target="_blank" rel="noreferrer">PingStep <span aria-hidden="true">↗</span></a> is commercial, so its repository isn't linked beyond the product site above — the pattern itself is what's portable.</p>
+          </section>
+
+          <section class="resume-section">
+            <h2>The control loop I'm actually building</h2>
+            <p>None of the above automates the handoff itself. That's what <a href="https://github.com/mantoshkumar1/dogbuild" target="_blank" rel="noreferrer">DogBuild <span aria-hidden="true">↗</span></a> is for — my own local, file-based coordination layer, in active dogfood.</p>
+            <p>Its README names <a href="https://pingstep.dev" target="_blank" rel="noreferrer">PingStep <span aria-hidden="true">↗</span></a> as the motivating example: a human manually relaying an implementation result to a reviewer, then relaying the review findings back, every round of fixes. <a href="https://github.com/mantoshkumar1/dogbuild" target="_blank" rel="noreferrer">DogBuild <span aria-hidden="true">↗</span></a> exists to make that loop automatic, without the human losing authority over it.</p>
+
+            <figure class="project-architecture" aria-labelledby="dogbuild-architecture-caption">
+              <figcaption id="dogbuild-architecture-caption"><strong>The intended control loop, once closed</strong><span>DogBuild coordinates state and routing; it makes no product decisions of its own.</span></figcaption>
+              <ul class="architecture-boundaries" aria-label="DogBuild roles">
+                <li><strong>Human owner</strong><span>Authorizes objectives; sole authority over anything irreversible</span></li>
+                <li><strong>DogBuild</strong><span>Verified state ledger, routing, authority gate — no product decisions</span></li>
+                <li><strong>Implementation agent</strong><span>Claude Code today; replaceable without losing the project</span></li>
+                <li><strong>Review agent</strong><span>ChatGPT; transport is manual in this alpha</span></li>
+              </ul>
+              <div class="architecture-lanes">
+                <section class="architecture-lane" aria-labelledby="dogbuild-loop-title">
+                  <header><span aria-hidden="true">01</span><div><h3 id="dogbuild-loop-title">One authorized task</h3><p>Runs automatically until a real decision is needed.</p></div></header>
+                  <ol class="architecture-steps">
+                    <li><small>Human</small><strong>Authorize objective</strong><span>One task, explicitly scoped</span></li>
+                    <li><small>DogBuild</small><strong>Read project state</strong><span>From repository evidence, not narration</span></li>
+                    <li><small>Implementer</small><strong>Do the work</strong><span>Claude Code, bounded to the task</span></li>
+                    <li><small>DogBuild</small><strong>Capture evidence</strong><span>Actual commits, tests, results</span></li>
+                    <li><small>Reviewer</small><strong>Check against the task</strong><span>ChatGPT — manual handoff today</span></li>
+                    <li><small>DogBuild</small><strong>Route or escalate</strong><span>Fixes back to implementer, or stop for the human</span></li>
+                  </ol>
+                </section>
+              </div>
+              <p class="architecture-guardrail"><strong>Manual by design, today</strong><span>DogBuild does not call the review agent automatically in this alpha; step 5 above is still a human copy-paste — the exact gap this article is about.</span></p>
+            </figure>
+
+            <p><strong>What's real today:</strong></p>
+            <ul class="case-study-list">
+              <li>A persistent <code>dogBuild&gt;</code> interface backed by a verified state ledger in the repository's own <code>.ai/</code> directory — a session is disposable, the project isn't.</li>
+              <li>Built-in commands (<code>status</code>, <code>next</code>, <code>plan</code>, <code>review</code>, <code>refresh</code>) answered from local state, no model call.</li>
+              <li>A hard authority gate: the human decides anything irreversible — push, deploy, merge, publish, delete, spend.</li>
+            </ul>
+            <p><strong>What's not real yet</strong>, by explicit design in this alpha: the review handoff. <a href="https://github.com/mantoshkumar1/dogbuild" target="_blank" rel="noreferrer">DogBuild <span aria-hidden="true">↗</span></a>'s own docs say it plainly — "DogBuild does not talk to ChatGPT automatically — transport is manual in this alpha."</p>
+            <p>So today it removes re-explaining project state every session. It hasn't yet removed me from the loop between implementer and reviewer — the specific claim in this article's title.</p>
+            <p>That gap — is anyone <em>else</em> shipping a finished way to route work between different vendors' coding agents without a human as the dispatcher — was worth checking before assuming I was alone in building toward it.</p>
+          </section>
+
+          <section class="resume-section">
+            <h2>What the market actually has</h2>
+            <p>As of August 2026, in the fastest-moving corner of the fastest-moving field in software — treat this as a snapshot, not a standing claim:</p>
+            <ul class="case-study-list">
+              <li><strong>Shared context is already standardized.</strong> <code>AGENTS.md</code> is an open, cross-vendor format now adopted by Codex, Copilot, Gemini, and Cursor. The repository-as-shared-brain pattern isn't a niche workaround; it shows up independently elsewhere.</li>
+              <li><strong>Live handoff is real but early.</strong> Claude Code's own Agent Teams lets sessions coordinate and hand off directly; a couple of small open-source efforts attempt the same across vendors. None of it is install-and-go.</li>
+              <li><strong>Nothing targets this exact shape</strong>: one person mixing a premium-reasoning agent with a cheap implementer across vendors, wanting the dispatch step gone without losing founder-only production control.</li>
+            </ul>
+          </section>
+
+          <section class="resume-section">
+            <h2>Where this could go</h2>
+            <p><a href="https://github.com/mantoshkumar1/dogbuild" target="_blank" rel="noreferrer">DogBuild <span aria-hidden="true">↗</span></a>'s own roadmap names two pieces worth flagging here, clearly as roadmap, not shipped behavior:</p>
+            <ul class="case-study-list">
+              <li><strong>Reliable handoffs without re-explaining</strong> — a package carrying the objective, decisions, files changed, and unfinished work, so a new agent doesn't need the task re-described from scratch.</li>
+              <li><strong>Decision memory</strong> — recording not just what was decided but why, so an agent can't silently reverse a settled choice it never saw the reasoning for.</li>
+            </ul>
+            <p>Automate only once the inputs and decisions are stable enough to encode safely — the market above says that bar isn't cleared industry-wide yet, even where my own prototype is closing in on it. <a href="https://github.com/mantoshkumar1/dogbuild" target="_blank" rel="noreferrer">DogBuild <span aria-hidden="true">↗</span></a>'s own documentation records this same tension rather than resolving it early, and that's exactly where it should sit until it's actually settled.</p>
+          </section>
+
+          <section class="resume-section">
+            <h2>Evidence boundary</h2>
+            <p><strong>What this documents:</strong> an in-progress tool (<a href="https://github.com/mantoshkumar1/dogbuild" target="_blank" rel="noreferrer">DogBuild <span aria-hidden="true">↗</span></a>) I built and actively dogfood in a public repository. It's also a first-person account of the governance technique behind <a href="https://pingstep.dev" target="_blank" rel="noreferrer">PingStep <span aria-hidden="true">↗</span></a> — commercial, so its repository stays unlinked — plus a review of public multi-agent tooling from that same day, August 2026.</p>
+            <p><strong>What it doesn't claim:</strong> that <a href="https://github.com/mantoshkumar1/dogbuild" target="_blank" rel="noreferrer">DogBuild <span aria-hidden="true">↗</span></a> is complete, adopted, or commercially validated — its own documentation says so. It doesn't claim results beyond DogBuild's own repository, and it doesn't represent an employer's system or decision.</p>
+            <div class="resume-actions">
+              <a class="button primary" href="../newsletter/">Get new insights by email <span aria-hidden="true">→</span></a>
+              <a class="button secondary" href="https://www.linkedin.com/in/mantoshk/" target="_blank" rel="noreferrer">View LinkedIn profile <span aria-hidden="true">↗</span></a>
+              <a class="button secondary" href="https://github.com/mantoshkumar1/dogbuild" target="_blank" rel="noreferrer">See DogBuild <span aria-hidden="true">↗</span></a>
+            </div>
+          </section>
+        </article>
+      </div>
+    </main>
+    <script src="/assets/js/ask-mantosh-widget.js?v=20260716-17"></script>
+  </body>
+</html>

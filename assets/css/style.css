@@ -2672,8 +2672,16 @@ main.project-shell > .container > .section-block {
   line-height: 1.68;
 }
 
+.reading-page .resume-section > p + p {
+  margin-top: 1.1rem;
+}
+
 .reading-page .case-study-list {
   gap: .45rem;
+}
+
+.reading-page .case-study-list + p {
+  margin-top: 1.1rem;
 }
 
 .reading-page .resume-actions {

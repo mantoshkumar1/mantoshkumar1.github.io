@@ -191,7 +191,7 @@ function removeOldSeo(html) {
   return patterns.reduce((result, pattern) => result.replace(pattern, "\n"), html);
 }
 
-function metadataFromHtml(html, route, config) {
+function metadataFromHtml(html, route, config, knowledgeVisibility) {
   const override = config.pages?.[route] || {};
   const inline = html.match(/<!--\s*seo:page\s+([\s\S]*?)-->/i)?.[1]?.trim();
   let inlineMetadata = {};
@@ -210,7 +210,22 @@ function metadataFromHtml(html, route, config) {
       : route.startsWith("/projects/")
         ? "project"
         : "page";
-  return { title, description, kind: inferredKind, ...inlineMetadata, ...override };
+  // Single source of truth: a page paired with a knowledge/*.md document takes its
+  // indexability from that document's own `visibility` field, not a second hand-set
+  // flag that can silently drift out of sync with it. Only public documents are
+  // indexable; draft/private documents are forced noindex regardless of what an
+  // inline seo:page comment claims. An explicit seo.config.json page override still
+  // wins over this, for the rare case that genuinely needs one.
+  const pairedVisibility = knowledgeVisibility?.get(route);
+  const visibilityNoindex = pairedVisibility === undefined ? undefined : pairedVisibility !== "public";
+  return {
+    title,
+    description,
+    kind: inferredKind,
+    ...inlineMetadata,
+    ...(visibilityNoindex === undefined ? {} : { noindex: visibilityNoindex }),
+    ...override
+  };
 }
 
 async function htmlFiles(directory, files = []) {
@@ -222,6 +237,48 @@ async function htmlFiles(directory, files = []) {
     else if (entry.isFile() && extname(entry.name) === ".html") files.push(path);
   }
   return files;
+}
+
+async function markdownFiles(directory, files = []) {
+  let entries;
+  try {
+    entries = await readdir(directory, { withFileTypes: true });
+  } catch {
+    return files;
+  }
+  for (const entry of entries) {
+    const path = join(directory, entry.name);
+    if (entry.isDirectory()) await markdownFiles(path, files);
+    else if (entry.isFile() && extname(entry.name) === ".md") files.push(path);
+  }
+  return files;
+}
+
+function parseFrontMatterField(raw, key) {
+  const match = raw.match(new RegExp(`^${key}\\s*:\\s*(.+)$`, "m"));
+  return match?.[1]?.trim().replace(/^['"]|['"]$/g, "");
+}
+
+/**
+ * Maps each route backed by a knowledge/*.md document to that document's declared
+ * `visibility`. Used so a draft or private knowledge document can never end up
+ * indexable in sitemap.xml/feed.xml merely because its paired HTML page forgot to
+ * say so — the knowledge document's own visibility field is authoritative.
+ */
+async function knowledgeVisibilityByRoute(root) {
+  const map = new Map();
+  const files = await markdownFiles(join(root, "knowledge"));
+  for (const file of files) {
+    const raw = await readFile(file, "utf8");
+    const frontMatter = raw.match(/^---\r?\n([\s\S]*?)\r?\n---/)?.[1];
+    if (!frontMatter) continue;
+    const url = parseFrontMatterField(frontMatter, "url");
+    const visibility = parseFrontMatterField(frontMatter, "visibility");
+    if (!url || !visibility) continue;
+    const route = /^https?:\/\//i.test(url) ? new URL(url).pathname : url;
+    map.set(route, visibility);
+  }
+  return map;
 }
 
 function sitemap(site, entries) {
@@ -281,11 +338,12 @@ ${body}
 export async function generateSeo(root = SOURCE_ROOT, configPath = CONFIG_PATH) {
   const config = JSON.parse(await readFile(configPath, "utf8"));
   const files = await htmlFiles(root);
+  const knowledgeVisibility = await knowledgeVisibilityByRoute(root);
   const entries = [];
   for (const file of files) {
     const route = pathToRoute(root, file);
     let html = await readFile(file, "utf8");
-    const page = metadataFromHtml(html, route, config);
+    const page = metadataFromHtml(html, route, config, knowledgeVisibility);
     const url = routeToUrl(config.site, route);
     const canonicalUrl = page.canonicalPath ? routeToUrl(config.site, page.canonicalPath) : url;
     html = removeOldSeo(html);

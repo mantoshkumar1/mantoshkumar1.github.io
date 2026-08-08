@@ -39,6 +39,7 @@ His résumé-backed capabilities include engineering platforms and automation, P
 - [In Distributed Systems, Complexity Changes Address](https://mantoshkumar1.github.io/insights/complexity-changes-address.html)
 - [Blockchain Without a Master Branch](https://mantoshkumar1.github.io/insights/blockchain-without-a-master-branch.html)
 - [Engineering Ownership Before Escalation](https://mantoshkumar1.github.io/insights/ownership-before-escalation.html)
+- [Why Am I Still the Message Bus Between My AI Agents?](https://mantoshkumar1.github.io/insights/message-bus-between-ai-agents.html)
 
 ## Ask Mantosh
 
