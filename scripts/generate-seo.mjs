@@ -8,6 +8,8 @@ const GENERATED_START = "<!-- seo:generated:start -->";
 const GENERATED_END = "<!-- seo:generated:end -->";
 export const INSIGHTS_START = "<!-- insights:generated:start -->";
 export const INSIGHTS_END = "<!-- insights:generated:end -->";
+export const PROJECTS_START = "<!-- projects:generated:start -->";
+export const PROJECTS_END = "<!-- projects:generated:end -->";
 
 function escapeHtml(value) {
   return String(value).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
@@ -355,6 +357,78 @@ function injectHomepageInsights(html, entries) {
   return html.replace(new RegExp(`${INSIGHTS_START}[\\s\\S]*?${INSIGHTS_END}`), block);
 }
 
+/**
+ * Homepage "Selected Projects" is deliberately NOT the Insights recency
+ * model. Projects are heavier hiring evidence than Insights, the section
+ * heading is literally "Selected Projects," and project metadata mostly
+ * carries `dateModified` rather than a meaningful publication chronology —
+ * sorting by recency would be a poor semantic fit and could bump a strong
+ * Staff/Principal-level case study for a newer but weaker project. Selection
+ * here is purely editorial: an entry qualifies only when it carries an
+ * explicit `homepageOrder` (1-3) in seo.config.json, and the 3 qualifying
+ * entries render in that exact order. There is no date fallback and no
+ * relationship to Insights' `homepageRank`, which is only ever a same-day
+ * tiebreaker for an otherwise date-driven sort — the two fields are
+ * intentionally different mechanisms and must not be conflated.
+ */
+export function selectHomepageProjects(entries) {
+  const candidates = entries.filter(({ page }) =>
+    page.kind === "project" && !page.noindex && page.homepageOrder !== undefined && page.homepageOrder !== null
+  );
+  const missingCard = candidates.filter(({ page }) => !page.card);
+  if (missingCard.length) {
+    throw new Error(`Selected Projects require "card" metadata in seo.config.json: ${missingCard.map(({ route }) => route).join(", ")}`);
+  }
+  if (candidates.length !== 3) {
+    const found = candidates.map(({ route }) => route).join(", ");
+    throw new Error(`Selected Projects requires exactly 3 entries with "homepageOrder" set in seo.config.json; found ${candidates.length}${found ? ` (${found})` : ""}.`);
+  }
+  const orders = candidates.map(({ page }) => page.homepageOrder);
+  if (new Set(orders).size !== orders.length) {
+    throw new Error(`Selected Projects "homepageOrder" values must be unique; found ${orders.join(", ")}.`);
+  }
+  if (!orders.every((order) => [1, 2, 3].includes(order))) {
+    throw new Error(`Selected Projects "homepageOrder" values must be exactly 1, 2, and 3; found ${[...orders].sort().join(", ")}.`);
+  }
+  return [...candidates].sort((left, right) => left.page.homepageOrder - right.page.homepageOrder);
+}
+
+function renderProjectLink(link) {
+  const attrs = [];
+  if (link.detail) attrs.push('class="project-detail-link"');
+  attrs.push(`href="${escapeHtml(link.href)}"`);
+  if (link.external) attrs.push('target="_blank" rel="noreferrer"');
+  return `<a ${attrs.join(" ")}>${escapeHtml(link.label)}</a>`;
+}
+
+function homepageProjectsCards(entries) {
+  const selected = selectHomepageProjects(entries);
+  const cards = selected.map(({ page }) => {
+    const card = page.card;
+    const tech = card.tech.map((tag) => `                <span>${escapeHtml(tag)}</span>`).join("\n");
+    const links = card.links.map((link) => `                ${renderProjectLink(link)}`).join("\n");
+    return `            <article class="card project-card">
+              <p class="card-kicker">${escapeHtml(card.kicker)}</p>
+              <h3>${escapeHtml(card.title)}</h3>
+              <p>${escapeHtml(card.description)}</p>
+              <p class="project-impact">${escapeHtml(card.impact)}</p>
+              <div class="tech">
+${tech}
+              </div>
+              <div class="card-links">
+${links}
+              </div>
+            </article>`;
+  }).join("\n");
+  return `${PROJECTS_START}\n${cards}\n            ${PROJECTS_END}`;
+}
+
+function injectHomepageProjects(html, entries) {
+  if (!html.includes(PROJECTS_START)) return html;
+  const block = homepageProjectsCards(entries);
+  return html.replace(new RegExp(`${PROJECTS_START}[\\s\\S]*?${PROJECTS_END}`), block);
+}
+
 function sitemap(site, entries) {
   const urls = entries.filter((entry) => !entry.page.noindex).map(({ url }) => `  <url>\n    <loc>${escapeHtml(url)}</loc>\n  </url>`).join("\n");
   return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`;
@@ -462,6 +536,7 @@ export async function generateSeo(root = SOURCE_ROOT, configPath = CONFIG_PATH) 
       ? html.replace(headerPreamble, `$1\n    ${block}`)
       : html.replace(/<head>/i, `<head>\n    <meta charset="UTF-8" />\n    <meta name="viewport" content="width=device-width, initial-scale=1.0" />\n    ${block}`);
     html = injectHomepageInsights(html, entries);
+    html = injectHomepageProjects(html, entries);
     html = html.replace(/[\t ]+$/gm, "");
     await writeFile(file, html);
   }

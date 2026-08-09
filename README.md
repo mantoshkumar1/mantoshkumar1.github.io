@@ -76,6 +76,7 @@ node scripts/generate-seo.mjs
 node scripts/build-pages.mjs
 node scripts/audit-site.mjs
 node scripts/audit-homepage-insights.mjs
+node scripts/audit-homepage-projects.mjs
 node scripts/validate-discoverability.mjs
 node scripts/validate-xml-feeds.mjs
 node scripts/seo-audit.mjs
@@ -95,6 +96,7 @@ What these gates protect:
 - generated canonicals, Open Graph, Twitter Card, JSON-LD, sitemap, and feed metadata;
 - exactly one H1 and required semantic/SEO elements on every indexable page;
 - the homepage Insights teaser matches the deterministic latest-3-published selection with no stale or hand-edited cards;
+- the homepage Selected Projects section matches its configured editorial selection, with no unselected project and no ambiguous or duplicated ranking;
 - internal links, fragments, and public assets;
 - discoverability files and crawler policy;
 - Ask Mantosh coverage for every public HTML route;

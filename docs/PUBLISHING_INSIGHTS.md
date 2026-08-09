@@ -74,6 +74,18 @@ When you publish a new insight with a `datePublished` newer than the current
 top 3, it replaces the oldest featured card automatically on the next build —
 no `index.html` edit required.
 
+## Homepage Selected Projects (see PUBLISHING_PROJECTS.md)
+
+The homepage's "Selected Projects" section uses the same build-time
+generation architecture as the Insights teaser above, but a deliberately
+different, non-date-driven selection policy — do not simplify the two
+sections into the same algorithm:
+
+- **Insights** — latest 3 published, date-driven, fully automatic.
+- **Projects** — 3 editorially selected strongest projects, never by
+  recency. See [`PUBLISHING_PROJECTS.md`](PUBLISHING_PROJECTS.md) for the
+  full selection mechanism, required metadata, and build/audit guarantees.
+
 ## Empty-section behavior
 
 Autonomous publishing must never leave an editorial lane visually blank and

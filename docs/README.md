@@ -6,10 +6,11 @@ Use documents in this order when statements overlap:
 2. [`SYSTEM_STATE.md`](SYSTEM_STATE.md) records the verified production inventory, endpoints, controls, and known limits.
 3. [`../chat-worker/docs/`](../chat-worker/docs/) explains subsystem architecture, policy, deployment, security, cost, maintenance, and troubleshooting.
 4. [`PUBLISHING_INSIGHTS.md`](PUBLISHING_INSIGHTS.md) defines how a human-readable insight and Ask Mantosh knowledge source are published together.
-5. [`LINKEDIN_CONTENT_AUDIT.md`](LINKEDIN_CONTENT_AUDIT.md) records reviewed LinkedIn posts and publication decisions.
-6. [`ai-discoverability.md`](ai-discoverability.md) explains crawler, structured-data, sitemap, submission, and AI-referral practices.
-7. [`../VISION.md`](../VISION.md) describes durable product intent rather than deployed state.
-8. [`RELEASE_CONFIDENCE.md`](RELEASE_CONFIDENCE.md) explains browser journeys, accessibility checks, performance budgets, post-deploy smoke tests, and their limits.
+5. [`PUBLISHING_PROJECTS.md`](PUBLISHING_PROJECTS.md) defines project publication and the homepage Selected Projects editorial selection.
+6. [`LINKEDIN_CONTENT_AUDIT.md`](LINKEDIN_CONTENT_AUDIT.md) records reviewed LinkedIn posts and publication decisions.
+7. [`ai-discoverability.md`](ai-discoverability.md) explains crawler, structured-data, sitemap, submission, and AI-referral practices.
+8. [`../VISION.md`](../VISION.md) describes durable product intent rather than deployed state.
+9. [`RELEASE_CONFIDENCE.md`](RELEASE_CONFIDENCE.md) explains browser journeys, accessibility checks, performance budgets, post-deploy smoke tests, and their limits.
 
 Documentation changes run through `scripts/audit-docs.mjs`, which checks deployed endpoint references, production configuration values, public knowledge and Worker-test counts, prohibited stale wording, workflow enforcement, and local Markdown links.
 

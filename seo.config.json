@@ -248,7 +248,19 @@
       "applicationCategory": "DeveloperApplication",
       "breadcrumbs": [
         { "name": "Projects", "path": "/projects/" }
-      ]
+      ],
+      "card": {
+        "kicker": "Production system • Platform case study",
+        "title": "Evidence-First Engineering Knowledge System",
+        "description": "A static publishing platform with grounded AI retrieval, automated release gates, and explicit trust boundaries.",
+        "impact": "Grounded retrieval, explicit trust boundaries, automated release checks, and a production deployment.",
+        "tech": ["Workers", "D1 + Vectorize", "GitHub Actions"],
+        "links": [
+          { "label": "Try the live system →", "href": "#ask-mantosh" },
+          { "label": "See architecture and controls →", "href": "projects/engineering-knowledge-system.html", "detail": true }
+        ]
+      },
+      "homepageOrder": 1
     },
     "/projects/photosahi.html": {
       "title": "PhotoSahi: Privacy-First Browser Photo Processing | Mantosh Kumar",
@@ -260,7 +272,19 @@
       "applicationCategory": "UtilitiesApplication",
       "breadcrumbs": [
         { "name": "Projects", "path": "/projects/" }
-      ]
+      ],
+      "card": {
+        "kicker": "Working software • Architecture case study",
+        "title": "PhotoSahi",
+        "description": "A browser-based tool that simplifies passport and visa photo compliance with intelligent image processing.",
+        "impact": "100% browser-side image processing with no mandatory upload or backend.",
+        "tech": ["JavaScript", "Canvas", "Image Processing"],
+        "links": [
+          { "label": "Try the live product ↗", "href": "https://mantoshkumar1.github.io/photosahi/", "external": true },
+          { "label": "See architecture and trade-offs →", "href": "projects/photosahi.html", "detail": true }
+        ]
+      },
+      "homepageOrder": 2
     },
     "/projects/workflow-automation-toolkit.html": {
       "title": "Workflow Automation Toolkit | Mantosh Kumar",
@@ -292,7 +316,19 @@
       "dateModified": "2026-07-13",
       "breadcrumbs": [
         { "name": "Projects", "path": "/projects/" }
-      ]
+      ],
+      "card": {
+        "kicker": "Experience case study • Platform engineering",
+        "title": "Validation Platform and Release Intelligence",
+        "description": "Reusable validation infrastructure, AI-assisted failure investigation, and release intelligence for optical networking.",
+        "impact": "Turns repeated testing, failure investigation, and release reporting into one coherent engineering workflow.",
+        "tech": ["Python", "Validation", "Release health"],
+        "links": [
+          { "label": "See architecture and approach →", "href": "projects/validation-platform-optical-networking.html", "detail": true },
+          { "label": "Read the supporting insight →", "href": "insights/release-reports-as-operational-history.html" }
+        ]
+      },
+      "homepageOrder": 3
     },
     "/projects/legacy-validation-framework-migration.html": {
       "title": "Legacy Validation Framework Migration | Mantosh Kumar",
