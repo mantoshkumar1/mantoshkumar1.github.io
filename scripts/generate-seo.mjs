@@ -6,6 +6,8 @@ const SOURCE_ROOT = resolve(process.env.SITE_ROOT || process.cwd());
 const CONFIG_PATH = resolve(process.env.SEO_CONFIG || join(SOURCE_ROOT, "seo.config.json"));
 const GENERATED_START = "<!-- seo:generated:start -->";
 const GENERATED_END = "<!-- seo:generated:end -->";
+export const INSIGHTS_START = "<!-- insights:generated:start -->";
+export const INSIGHTS_END = "<!-- insights:generated:end -->";
 
 function escapeHtml(value) {
   return String(value).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
@@ -281,6 +283,78 @@ async function knowledgeVisibilityByRoute(root) {
   return map;
 }
 
+function formatCardDate(value) {
+  const date = new Date(`${value}T12:00:00Z`);
+  return date.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" });
+}
+
+/**
+ * The homepage Insights teaser always shows the 3 most recently published
+ * insight articles, newest first — no manual curation, and nothing below can
+ * recreate the old hand-picked "featured" model. `datePublished` is the sole
+ * ordering signal and always wins on its own: an article published
+ * 2026-08-09 outranks one published 2026-08-08 no matter what any other
+ * field says. `homepageRank` is consulted ONLY to break a tie between
+ * articles that share the exact same `datePublished` — the comparator
+ * returns before ever reading `homepageRank` when dates differ, so a rank
+ * can never promote an older article over a newer one. Within a same-day
+ * tie: lower `homepageRank` wins; articles without a rank sort after ranked
+ * ones; remaining ties break on `dateModified` (newest first), then route
+ * (alphabetical) so the result is fully deterministic regardless of input
+ * order.
+ */
+// Exported so scripts/audit-homepage-insights.mjs can verify the built
+// homepage against this exact selection instead of re-implementing (and
+// risking drift from) the sort/tiebreak rules.
+export function selectHomepageInsights(entries) {
+  const candidates = entries.filter(({ route, page }) =>
+    page.kind === "article" && route.startsWith("/insights/") && route !== "/insights/" && !page.noindex
+  );
+  const missingCard = candidates.filter(({ page }) => !page.card);
+  if (missingCard.length) {
+    throw new Error(`Homepage insight cards require "card" metadata in seo.config.json: ${missingCard.map(({ route }) => route).join(", ")}`);
+  }
+  const missingDate = candidates.filter(({ page }) => !page.datePublished);
+  if (missingDate.length) {
+    throw new Error(`Homepage insight cards require datePublished in seo.config.json: ${missingDate.map(({ route }) => route).join(", ")}`);
+  }
+  const sorted = [...candidates].sort((left, right) => {
+    if (left.page.datePublished !== right.page.datePublished) return right.page.datePublished.localeCompare(left.page.datePublished);
+    const leftRank = left.page.homepageRank ?? Infinity;
+    const rightRank = right.page.homepageRank ?? Infinity;
+    if (leftRank !== rightRank) return leftRank - rightRank;
+    const leftModified = left.page.dateModified || "";
+    const rightModified = right.page.dateModified || "";
+    if (leftModified !== rightModified) return rightModified.localeCompare(leftModified);
+    return left.route.localeCompare(right.route);
+  });
+  const top3 = sorted.slice(0, 3);
+  if (top3.length < 3) throw new Error(`Homepage requires at least 3 published insight articles with card metadata; found ${top3.length}.`);
+  return top3;
+}
+
+function homepageInsightsCards(entries) {
+  const top3 = selectHomepageInsights(entries);
+  const cards = top3.map(({ page, route }) => {
+    const card = page.card;
+    const dateLabel = formatCardDate(page.datePublished);
+    const href = route.replace(/^\//, "");
+    return `            <article class="card insight-card">
+              <p class="card-kicker">${escapeHtml(card.kicker)} • ${escapeHtml(card.readTime)} • <time datetime="${escapeHtml(page.datePublished)}">${escapeHtml(dateLabel)}</time></p>
+              <h3>${escapeHtml(card.title)}</h3>
+              <p>${escapeHtml(card.summary)}</p>
+              <a href="${escapeHtml(href)}">${escapeHtml(card.cta)} <span aria-hidden="true">→</span></a>
+            </article>`;
+  }).join("\n");
+  return `${INSIGHTS_START}\n${cards}\n            ${INSIGHTS_END}`;
+}
+
+function injectHomepageInsights(html, entries) {
+  if (!html.includes(INSIGHTS_START)) return html;
+  const block = homepageInsightsCards(entries);
+  return html.replace(new RegExp(`${INSIGHTS_START}[\\s\\S]*?${INSIGHTS_END}`), block);
+}
+
 function sitemap(site, entries) {
   const urls = entries.filter((entry) => !entry.page.noindex).map(({ url }) => `  <url>\n    <loc>${escapeHtml(url)}</loc>\n  </url>`).join("\n");
   return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`;
@@ -335,16 +409,49 @@ ${body}
 `;
 }
 
-export async function generateSeo(root = SOURCE_ROOT, configPath = CONFIG_PATH) {
+// Shared by loadEntries() and generateSeo() so there is exactly one place
+// that reads seo.config.json, walks the HTML files, and derives each
+// route's metadata (including `card`/`homepageRank`). generateSeo() needs
+// the raw `html`/`file` alongside `page` for its rewrite pass; loadEntries()
+// (used by scripts/audit-homepage-insights.mjs) only needs the metadata.
+async function collectItems(root, configPath) {
   const config = JSON.parse(await readFile(configPath, "utf8"));
   const files = await htmlFiles(root);
   const knowledgeVisibility = await knowledgeVisibilityByRoute(root);
-  const entries = [];
+  const items = [];
   for (const file of files) {
     const route = pathToRoute(root, file);
-    let html = await readFile(file, "utf8");
+    const html = await readFile(file, "utf8");
     const page = metadataFromHtml(html, route, config, knowledgeVisibility);
     const url = routeToUrl(config.site, route);
+    items.push({ file, route, html, page, url });
+  }
+  return { config, items };
+}
+
+// Exported so scripts/audit-homepage-insights.mjs can compute the same
+// route/page metadata (including seo.config.json's `card`/`homepageRank`
+// fields) that generateSeo() uses, without re-reading or re-deriving it.
+export async function loadEntries(root = SOURCE_ROOT, configPath = CONFIG_PATH) {
+  const { config, items } = await collectItems(root, configPath);
+  return { config, entries: items.map(({ page, route, url }) => ({ page, route, url })) };
+}
+
+export { formatCardDate };
+
+export async function generateSeo(root = SOURCE_ROOT, configPath = CONFIG_PATH) {
+  // Pass 1: read every file and compute its metadata first. The homepage
+  // Insights teaser needs every insight article's page metadata (dates, card
+  // text) before it can render, and directory traversal order does not
+  // guarantee index.html is processed after insights/*.html.
+  const { config, items } = await collectItems(root, configPath);
+  const entries = items.map(({ page, route, url }) => ({ page, route, url }));
+
+  // Pass 2: rewrite each file's SEO head block and, for the homepage, its
+  // generated Insights cards, now that `entries` is fully populated.
+  for (const item of items) {
+    const { file, route, page, url } = item;
+    let html = item.html;
     const canonicalUrl = page.canonicalPath ? routeToUrl(config.site, page.canonicalPath) : url;
     html = removeOldSeo(html);
     html = html.replace(/<html\b([^>]*)>/i, (_match, attrs) => `<html${attrs.replace(/\s+lang=["'][^"']*["']/i, "")} lang="${config.site.language}">`);
@@ -354,9 +461,9 @@ export async function generateSeo(root = SOURCE_ROOT, configPath = CONFIG_PATH) 
     html = headerPreamble.test(html)
       ? html.replace(headerPreamble, `$1\n    ${block}`)
       : html.replace(/<head>/i, `<head>\n    <meta charset="UTF-8" />\n    <meta name="viewport" content="width=device-width, initial-scale=1.0" />\n    ${block}`);
+    html = injectHomepageInsights(html, entries);
     html = html.replace(/[\t ]+$/gm, "");
     await writeFile(file, html);
-    entries.push({ page, route, url });
   }
   await writeFile(join(root, "sitemap.xml"), sitemap(config.site, entries));
   await writeFile(join(root, "feed.xml"), atomFeed(config.site, entries));

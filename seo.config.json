@@ -46,7 +46,15 @@
       "dateModified": "2026-07-12",
       "breadcrumbs": [
         { "name": "Insights", "path": "/insights/" }
-      ]
+      ],
+      "card": {
+        "kicker": "Engineering philosophy",
+        "readTime": "4 minute read",
+        "title": "Build leverage, not just software",
+        "summary": "Four principles for choosing the bottleneck, removing repeated intervention, preserving judgment, and keeping evidence close to claims.",
+        "cta": "Read the philosophy"
+      },
+      "homepageRank": 1
     },
     "/insights/why-does-this-still-require-me.html": {
       "title": "Why Does This Still Require Me? | Mantosh Kumar",
@@ -57,7 +65,15 @@
       "dateModified": "2026-07-12",
       "breadcrumbs": [
         { "name": "Insights", "path": "/insights/" }
-      ]
+      ],
+      "card": {
+        "kicker": "Engineering note",
+        "readTime": "5 minute read",
+        "title": "Why does this still require me?",
+        "summary": "A practical test for recognizing work that should become a system, a delegated responsibility, or an automated workflow.",
+        "cta": "Read the note"
+      },
+      "homepageRank": 2
     },
     "/insights/message-bus-between-ai-agents.html": {
       "title": "Why Am I Still the Message Bus Between My AI Agents? | Mantosh Kumar",
@@ -68,7 +84,14 @@
       "dateModified": "2026-08-08",
       "breadcrumbs": [
         { "name": "Insights", "path": "/insights/" }
-      ]
+      ],
+      "card": {
+        "kicker": "Technical article",
+        "readTime": "5 minute read",
+        "title": "Why am I still the message bus between my AI agents?",
+        "summary": "A durable governance pattern already fixes most of the shared-context problem — DogBuild is the local tool closing the rest: the actual handoff.",
+        "cta": "Read the article"
+      }
     },
     "/insights/release-reports-as-operational-history.html": {
       "title": "Release Reports as Operational History | Mantosh Kumar",
@@ -77,7 +100,15 @@
       "schemaType": "TechArticle",
       "datePublished": "2026-07-12",
       "dateModified": "2026-07-12",
-      "breadcrumbs": [{ "name": "Insights", "path": "/insights/" }]
+      "breadcrumbs": [{ "name": "Insights", "path": "/insights/" }],
+      "card": {
+        "kicker": "Operational intelligence",
+        "readTime": "5 minute read",
+        "title": "Release reports become operational history",
+        "summary": "How comparable release snapshots can reveal longer-term patterns without replacing engineering judgment.",
+        "cta": "Read the note"
+      },
+      "homepageRank": 3
     },
     "/insights/complexity-changes-address.html": {
       "title": "In Distributed Systems, Complexity Changes Address | Mantosh Kumar",
@@ -86,7 +117,14 @@
       "schemaType": "TechArticle",
       "datePublished": "2026-07-12",
       "dateModified": "2026-07-12",
-      "breadcrumbs": [{ "name": "Insights", "path": "/insights/" }]
+      "breadcrumbs": [{ "name": "Insights", "path": "/insights/" }],
+      "card": {
+        "kicker": "Distributed systems",
+        "readTime": "4 minute read",
+        "title": "Complexity changes address",
+        "summary": "A decision heuristic for tracking the failure modes and responsibilities that an optimization moves elsewhere.",
+        "cta": "Read the note"
+      }
     },
     "/insights/blockchain-without-a-master-branch.html": {
       "title": "Blockchain Without a Master Branch | Mantosh Kumar",
@@ -95,7 +133,14 @@
       "schemaType": "TechArticle",
       "datePublished": "2026-07-12",
       "dateModified": "2026-07-12",
-      "breadcrumbs": [{ "name": "Insights", "path": "/insights/" }]
+      "breadcrumbs": [{ "name": "Insights", "path": "/insights/" }],
+      "card": {
+        "kicker": "Distributed systems",
+        "readTime": "5 minute read",
+        "title": "What if Git had no master branch?",
+        "summary": "A limited analogy for understanding blockchain as a shared-history and consensus problem.",
+        "cta": "Read the article"
+      }
     },
     "/insights/ownership-before-escalation.html": {
       "title": "Engineering Ownership Before Escalation | Mantosh Kumar",
@@ -104,7 +149,14 @@
       "schemaType": "TechArticle",
       "datePublished": "2026-07-12",
       "dateModified": "2026-07-12",
-      "breadcrumbs": [{ "name": "Insights", "path": "/insights/" }]
+      "breadcrumbs": [{ "name": "Insights", "path": "/insights/" }],
+      "card": {
+        "kicker": "Engineering leadership",
+        "readTime": "4 minute read",
+        "title": "Ownership starts before escalation",
+        "summary": "A practical standard for making meaningful issues, risk, and next actions visible before someone has to ask.",
+        "cta": "Read the note"
+      }
     },
     "/thinking/": {
       "title": "Redirecting to Insights | Mantosh Kumar",

@@ -35,12 +35,44 @@ Never infer employer results, adoption, scale, incidents, or metrics. Put future
 
 1. Create the HTML page from `templates/article.html` and add an explicit evidence-boundary section.
 2. Create the paired Markdown document from `knowledge/_template.md`; choose `article` or `note`, set its canonical `url`, and keep `visibility: draft` during review.
-3. Add the dated page to `seo.config.json`, the Insights index, the homepage when featured, and `llms.txt`. `scripts/generate-seo.mjs` adds every dated article or project to `feed.xml` automatically.
-4. Add the page to `scripts/audit-site.mjs` and `scripts/validate-discoverability.mjs`.
+3. Add the dated page to `seo.config.json` (including its `card` object, see below), the Insights index, and `llms.txt`. `scripts/generate-seo.mjs` adds every dated article or project to `feed.xml` automatically, and regenerates the homepage Insights teaser automatically — see "Homepage Insights teaser" below.
+4. Add the page to `scripts/audit-site.mjs`.
 5. Review every claim, then set the knowledge document to `visibility: public`.
 6. Run the complete release gates documented in the root README.
 7. Push `main`; Pages deploys the article and the knowledge workflow synchronizes the paired retrieval document.
 8. Ask one direct, one paraphrased, and one unrelated question. Verify the source label, URL, and no-evidence behavior.
+
+## Homepage Insights teaser
+
+The homepage's Insights section always shows the **3 most recently published
+insight articles, newest first**. This is generated automatically at build
+time by `scripts/generate-seo.mjs` — there is no manual curation step and the
+homepage's `index.html` must never be hand-edited to add, remove, or reorder a
+card. The generated markup lives between `<!-- insights:generated:start -->`
+and `<!-- insights:generated:end -->` markers inside the `#insights` section's
+`.cards` block.
+
+`seo.config.json` is the single source of truth for both ordering and card
+text, because it already drives `sitemap.xml` and `feed.xml`:
+
+- **Ordering** — sort by `datePublished` descending; this always wins on its
+  own, so an article published 2026-08-09 outranks one published 2026-08-08
+  regardless of any other field. `homepageRank` is consulted **only** to
+  break a tie between articles that share the exact same `datePublished` — it
+  can never promote an older article over a newer one, and it does not bring
+  back manual "featuring." Within a same-day tie: lower `homepageRank` wins;
+  articles without a rank sort after every ranked one; remaining ties break
+  on `dateModified` descending, then route. Set `homepageRank` only when you
+  need to control a same-day tie.
+- **Card text** — every insight article entry must include a `card` object
+  with `kicker`, `readTime`, `title`, `summary`, and `cta`. `generate-seo.mjs`
+  throws a build error if a published insight article is missing `card`
+  metadata, so the build fails loudly rather than silently omitting a card or
+  rendering blank text.
+
+When you publish a new insight with a `datePublished` newer than the current
+top 3, it replaces the oldest featured card automatically on the next build —
+no `index.html` edit required.
 
 ## Empty-section behavior
 
@@ -62,7 +94,7 @@ canonical article URL, feed entry, sitemap entry, or Ask Mantosh document.
 
 An insight is complete only when:
 
-- a visitor can find it from the homepage and Insights navigation;
+- a visitor can find it from the Insights navigation, and from the homepage automatically once it is among the 3 most recently published insights;
 - the page has one H1, canonical metadata, structured data, feed/sitemap discovery, and working links;
 - Ask Mantosh can answer a concrete question from its paired public document and cite the canonical page;
 - unsupported claims are excluded rather than softened with marketing language;
