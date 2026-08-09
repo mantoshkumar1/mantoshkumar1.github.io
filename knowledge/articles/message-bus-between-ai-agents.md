@@ -51,7 +51,7 @@ git rev-parse origin/main
 
 None of the above automates the handoff itself. That's what [DogBuild](https://github.com/mantoshkumar1/dogbuild) is for — my own local, file-based coordination layer, in active dogfood.
 
-Its README names [PingStep](https://pingstep.dev) as the motivating example: a human manually relaying an implementation result to a reviewer, then relaying the review findings back, every round of fixes. [DogBuild](https://github.com/mantoshkumar1/dogbuild) exists to make that loop automatic, without the human losing authority over it.
+Its [vision document](https://github.com/mantoshkumar1/dogbuild/blob/main/vision.md) names [PingStep](https://pingstep.dev) as the motivating example: a human manually relaying an implementation result to a reviewer, then relaying the review findings back, every round of fixes. [DogBuild](https://github.com/mantoshkumar1/dogbuild) exists to make that loop automatic, without the human losing authority over it.
 
 The intended loop, once closed:
 
