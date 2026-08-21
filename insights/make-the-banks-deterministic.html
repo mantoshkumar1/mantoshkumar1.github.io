@@ -90,7 +90,11 @@
           <section class="resume-section">
             <h2>Where attention actually goes</h2>
             <figure class="reading-figure">
-              <svg viewBox="0 0 680 424" width="100%" role="img" aria-labelledby="banks-title banks-desc" style="max-width:640px;height:auto;display:block;margin:0 auto">
+              <style>
+                .banks-diagram { --dg-line: #8ea3bd; --dg-accent: #7cb2ff; --dg-fill: #18222f; --dg-tint: rgba(124, 178, 255, 0.16); --dg-text: #f8fafc; --dg-muted: #aebdd0; }
+                html[data-theme="light"] .banks-diagram { --dg-line: #64748b; --dg-accent: #1d4ed8; --dg-fill: #ffffff; --dg-tint: rgba(29, 78, 216, 0.10); --dg-text: #111827; --dg-muted: #536174; }
+              </style>
+              <svg class="banks-diagram" viewBox="0 0 680 424" width="100%" role="img" aria-labelledby="banks-title banks-desc" style="max-width:640px;height:auto;display:block;margin:0 auto">
                 <title id="banks-title">How an agent change splits into two review lanes</title>
                 <desc id="banks-desc">An agent change divides into implementation, roughly 2,000 lines that flow through unread, and tests plus CI config, roughly 40 lines that are read. Both then pass through floors that only rise, which block any drop in coverage or test count before the change merges. The tests, CI config and floors are the banks: the parts that are protected and read. The implementation is the water: it flows through.</desc>
                 <defs>
@@ -99,40 +103,40 @@
                   </marker>
                 </defs>
 
-                <rect x="270" y="30" width="140" height="44" rx="8" fill="var(--surface)" stroke="var(--border)" stroke-width="1"/>
-                <text x="340" y="52" text-anchor="middle" dominant-baseline="central" fill="var(--text)" font-family="Inter, sans-serif" font-size="14" font-weight="500">Agent change</text>
+                <rect x="270" y="30" width="140" height="44" rx="8" fill="var(--dg-fill)" stroke="var(--dg-line)" stroke-width="1.5"/>
+                <text x="340" y="52" text-anchor="middle" dominant-baseline="central" fill="var(--dg-text)" font-family="Inter, sans-serif" font-size="14" font-weight="500">Agent change</text>
 
-                <path d="M340 74 L340 98" fill="none" stroke="var(--muted)" stroke-width="1.5"/>
-                <path d="M185 98 L495 98" fill="none" stroke="var(--muted)" stroke-width="1.5"/>
-                <path d="M185 98 L185 116" fill="none" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#bank-arrow)"/>
-                <path d="M495 98 L495 116" fill="none" stroke="var(--primary)" stroke-width="2" marker-end="url(#bank-arrow)"/>
+                <path d="M340 74 L340 98" fill="none" stroke="var(--dg-line)" stroke-width="1.75"/>
+                <path d="M185 98 L495 98" fill="none" stroke="var(--dg-line)" stroke-width="1.75"/>
+                <path d="M185 98 L185 116" fill="none" stroke="var(--dg-line)" stroke-width="1.75" stroke-dasharray="6 5" marker-end="url(#bank-arrow)"/>
+                <path d="M495 98 L495 116" fill="none" stroke="var(--dg-accent)" stroke-width="2.5" marker-end="url(#bank-arrow)"/>
 
-                <rect x="60" y="120" width="250" height="60" rx="8" fill="var(--surface)" stroke="var(--muted)" stroke-width="1.25" stroke-dasharray="5 4"/>
-                <text x="185" y="142" text-anchor="middle" dominant-baseline="central" fill="var(--text)" font-family="Inter, sans-serif" font-size="14" font-weight="500">Implementation</text>
-                <text x="185" y="161" text-anchor="middle" dominant-baseline="central" fill="var(--muted)" font-family="Inter, sans-serif" font-size="12">~2,000 lines, not read</text>
+                <rect x="60" y="120" width="250" height="60" rx="8" fill="var(--dg-fill)" stroke="var(--dg-line)" stroke-width="1.5" stroke-dasharray="6 5"/>
+                <text x="185" y="142" text-anchor="middle" dominant-baseline="central" fill="var(--dg-text)" font-family="Inter, sans-serif" font-size="14" font-weight="500">Implementation</text>
+                <text x="185" y="161" text-anchor="middle" dominant-baseline="central" fill="var(--dg-muted)" font-family="Inter, sans-serif" font-size="12">~2,000 lines, not read</text>
 
-                <rect x="370" y="120" width="250" height="60" rx="8" fill="var(--primary)" fill-opacity="0.12" stroke="var(--primary)" stroke-width="2"/>
-                <text x="495" y="142" text-anchor="middle" dominant-baseline="central" fill="var(--text)" font-family="Inter, sans-serif" font-size="14" font-weight="500">Tests and CI config</text>
-                <text x="495" y="161" text-anchor="middle" dominant-baseline="central" fill="var(--primary)" font-family="Inter, sans-serif" font-size="12" font-weight="500">~40 lines, you read these</text>
+                <rect x="370" y="120" width="250" height="60" rx="8" fill="var(--dg-tint)" stroke="var(--dg-accent)" stroke-width="2.5"/>
+                <text x="495" y="142" text-anchor="middle" dominant-baseline="central" fill="var(--dg-text)" font-family="Inter, sans-serif" font-size="14" font-weight="500">Tests and CI config</text>
+                <text x="495" y="161" text-anchor="middle" dominant-baseline="central" fill="var(--dg-accent)" font-family="Inter, sans-serif" font-size="12" font-weight="500">~40 lines, you read these</text>
 
-                <path d="M185 180 L185 204" fill="none" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="5 4"/>
-                <path d="M495 180 L495 204" fill="none" stroke="var(--primary)" stroke-width="2"/>
-                <path d="M185 204 L495 204" fill="none" stroke="var(--muted)" stroke-width="1.5"/>
-                <path d="M340 204 L340 222" fill="none" stroke="var(--muted)" stroke-width="1.5" marker-end="url(#bank-arrow)"/>
+                <path d="M185 180 L185 204" fill="none" stroke="var(--dg-line)" stroke-width="1.75" stroke-dasharray="6 5"/>
+                <path d="M495 180 L495 204" fill="none" stroke="var(--dg-accent)" stroke-width="2.5"/>
+                <path d="M185 204 L495 204" fill="none" stroke="var(--dg-line)" stroke-width="1.75"/>
+                <path d="M340 204 L340 222" fill="none" stroke="var(--dg-line)" stroke-width="1.75" marker-end="url(#bank-arrow)"/>
 
-                <rect x="170" y="226" width="340" height="60" rx="8" fill="var(--primary)" fill-opacity="0.12" stroke="var(--primary)" stroke-width="2"/>
-                <text x="340" y="248" text-anchor="middle" dominant-baseline="central" fill="var(--text)" font-family="Inter, sans-serif" font-size="14" font-weight="500">Floors that only rise</text>
-                <text x="340" y="267" text-anchor="middle" dominant-baseline="central" fill="var(--primary)" font-family="Inter, sans-serif" font-size="12" font-weight="500">Coverage and count can't fall</text>
+                <rect x="170" y="226" width="340" height="60" rx="8" fill="var(--dg-tint)" stroke="var(--dg-accent)" stroke-width="2.5"/>
+                <text x="340" y="248" text-anchor="middle" dominant-baseline="central" fill="var(--dg-text)" font-family="Inter, sans-serif" font-size="14" font-weight="500">Floors that only rise</text>
+                <text x="340" y="267" text-anchor="middle" dominant-baseline="central" fill="var(--dg-accent)" font-family="Inter, sans-serif" font-size="12" font-weight="500">Coverage and count can't fall</text>
 
-                <path d="M340 286 L340 326" fill="none" stroke="var(--muted)" stroke-width="1.5" marker-end="url(#bank-arrow)"/>
+                <path d="M340 286 L340 326" fill="none" stroke="var(--dg-line)" stroke-width="1.75" marker-end="url(#bank-arrow)"/>
 
-                <rect x="270" y="330" width="140" height="44" rx="8" fill="var(--surface)" stroke="var(--muted)" stroke-width="1.25"/>
-                <text x="340" y="352" text-anchor="middle" dominant-baseline="central" fill="var(--text)" font-family="Inter, sans-serif" font-size="14" font-weight="500">Merge</text>
+                <rect x="270" y="330" width="140" height="44" rx="8" fill="var(--dg-fill)" stroke="var(--dg-line)" stroke-width="1.5"/>
+                <text x="340" y="352" text-anchor="middle" dominant-baseline="central" fill="var(--dg-text)" font-family="Inter, sans-serif" font-size="14" font-weight="500">Merge</text>
 
-                <rect x="150" y="396" width="12" height="12" rx="3" fill="var(--primary)" fill-opacity="0.12" stroke="var(--primary)" stroke-width="2"/>
-                <text x="170" y="402" dominant-baseline="central" fill="var(--muted)" font-family="Inter, sans-serif" font-size="12">Solid: the banks, read and protected</text>
-                <rect x="410" y="396" width="12" height="12" rx="3" fill="var(--surface)" stroke="var(--muted)" stroke-width="1.25" stroke-dasharray="3 2"/>
-                <text x="430" y="402" dominant-baseline="central" fill="var(--muted)" font-family="Inter, sans-serif" font-size="12">Dashed: the water, flows through</text>
+                <rect x="150" y="396" width="12" height="12" rx="3" fill="var(--dg-tint)" stroke="var(--dg-accent)" stroke-width="2.5"/>
+                <text x="170" y="402" dominant-baseline="central" fill="var(--dg-muted)" font-family="Inter, sans-serif" font-size="12">Solid: the banks, read and protected</text>
+                <rect x="410" y="396" width="12" height="12" rx="3" fill="var(--dg-fill)" stroke="var(--dg-line)" stroke-width="1.5" stroke-dasharray="3 2"/>
+                <text x="430" y="402" dominant-baseline="central" fill="var(--dg-muted)" font-family="Inter, sans-serif" font-size="12">Dashed: the water, flows through</text>
               </svg>
               <figcaption>The implementation flows through unread. The tests, the CI config, and the floors are the banks.</figcaption>
             </figure>
