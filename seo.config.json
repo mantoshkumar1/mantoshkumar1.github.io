@@ -38,7 +38,7 @@
       "schemaType": "CollectionPage"
     },
     "/insights/make-the-banks-deterministic.html": {
-      "title": "The Water Isn't Deterministic. The Banks Can Be. | Mantosh Kumar",
+      "title": "A River Can't Be Deterministic. Its Banks Can Be. | Mantosh Kumar",
       "description": "A working rule for using coding agents as a solo builder: review the tests rather than the generated code, and enforce floors that only rise.",
       "kind": "article",
       "schemaType": "TechArticle",
@@ -53,8 +53,8 @@
       "card": {
         "kicker": "AI-assisted engineering",
         "readTime": "5 minute read",
-        "title": "The water isn't deterministic. The banks can be.",
-        "summary": "You can't read everything an agent writes. You can stop it editing the thing that checks its work.",
+        "title": "A river can't be deterministic. Its banks can be.",
+        "summary": "The AI model is the river and your tests are the banks — you can't make the river predictable, only bounded.",
         "cta": "Read the note"
       }
     },

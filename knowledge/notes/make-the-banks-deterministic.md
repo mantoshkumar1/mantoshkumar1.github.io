@@ -1,5 +1,5 @@
 ---
-title: "The Water Isn't Deterministic. The Banks Can Be."
+title: "A River Can't Be Deterministic. Its Banks Can Be."
 slug: "make-the-banks-deterministic"
 category: "note"
 tags: [ai-assisted-engineering, testing-infrastructure, ci-cd, developer-productivity, code-review]
@@ -10,7 +10,7 @@ visibility: "public"
 url: "/insights/make-the-banks-deterministic.html"
 ---
 
-# The Water Isn't Deterministic. The Banks Can Be.
+# A River Can't Be Deterministic. Its Banks Can Be.
 
 ## Core rule
 

@@ -1,0 +1,80 @@
+name: Protected paths
+
+# The agent may write the code, but not the thing that judges the code.
+#
+# Tests, CI workflows, and the gates themselves are the checks that stand in
+# for reading every generated line. If a change can quietly edit them, the
+# suite can be made green by moving the goalposts rather than by being correct.
+#
+# This job does not block those files from changing. It makes the change
+# visible and forces one deliberate human act: read `git diff -- <paths>` and
+# add the `approved-test-change` label. That review is small enough to always
+# actually happen.
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Block unapproved changes to tests and CI configuration
+        env:
+          BASE_REF: ${{ github.base_ref }}
+          LABELS: ${{ join(github.event.pull_request.labels.*.name, ',') }}
+        run: |
+          set -euo pipefail
+
+          CHANGED=$(git diff --name-only "origin/${BASE_REF}...HEAD" -- \
+            'chat-worker/test/**' \
+            'chat-worker/eval/**' \
+            'tests/**' \
+            '.github/workflows/**' \
+            'scripts/audit-*.mjs' \
+            '.test-count' \
+            'playwright.config.mjs' || true)
+
+          if [ -z "$CHANGED" ]; then
+            echo "No protected paths changed."
+            exit 0
+          fi
+
+          echo "Protected paths changed in this pull request:"
+          echo "$CHANGED" | sed 's/^/  /'
+          echo
+
+          if printf '%s' "$LABELS" | tr ',' '\n' | grep -qx 'approved-test-change'; then
+            echo "Label 'approved-test-change' present; the diff has been reviewed."
+            exit 0
+          fi
+
+          echo "::error::Protected paths changed without review. Run 'git diff -- ${CHANGED//$'\n'/ }', confirm the change is intended, then add the 'approved-test-change' label."
+          exit 1
+
+  floor:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+
+      - name: Test count may rise, never fall
+        run: node scripts/audit-test-floor.mjs
+
+      - name: Fail if the floor was raised without committing it
+        run: |
+          if ! git diff --quiet -- .test-count; then
+            echo "::error::Test count rose. Commit the updated .test-count."
+            git diff -- .test-count
+            exit 1
+          fi

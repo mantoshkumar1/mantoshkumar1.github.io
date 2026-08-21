@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "deny": [
+      "Edit(chat-worker/test/**)",
+      "Edit(chat-worker/eval/**)",
+      "Edit(.github/workflows/**)",
+      "Edit(scripts/audit-*.mjs)",
+      "Edit(.test-count)",
+      "Edit(playwright.config.mjs)",
+      "Edit(.claude/settings.json)"
+    ]
+  }
+}
