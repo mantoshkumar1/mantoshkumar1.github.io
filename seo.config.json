@@ -37,6 +37,27 @@
       "kind": "collection",
       "schemaType": "CollectionPage"
     },
+    "/insights/make-the-banks-deterministic.html": {
+      "title": "The Water Isn't Deterministic. The Banks Can Be. | Mantosh Kumar",
+      "description": "A working rule for using coding agents as a solo builder: review the tests rather than the generated code, and enforce floors that only rise.",
+      "kind": "article",
+      "schemaType": "TechArticle",
+      "datePublished": "2026-08-21",
+      "dateModified": "2026-08-21",
+      "breadcrumbs": [
+        {
+          "name": "Insights",
+          "path": "/insights/"
+        }
+      ],
+      "card": {
+        "kicker": "AI-assisted engineering",
+        "readTime": "5 minute read",
+        "title": "The water isn't deterministic. The banks can be.",
+        "summary": "You can't read everything an agent writes. You can stop it editing the thing that checks its work.",
+        "cta": "Read the note"
+      }
+    },
     "/insights/engineering-philosophy.html": {
       "title": "Engineering Philosophy: Build Leverage, Not Just Software | Mantosh Kumar",
       "description": "Four principles for choosing engineering interventions: start with the bottleneck, systematize repetition, preserve judgment, and keep evidence close to claims.",
@@ -45,7 +66,10 @@
       "datePublished": "2026-07-12",
       "dateModified": "2026-07-12",
       "breadcrumbs": [
-        { "name": "Insights", "path": "/insights/" }
+        {
+          "name": "Insights",
+          "path": "/insights/"
+        }
       ],
       "card": {
         "kicker": "Engineering philosophy",
@@ -64,7 +88,10 @@
       "datePublished": "2026-07-12",
       "dateModified": "2026-07-12",
       "breadcrumbs": [
-        { "name": "Insights", "path": "/insights/" }
+        {
+          "name": "Insights",
+          "path": "/insights/"
+        }
       ],
       "card": {
         "kicker": "Engineering note",
@@ -83,7 +110,10 @@
       "datePublished": "2026-08-08",
       "dateModified": "2026-08-08",
       "breadcrumbs": [
-        { "name": "Insights", "path": "/insights/" }
+        {
+          "name": "Insights",
+          "path": "/insights/"
+        }
       ],
       "card": {
         "kicker": "Technical article",
@@ -100,7 +130,12 @@
       "schemaType": "TechArticle",
       "datePublished": "2026-07-12",
       "dateModified": "2026-07-12",
-      "breadcrumbs": [{ "name": "Insights", "path": "/insights/" }],
+      "breadcrumbs": [
+        {
+          "name": "Insights",
+          "path": "/insights/"
+        }
+      ],
       "card": {
         "kicker": "Operational intelligence",
         "readTime": "5 minute read",
@@ -117,7 +152,12 @@
       "schemaType": "TechArticle",
       "datePublished": "2026-07-12",
       "dateModified": "2026-07-12",
-      "breadcrumbs": [{ "name": "Insights", "path": "/insights/" }],
+      "breadcrumbs": [
+        {
+          "name": "Insights",
+          "path": "/insights/"
+        }
+      ],
       "card": {
         "kicker": "Distributed systems",
         "readTime": "4 minute read",
@@ -133,7 +173,12 @@
       "schemaType": "TechArticle",
       "datePublished": "2026-07-12",
       "dateModified": "2026-07-12",
-      "breadcrumbs": [{ "name": "Insights", "path": "/insights/" }],
+      "breadcrumbs": [
+        {
+          "name": "Insights",
+          "path": "/insights/"
+        }
+      ],
       "card": {
         "kicker": "Distributed systems",
         "readTime": "5 minute read",
@@ -149,7 +194,12 @@
       "schemaType": "TechArticle",
       "datePublished": "2026-07-12",
       "dateModified": "2026-07-12",
-      "breadcrumbs": [{ "name": "Insights", "path": "/insights/" }],
+      "breadcrumbs": [
+        {
+          "name": "Insights",
+          "path": "/insights/"
+        }
+      ],
       "card": {
         "kicker": "Engineering leadership",
         "readTime": "4 minute read",
@@ -230,7 +280,12 @@
       "description": "Follow concise, evidence-backed engineering notes from Mantosh Kumar about platform engineering, automation, backend systems, and operational intelligence.",
       "kind": "page",
       "schemaType": "WebPage",
-      "breadcrumbs": [{ "name": "Insights", "path": "/insights/" }]
+      "breadcrumbs": [
+        {
+          "name": "Insights",
+          "path": "/insights/"
+        }
+      ]
     },
     "/accessibility/": {
       "title": "Accessibility | Mantosh Kumar",
@@ -247,17 +302,31 @@
       "softwareApplication": true,
       "applicationCategory": "DeveloperApplication",
       "breadcrumbs": [
-        { "name": "Projects", "path": "/projects/" }
+        {
+          "name": "Projects",
+          "path": "/projects/"
+        }
       ],
       "card": {
         "kicker": "Production system • Platform case study",
         "title": "Evidence-First Engineering Knowledge System",
         "description": "A static publishing platform with grounded AI retrieval, automated release gates, and explicit trust boundaries.",
         "impact": "Grounded retrieval, explicit trust boundaries, automated release checks, and a production deployment.",
-        "tech": ["Workers", "D1 + Vectorize", "GitHub Actions"],
+        "tech": [
+          "Workers",
+          "D1 + Vectorize",
+          "GitHub Actions"
+        ],
         "links": [
-          { "label": "Try the live system →", "href": "#ask-mantosh" },
-          { "label": "See architecture and controls →", "href": "projects/engineering-knowledge-system.html", "detail": true }
+          {
+            "label": "Try the live system →",
+            "href": "#ask-mantosh"
+          },
+          {
+            "label": "See architecture and controls →",
+            "href": "projects/engineering-knowledge-system.html",
+            "detail": true
+          }
         ]
       },
       "homepageOrder": 1
@@ -271,17 +340,32 @@
       "softwareApplication": true,
       "applicationCategory": "UtilitiesApplication",
       "breadcrumbs": [
-        { "name": "Projects", "path": "/projects/" }
+        {
+          "name": "Projects",
+          "path": "/projects/"
+        }
       ],
       "card": {
         "kicker": "Working software • Architecture case study",
         "title": "PhotoSahi",
         "description": "A browser-based tool that simplifies passport and visa photo compliance with intelligent image processing.",
         "impact": "100% browser-side image processing with no mandatory upload or backend.",
-        "tech": ["JavaScript", "Canvas", "Image Processing"],
+        "tech": [
+          "JavaScript",
+          "Canvas",
+          "Image Processing"
+        ],
         "links": [
-          { "label": "Try the live product ↗", "href": "https://mantoshkumar1.github.io/photosahi/", "external": true },
-          { "label": "See architecture and trade-offs →", "href": "projects/photosahi.html", "detail": true }
+          {
+            "label": "Try the live product ↗",
+            "href": "https://mantoshkumar1.github.io/photosahi/",
+            "external": true
+          },
+          {
+            "label": "See architecture and trade-offs →",
+            "href": "projects/photosahi.html",
+            "detail": true
+          }
         ]
       },
       "homepageOrder": 2
@@ -293,7 +377,10 @@
       "entityName": "Workflow Automation Toolkit",
       "dateModified": "2026-07-12",
       "breadcrumbs": [
-        { "name": "Projects", "path": "/projects/" }
+        {
+          "name": "Projects",
+          "path": "/projects/"
+        }
       ]
     },
     "/projects/gtt-price-calculator.html": {
@@ -305,7 +392,10 @@
       "softwareApplication": true,
       "applicationCategory": "FinanceApplication",
       "breadcrumbs": [
-        { "name": "Projects", "path": "/projects/" }
+        {
+          "name": "Projects",
+          "path": "/projects/"
+        }
       ]
     },
     "/projects/validation-platform-optical-networking.html": {
@@ -315,17 +405,31 @@
       "entityName": "Validation Platform and Release Intelligence",
       "dateModified": "2026-07-13",
       "breadcrumbs": [
-        { "name": "Projects", "path": "/projects/" }
+        {
+          "name": "Projects",
+          "path": "/projects/"
+        }
       ],
       "card": {
         "kicker": "Experience case study • Platform engineering",
         "title": "Validation Platform and Release Intelligence",
         "description": "Reusable validation infrastructure, AI-assisted failure investigation, and release intelligence for optical networking.",
         "impact": "Turns repeated testing, failure investigation, and release reporting into one coherent engineering workflow.",
-        "tech": ["Python", "Validation", "Release health"],
+        "tech": [
+          "Python",
+          "Validation",
+          "Release health"
+        ],
         "links": [
-          { "label": "See architecture and approach →", "href": "projects/validation-platform-optical-networking.html", "detail": true },
-          { "label": "Read the supporting insight →", "href": "insights/release-reports-as-operational-history.html" }
+          {
+            "label": "See architecture and approach →",
+            "href": "projects/validation-platform-optical-networking.html",
+            "detail": true
+          },
+          {
+            "label": "Read the supporting insight →",
+            "href": "insights/release-reports-as-operational-history.html"
+          }
         ]
       },
       "homepageOrder": 3
@@ -337,7 +441,10 @@
       "entityName": "Legacy Validation Framework Migration",
       "dateModified": "2026-07-15",
       "breadcrumbs": [
-        { "name": "Projects", "path": "/projects/" }
+        {
+          "name": "Projects",
+          "path": "/projects/"
+        }
       ]
     },
     "/404.html": {

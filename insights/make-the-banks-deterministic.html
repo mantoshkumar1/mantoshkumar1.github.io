@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- seo:generated:start -->
+    <meta name="description" content="A working rule for using coding agents as a solo builder: review the tests rather than the generated code, and enforce floors that only rise." />
+    <meta name="author" content="Mantosh Kumar" />
+    <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1" />
+    <meta name="theme-color" content="#060b12" />
+    <meta name="application-name" content="Mantosh Kumar" />
+    <meta name="apple-mobile-web-app-title" content="Mantosh Kumar" />
+    <link rel="canonical" href="https://mantoshkumar1.github.io/insights/make-the-banks-deterministic.html" />
+    <link rel="alternate" type="application/rss+xml" title="Mantosh Kumar — Engineering Writing and Systems" href="https://mantoshkumar1.github.io/feed.xml" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta property="og:locale" content="en_CA" />
+    <meta property="og:title" content="The Water Isn't Deterministic. The Banks Can Be. | Mantosh Kumar" />
+    <meta property="og:description" content="A working rule for using coding agents as a solo builder: review the tests rather than the generated code, and enforce floors that only rise." />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://mantoshkumar1.github.io/insights/make-the-banks-deterministic.html" />
+    <meta property="og:site_name" content="Mantosh Kumar" />
+    <meta property="og:image" content="https://mantoshkumar1.github.io/assets/seo/social-default.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="The Water Isn't Deterministic. The Banks Can Be. | Mantosh Kumar" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="The Water Isn't Deterministic. The Banks Can Be. | Mantosh Kumar" />
+    <meta name="twitter:description" content="A working rule for using coding agents as a solo builder: review the tests rather than the generated code, and enforce floors that only rise." />
+    <meta name="twitter:image" content="https://mantoshkumar1.github.io/assets/seo/social-default.jpg" />
+    <meta name="twitter:image:alt" content="The Water Isn't Deterministic. The Banks Can Be. | Mantosh Kumar" />
+    <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","@id":"https://mantoshkumar1.github.io/insights/make-the-banks-deterministic.html#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://mantoshkumar1.github.io"},{"@type":"ListItem","position":2,"name":"Insights","item":"https://mantoshkumar1.github.io/insights/"},{"@type":"ListItem","position":3,"name":"The Water Isn't Deterministic. The Banks Can Be.","item":"https://mantoshkumar1.github.io/insights/make-the-banks-deterministic.html"}]},{"@id":"https://mantoshkumar1.github.io/insights/make-the-banks-deterministic.html#webpage","@type":"TechArticle","name":"The Water Isn't Deterministic. The Banks Can Be. | Mantosh Kumar","description":"A working rule for using coding agents as a solo builder: review the tests rather than the generated code, and enforce floors that only rise.","url":"https://mantoshkumar1.github.io/insights/make-the-banks-deterministic.html","inLanguage":"en","isPartOf":{"@id":"https://mantoshkumar1.github.io/#website"},"breadcrumb":{"@id":"https://mantoshkumar1.github.io/insights/make-the-banks-deterministic.html#breadcrumb"},"headline":"The Water Isn't Deterministic. The Banks Can Be.","author":{"@type":"Person","name":"Mantosh Kumar","url":"https://mantoshkumar1.github.io"},"datePublished":"2026-08-21","dateModified":"2026-08-21"}]}</script>
+    <script>
+      window.addEventListener("load", () => {
+        const analytics = document.createElement("script");
+        analytics.defer = true;
+        analytics.dataset.domain = "mantoshkumar1.github.io";
+        analytics.src = "https://plausible.io/js/script.js";
+        document.head.append(analytics);
+      }, { once: true });
+    </script>
+    <script defer src="/assets/js/ai-referral-analytics.js"></script>
+    <!-- seo:generated:end -->
+
+<!-- seo:page {"datePublished":"2026-08-21","dateModified":"2026-08-21"} -->
+    <title>The Water Isn't Deterministic. The Banks Can Be. | Mantosh Kumar</title>
+    <script src="../assets/js/theme-init.js?v=20260713-1"></script>
+    <link rel="stylesheet" href="../assets/css/style.css?v=20260716-15" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+    <header class="navbar">
+      <div class="container nav-wrap">
+        <a class="logo" href="../" aria-label="Mantosh Kumar — Home" title="Go to homepage">Mantosh Kumar</a>
+        <nav aria-label="Primary navigation">
+          <a href="../">Home</a>
+          <a href="../projects/">Projects</a>
+          <a href="../insights/" aria-current="page">Insights</a>
+          <a href="../experience/">Experience</a>
+          <a href="../resume/">Resume</a>
+          <a class="nav-cta" href="../contact/">Discuss a role</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="page-shell reading-shell" id="main-content" tabindex="-1">
+      <div class="container">
+        <article class="resume-card case-study reading-page">
+          <header class="resume-header">
+            <p class="eyebrow">AI-assisted engineering • 5 minute read</p>
+            <h1>The water isn't deterministic. The banks can be.</h1>
+            <p>You can't read everything an agent writes. You can stop it editing the thing that checks its work.</p>
+          </header>
+
+          <section class="resume-section">
+            <h2>You can't argue a model into being predictable</h2>
+            <p>Ask an assistant for a retry wrapper twice and you get two different functions. One uses a decorator, one uses a loop. Both work. Lower the temperature and you still get two, just two more similar ones.</p>
+            <p>That isn't a bug to fix. It's how the thing works. So stop trying to fix it, and build the channel instead.</p>
+          </section>
+
+          <section class="resume-section">
+            <h2>"Read everything" is not a plan</h2>
+            <p>The usual advice is to review every line. For one person running agents, that advice destroys the only reason to run them. Reading 2,000 generated lines at review speed spends the afternoon I was trying to save.</p>
+            <p>So don't read the code. Read the things that judge the code.</p>
+            <p>A typical agent change is 2,000 lines of implementation and 40 lines of test changes. <code>git diff -- tests/</code> shows the 40. That takes a minute, and those 40 lines are what stand between me and a broken product, not my eyeballs on the other 1,960.</p>
+          </section>
+
+          <section class="resume-section">
+            <h2>Where attention actually goes</h2>
+            <figure class="reading-figure">
+              <svg viewBox="0 0 680 412" width="100%" role="img" aria-labelledby="banks-title banks-desc" style="max-width:680px;height:auto;display:block;margin:0 auto">
+                <title id="banks-title">How an agent change splits into two review lanes</title>
+                <desc id="banks-desc">An agent change divides into implementation, roughly 2,000 lines that flow through unread, and tests plus CI config, roughly 40 lines that are read. Both then pass through floors that only rise, which block any drop in coverage or test count before the change merges. The tests, CI config and floors are the banks: the parts that are protected and read. The implementation is the water: it flows through.</desc>
+                <defs>
+                  <marker id="bank-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                    <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </marker>
+                </defs>
+
+                <rect x="270" y="40" width="140" height="44" rx="8" fill="var(--surface)" stroke="var(--border)" stroke-width="1"/>
+                <text x="340" y="62" text-anchor="middle" dominant-baseline="central" fill="var(--text)" font-family="Inter, sans-serif" font-size="14" font-weight="500">Agent change</text>
+
+                <path d="M340 84 L340 107 L190 107 L190 126" fill="none" stroke="var(--muted)" stroke-width="1.5" marker-end="url(#bank-arrow)"/>
+                <path d="M340 84 L340 107 L490 107 L490 126" fill="none" stroke="var(--muted)" stroke-width="1.5" marker-end="url(#bank-arrow)"/>
+
+                <rect x="70" y="130" width="240" height="56" rx="8" fill="var(--surface)" stroke="var(--border)" stroke-width="1"/>
+                <text x="190" y="150" text-anchor="middle" dominant-baseline="central" fill="var(--muted)" font-family="Inter, sans-serif" font-size="14" font-weight="500">Implementation</text>
+                <text x="190" y="169" text-anchor="middle" dominant-baseline="central" fill="var(--muted)" font-family="Inter, sans-serif" font-size="12">~2,000 lines, not read</text>
+
+                <rect x="370" y="130" width="240" height="56" rx="8" fill="var(--surface)" stroke="var(--primary)" stroke-width="1.5"/>
+                <text x="490" y="150" text-anchor="middle" dominant-baseline="central" fill="var(--text)" font-family="Inter, sans-serif" font-size="14" font-weight="500">Tests and CI config</text>
+                <text x="490" y="169" text-anchor="middle" dominant-baseline="central" fill="var(--primary)" font-family="Inter, sans-serif" font-size="12">~40 lines, you read these</text>
+
+                <path d="M190 186 L190 209 L340 209 L340 228" fill="none" stroke="var(--muted)" stroke-width="1.5" marker-end="url(#bank-arrow)"/>
+                <path d="M490 186 L490 209 L340 209 L340 228" fill="none" stroke="var(--muted)" stroke-width="1.5" marker-end="url(#bank-arrow)"/>
+
+                <rect x="170" y="232" width="340" height="56" rx="8" fill="var(--surface)" stroke="var(--primary)" stroke-width="1.5"/>
+                <text x="340" y="252" text-anchor="middle" dominant-baseline="central" fill="var(--text)" font-family="Inter, sans-serif" font-size="14" font-weight="500">Floors that only rise</text>
+                <text x="340" y="271" text-anchor="middle" dominant-baseline="central" fill="var(--primary)" font-family="Inter, sans-serif" font-size="12">Coverage and count can't fall</text>
+
+                <line x1="340" y1="288" x2="340" y2="318" stroke="var(--muted)" stroke-width="1.5" marker-end="url(#bank-arrow)"/>
+
+                <rect x="270" y="320" width="140" height="44" rx="8" fill="var(--surface)" stroke="var(--border)" stroke-width="1"/>
+                <text x="340" y="342" text-anchor="middle" dominant-baseline="central" fill="var(--text)" font-family="Inter, sans-serif" font-size="14" font-weight="500">Merge</text>
+
+                <rect x="150" y="386" width="12" height="12" rx="3" fill="var(--surface)" stroke="var(--primary)" stroke-width="1.5"/>
+                <text x="170" y="392" dominant-baseline="central" fill="var(--muted)" font-family="Inter, sans-serif" font-size="12">The banks: protected and read</text>
+                <rect x="410" y="386" width="12" height="12" rx="3" fill="var(--surface)" stroke="var(--border)" stroke-width="1"/>
+                <text x="430" y="392" dominant-baseline="central" fill="var(--muted)" font-family="Inter, sans-serif" font-size="12">The water: flows through</text>
+              </svg>
+              <figcaption>The implementation flows through unread. The tests, the CI config, and the floors are the banks.</figcaption>
+            </figure>
+          </section>
+
+          <section class="resume-section">
+            <h2>Which is why the tests are the thing to protect</h2>
+            <p>If the agent can edit the tests, it can move the goalposts and then report success.</p>
+            <p>The failure looks like this. A task breaks <code>test_webhook_retries_on_500</code>. The agent sees the red test, decides it's outdated, deletes it, and reports the work complete. The suite is green. The retry is gone. Nothing anywhere says so.</p>
+            <p>Which gives the actual rule: the agent can write the code, but not the thing that judges the code.</p>
+          </section>
+
+          <section class="resume-section">
+            <h2>Five rules</h2>
+            <ul class="case-study-list">
+              <li><strong>Write the failing test before you ask.</strong> Before "add retry to the webhook sender," write <code>test_webhook_retries_three_times_on_500</code>. Watch it fail. Now "done" is defined by me, not by whatever the agent decides done looks like.</li>
+              <li><strong>Never let one change touch both code and tests.</strong> Test changes get their own commit that I approve. Code changes flow. If a task needs both, it's two steps, and I only stop for one of them.</li>
+              <li><strong>Read the test diff, not the code diff.</strong> <code>git diff -- tests/</code> before merging. On a big change that's still a screen or two. This is the whole review load.</li>
+              <li><strong>Set floors that only rise.</strong> <code>pytest --cov-fail-under=90</code> fails the build when coverage drops below 90%. Improve it to 93 and raise the floor to 93. Add the same for test count. Now an agent deleting a test to get green trips a wire while I'm asleep.</li>
+              <li><strong>Don't hand it anything you can't undo.</strong> No production database credentials, no deploy rights, no <code>DROP</code>. Speed is worth having. It isn't worth a lost database.</li>
+            </ul>
+          </section>
+
+          <section class="resume-section">
+            <h2>The gap these leave</h2>
+            <p>None of this helps with brand-new code where no test exists yet. There's no goalpost to move, so nothing catches a bad one being set.</p>
+            <p>That's why the first rule carries the weight. It isn't about discipline. It's the one moment where I decide what correct means instead of the agent.</p>
+          </section>
+
+          <section class="resume-section">
+            <h2>The damage stays invisible until it isn't</h2>
+            <p>Unreviewed code looks exactly like reviewed code. A file nobody read looks identical to one picked apart line by line. Nothing turns red. Nothing appears on a dashboard.</p>
+            <p>That's why these rules feel skippable. Skipping them costs nothing today, and the bill arrives later, usually while someone is debugging at an awkward hour.</p>
+          </section>
+
+          <section class="resume-section">
+            <h2>The standard</h2>
+            <p>The question isn't how much got shipped this week. It's whether anything could still catch it if it were wrong.</p>
+            <p>Volume without a working check isn't speed. It's unfinished work moved somewhere nobody is looking.</p>
+          </section>
+
+          <section class="resume-section">
+            <h2>Evidence boundary</h2>
+            <p>This is a personal working rule from my own use of AI-assisted coding tools on my own projects. It does not describe a specific employer's system, an adoption level, or a measured result. The commands and thresholds shown are illustrative examples, not a published configuration.</p>
+            <div class="resume-actions">
+              <a class="button primary" href="../newsletter/">Get new insights by email <span aria-hidden="true">→</span></a>
+              <a class="button secondary" href="complexity-changes-address.html">Read about displaced complexity <span aria-hidden="true">→</span></a>
+              <a class="button secondary" href="why-does-this-still-require-me.html">Read the leverage heuristic <span aria-hidden="true">→</span></a>
+            </div>
+          </section>
+        </article>
+      </div>
+    </main>
+    <script src="/assets/js/ask-mantosh-widget.js?v=20260716-17"></script>
+  </body>
+</html>
