@@ -52,6 +52,31 @@ change on its own. To change the selection, update `homepageOrder` (and add
 `card` metadata, see below) on the newly selected project's `seo.config.json`
 entry, and remove `homepageOrder`/`card` from the project being replaced.
 
+### Live products come first (2026-08-22)
+
+A project that a visitor can use right now is stronger evidence than a
+write-up of one they cannot. Projects carrying `"live": true` in
+`seo.config.json` — set only where a `softwareApplication.url` exists — take
+the homepage slots ahead of case studies, and appear first on
+`projects/index.html`.
+
+`homepageOrder` still decides sequence, but only within that grouping. It is a
+tiebreaker now, not the primary rule.
+
+This deliberately overrides the paragraph above in one respect: a live product
+may displace a stronger case study. That trade was made knowingly. The
+validation-platform case study left the homepage so the GTT calculator could
+appear, because a visitor can click one and only read about the other. It
+remains on the projects page.
+
+Live cards carry a `.project-live` marker with a slowly pulsing dot. The dot is
+`aria-hidden` and decorative; the adjacent "Live" text carries the meaning, and
+the animation stops under `prefers-reduced-motion`.
+
+The dot reflects the `live` flag in configuration. It is not a health check and
+does not probe the URL, so it will keep pulsing if a product is down. Treat it
+as "this is meant to be usable", not as uptime.
+
 ### Metadata source and required fields
 
 `seo.config.json` is the single metadata source; there is no second project

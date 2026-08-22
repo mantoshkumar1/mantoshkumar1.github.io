@@ -329,7 +329,8 @@
           }
         ]
       },
-      "homepageOrder": 1
+      "homepageOrder": 1,
+      "live": true
     },
     "/projects/photosahi.html": {
       "title": "PhotoSahi: Privacy-First Browser Photo Processing | Mantosh Kumar",
@@ -368,7 +369,8 @@
           }
         ]
       },
-      "homepageOrder": 2
+      "homepageOrder": 2,
+      "live": true
     },
     "/projects/workflow-automation-toolkit.html": {
       "title": "Workflow Automation Toolkit | Mantosh Kumar",
@@ -396,7 +398,32 @@
           "name": "Projects",
           "path": "/projects/"
         }
-      ]
+      ],
+      "live": true,
+      "card": {
+        "kicker": "Working software • Rules-based utility",
+        "title": "GTT Trigger Price Calculator",
+        "description": "Prepare candidate buy and sell trigger prices for GTT orders in the Indian stock market.",
+        "impact": "Explicit trigger-distance and rounding rules with documented freshness limits for order preparation.",
+        "tech": [
+          "Python",
+          "Streamlit",
+          "Rules Engine"
+        ],
+        "links": [
+          {
+            "label": "Try the live product ↗",
+            "href": "https://gtt-calculator.streamlit.app/",
+            "external": true
+          },
+          {
+            "label": "See decisions and limits →",
+            "href": "projects/gtt-price-calculator.html",
+            "detail": true
+          }
+        ]
+      },
+      "homepageOrder": 3
     },
     "/projects/validation-platform-optical-networking.html": {
       "title": "Validation Platform and Release Intelligence | Mantosh Kumar",
@@ -431,8 +458,7 @@
             "href": "insights/release-reports-as-operational-history.html"
           }
         ]
-      },
-      "homepageOrder": 3
+      }
     },
     "/projects/legacy-validation-framework-migration.html": {
       "title": "Legacy Validation Framework Migration | Mantosh Kumar",

@@ -915,10 +915,51 @@ button.button {
   border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
+/* Live project status. A slow pulse so a card reads as something running,
+   not as a notification. Decorative only: the adjacent "Live" text carries the
+   meaning, and the dot itself is aria-hidden. */
+.project-live {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  margin-bottom: .55rem;
+  color: var(--primary);
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+.project-live-dot {
+  width: .5rem;
+  height: .5rem;
+  border-radius: 50%;
+  background: var(--primary);
+  animation: project-breathe 3.2s ease-in-out infinite;
+}
+
+.project-card:nth-of-type(2) .project-live-dot { animation-delay: -1.1s; }
+.project-card:nth-of-type(3) .project-live-dot { animation-delay: -2.2s; }
+
+@keyframes project-breathe {
+  0%, 100% { opacity: .45; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.18); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .project-live-dot { animation: none; opacity: 1; }
+}
+
+
 .case-study .resume-section > p,
 .case-study-list li,
 .decision-grid p {
-  color: var(--muted);
+  /* Long-form body copy sits between --muted and --text. Muted alone reads
+     washed out across a full article or case study; pure --text is harsh on a
+     dark ground. color-mix adapts to every theme, and the plain declaration
+     above it is the fallback where color-mix is unsupported. */
+  color: var(--text);
+  color: color-mix(in srgb, var(--text) 68%, var(--muted));
   line-height: 1.7;
 }
 
