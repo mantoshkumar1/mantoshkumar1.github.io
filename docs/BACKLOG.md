@@ -153,3 +153,22 @@ On publication:
 Six untracked `insights/*.html.bak_*` files from an earlier editing session sit
 in the working tree. They are not committed and serve no purpose. Confirm
 nothing references them, then delete.
+
+---
+
+## BL-3 — Lead with what is live
+
+**Status:** done 2026-08-22 (branch `projects/lead-with-live`)
+**Created:** 2026-08-22
+
+> **Done.** Live projects now take the three homepage slots and lead
+> `projects/index.html`. GTT gained a `card` and `homepageOrder` 3; the
+> validation-platform case study gave up its slot and stays on the projects
+> page. CTA wording aligned to the site's existing convention (`Try the live
+> system` / `Try the live product`) and moved to first position. A `.project-live`
+> dot pulses on a 3.2s breathe, staggered per card, and stops under
+> `prefers-reduced-motion`. `docs/PUBLISHING_PROJECTS.md` records the new
+> ordering rule and the trade it makes.
+>
+> Not done, deliberately: the dot is a config flag, not a health check.
+

@@ -407,8 +407,11 @@ function homepageProjectsCards(entries) {
     const card = page.card;
     const tech = card.tech.map((tag) => `                <span>${escapeHtml(tag)}</span>`).join("\n");
     const links = card.links.map((link) => `                ${renderProjectLink(link)}`).join("\n");
+    const live = page.live
+      ? `\n              <p class="project-live"><span class="project-live-dot" aria-hidden="true"></span>Live</p>`
+      : "";
     return `            <article class="card project-card">
-              <p class="card-kicker">${escapeHtml(card.kicker)}</p>
+              <p class="card-kicker">${escapeHtml(card.kicker)}</p>${live}
               <h3>${escapeHtml(card.title)}</h3>
               <p>${escapeHtml(card.description)}</p>
               <p class="project-impact">${escapeHtml(card.impact)}</p>
