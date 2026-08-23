@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- seo:generated:start -->
+    <meta name="description" content="Five failures a passing test suite will not catch when an agent writes the code, and why only one of the fixes depends on someone remembering it." />
+    <meta name="author" content="Mantosh Kumar" />
+    <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1" />
+    <meta name="theme-color" content="#060b12" />
+    <meta name="application-name" content="Mantosh Kumar" />
+    <meta name="apple-mobile-web-app-title" content="Mantosh Kumar" />
+    <link rel="canonical" href="https://mantoshkumar1.github.io/insights/tests-are-the-cheapest-check.html" />
+    <link rel="alternate" type="application/rss+xml" title="Mantosh Kumar — Engineering Writing and Systems" href="https://mantoshkumar1.github.io/feed.xml" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta property="og:locale" content="en_CA" />
+    <meta property="og:title" content="Your Agent's Tests Are the Cheapest Check You Have | Mantosh Kumar" />
+    <meta property="og:description" content="Five failures a passing test suite will not catch when an agent writes the code, and why only one of the fixes depends on someone remembering it." />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://mantoshkumar1.github.io/insights/tests-are-the-cheapest-check.html" />
+    <meta property="og:site_name" content="Mantosh Kumar" />
+    <meta property="og:image" content="https://mantoshkumar1.github.io/assets/seo/social-default.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Your Agent's Tests Are the Cheapest Check You Have | Mantosh Kumar" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Your Agent's Tests Are the Cheapest Check You Have | Mantosh Kumar" />
+    <meta name="twitter:description" content="Five failures a passing test suite will not catch when an agent writes the code, and why only one of the fixes depends on someone remembering it." />
+    <meta name="twitter:image" content="https://mantoshkumar1.github.io/assets/seo/social-default.jpg" />
+    <meta name="twitter:image:alt" content="Your Agent's Tests Are the Cheapest Check You Have | Mantosh Kumar" />
+    <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","@id":"https://mantoshkumar1.github.io/insights/tests-are-the-cheapest-check.html#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://mantoshkumar1.github.io"},{"@type":"ListItem","position":2,"name":"Insights","item":"https://mantoshkumar1.github.io/insights/"},{"@type":"ListItem","position":3,"name":"Your Agent's Tests Are the Cheapest Check You Have","item":"https://mantoshkumar1.github.io/insights/tests-are-the-cheapest-check.html"}]},{"@id":"https://mantoshkumar1.github.io/insights/tests-are-the-cheapest-check.html#webpage","@type":"TechArticle","name":"Your Agent's Tests Are the Cheapest Check You Have | Mantosh Kumar","description":"Five failures a passing test suite will not catch when an agent writes the code, and why only one of the fixes depends on someone remembering it.","url":"https://mantoshkumar1.github.io/insights/tests-are-the-cheapest-check.html","inLanguage":"en","isPartOf":{"@id":"https://mantoshkumar1.github.io/#website"},"breadcrumb":{"@id":"https://mantoshkumar1.github.io/insights/tests-are-the-cheapest-check.html#breadcrumb"},"headline":"Your Agent's Tests Are the Cheapest Check You Have","author":{"@type":"Person","name":"Mantosh Kumar","url":"https://mantoshkumar1.github.io"},"datePublished":"2026-08-22","dateModified":"2026-08-22"}]}</script>
+    <script>
+      window.addEventListener("load", () => {
+        const analytics = document.createElement("script");
+        analytics.defer = true;
+        analytics.dataset.domain = "mantoshkumar1.github.io";
+        analytics.src = "https://plausible.io/js/script.js";
+        document.head.append(analytics);
+      }, { once: true });
+    </script>
+    <script defer src="/assets/js/ai-referral-analytics.js"></script>
+    <!-- seo:generated:end -->
+
+<!-- seo:page {"datePublished":"2026-08-22","dateModified":"2026-08-22"} -->
+    <title>Your Agent's Tests Are the Cheapest Check You Have | Mantosh Kumar</title>
+    <script src="../assets/js/theme-init.js?v=20260713-1"></script>
+    <link rel="stylesheet" href="../assets/css/style.css?v=20260716-15" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+    <header class="navbar">
+      <div class="container nav-wrap">
+        <a class="logo" href="../" aria-label="Mantosh Kumar — Home" title="Go to homepage">Mantosh Kumar</a>
+        <nav aria-label="Primary navigation">
+          <a href="../">Home</a>
+          <a href="../projects/">Projects</a>
+          <a href="../insights/" aria-current="page">Insights</a>
+          <a href="../experience/">Experience</a>
+          <a href="../resume/">Resume</a>
+          <a class="nav-cta" href="../contact/">Discuss a role</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="page-shell reading-shell" id="main-content" tabindex="-1">
+      <div class="container">
+        <article class="resume-card case-study reading-page">
+          <header class="resume-header">
+            <p class="eyebrow">AI-assisted engineering • 5 minute read</p>
+            <h1>Your agent's tests are the cheapest check you have. Don't make them the only one.</h1>
+            <p>Five failures a passing test suite will not catch — and why four of them hold on their own while one quietly rots.</p>
+          </header>
+
+          <section class="resume-section">
+            <p>I run coding agents on my own projects, unattended. They open changes, the suite goes green, and the change lands. I read the test diff, not the two thousand lines underneath it.</p>
+            <p>That works right up until the check that was supposed to catch something wasn't watching. Here are five of those, all from code an agent wrote.</p>
+          </section>
+
+          <section class="resume-section">
+            <h2>The API changed underneath the agent</h2>
+            <p>The agent wired up a payment provider and mocked its response. Then the provider renamed <code>amount_cents</code> to <code>amount</code>. The tests stayed green for weeks, because they never called it:</p>
+            <pre><code>mockApi.returns({ amount_cents: 500 });   // the agent wrote this response
+                                          // then tested against it</code></pre>
+            <p>One test that actually calls the thing fails the morning it changes:</p>
+            <pre><code>const body = await (await fetch(`${API}/charges/${id}`)).json();
+assert.ok(typeof body.amount_cents === "number");</code></pre>
+            <p><strong>A mock tests whoever wrote the mock. This tests the API.</strong></p>
+          </section>
+
+          <section class="resume-section">
+            <h2>The agent had more access than it needed</h2>
+            <p>It wrote a tidy-up job and the <code>WHERE</code> clause was one condition short. Every test passed, because the fixture had four rows. No test protects you here. A missing permission does:</p>
+            <pre><code>GRANT SELECT, INSERT, UPDATE ON app.* TO agent;
+-- no DELETE, no DROP</code></pre>
+            <p>The job fails on line one instead of finishing successfully and taking the table with it.</p>
+            <p>Same idea, sharper edge: the credentials it can read. An agent works by loading files into a context window, so a live key in a <code>.env</code> it can open is a live key it has read.</p>
+            <pre><code># on my machine, where the agent works
+STRIPE_KEY=sk_test_...        # sandbox. worst case is a fake charge.
+
+# the live key exists only as a CI secret,
+# injected at deploy, never written to disk</code></pre>
+            <p>It doesn't have to misuse a credential for that to matter. It only has to <em>read</em> one — and then it can end up echoed in a log, committed to a branch, or sent to a model provider as ordinary context. None of those are attacks. They're just Tuesday.</p>
+            <p><strong>You can't test your way out of a permission you shouldn't have granted, or a secret you didn't have to share.</strong></p>
+          </section>
+
+          <section class="resume-section">
+            <h2>The agent changed the build. The site went down.</h2>
+            <p>A build step stopped copying a folder. Every unit test passed and every page returned 404 — of course they did, no unit test ever asked for a URL.</p>
+            <pre><code>curl -fsS https://staging.example.com/health || exit 1</code></pre>
+            <p>One line, after deploy, fails the release. <strong>The first check that touches what a visitor touches.</strong></p>
+          </section>
+
+          <section class="resume-section">
+            <h2>Nothing failed, because nothing ran</h2>
+            <p>A refactor moved a nightly job out of the scheduler. No test failed. No error was thrown. Nothing was wrong, because nothing happened at all — and an agent has no way to notice that its own change stopped something from existing.</p>
+            <p>A job that should report by 3am and hasn't by 6 is a fact, and only something watching production can produce it. This is the gap I ended up building <a href="https://pingstep.dev" target="_blank" rel="noreferrer">PingStep</a> for — it watches for the ping that doesn't arrive.</p>
+            <p><strong>The failure is the absence of something, not the presence of a wrong value.</strong> Every other check on this page asserts on something that happened. This one is the only one that can notice nothing did.</p>
+          </section>
+
+          <section class="resume-section">
+            <h2>The agent added an endpoint. A bad value walked in.</h2>
+            <p>An order arrives with <code>quantity: -5</code>. The test used <code>5</code>, because the agent wrote the test and chose the input:</p>
+            <pre><code>const order = createOrder({ quantity: 5 });   // it chose this
+assert.equal(order.status, "pending");        // so of course it passes</code></pre>
+            <p>Green. And <code>-5</code> walks straight in, because nothing was standing at the door.</p>
+            <p>A schema stands at the door. It's a description of what counts as a valid order, written once — zod here, but any validation library or a typed language does the same job:</p>
+            <pre><code>const OrderInput = z.object({
+  quantity: z.number().int().positive(),
+  sku:      z.string().min(1),
+});
+
+// at the top of the handler
+const order = OrderInput.parse(req.body);</code></pre>
+            <p>Now <code>-5</code> never reaches <code>createOrder</code>. Neither does <code>&quot;3&quot;</code>, or <code>null</code>, or a missing <code>sku</code>, or the shape some other service starts sending next month.</p>
+            <p><strong>The test is a sample. The schema is a rule.</strong></p>
+          </section>
+
+          <section class="resume-section">
+            <h2>Now ask who has to remember</h2>
+            <ul class="case-study-list">
+              <li><strong>Contract test</strong> — nobody, it's in the suite</li>
+              <li><strong>Permissions and secrets</strong> — nobody, set once</li>
+              <li><strong>Staging request</strong> — nobody, it's in the pipeline</li>
+              <li><strong>Monitoring</strong> — nobody, always on</li>
+              <li><strong>A schema per endpoint</strong> — me, every single time</li>
+            </ul>
+            <p>Four hold themselves. The one I just showed you is a habit — and a habit is worth nothing when the agent adds endpoint twelve at 2am and I'm asleep. It won't write the schema. Nothing anywhere will notice.</p>
+            <p>This is the part people miss about handing code to an agent. Advice like "remember to validate your inputs" was always addressed to a person. There's no longer a person at that step.</p>
+            <p>So don't remember harder. Make the absence fail:</p>
+            <pre><code>// the only way to register a route
+router.post("/orders", withSchema(OrderInput, createOrder));
+
+// withSchema refuses a handler with no schema,
+// so the agent cannot register an unvalidated endpoint at all</code></pre>
+            <p>A forgotten schema is no longer a silent gap. The app won't start.</p>
+          </section>
+
+          <section class="resume-section">
+            <h2>The rule</h2>
+            <blockquote><p><strong>A check you have to remember isn't a check. Make its absence fail.</strong></p></blockquote>
+            <p>That's all a permission is. That's all a pipeline step is. Anything you have to remember per instance will eventually be forgotten — and when an agent is writing the instances, "eventually" arrives a lot sooner.</p>
+            <p>If you try one thing: take the check you're proudest of, and ask what happens the next time your agent forgets it. If the answer is "nothing", it isn't protecting you. It's protecting you <em>so far</em>.</p>
+          </section>
+
+          <section class="resume-section">
+            <h2>Evidence boundary</h2>
+            <p>Personal working preferences from my own projects, where I run coding agents on unattended changes. The five failures illustrate failure modes rather than reporting incidents — no customer impact, outage, or measured cost is claimed. Code shown is illustrative rather than copied from a running system. PingStep is my own product; it is mentioned because this failure mode is what it exists for, not as a recommendation over any alternative.</p>
+            <div class="resume-actions">
+              <a class="button primary" href="../newsletter/">Get new insights by email <span aria-hidden="true">→</span></a>
+              <a class="button secondary" href="make-the-banks-deterministic.html">A river can&#39;t be deterministic <span aria-hidden="true">→</span></a>
+            </div>
+          </section>
+        </article>
+      </div>
+    </main>
+    <script src="/assets/js/ask-mantosh-widget.js?v=20260716-17"></script>
+  </body>
+</html>

@@ -37,6 +37,27 @@
       "kind": "collection",
       "schemaType": "CollectionPage"
     },
+    "/insights/tests-are-the-cheapest-check.html": {
+      "title": "Your Agent's Tests Are the Cheapest Check You Have | Mantosh Kumar",
+      "description": "Five failures a passing test suite will not catch when an agent writes the code, and why only one of the fixes depends on someone remembering it.",
+      "kind": "article",
+      "schemaType": "TechArticle",
+      "datePublished": "2026-08-22",
+      "dateModified": "2026-08-22",
+      "breadcrumbs": [
+        {
+          "name": "Insights",
+          "path": "/insights/"
+        }
+      ],
+      "card": {
+        "kicker": "AI-assisted engineering",
+        "readTime": "5 minute read",
+        "title": "Your agent's tests are the cheapest check you have. Don't make them the only one.",
+        "summary": "Five failures a passing test suite will not catch — and why four of them hold on their own while one quietly rots.",
+        "cta": "Read the note"
+      }
+    },
     "/insights/make-the-banks-deterministic.html": {
       "title": "A River Can't Be Deterministic. Its Banks Can Be. | Mantosh Kumar",
       "description": "A working rule for using coding agents as a solo builder: review the tests rather than the generated code, and enforce floors that only rise.",

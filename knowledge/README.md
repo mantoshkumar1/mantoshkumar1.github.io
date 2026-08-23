@@ -14,7 +14,7 @@ with `_` are intentionally not indexed.
 
 ## Current public corpus
 
-As of 2026-08-21, the public index contains 19 source documents:
+As of 2026-08-22, the public index contains 20 source documents:
 
 - `Project: Evidence-First Engineering Knowledge System`
 - `Project: PhotoSahi`
@@ -29,6 +29,7 @@ As of 2026-08-21, the public index contains 19 source documents:
 - `Article: Blockchain Without a Master Branch`
 - `Note: Engineering Ownership Before Escalation`
 - `Note: A River Can't Be Deterministic. Its Banks Can Be.`
+- `Note: Your Agent's Tests Are the Cheapest Check You Have`
 - `Article: Why Am I Still the Message Bus Between My AI Agents?`
 - `Experience: Engineering Capabilities and Technical Skills`
 - `Experience: Engineering Work Outside Nokia`
