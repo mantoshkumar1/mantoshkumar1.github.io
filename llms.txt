@@ -41,6 +41,7 @@ His résumé-backed capabilities include engineering platforms and automation, P
 - [Engineering Ownership Before Escalation](https://mantoshkumar1.github.io/insights/ownership-before-escalation.html)
 - [Why Am I Still the Message Bus Between My AI Agents?](https://mantoshkumar1.github.io/insights/message-bus-between-ai-agents.html)
 - [A River Can't Be Deterministic. Its Banks Can Be.](https://mantoshkumar1.github.io/insights/make-the-banks-deterministic.html)
+- [Your Agent's Tests Are the Cheapest Check You Have](https://mantoshkumar1.github.io/insights/tests-are-the-cheapest-check.html)
 
 ## Ask Mantosh
 

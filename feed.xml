@@ -4,9 +4,19 @@
   <id>https://mantoshkumar1.github.io/</id>
   <link href="https://mantoshkumar1.github.io/" />
   <link href="https://mantoshkumar1.github.io/feed.xml" rel="self" type="application/atom+xml" />
-  <updated>2026-08-21T12:00:00Z</updated>
+  <updated>2026-08-22T12:00:00Z</updated>
   <author><name>Mantosh Kumar</name></author>
   <subtitle>Platform engineering, automation, backend systems, and operational intelligence.</subtitle>
+  <entry>
+    <title>Your Agent's Tests Are the Cheapest Check You Have</title>
+    <id>https://mantoshkumar1.github.io/insights/tests-are-the-cheapest-check.html</id>
+    <link href="https://mantoshkumar1.github.io/insights/tests-are-the-cheapest-check.html" />
+    <published>2026-08-22T12:00:00Z</published>
+    <updated>2026-08-22T12:00:00Z</updated>
+    <author><name>Mantosh Kumar</name></author>
+    <category term="engineering-insight" />
+    <summary>Five failures a passing test suite will not catch when an agent writes the code, and why only one of the fixes depends on someone remembering it.</summary>
+  </entry>
   <entry>
     <title>A River Can't Be Deterministic. Its Banks Can Be.</title>
     <id>https://mantoshkumar1.github.io/insights/make-the-banks-deterministic.html</id>
