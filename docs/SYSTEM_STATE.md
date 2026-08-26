@@ -1,6 +1,6 @@
 # Production system state
 
-Verified: 2026-07-17
+Verified: 2026-08-26
 
 This document is the canonical description of what is deployed. Architecture proposals and future operating standards in other documents must not be read as already implemented unless they also appear here or in executable configuration.
 
@@ -17,9 +17,9 @@ Last verified Worker deployment: `20a691b8-d3fb-4e97-a178-e79978e64028`. The rep
 
 ## Published inventory
 
-- SEO-configured public pages: home, projects index, six project case studies, Insights index, seven engineering articles and notes, experience, résumé, contact, a live Buttondown email subscription with RSS, accessibility statement, and custom 404.
-- 20 public Ask Mantosh documents: six project sources, nine Insights sources, three résumé-backed experience and academic-achievement sources, one role-by-role résumé source, and one evidence-backed profile and fit guide.
-- Whole-site Ask Mantosh coverage: 15 evidence-bearing routes, seven deterministic utility destinations, and nine explicit no-index legacy or error routes cover all 30 public HTML routes.
+- SEO-configured public pages: home, projects index, six project case studies, Insights index, ten engineering articles and notes, experience, résumé, contact, a live Buttondown email subscription with RSS, accessibility statement, and custom 404.
+- 21 public Ask Mantosh documents: six project sources, ten Insights sources, three résumé-backed experience and academic-achievement sources, one role-by-role résumé source, and one evidence-backed profile and fit guide.
+- Whole-site Ask Mantosh coverage: 16 evidence-bearing routes, seven deterministic utility destinations, and nine explicit no-index legacy or error routes cover all 31 public HTML routes.
 - One résumé PDF served for in-browser preview and explicit download.
 - Sitemap, RSS feed, `robots.txt`, `llms.txt`, JSON-LD, Open Graph, Twitter Card, manifest, icons, and a 1200×630 social image.
 - A visitor-controlled Auto, Light, Dark, Soft, and High contrast appearance setting. Soft is the first-visit default; an early initializer prevents a dark-theme flash, explicit choices persist on the device, and Auto follows the operating system.
@@ -109,7 +109,7 @@ The repository currently enforces:
 
 ## Known limits
 
-- Only 17 public knowledge documents are indexed; outside deterministic greetings, courtesies, light banter, and navigation, Ask Mantosh keeps answers within published evidence and clearly redirects unsupported topics.
+- Only 21 public knowledge documents are indexed; outside deterministic greetings, courtesies, light banter, and navigation, Ask Mantosh keeps answers within published evidence and clearly redirects unsupported topics.
 - Public evidence has no fabricated employer metrics or inferred organizational outcomes.
 - The Worker uses the Cloudflare free allocation and may return a clear 429 when safety or provider limits are reached.
 - There is no authenticated user account, durable personal profile, staging environment declared in this repository, formal accessibility conformance audit, human-rated response benchmark, live-production retrieval benchmark, or automated production Core Web Vitals trace.
