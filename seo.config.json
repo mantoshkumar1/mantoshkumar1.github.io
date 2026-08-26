@@ -37,6 +37,27 @@
       "kind": "collection",
       "schemaType": "CollectionPage"
     },
+    "/insights/ai-company-control-loop.html": {
+      "title": "The AI Company Control Loop | Mantosh Kumar",
+      "description": "An architecture for keeping AI agents moving through pre-authorized work while reserving new product, production, and irreversible decisions for the founder.",
+      "kind": "article",
+      "schemaType": "TechArticle",
+      "datePublished": "2026-08-26",
+      "dateModified": "2026-08-26",
+      "breadcrumbs": [
+        {
+          "name": "Insights",
+          "path": "/insights/"
+        }
+      ],
+      "card": {
+        "kicker": "AI-assisted engineering",
+        "readTime": "7 minute read",
+        "title": "The AI company control loop",
+        "summary": "How strategy, a durable control board, event-driven dispatch, and explicit authority boundaries let AI agents keep moving without making the founder the message bus.",
+        "cta": "Read the article"
+      }
+    },
     "/insights/tests-are-the-cheapest-check.html": {
       "title": "Your Agent's Tests Are the Cheapest Check You Have | Mantosh Kumar",
       "description": "Five failures a passing test suite will not catch when an agent writes the code, and why only one of the fixes depends on someone remembering it.",
