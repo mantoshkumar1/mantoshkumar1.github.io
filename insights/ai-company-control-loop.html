@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- seo:page {"datePublished":"2026-08-26","dateModified":"2026-08-26"} -->
+    <title>The AI Company Control Loop | Mantosh Kumar</title>
+    <script src="../assets/js/theme-init.js?v=20260713-1"></script>
+    <link rel="stylesheet" href="../assets/css/style.css?v=20260716-15" />
+    <style>
+      .control-loop-figure {
+        margin: 2rem 0;
+        padding: clamp(1rem, 3vw, 1.75rem);
+        overflow-x: auto;
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        background: var(--surface);
+      }
+
+      .control-loop-figure figcaption {
+        margin-bottom: 1rem;
+      }
+
+      .control-loop-figure figcaption span {
+        display: block;
+        margin-top: 0.3rem;
+        color: var(--muted);
+      }
+
+      .control-loop-svg {
+        display: block;
+        width: 100%;
+        min-width: 720px;
+        height: auto;
+      }
+
+      .control-loop-svg .node {
+        fill: var(--surface);
+        stroke: var(--primary);
+        stroke-width: 2;
+      }
+
+      .control-loop-svg .node--human {
+        stroke: #f3b85b;
+      }
+
+      .control-loop-svg .node--state {
+        stroke: #78d6c6;
+      }
+
+      .control-loop-svg .edge {
+        fill: none;
+        stroke: var(--muted);
+        stroke-width: 2;
+        marker-end: url(#arrowhead);
+      }
+
+      .control-loop-svg .node-label {
+        fill: var(--text);
+        font: 600 16px/1.35 system-ui, sans-serif;
+        text-anchor: middle;
+      }
+
+      .control-loop-svg .edge-label {
+        fill: var(--muted);
+        font: 500 13px/1.35 system-ui, sans-serif;
+        text-anchor: middle;
+      }
+
+      .control-loop-svg .label-bg {
+        fill: var(--surface);
+        opacity: 0.96;
+      }
+
+      .diagram-source {
+        margin-top: 1rem;
+      }
+
+      .diagram-source pre {
+        overflow-x: auto;
+        padding: 1rem;
+        border-radius: 12px;
+        background: var(--bg);
+        font-size: 0.82rem;
+      }
+    </style>
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+    <header class="navbar">
+      <div class="container nav-wrap">
+        <a class="logo" href="../" aria-label="Mantosh Kumar — Home" title="Go to homepage">Mantosh Kumar</a>
+        <nav aria-label="Primary navigation">
+          <a href="../">Home</a>
+          <a href="../projects/">Projects</a>
+          <a href="../insights/" aria-current="page">Insights</a>
+          <a href="../experience/">Experience</a>
+          <a href="../resume/">Resume</a>
+          <a class="nav-cta" href="../contact/">Discuss a role</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="page-shell reading-shell" id="main-content" tabindex="-1">
+      <div class="container">
+        <article class="resume-card case-study reading-page">
+          <header class="resume-header">
+            <p class="eyebrow">AI-assisted engineering • 7 minute read • <time datetime="2026-08-26">Aug 26, 2026</time></p>
+            <h1>The AI company control loop</h1>
+            <p>Giving several AI agents a backlog does not create a company. It creates several workers waiting for someone to decide what happens next.</p>
+            <p>The permanent fix is not a larger prompt or a faster poller. It is a control loop that separates judgment, durable state, dispatch, execution, evidence, and human authority.</p>
+          </header>
+
+          <section class="resume-section">
+            <h2>The first automation target was the wrong one</h2>
+            <p>My immediate frustration was simple: ChatGPT could set direction, Claude and Codex could do useful work, and GitHub could hold the evidence — but I was still carrying messages between them. If one agent finished early, it waited. If a review created follow-up work, I had to relay it. An hourly scheduler left capable workers idle.</p>
+            <p>That sounds like a notification problem. It is really an authority problem.</p>
+            <p>A webhook can wake an agent immediately, but waking it does not answer the important question: <em>what is this agent already allowed to do?</em> Without that answer, event-driven automation merely makes an unsafe or confused system react faster.</p>
+          </section>
+
+          <section class="resume-section">
+            <h2>The permanent shape</h2>
+            <p>The system needs one strategy manager, one durable control board, an automatic dispatcher, replaceable specialist agents, and GitHub as the evidence surface. Deterministic software moves work through transitions that have already been approved. AI is used where interpretation or imagination is required.</p>
+
+            <figure class="control-loop-figure" aria-labelledby="control-loop-caption">
+              <figcaption id="control-loop-caption"><strong>The AI company control loop</strong><span>Exact roles, transitions, and escalation paths from the working design.</span></figcaption>
+              <svg class="control-loop-svg" viewBox="0 0 1120 900" role="img" aria-labelledby="control-loop-svg-title control-loop-svg-desc">
+                <title id="control-loop-svg-title">The AI company control loop</title>
+                <desc id="control-loop-svg-desc">The founder and hourly fallback feed a ChatGPT strategy manager. Strategy writes tasks, priorities, and allowed handoffs to a central control board. A dispatcher routes work to Claude and Codex. Their code, reviews, and results go to GitHub. Known transitions return to the dispatcher, judgment returns to strategy, and only genuine founder decisions return to the founder.</desc>
+                <defs>
+                  <marker id="arrowhead" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                    <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--muted)"></path>
+                  </marker>
+                </defs>
+
+                <path class="edge" d="M 300 85 L 410 85"></path>
+                <path class="edge" d="M 820 85 L 710 85"></path>
+                <path class="edge" d="M 560 125 L 560 205"></path>
+                <rect class="label-bg" x="439" y="149" width="242" height="25" rx="8"></rect>
+                <text class="edge-label" x="560" y="167">Tasks, priorities, allowed handoffs</text>
+                <path class="edge" d="M 560 285 L 560 355"></path>
+                <path class="edge" d="M 500 435 L 350 505"></path>
+                <path class="edge" d="M 620 435 L 770 505"></path>
+                <path class="edge" d="M 350 585 L 500 665"></path>
+                <rect class="label-bg" x="293" y="606" width="174" height="25" rx="8"></rect>
+                <text class="edge-label" x="380" y="624">Code, review, result</text>
+                <path class="edge" d="M 770 585 L 620 665"></path>
+                <rect class="label-bg" x="653" y="606" width="174" height="25" rx="8"></rect>
+                <text class="edge-label" x="740" y="624">Code, review, result</text>
+                <path class="edge" d="M 710 705 C 970 705 985 395 710 395"></path>
+                <rect class="label-bg" x="842" y="526" width="221" height="25" rx="8"></rect>
+                <text class="edge-label" x="952" y="544">Known pre-approved transition</text>
+                <path class="edge" d="M 410 705 C 105 705 100 85 410 85"></path>
+                <rect class="label-bg" x="92" y="391" width="150" height="25" rx="8"></rect>
+                <text class="edge-label" x="167" y="409">Judgment required</text>
+                <path class="edge" d="M 410 64 C 370 5 210 5 190 45"></path>
+                <rect class="label-bg" x="202" y="3" width="217" height="25" rx="8"></rect>
+                <text class="edge-label" x="310" y="21">Only genuine founder decision</text>
+
+                <rect class="node node--human" x="50" y="45" width="250" height="80" rx="14"></rect>
+                <text class="node-label" x="175" y="80"><tspan x="175">You: direction and</tspan><tspan x="175" dy="22">reserved decisions</tspan></text>
+
+                <rect class="node" x="410" y="45" width="300" height="80" rx="14"></rect>
+                <text class="node-label" x="560" y="91">ChatGPT: Strategy manager</text>
+
+                <rect class="node" x="820" y="45" width="250" height="80" rx="14"></rect>
+                <text class="node-label" x="945" y="91">Hourly fallback</text>
+
+                <rect class="node node--state" x="410" y="205" width="300" height="80" rx="14"></rect>
+                <text class="node-label" x="560" y="251">Central control board</text>
+
+                <rect class="node" x="410" y="355" width="300" height="80" rx="14"></rect>
+                <text class="node-label" x="560" y="401">Automatic dispatcher</text>
+
+                <rect class="node" x="225" y="505" width="250" height="80" rx="14"></rect>
+                <text class="node-label" x="350" y="551">Claude</text>
+
+                <rect class="node" x="645" y="505" width="250" height="80" rx="14"></rect>
+                <text class="node-label" x="770" y="551">Codex</text>
+
+                <rect class="node node--state" x="410" y="665" width="300" height="80" rx="14"></rect>
+                <text class="node-label" x="560" y="711">GitHub</text>
+              </svg>
+
+              <details class="diagram-source">
+                <summary>Exact Mermaid source</summary>
+                <pre><code>flowchart TD
+    F["You: direction and reserved decisions"] --&gt; S["ChatGPT: Strategy manager"]
+    H["Hourly fallback"] --&gt; S
+    S --&gt;|"Tasks, priorities, allowed handoffs"| B["Central control board"]
+    B --&gt; D["Automatic dispatcher"]
+    D --&gt; C["Claude"]
+    D --&gt; X["Codex"]
+    C --&gt;|"Code, review, result"| G["GitHub"]
+    X --&gt;|"Code, review, result"| G
+    G --&gt;|"Known pre-approved transition"| D
+    G --&gt;|"Judgment required"| S
+    S --&gt;|"Only genuine founder decision"| F</code></pre>
+              </details>
+            </figure>
+          </section>
+
+          <section class="resume-section">
+            <h2>Each layer has one job</h2>
+            <ul class="case-study-list">
+              <li><strong>The founder sets direction and reserves authority.</strong> Product direction, material scope changes, production releases, secrets, spending, destructive actions, and other irreversible decisions remain human.</li>
+              <li><strong>ChatGPT manages strategy.</strong> It turns direction into an authorized portfolio: priorities, task envelopes, acceptance criteria, dependencies, and the handoffs that may happen without asking again.</li>
+              <li><strong>The central board holds durable intent.</strong> It records more than open and closed. Every item has an owner, current state, evidence, allowed next states, and an explicit reason when it is blocked.</li>
+              <li><strong>The dispatcher moves settled work.</strong> It watches events, claims ready items atomically, wakes the right adapter, enforces concurrency and retry rules, and records every transition.</li>
+              <li><strong>Claude and Codex perform bounded work.</strong> They implement, review, repair, or investigate inside the envelope. They may take the next ready item without waiting for the hourly strategy cycle.</li>
+              <li><strong>GitHub stores code and evidence.</strong> Commits, pull requests, checks, reviews, and structured comments are observable facts. They are signals to the control loop, not the complete source of business authority.</li>
+            </ul>
+          </section>
+
+          <section class="resume-section">
+            <h2>Events are signals, not permission</h2>
+            <p>A GitHub App can react immediately when a pull request opens, a review arrives, a check fails, or an agent is mentioned. That removes the hourly delay. It still must not invent the next action.</p>
+            <p>If the board already says “after implementation, send this to Codex for review,” the dispatcher can wake Codex as soon as the implementation evidence appears. If the review reports an ordinary defect and the task allows repair rounds, it can wake Claude again. Those are known, pre-approved transitions.</p>
+            <p>If the review exposes a product trade-off, changes the promised scope, requires a secret, or asks for production authority, the dispatcher stops. It routes the evidence to Strategy. Strategy either chooses within its authority or asks the founder one precise question.</p>
+            <p>This is the key distinction: GitHub activity tells the system that something happened. The control board tells it what that event is allowed to cause.</p>
+          </section>
+
+          <section class="resume-section">
+            <h2>How agents keep working during the one-hour window</h2>
+            <p>Strategy should not assign one instruction and hope it lasts an hour. It should authorize a small portfolio of independent work with ordering and limits.</p>
+            <p>An agent finishes one item, publishes evidence, and asks the board for the next claimable item. The dispatcher checks dependencies, ownership, concurrency, and authority before leasing it. If nothing is ready, the agent stops cleanly. If a result unlocks another approved task, the next agent wakes immediately.</p>
+            <p>Completion is not inferred from persuasive prose. A task reaches a terminal state only when its acceptance evidence exists: the expected commit or artifact, required checks, review disposition, and any task-specific proof. AI can judge whether the evidence satisfies a nuanced requirement; deterministic code can verify that the judgment was recorded by an authorized actor and that the state transition is legal.</p>
+          </section>
+
+          <section class="resume-section">
+            <h2>Deterministic management does not mean deterministic judgment</h2>
+            <p>Project management cannot be reduced to a finite state machine without losing the most valuable part: noticing a new possibility, revising a plan while learning, reconciling conflicting evidence, and deciding that the original task was wrong.</p>
+            <p>But the machinery around those decisions can be codified:</p>
+            <ul class="case-study-list">
+              <li>who may change which state;</li>
+              <li>which evidence is required before a transition;</li>
+              <li>which handoffs are already authorized;</li>
+              <li>how work is claimed, retried, timed out, and recovered after restart;</li>
+              <li>when uncertainty must be escalated rather than disguised as completion.</li>
+            </ul>
+            <p>The AI remains the judgment engine. The surrounding system makes that judgment observable, bounded, and recoverable.</p>
+          </section>
+
+          <section class="resume-section">
+            <h2>Build it in stages</h2>
+            <ol class="case-study-list">
+              <li><strong>Prove the protocol with polling.</strong> A small local process can watch the control issue and structured agent updates every few seconds. This is enough to learn which states and handoffs are actually needed.</li>
+              <li><strong>Replace polling with a GitHub App.</strong> Signed webhooks provide immediate events. The dispatcher deduplicates deliveries and maps them to authorized transitions.</li>
+              <li><strong>Make state restart-safe.</strong> Leases, idempotency keys, attempt histories, heartbeats, and dead-letter states prevent a reboot or duplicate webhook from losing or repeating work.</li>
+              <li><strong>Add vendor adapters.</strong> Claude, Codex, and future agents receive the same task envelope and return the same result contract even though their runtimes differ.</li>
+              <li><strong>Keep strategy asynchronous.</strong> Event-triggered strategy runs can handle urgent judgment where supported; the hourly run remains a reconciliation and recovery path, not the normal dispatcher.</li>
+            </ol>
+          </section>
+
+          <section class="resume-section">
+            <h2>The real goal is bounded momentum</h2>
+            <p>The useful version of an “AI company” is not a system that never asks a person anything. It is a system that keeps moving through every decision already made, preserves the evidence for every transition, and interrupts the founder only when a genuinely new decision appears.</p>
+            <p>That gives the agents autonomy without pretending they own the company. It gives the founder leverage without making them the message bus.</p>
+            <p>This is the architectural follow-up to <a href="message-bus-between-ai-agents.html">Why Am I Still the Message Bus Between My AI Agents?</a>. The earlier article identifies the manual relay. This control loop defines the boundary that can safely remove it.</p>
+          </section>
+
+          <section class="resume-section">
+            <h2>Evidence boundary</h2>
+            <p><strong>What this documents:</strong> an architecture derived from an active, multi-agent workflow and the incremental path being used to test it: durable tasks, structured results, bounded handoffs, and event-driven wake-ups.</p>
+            <p><strong>What it does not claim:</strong> that the permanent control plane is complete, production-proven, or generally available. The polling bridge and the event-driven architecture are milestones, not evidence that the final system already exists.</p>
+            <div class="resume-actions">
+              <a class="button primary" href="../newsletter/">Get new insights by email <span aria-hidden="true">→</span></a>
+              <a class="button secondary" href="message-bus-between-ai-agents.html">Read the previous article <span aria-hidden="true">→</span></a>
+              <a class="button secondary" href="https://github.com/mantoshkumar1/dogbuild" target="_blank" rel="noreferrer">See DogBuild <span aria-hidden="true">↗</span></a>
+            </div>
+          </section>
+        </article>
+      </div>
+    </main>
+    <script src="/assets/js/ask-mantosh-widget.js?v=20260716-17"></script>
+  </body>
+</html>
