@@ -33,6 +33,7 @@ His résumé-backed capabilities include engineering platforms and automation, P
 
 ## Engineering insights
 
+- [The AI Company Control Loop](https://mantoshkumar1.github.io/insights/ai-company-control-loop.html)
 - [Engineering Philosophy: Build Leverage, Not Just Software](https://mantoshkumar1.github.io/insights/engineering-philosophy.html)
 - [Why Does This Still Require Me?](https://mantoshkumar1.github.io/insights/why-does-this-still-require-me.html)
 - [Release Reports as Operational History](https://mantoshkumar1.github.io/insights/release-reports-as-operational-history.html)
