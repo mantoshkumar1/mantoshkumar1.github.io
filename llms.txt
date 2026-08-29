@@ -42,6 +42,7 @@ His résumé-backed capabilities include engineering platforms and automation, P
 - [Why Am I Still the Message Bus Between My AI Agents?](https://mantoshkumar1.github.io/insights/message-bus-between-ai-agents.html)
 - [A River Can't Be Deterministic. Its Banks Can Be.](https://mantoshkumar1.github.io/insights/make-the-banks-deterministic.html)
 - [Your Agent's Tests Are the Cheapest Check You Have](https://mantoshkumar1.github.io/insights/tests-are-the-cheapest-check.html)
+- [When a Product Builds the System That Will Maintain It](https://mantoshkumar1.github.io/insights/product-builds-the-system-that-will-maintain-it.html)
 
 ## Ask Mantosh
 

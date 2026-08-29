@@ -499,6 +499,27 @@
       "description": "The requested page could not be found.",
       "kind": "page",
       "noindex": true
+    },
+    "/insights/product-builds-the-system-that-will-maintain-it.html": {
+      "title": "When a Product Builds the System That Will Maintain It | Mantosh Kumar",
+      "description": "PingStep exposed the coordination failures; DogBuild is the control plane being born from them—and will eventually maintain its parent.",
+      "kind": "article",
+      "schemaType": "TechArticle",
+      "datePublished": "2026-08-29",
+      "dateModified": "2026-08-29",
+      "breadcrumbs": [
+        {
+          "name": "Insights",
+          "path": "/insights/"
+        }
+      ],
+      "card": {
+        "kicker": "AI-assisted engineering",
+        "readTime": "6 minute read",
+        "title": "When a product builds the system that will maintain it",
+        "summary": "PingStep exposed the coordination failures; DogBuild is the control plane being born from them—and will eventually maintain its parent.",
+        "cta": "Read the architecture note"
+      }
     }
   }
 }
