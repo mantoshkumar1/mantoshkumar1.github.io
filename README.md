@@ -22,6 +22,7 @@ The current production inventory, data flow, deployment paths, controls, and kno
 - `projects/validation-platform-optical-networking.html` — public, evidence-bounded case study on validation platform and release intelligence
 - `projects/legacy-validation-framework-migration.html` — firsthand case study on migrating thousands of tests to a distributed CI/CD platform
 - `insights/index.html` — engineering Insights archive (canonical URL `/insights/`; legacy `/thinking/` URLs redirect here)
+- `insights/product-builds-the-system-that-will-maintain-it.html` — PingStep-to-DogBuild bootstrap architecture note
 - `insights/engineering-philosophy.html` — evidence-bounded engineering philosophy
 - `insights/why-does-this-still-require-me.html` — engineering-leverage note
 - `insights/release-reports-as-operational-history.html` — operational-history and AI-assisted analysis note
