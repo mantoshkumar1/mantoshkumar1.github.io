@@ -22,6 +22,7 @@ The current production inventory, data flow, deployment paths, controls, and kno
 - `projects/validation-platform-optical-networking.html` — public, evidence-bounded case study on validation platform and release intelligence
 - `projects/legacy-validation-framework-migration.html` — firsthand case study on migrating thousands of tests to a distributed CI/CD platform
 - `insights/index.html` — engineering Insights archive (canonical URL `/insights/`; legacy `/thinking/` URLs redirect here)
+- `insights/one-bot-many-ai-workers.html` — GitHub App identity, permission, and multi-provider routing note
 - `insights/engineering-philosophy.html` — evidence-bounded engineering philosophy
 - `insights/why-does-this-still-require-me.html` — engineering-leverage note
 - `insights/release-reports-as-operational-history.html` — operational-history and AI-assisted analysis note

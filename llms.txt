@@ -33,6 +33,7 @@ His résumé-backed capabilities include engineering platforms and automation, P
 
 ## Engineering insights
 
+- [One Bot Can Coordinate Many AI Workers. It Cannot Prove Who They Were.](https://mantoshkumar1.github.io/insights/one-bot-many-ai-workers.html)
 - [Engineering Philosophy: Build Leverage, Not Just Software](https://mantoshkumar1.github.io/insights/engineering-philosophy.html)
 - [Why Does This Still Require Me?](https://mantoshkumar1.github.io/insights/why-does-this-still-require-me.html)
 - [Release Reports as Operational History](https://mantoshkumar1.github.io/insights/release-reports-as-operational-history.html)
