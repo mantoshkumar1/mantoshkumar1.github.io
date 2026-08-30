@@ -37,6 +37,27 @@
       "kind": "collection",
       "schemaType": "CollectionPage"
     },
+    "/insights/one-bot-many-ai-workers.html": {
+      "title": "One Bot Can Coordinate Many AI Workers. It Cannot Prove Who They Were. | Mantosh Kumar",
+      "description": "A permission and traceability model for using one GitHub App to route work across Claude and Codex without treating one bot identity as proof of the worker behind it.",
+      "kind": "article",
+      "schemaType": "TechArticle",
+      "datePublished": "2026-08-30",
+      "dateModified": "2026-08-30",
+      "breadcrumbs": [
+        {
+          "name": "Insights",
+          "path": "/insights/"
+        }
+      ],
+      "card": {
+        "kicker": "AI-assisted engineering",
+        "readTime": "6 minute read",
+        "title": "One bot can coordinate many AI workers. It cannot prove who they were.",
+        "summary": "A practical identity and permission model for routing GitHub work across Claude and Codex without creating a human account for every role.",
+        "cta": "Read the article"
+      }
+    },
     "/insights/tests-are-the-cheapest-check.html": {
       "title": "Your Agent's Tests Are the Cheapest Check You Have | Mantosh Kumar",
       "description": "Five failures a passing test suite will not catch when an agent writes the code, and why only one of the fixes depends on someone remembering it.",
