@@ -499,6 +499,27 @@
       "description": "The requested page could not be found.",
       "kind": "page",
       "noindex": true
+    },
+    "/insights/gateway-is-not-the-authority.html": {
+      "title": "The Gateway Is Not the Authority | Mantosh Kumar",
+      "description": "A field-tested model for separating MCP client authentication, capability routing, upstream GitHub identity, and execution authority.",
+      "kind": "article",
+      "schemaType": "TechArticle",
+      "datePublished": "2026-09-07",
+      "dateModified": "2026-09-07",
+      "breadcrumbs": [
+        {
+          "name": "Insights",
+          "path": "/insights/"
+        }
+      ],
+      "card": {
+        "kicker": "MCP architecture",
+        "readTime": "7 minute read",
+        "title": "The gateway is not the authority",
+        "summary": "One MCP endpoint can hide four distinct boundaries: caller authentication, tool routing, execution identity, and authority.",
+        "cta": "Read the architecture note"
+      }
     }
   }
 }

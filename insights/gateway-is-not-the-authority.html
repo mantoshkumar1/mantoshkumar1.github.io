@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- seo:page {"datePublished":"2026-09-07","dateModified":"2026-09-07"} -->
+    <title>The Gateway Is Not the Authority | Mantosh Kumar</title>
+    <script src="../assets/js/theme-init.js?v=20260713-1"></script>
+    <link rel="stylesheet" href="../assets/css/style.css?v=20260716-15" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+    <header class="navbar">
+      <div class="container nav-wrap">
+        <a class="logo" href="../" aria-label="Mantosh Kumar — Home" title="Go to homepage">Mantosh Kumar</a>
+        <nav aria-label="Primary navigation">
+          <a href="../">Home</a>
+          <a href="../projects/">Projects</a>
+          <a href="../insights/" aria-current="page">Insights</a>
+          <a href="../experience/">Experience</a>
+          <a href="../resume/">Resume</a>
+          <a class="nav-cta" href="../contact/">Discuss a role</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="page-shell reading-shell" id="main-content" tabindex="-1">
+      <div class="container">
+        <article class="resume-card case-study reading-page">
+          <header class="resume-header">
+            <p class="eyebrow">Architecture note • 7 minute read • <time datetime="2026-09-07">Sep 7, 2026</time></p>
+            <h1>The gateway is not the authority</h1>
+            <p>I put one MCP endpoint in front of three GitHub capability planes. It worked — and it exposed the mental model I had wrong.</p>
+            <p>A gateway can authenticate the caller and route a tool call. It does not, by itself, decide which GitHub identity executes that call, which operations the identity can perform, or whether an agent is authorized to perform them.</p>
+          </header>
+
+          <section class="resume-section">
+            <h2>The confusion was reasonable</h2>
+            <p>The setup looked simple: one Cloudflare MCP portal, one URL, and three upstream GitHub MCP servers. I expected one policy at the portal to explain the whole security model.</p>
+            <p>It did not. I was mixing four separate questions:</p>
+            <ul class="case-study-list">
+              <li><strong>Who can enter?</strong> Client authentication at the portal.</li>
+              <li><strong>Where does the call go?</strong> Capability routing to the upstream that advertised the selected tool.</li>
+              <li><strong>Who acts on GitHub?</strong> The identity represented by the upstream credential.</li>
+              <li><strong>May the agent do this?</strong> Tool curation, repository controls, and the workflow's own authority rules.</li>
+            </ul>
+            <p>Those controls cooperate, but none substitutes for the others.</p>
+          </section>
+
+          <section class="resume-section">
+            <h2>One endpoint, three capability planes</h2>
+            <figure class="project-architecture" aria-labelledby="mcp-architecture-caption">
+              <figcaption id="mcp-architecture-caption">
+                <strong>The four boundaries behind one MCP URL</strong>
+                <span>The portal is the entry and routing layer; execution identity and authority remain separate.</span>
+              </figcaption>
+              <ul class="architecture-boundaries" aria-label="MCP architecture boundaries">
+                <li><strong>Agent client</strong><span>Authenticates to one portal endpoint</span></li>
+                <li><strong>MCP portal</strong><span>Discovers tools and routes calls to their owning upstream</span></li>
+                <li><strong>GitHub upstreams</strong><span>Core read/write, Projects, and Actions read-only</span></li>
+                <li><strong>GitHub controls</strong><span>Credential scopes, repository rules, and human authority</span></li>
+              </ul>
+              <div class="architecture-lanes">
+                <section class="architecture-lane" aria-labelledby="mcp-flow-title">
+                  <header><span aria-hidden="true">01</span><div><h3 id="mcp-flow-title">A call crosses distinct checks</h3><p>Passing one check does not imply passing the next.</p></div></header>
+                  <ol class="architecture-steps">
+                    <li><small>Portal</small><strong>Authenticate caller</strong><span>Interactive or approved machine access</span></li>
+                    <li><small>Catalog</small><strong>Select named tool</strong><span>The tool schema identifies its upstream</span></li>
+                    <li><small>Upstream</small><strong>Authenticate to GitHub</strong><span>Encrypted bearer credential, never exposed to the client</span></li>
+                    <li><small>GitHub</small><strong>Enforce capability</strong><span>Identity, scopes, repository rules, and API semantics</span></li>
+                    <li><small>Control plane</small><strong>Enforce authority</strong><span>Read, write, review, merge, and production remain distinct decisions</span></li>
+                  </ol>
+                </section>
+              </div>
+              <p class="architecture-guardrail"><strong>Design rule</strong><span>Authenticate once at the edge, split capabilities upstream, and keep irreversible authority outside the model's discretion.</span></p>
+            </figure>
+          </section>
+
+          <section class="resume-section">
+            <h2>How the portal knows which server to use</h2>
+            <p>The client does not send a vague request such as “use GitHub.” It invokes a specific tool from the catalog exposed by the portal. Each tool retains the identity of the upstream server that published it. The portal routes that invocation back to the same upstream.</p>
+            <p>That is why the three planes can sit behind one URL without guessing:</p>
+            <ul class="case-study-list">
+              <li><strong>Core</strong> owns issue, pull-request, branch, commit, and repository operations.</li>
+              <li><strong>Projects</strong> owns Project v2 item and field operations.</li>
+              <li><strong>Actions read-only</strong> owns workflow-run and job inspection without a write path.</li>
+            </ul>
+            <p>The split is not cosmetic. It makes the capability boundary inspectable. A read-only Actions plane cannot quietly become a workflow-dispatch plane just because another upstream can write issues.</p>
+          </section>
+
+          <section class="resume-section">
+            <h2>Portal policy and upstream authentication solve different problems</h2>
+            <p>The portal's access policy protects the client-facing entrance. It answers whether this person or runtime may establish an MCP session.</p>
+            <p>The upstream header answers a different question: when Cloudflare calls GitHub, which credential should GitHub evaluate? For GitHub's HTTP MCP endpoints, that header has the standard form <code>Authorization: Bearer &lt;token&gt;</code>. The value belongs in encrypted server configuration, not in prompts, repositories, screenshots, or operational prose.</p>
+            <p>Repeating the same human-access policy on every upstream is not what gives GitHub access. A separate server policy matters only if that server is also exposed as its own client-facing Access application or if the product explicitly uses it as an additional gate. Upstream authentication is still required because GitHub must authenticate the call leaving the portal.</p>
+          </section>
+
+          <section class="resume-section">
+            <h2>The canary proved transport, not safety</h2>
+            <p>I tested the boundaries with a disposable issue in the public DogBuild repository. Through the portal, the client created and read the issue, added it to a GitHub Project, moved its status from Ready to Review to Done, inspected a completed Actions run, emitted webhook comments, and finally closed the issue. Every mutation was read back.</p>
+            <p>The listener received the webhook but initially rejected the control read because it expected experiment markers in the wrong repository context. After the listener path was corrected, it parsed the control schema, generation, revision, strategy identity, and tasks. It then returned <code>NO_ACTION</code> because the event satisfied no unconsumed wake.</p>
+            <p>That is a useful result: transport worked, parsing worked, and idempotency held. It is not a security certification. The test also revealed that the upstream credential still represented my personal GitHub identity, which is exactly why capability inventory and identity migration remain separate hardening work.</p>
+          </section>
+
+          <section class="resume-section">
+            <h2>The hardening sequence</h2>
+            <ol class="case-study-list">
+              <li><strong>Inventory the actual tools.</strong> Classify read, bounded write, destructive, administrative, and workflow-triggering operations.</li>
+              <li><strong>Disable what the workflow does not need.</strong> Prefer absence over a prompt instruction saying “do not use this.”</li>
+              <li><strong>Move to a dedicated least-privilege identity.</strong> A working personal token is evidence of connectivity, not a final runtime design.</li>
+              <li><strong>Re-run exact canaries.</strong> Prove required reads and bounded writes still work; prove forbidden operations are unavailable or blocked.</li>
+              <li><strong>Retire old credentials and local settings last.</strong> Cleanup follows replacement proof, never precedes it.</li>
+              <li><strong>Document recovery privately.</strong> Architecture can be public; credential locations, rotation steps, and recovery details belong in restricted operational documentation.</li>
+            </ol>
+          </section>
+
+          <section class="resume-section">
+            <h2>The reusable principle</h2>
+            <p>“It is behind a gateway” is not a security model. A useful design names every boundary: caller authentication, tool routing, execution identity, allowed capability, and irreversible authority.</p>
+            <p>The architecture became easier to reason about only after I stopped drawing one box labelled “MCP access” and started asking who makes each decision. One endpoint can simplify the client experience. It should not collapse the control model.</p>
+          </section>
+
+          <section class="resume-section">
+            <h2>Evidence boundary</h2>
+            <p><strong>What this documents:</strong> a real DogBuild dogfood setup tested on September 7, 2026, including Core and Projects mutations, Actions reads, webhook delivery, schema parsing, and read-back verification.</p>
+            <p><strong>What it does not claim:</strong> production readiness, formal threat-model coverage, independent security review, or completion of least-privilege migration. Credential values, account identifiers, and private recovery details are intentionally excluded.</p>
+            <div class="resume-actions">
+              <a class="button primary" href="../newsletter/">Get new insights by email <span aria-hidden="true">→</span></a>
+              <a class="button secondary" href="message-bus-between-ai-agents.html">Read the earlier DogBuild article <span aria-hidden="true">→</span></a>
+              <a class="button secondary" href="https://github.com/mantoshkumar1/dogbuild" target="_blank" rel="noreferrer">See DogBuild <span aria-hidden="true">↗</span></a>
+            </div>
+          </section>
+        </article>
+      </div>
+    </main>
+    <script src="/assets/js/ask-mantosh-widget.js?v=20260716-17"></script>
+  </body>
+</html>
