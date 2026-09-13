@@ -37,6 +37,27 @@
       "kind": "collection",
       "schemaType": "CollectionPage"
     },
+    "/insights/keep-staging-moving-freeze-the-release-candidate.html": {
+      "title": "Keep Staging Moving. Freeze the Release Candidate. | Mantosh Kumar",
+      "description": "A simple release-pipeline design: keep staging moving for integration, cut an immutable release candidate, and run the expensive full qualification only against that frozen candidate.",
+      "kind": "article",
+      "schemaType": "TechArticle",
+      "datePublished": "2026-09-13",
+      "dateModified": "2026-09-13",
+      "breadcrumbs": [
+        {
+          "name": "Insights",
+          "path": "/insights/"
+        }
+      ],
+      "card": {
+        "kicker": "Release engineering",
+        "readTime": "4 minute read",
+        "title": "Keep staging moving. Freeze the release candidate.",
+        "summary": "Integration wants movement. Qualification wants immutability. Separate the two so development can continue while one exact candidate is proved.",
+        "cta": "Read the article"
+      }
+    },
     "/insights/tests-are-the-cheapest-check.html": {
       "title": "Your Agent's Tests Are the Cheapest Check You Have | Mantosh Kumar",
       "description": "Five failures a passing test suite will not catch when an agent writes the code, and why only one of the fixes depends on someone remembering it.",

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- seo:generated:start -->
+    <meta name="description" content="A simple release-pipeline design: keep staging moving for integration, cut an immutable release candidate, and run the expensive full qualification only against that frozen candidate." />
+    <meta name="author" content="Mantosh Kumar" />
+    <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1" />
+    <meta name="theme-color" content="#060b12" />
+    <meta name="application-name" content="Mantosh Kumar" />
+    <meta name="apple-mobile-web-app-title" content="Mantosh Kumar" />
+    <link rel="canonical" href="https://mantoshkumar1.github.io/insights/keep-staging-moving-freeze-the-release-candidate.html" />
+    <link rel="alternate" type="application/rss+xml" title="Mantosh Kumar — Engineering Writing and Systems" href="https://mantoshkumar1.github.io/feed.xml" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta property="og:locale" content="en_CA" />
+    <meta property="og:title" content="Keep Staging Moving. Freeze the Release Candidate. | Mantosh Kumar" />
+    <meta property="og:description" content="A simple release-pipeline design: keep staging moving for integration, cut an immutable release candidate, and run the expensive full qualification only against that frozen candidate." />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://mantoshkumar1.github.io/insights/keep-staging-moving-freeze-the-release-candidate.html" />
+    <meta property="og:site_name" content="Mantosh Kumar" />
+    <meta property="og:image" content="https://mantoshkumar1.github.io/assets/seo/social-default.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Keep Staging Moving. Freeze the Release Candidate. | Mantosh Kumar" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Keep Staging Moving. Freeze the Release Candidate. | Mantosh Kumar" />
+    <meta name="twitter:description" content="A simple release-pipeline design: keep staging moving for integration, cut an immutable release candidate, and run the expensive full qualification only against that frozen candidate." />
+    <meta name="twitter:image" content="https://mantoshkumar1.github.io/assets/seo/social-default.jpg" />
+    <meta name="twitter:image:alt" content="Keep Staging Moving. Freeze the Release Candidate. | Mantosh Kumar" />
+    <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","@id":"https://mantoshkumar1.github.io/insights/keep-staging-moving-freeze-the-release-candidate.html#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://mantoshkumar1.github.io"},{"@type":"ListItem","position":2,"name":"Insights","item":"https://mantoshkumar1.github.io/insights/"},{"@type":"ListItem","position":3,"name":"Keep Staging Moving. Freeze the Release Candidate.","item":"https://mantoshkumar1.github.io/insights/keep-staging-moving-freeze-the-release-candidate.html"}]},{"@id":"https://mantoshkumar1.github.io/insights/keep-staging-moving-freeze-the-release-candidate.html#webpage","@type":"TechArticle","name":"Keep Staging Moving. Freeze the Release Candidate. | Mantosh Kumar","description":"A simple release-pipeline design: keep staging moving for integration, cut an immutable release candidate, and run the expensive full qualification only against that frozen candidate.","url":"https://mantoshkumar1.github.io/insights/keep-staging-moving-freeze-the-release-candidate.html","inLanguage":"en","isPartOf":{"@id":"https://mantoshkumar1.github.io/#website"},"breadcrumb":{"@id":"https://mantoshkumar1.github.io/insights/keep-staging-moving-freeze-the-release-candidate.html#breadcrumb"},"headline":"Keep Staging Moving. Freeze the Release Candidate.","author":{"@type":"Person","name":"Mantosh Kumar","url":"https://mantoshkumar1.github.io"},"datePublished":"2026-09-13","dateModified":"2026-09-13"}]}</script>
+    <script>
+      window.addEventListener("load", () => {
+        const analytics = document.createElement("script");
+        analytics.defer = true;
+        analytics.dataset.domain = "mantoshkumar1.github.io";
+        analytics.src = "https://plausible.io/js/script.js";
+        document.head.append(analytics);
+      }, { once: true });
+    </script>
+    <script defer src="/assets/js/ai-referral-analytics.js"></script>
+    <!-- seo:generated:end -->
+
+<!-- seo:page {"datePublished":"2026-09-13","dateModified":"2026-09-13"} -->
+    <title>Keep Staging Moving. Freeze the Release Candidate. | Mantosh Kumar</title>
+    <script src="../assets/js/theme-init.js?v=20260713-1"></script>
+    <link rel="stylesheet" href="../assets/css/style.css?v=20260716-15" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+    <header class="navbar">
+      <div class="container nav-wrap">
+        <a class="logo" href="../" aria-label="Mantosh Kumar — Home" title="Go to homepage">Mantosh Kumar</a>
+        <nav aria-label="Primary navigation">
+          <a href="../">Home</a>
+          <a href="../projects/">Projects</a>
+          <a href="../insights/" aria-current="page">Insights</a>
+          <a href="../experience/">Experience</a>
+          <a href="../resume/">Resume</a>
+          <a class="nav-cta" href="../contact/">Discuss a role</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="page-shell reading-shell" id="main-content" tabindex="-1">
+      <div class="container">
+        <article class="resume-card case-study reading-page">
+          <header class="resume-header">
+            <p class="eyebrow">Release engineering • 4 minute read • <time datetime="2026-09-13">Sep 13, 2026</time></p>
+            <h1>Keep staging moving. Freeze the release candidate.</h1>
+            <p>I made one branch do two jobs: integration and release qualification. It worked, but every new merge invalidated the evidence I had just collected.</p>
+            <p>The cleaner design is simple: let staging keep moving, and freeze only the exact candidate you are trying to prove.</p>
+          </header>
+
+          <section class="resume-section">
+            <h2>The bottleneck I created</h2>
+            <p>For a first release, I used permanent <code>staging</code> as both the place where changes integrated and the exact version being qualified for release.</p>
+            <p>That is safe, but it couples two different jobs. Integration wants movement. Qualification wants immutability.</p>
+            <p>If a browser run, accessibility check, or system-boundary test takes a long time, I have two choices: stop merging new work, or accept that the next staging commit makes the evidence stale.</p>
+            <p>With several AI agents working independently, that becomes expensive quickly. The agents are ready to continue, but the branch has to stay still because the release proof is attached to it.</p>
+          </section>
+
+          <section class="resume-section">
+            <h2>The branch pipeline I want instead</h2>
+            <figure class="project-architecture" aria-labelledby="release-pipeline-caption">
+              <figcaption id="release-pipeline-caption"><strong>Moving integration, frozen qualification</strong><span>Staging keeps accepting safe work while the exact release candidate is qualified independently.</span></figcaption>
+              <ul class="architecture-boundaries" aria-label="Release pipeline responsibilities">
+                <li><strong>Feature branches</strong><span>Focused implementation and affected tests</span></li>
+                <li><strong>Staging</strong><span>Continuously moving integration branch</span></li>
+                <li><strong>RC-N</strong><span>Immutable exact candidate under full qualification</span></li>
+                <li><strong>Production</strong><span>Human-authorized promotion only</span></li>
+              </ul>
+              <div class="architecture-lanes">
+                <section class="architecture-lane" aria-labelledby="release-flow-title">
+                  <header><span aria-hidden="true">01</span><div><h3 id="release-flow-title">Normal release flow</h3><p>Cheap checks happen early; exhaustive proof happens once the candidate is frozen.</p></div></header>
+                  <ol class="architecture-steps">
+                    <li><small>Feature</small><strong>Focused checks</strong><span>Unit, integration, affected browser/system tests</span></li>
+                    <li><small>Staging</small><strong>Integrate continuously</strong><span>Smoke + deterministic affected integration tests</span></li>
+                    <li><small>Cut</small><strong>RC-17</strong><span>Bind one immutable tree and identity</span></li>
+                    <li><small>Qualify</small><strong>Run everything</strong><span>Browser, system boundaries, security, accessibility, cleanup</span></li>
+                    <li><small>Human</small><strong>GO / NO-GO</strong><span>Promote only the exact qualified candidate</span></li>
+                  </ol>
+                </section>
+              </div>
+              <p class="architecture-guardrail"><strong>Meanwhile</strong><span>RC-17 stays frozen while staging can keep receiving Feature D, E, and F. Those commits belong to a future candidate, not to RC-17.</span></p>
+            </figure>
+          </section>
+
+          <section class="resume-section">
+            <h2>A failed candidate should stay failed</h2>
+            <p>The other useful rule falls out naturally: never patch a release candidate in place.</p>
+            <pre><code>RC-17 fails
+→ keep RC-17 and its evidence intact
+→ fix on a normal branch
+→ merge the fix into staging
+→ cut RC-18
+→ qualify RC-18 from scratch where required</code></pre>
+            <p>That gives each candidate a clean history. It also prevents a dangerous shortcut: changing the test or the candidate until the red result disappears.</p>
+            <p>My rule for that is the same one I use elsewhere: <strong>if the product is wrong, preserve the test and fix the product.</strong> If the test itself is genuinely wrong, prove that separately before changing the contract.</p>
+          </section>
+
+          <section class="resume-section">
+            <h2>Not every commit needs the whole test universe</h2>
+            <p>The frozen-candidate layer also gives test cost a natural place to live.</p>
+            <ul class="case-study-list">
+              <li><strong>Feature branch:</strong> run focused tests for the changed behavior and every mandatory protection tied to it.</li>
+              <li><strong>Staging:</strong> run integration smoke plus deterministic change- and dependency-aware tests. If impact is unclear, run more, not less.</li>
+              <li><strong>Release candidate:</strong> run the complete release qualification — all required browser journeys, real system boundaries, security, migrations, accessibility, cleanup, and release evidence.</li>
+            </ul>
+            <p>The important constraint is that an agent does not get to decide casually that a test is unnecessary. Test selection before the RC should be rule-driven. The RC is where the full proof converges.</p>
+          </section>
+
+          <section class="resume-section">
+            <h2>This changes the human role too</h2>
+            <p>Once the pipeline is bounded correctly, I do not need to supervise every implementation, review, staging merge, or repair loop.</p>
+            <p>The AI agents can have broad execution freedom through staging and candidate creation, while deterministic gates protect the test and review contracts.</p>
+            <p>The human boundary moves to the place where it is actually valuable:</p>
+            <blockquote><p><strong>Show me one immutable candidate that has passed the complete qualification. Then ask me whether to release it.</strong></p></blockquote>
+            <p>That is a much cleaner interface than asking for permission at every intermediate step.</p>
+          </section>
+
+          <section class="resume-section">
+            <h2>The rule</h2>
+            <blockquote><p><strong>Keep integration moving. Freeze only the thing you are proving.</strong></p></blockquote>
+            <p>Staging is a river: it exists to collect work. A release candidate is a snapshot: it exists to be judged.</p>
+            <p>Making one branch play both roles is safe, but it serializes work that does not need to be serialized. Separating them lets development continue without making release evidence ambiguous.</p>
+          </section>
+
+          <section class="resume-section">
+            <h2>Evidence boundary</h2>
+            <p>This is a first-person release-engineering lesson from preparing the Free release of PingStep, a product I am building. It describes the branch and qualification model I want to adopt after observing the cost of using one staging branch as both the moving integration surface and the release candidate. It does not claim production-scale throughput, team adoption, or measured delivery-time improvement. The post-release architecture described here is a design decision, not a claim that the complete pipeline is already deployed.</p>
+            <div class="resume-actions">
+              <a class="button primary" href="../newsletter/">Get new insights by email <span aria-hidden="true">→</span></a>
+              <a class="button secondary" href="make-the-banks-deterministic.html">A river can&#39;t be deterministic <span aria-hidden="true">→</span></a>
+            </div>
+          </section>
+        </article>
+      </div>
+    </main>
+    <script src="/assets/js/ask-mantosh-widget.js?v=20260716-17"></script>
+  </body>
+</html>
