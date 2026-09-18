@@ -92,7 +92,7 @@
 
           <section class="content-card section-block">
             <h2>My Contribution</h2>
-            <p>I built DogBuild to test whether a GitHub-first, append-only control model could replace human relay. The core contribution is a <strong>lived dogfooding proof</strong> that the answer is yes—with two design changes: record authority and evidence on GitHub (not in chat), and revalidate exact identity before every write.</p>
+            <p>I built DogBuild to test whether a GitHub-first, append-only control model could replace human relay. The core contribution is a <strong>lived dogfooding proof of concept</strong> showing that the approach works with two design changes: record authority and evidence on GitHub (not in chat), and revalidate exact identity before every write.</p>
             <p><strong>Architecture in use (as of September 2026):</strong></p>
             <ul class="case-study-list">
               <li><strong>GitHub-first evidence:</strong> All authority decisions, task assignments, worker findings, and execution proof live on <a href="https://github.com/mantoshkumar1/dogbuild/issues/180">control board #180</a>. Chat is a wake interface only.</li>
@@ -145,8 +145,9 @@
             <p><strong>In review or awaiting deployment:</strong></p>
             <ul class="case-study-list">
               <li>DogBuild Control MCP package—merged, awaiting exact-SHA proof verification</li>
-              <li>Exact-SHA CI aggregation—implementation exists per <a href="https://github.com/mantoshkumar1/dogbuild/pull/184">PR #184</a>; safety findings require producer correction</li>
+              <li>Exact-SHA CI aggregation—policy/design documented per <a href="https://github.com/mantoshkumar1/dogbuild/pull/184">PR #184</a>; mechanical enforcement pending #176</li>
               <li>Comment-policy tool—unresolved review findings per <a href="https://github.com/mantoshkumar1/dogbuild/pull/174">PR #174</a></li>
+              <li>Tool-surface enforcement and least-privilege identity—in design/development per <a href="https://github.com/mantoshkumar1/dogbuild/issues/169">#169</a> and <a href="https://github.com/mantoshkumar1/dogbuild/issues/167">#167</a></li>
             </ul>
             <p><strong>Deferred pending safety findings repair:</strong></p>
             <ul class="case-study-list">
@@ -179,8 +180,8 @@
           <section class="project-reflection">
             <h2>Reflection</h2>
             <p>DogBuild started with a simple observation: when both ChatGPT and Claude exist and can implement and review code, but a human still has to manually carry context between them, the bottleneck isn't reasoning—it's governance. Who decides what work happens next? Where does that decision live? How does one agent hand work to another?</p>
-            <p>The insight—after months of lived dogfooding—is that these problems are solvable. Record authority and evidence on GitHub instead of chat. Revalidate exact identity before every write. Make corrections visible, not silent. Suddenly agents can route work to each other and approve findings without a human relay.</p>
-            <p>DogBuild is not yet production-ready. Safety findings in the listener remain pending. Least-privilege identity is under development. Deployment will require explicit founder authorization with rollback proof. But the core claim—that durable, auditable control planes can replace manual relay between agents—has been proven through lived use. The bottleneck was never the agents. It was always the governance layer.</p>
+            <p>The insight—after months of lived dogfooding—is that the core layers are solvable. Record authority and evidence on GitHub instead of chat. Revalidate exact identity before every write. Make corrections visible, not silent. These documented practices enable a pathway toward agents routing work to each other and approving findings without routine human relay—but this full capability remains the target and is not yet fully proven end-to-end.</p>
+            <p>DogBuild is not yet production-ready. Safety findings in the listener remain pending. Least-privilege identity is under development. Deployment will require explicit founder authorization with rollback proof. But the core architectural layers—durable, auditable control planes, GitHub-first evidence, and append-only decision trails—are proven through lived use. The path forward requires scheduled worker invocation and independent pre-write verification before full admission. The bottleneck was never the agents. It was always the governance layer.</p>
           </section>
 
           <nav class="project-related" aria-label="Related project knowledge">
@@ -196,6 +197,8 @@
           <div class="inline-cta">
             <p><strong>Building systems where multiple agents coordinate without human relay?</strong></p>
             <div class="inline-cta-actions">
+              <a href="https://github.com/mantoshkumar1/dogbuild">Explore on GitHub <span aria-hidden="true">→</span></a>
+              <a href="../insights/message-bus-between-ai-agents.html">Read the problem statement <span aria-hidden="true">→</span></a>
               <a href="../experience/">View experience <span aria-hidden="true">→</span></a>
               <a href="../contact/">Discuss a role or project <span aria-hidden="true">→</span></a>
             </div>

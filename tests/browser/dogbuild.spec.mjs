@@ -26,8 +26,8 @@ test.describe("DogBuild project discoverability and accessibility", () => {
     // Verify main content is visible
     await expect(page.locator("main")).toBeVisible();
 
-    // Verify problem, architecture, design principles sections exist
-    for (const section of ["The Problem", "Current Architecture", "Key Design Principles", "Current Status", "Roadmap"]) {
+    // Verify problem, challenge, contribution, outcome, evidence sections exist
+    for (const section of ["Problem", "Challenge", "My Contribution", "Outcome", "Evidence"]) {
       await expect(page.locator("h2", { hasText: section })).toBeVisible();
     }
 
@@ -55,7 +55,7 @@ test.describe("DogBuild project discoverability and accessibility", () => {
 
     // Verify navigation landmarks
     await expect(page.locator("header.navbar")).toBeVisible();
-    await expect(page.locator("nav")).toBeVisible();
+    await expect(page.locator('nav[aria-label="Primary navigation"]')).toBeVisible();
     await expect(page.locator("main")).toBeVisible();
 
     // Verify skip link
@@ -109,7 +109,7 @@ test.describe("DogBuild project discoverability and accessibility", () => {
   test("DogBuild page navigation and breadcrumbs work correctly", async ({ page }) => {
     // Verify breadcrumb navigation from home
     await page.goto("/");
-    await page.getByRole("link", { name: "Projects", exact: true }).first().click();
+    await page.getByRole("link", { name: "View all projects" }).click();
     await expect(page).toHaveURL(/\/projects\/$/);
 
     // Click DogBuild card
