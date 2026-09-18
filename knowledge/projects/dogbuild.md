@@ -12,7 +12,7 @@ url: "/projects/dogbuild.html"
 
 # DogBuild
 
-DogBuild is an experimental deterministic control and orchestration layer for coordinating multiple AI coding agents (Claude Code, Cursor, Codex) through GitHub and curated MCP interfaces, without requiring a human to manually relay context between them.
+DogBuild is an experimental deterministic control and orchestration layer for coordinating multiple AI coding agents (Claude Code, Cursor, Codex) through GitHub and curated MCP interfaces. Current lived dogfooding demonstrates the architecture's viability; full autonomous coordination without human wake-signal participation remains under development.
 
 ## The Problem
 
@@ -27,7 +27,7 @@ DogBuild explores how intent, authority, evidence, routing, and handoffs can bec
 ## Core Design Principles
 
 - **GitHub records live control and execution state.** Chat is a control/wake interface only; evidence and routing decisions live on GitHub.
-- **DogBuild contains no AI and makes no semantic product decisions.** It enforces boundaries and routes work; humans and specialized agents make product calls.
+- **DogBuild contains no AI and makes no semantic product decisions.** It documents authority boundaries and routes work through GitHub; mechanical enforcement of policy boundaries remains in development. Humans and specialized agents make product calls.
 - **Strategy carries founder intent and assigns work.** The human decides anything irreversible.
 - **Workers do not self-start or broaden their authority.** Every task is explicitly bounded and reviewed.
 - **Worker plans, findings, and verdicts are append-only on GitHub.** Corrections supersede earlier evidence without silently rewriting history.
@@ -41,11 +41,11 @@ The intended architecture flows from founder intent through a strategy layer, on
 graph TD
     A[Founder Intent] --> B[Strategy Layer]
     B --> C["GitHub Control<br/>(append-only)"]
-    C --> D[Deterministic<br/>Reconciliation]
-    D --> E[Authorized<br/>Claude/Codex Worker]
+    C --> D["Deterministic<br/>Reconciliation"]
+    D --> E["Authorized<br/>Claude/Codex Worker"]
     E --> F["GitHub Evidence<br/>(append-only)"]
-    F --> G[Independent Review<br/>ChatGPT]
-    G --> H[Strategy<br/>Reconciliation]
+    F --> G["Independent Review<br/>ChatGPT"]
+    G --> H["Strategy<br/>Reconciliation"]
 ```
 
 ## Current Status
@@ -62,16 +62,16 @@ Key milestones achieved:
 
 ## What This Project Demonstrates
 
-- Authority hierarchies that remain clear and mechanically enforced across agent boundaries.
+- Authority hierarchies that remain explicit and auditable through GitHub-first documentation; mechanical enforcement across agent boundaries is the design goal, currently validated through lived processes.
 - Append-only evidence models that prevent silent history rewrites while still supporting corrections.
 - GitHub as a durable, auditable control plane instead of hidden chat state.
-- Deterministic routing and identity validation to replace manual context relay.
+- Deterministic routing and identity validation as the intended design; scheduled autonomous invocation and full pre-write authority revalidation remain under development.
 - Boundary enforcement that keeps each agent operating within its authority scope.
 - Design principles that favor failing closed when evidence is unclear over guessing.
 
 ## Reflection
 
-The core insight is that multi-agent coordination fails when the human becomes the message bus. Once agents can read and write to a shared, append-only evidence store (GitHub), and once authority is explicit and revalidated before each write, manual relay becomes unnecessary. The challenge is building the governance layer that keeps every agent honest about its authority scope — not harder than multi-agent reasoning, but orthogonal to it.
+The core insight is that multi-agent coordination fails when the human becomes the message bus. The hypothesis is that once agents can read and write to a shared, append-only evidence store (GitHub), and once authority is explicit and revalidated before each write, deterministic routing can reduce the need for routine human relay. The challenge is building the governance layer that keeps every agent honest about its authority scope — not harder than multi-agent reasoning, but orthogonal to it. Full autonomous routing without human wake-signal participation remains the target and is not yet proven end-to-end.
 
 Full account: [`vision.md`](https://github.com/mantoshkumar1/dogbuild/blob/main/vision.md) on the DogBuild repository.
 

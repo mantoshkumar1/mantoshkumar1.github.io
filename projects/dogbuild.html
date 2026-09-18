@@ -92,14 +92,14 @@
 
           <section class="content-card section-block">
             <h2>My Contribution</h2>
-            <p>I built DogBuild to test whether a GitHub-first, append-only control model could replace human relay. The core contribution is a <strong>lived dogfooding proof of concept</strong> showing that the approach works with two design changes: record authority and evidence on GitHub (not in chat), and revalidate exact identity before every write.</p>
+            <p>I built DogBuild to test whether a GitHub-first, append-only control model could replace human relay. The core contribution is a <strong>lived dogfooding proof of concept</strong> demonstrating that the architectural approach is viable with two key design changes: record authority and evidence on GitHub (not in chat), and revalidate exact identity before every write. Full deterministic routing and scheduled autonomous invocation remain under development.</p>
             <p><strong>Architecture in use (as of September 2026):</strong></p>
             <ul class="case-study-list">
               <li><strong>GitHub-first evidence:</strong> All authority decisions, task assignments, worker findings, and execution proof live on <a href="https://github.com/mantoshkumar1/dogbuild/issues/180">control board #180</a>. Chat is a wake interface only.</li>
-              <li><strong>Three-server MCP portal:</strong> A Cloudflare gateway routes requests through three validated MCP servers (Claude, Cursor, Codex), providing documented tool access without needing unrestricted GitHub permissions.</li>
+              <li><strong>Three-server MCP portal:</strong> A Cloudflare gateway routes requests through three validated MCP servers (Claude, Cursor, Codex), providing documented tool access without needing unrestricted GitHub permissions. Portal connectivity and tool inventory are end-to-end validated through lived use; tool-surface enforcement and least-privilege boundaries remain in development per <a href="https://github.com/mantoshkumar1/dogbuild/issues/169">#169</a> and <a href="https://github.com/mantoshkumar1/dogbuild/issues/167">#167</a>.</li>
               <li><strong>Append-only evidence:</strong> Worker plans, findings, and corrections are all timestamped and preserved on GitHub—corrections supersede earlier evidence without silent rewrites.</li>
               <li><strong>Authority tiers:</strong> Founder approves irreversible actions (merge, deploy, spend). Strategy routes work and reconciles evidence. Workers are bounded to assigned tasks.</li>
-              <li><strong>Exact-SHA verification:</strong> All GitHub mutations include exact head SHA and CI evidence linked on the control board, enabling independent review before any authority changes.</li>
+              <li><strong>Exact-SHA verification:</strong> Current policy and design in <a href="https://github.com/mantoshkumar1/dogbuild/pull/184">PR #184</a> document that GitHub mutations include exact head SHA and CI evidence linked on the control board for independent review. Universal mechanical enforcement of this policy remains under development per <a href="https://github.com/mantoshkumar1/dogbuild/issues/176">#176</a>.</li>
             </ul>
           </section>
 
@@ -108,7 +108,7 @@
             <div class="decision-grid">
               <div class="decision">
                 <h3>GitHub as the durable source of truth</h3>
-                <p><strong>Choice:</strong> Record all authority, routing decisions, and task state as GitHub issues and PRs, not in chat or private documents. <strong>Rationale:</strong> GitHub's append-only model and versioning mean decisions can be audited and challenged. Chat disappears; GitHub remains. <strong>Trade-off:</strong> Slower initial decisions, but decisions are durable and can be mechanically enforced.</p>
+                <p><strong>Choice:</strong> Record all authority, routing decisions, and task state as GitHub issues and PRs, not in chat or private documents. <strong>Rationale:</strong> GitHub's append-only model and versioning mean decisions can be audited and challenged. Chat disappears; GitHub remains. <strong>Trade-off:</strong> Slower initial decisions, but decisions become durable and auditable. Mechanical enforcement of policy via the control MCP server remains under development per <a href="https://github.com/mantoshkumar1/dogbuild/issues/176">#176</a>.</p>
               </div>
               <div class="decision">
                 <h3>Append-only evidence without silent rewrites</h3>
@@ -140,7 +140,7 @@
               <li>GitHub-first control board and append-only communication model—proves the approach works at scale</li>
               <li>Three-server Cloudflare MCP portal—end-to-end validated through lived use</li>
               <li>53-tool MCP inventory and independent <a href="https://github.com/mantoshkumar1/dogbuild/issues/169">Matrix V3 classification</a>—every tool's authority tier is documented</li>
-              <li>Founder/Strategy/worker authority model—<a href="https://github.com/mantoshkumar1/dogbuild/issues/180">GitHub-documented and mechanically enforced</a></li>
+              <li>Founder/Strategy/worker authority model—<a href="https://github.com/mantoshkumar1/dogbuild/issues/180">GitHub-documented</a> and process-in-use through lived dogfooding; universal mechanical enforcement remains under development</li>
             </ul>
             <p><strong>In review or awaiting deployment:</strong></p>
             <ul class="case-study-list">
@@ -161,15 +161,15 @@
               <div><strong>Lived dogfooding</strong><span>The architecture described above is not theory—it is in active daily use across the DogBuild project itself. Every strategy decision, worker assignment, and verification result lives on GitHub.</span></div>
               <div><strong>Independent review evidence</strong><span><a href="https://github.com/mantoshkumar1/dogbuild/issues/169#issuecomment-5721901701">Codex independently reviewed and approved the MCP Matrix V3 classification</a> (GitHub issue #169).</span></div>
               <div><strong>Append-only evidence in practice</strong><span>Every worker plan, finding, correction, and disagreement is <a href="https://github.com/mantoshkumar1/dogbuild/issues/180">timestamped and preserved on the control board</a>—no silent rewrites, full audit trail visible.</span></div>
-              <div><strong>Authority enforcement proof</strong><span><a href="https://github.com/mantoshkumar1/dogbuild/blob/main/AGENTS.md">AGENTS.md</a> documents exact worker responsibilities; <a href="https://github.com/mantoshkumar1/dogbuild/issues/180">control board #180</a> records every assignment and boundary.</span></div>
-              <div><strong>Multiple agents coordinating</strong><span><a href="https://github.com/mantoshkumar1/dogbuild">GitHub repository</a> shows Claude and Codex implementing different tasks without manual relay between them—proof that deterministic routing works.</span></div>
+              <div><strong>Authority documentation and process evidence</strong><span><a href="https://github.com/mantoshkumar1/dogbuild/blob/main/AGENTS.md">AGENTS.md</a> documents worker responsibilities and boundaries; <a href="https://github.com/mantoshkumar1/dogbuild/issues/180">control board #180</a> records assignments and scope constraints. These prove documented governance processes, not mechanical enforcement. Automatic enforcement of authority boundaries remains pending <a href="https://github.com/mantoshkumar1/dogbuild/issues/176">#176</a>.</span></div>
+              <div><strong>Multiple agents coordinating via GitHub-first handoffs</strong><span><a href="https://github.com/mantoshkumar1/dogbuild">GitHub repository</a> demonstrates Claude and Codex implementing and reviewing different tasks with evidence-based handoffs on the control board. Scheduled autonomous invocation and full pre-write authority revalidation remain under development; current handoffs still involve human wake-signal participation.</span></div>
             </div>
           </section>
 
           <section class="project-demonstrates">
             <h2>What This Project Demonstrates</h2>
             <div class="project-demonstrates-grid">
-              <div><h3>Durable governance in multi-agent systems</h3><p>Authority hierarchies that remain explicit and mechanically enforced across agent boundaries—preventing silent scope creep or unauthorized mutations.</p></div>
+              <div><h3>Durable governance in multi-agent systems</h3><p>Authority hierarchies that remain explicit and auditable through GitHub-first documentation and append-only evidence trails. The goal is mechanical enforcement across agent boundaries; currently validated through lived process and review practices, with automatic enforcement mechanisms under development.</p></div>
               <div><h3>Append-only evidence as a system property</h3><p>How to preserve full audit trails and correctness proofs while still allowing corrections, supersessions, and reversals of earlier decisions.</p></div>
               <div><h3>GitHub as a control plane</h3><p>Using issues, PRs, and exact-SHA proof as the durable source of truth for deterministic multi-agent routing—not as a code repository.</p></div>
               <div><h3>Fail-closed system design</h3><p>How a control plane can stop and ask for human direction when faced with ambiguous or conflicting evidence, rather than silently guessing.</p></div>
