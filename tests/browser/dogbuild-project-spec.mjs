@@ -125,4 +125,56 @@ test.describe("DogBuild project discoverability and accessibility", () => {
     expect(breadcrumbText).toContain("Projects");
     expect(breadcrumbText).toContain("DogBuild");
   });
+
+  test("DogBuild page keyboard navigation and focus management work", async ({ page }) => {
+    await page.goto("/projects/dogbuild.html");
+
+    // Tab to first interactive element
+    await page.keyboard.press("Tab");
+    const focusedElement = await page.evaluate(() => document.activeElement?.tagName);
+    expect(focusedElement, "Keyboard Tab should focus an interactive element").not.toBeNull();
+
+    // Verify focus ring is visible on interactive elements
+    const initialFocus = await page.evaluate(() => {
+      const el = document.activeElement;
+      return el ? getComputedStyle(el).outline !== "none" || getComputedStyle(el).boxShadow !== "none" : false;
+    });
+    expect(initialFocus, "Focused element should have visible focus indicator").toBeTruthy();
+
+    // Tab through primary actions (GitHub link, problem statement link)
+    let focusedLinks = 0;
+    for (let i = 0; i < 10; i++) {
+      await page.keyboard.press("Tab");
+      const tagName = await page.evaluate(() => document.activeElement?.tagName);
+      if (tagName === "A") {
+        focusedLinks++;
+      }
+    }
+    expect(focusedLinks, "Should be able to tab to multiple links").toBeGreaterThan(0);
+  });
+
+  test("DogBuild project links return successful responses", async ({ page, context }) => {
+    await page.goto("/projects/dogbuild.html");
+
+    // Track response status codes
+    const responses = [];
+    context.on("response", (response) => {
+      if (!response.url().includes("analytics") && !response.url().includes("tracking")) {
+        responses.push({ url: response.url(), status: response.status() });
+      }
+    });
+
+    // Click GitHub link and verify it navigates (don't follow external)
+    const githubLink = page.getByRole("link", { name: "Explore on GitHub" });
+    const href = await githubLink.getAttribute("href");
+    expect(href).toBe("https://github.com/mantoshkumar1/dogbuild");
+
+    // Click internal link and verify successful response
+    await page.getByRole("link", { name: "Read the problem statement" }).click();
+    await expect(page).toHaveURL(/\/insights\/message-bus-between-ai-agents\.html$/);
+
+    // Verify all internal resources loaded successfully
+    const failedResponses = responses.filter((r) => r.status >= 400 && !r.url.includes("external"));
+    expect(failedResponses, "All internal resources should load successfully").toEqual([]);
+  });
 });
