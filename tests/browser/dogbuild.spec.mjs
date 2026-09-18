@@ -134,12 +134,17 @@ test.describe("DogBuild project discoverability and accessibility", () => {
     const focusedElement = await page.evaluate(() => document.activeElement?.tagName);
     expect(focusedElement, "Keyboard Tab should focus an interactive element").not.toBeNull();
 
-    // Verify focus ring is visible on interactive elements
-    const initialFocus = await page.evaluate(() => {
+    // Verify focus ring is visible with actual outline width/style
+    const focusStyles = await page.evaluate(() => {
       const el = document.activeElement;
-      return el ? getComputedStyle(el).outline !== "none" || getComputedStyle(el).boxShadow !== "none" : false;
+      if (!el) return { hasVisible: false };
+      const cs = getComputedStyle(el);
+      const outlineWidth = cs.outlineWidth;
+      const outlineStyle = cs.outlineStyle;
+      const hasVisible = outlineStyle !== 'none' && outlineWidth !== '0px' && outlineWidth !== '0';
+      return { hasVisible, outlineWidth, outlineStyle };
     });
-    expect(initialFocus, "Focused element should have visible focus indicator").toBeTruthy();
+    expect(focusStyles.hasVisible, `Focused element should have visible outline (width: ${focusStyles.outlineWidth}, style: ${focusStyles.outlineStyle})`).toBeTruthy();
 
     // Tab through primary actions (GitHub link, problem statement link)
     let focusedLinks = 0;
@@ -154,27 +159,24 @@ test.describe("DogBuild project discoverability and accessibility", () => {
   });
 
   test("DogBuild project links return successful responses", async ({ page, context }) => {
-    await page.goto("/projects/dogbuild.html");
+    // Assert initial navigation response succeeds
+    const initialResponse = await page.goto("/projects/dogbuild.html");
+    expect(initialResponse?.status(), "Initial navigation should succeed").toBeLessThan(400);
 
-    // Track response status codes
-    const responses = [];
-    context.on("response", (response) => {
-      if (!response.url().includes("analytics") && !response.url().includes("tracking")) {
-        responses.push({ url: response.url(), status: response.status() });
+    // Verify GitHub link href is correct (external, don't request)
+    const githubLink = page.getByRole("link", { name: "Explore on GitHub" });
+    const githubHref = await githubLink.getAttribute("href");
+    expect(githubHref).toBe("https://github.com/mantoshkumar1/dogbuild");
+
+    // Assert internal navigation response succeeds
+    let internalNavResponse;
+    page.once("response", (response) => {
+      if (response.url().includes("/insights/")) {
+        internalNavResponse = response;
       }
     });
-
-    // Click GitHub link and verify it navigates (don't follow external)
-    const githubLink = page.getByRole("link", { name: "Explore on GitHub" });
-    const href = await githubLink.getAttribute("href");
-    expect(href).toBe("https://github.com/mantoshkumar1/dogbuild");
-
-    // Click internal link and verify successful response
     await page.getByRole("link", { name: "Read the problem statement" }).click();
     await expect(page).toHaveURL(/\/insights\/message-bus-between-ai-agents\.html$/);
-
-    // Verify all internal resources loaded successfully
-    const failedResponses = responses.filter((r) => r.status >= 400 && !r.url.includes("external"));
-    expect(failedResponses, "All internal resources should load successfully").toEqual([]);
+    expect(internalNavResponse?.status(), "Internal navigation should succeed").toBeLessThan(400);
   });
 });

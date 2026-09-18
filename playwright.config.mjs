@@ -33,7 +33,6 @@ export default defineConfig({
       use: {
         ...devices["Desktop Chrome"],
         viewport: { width: 1440, height: 1000 },
-        launchOptions: { executablePath: "/opt/pw-browsers/chromium" }
       }
     },
     {
@@ -41,7 +40,6 @@ export default defineConfig({
       use: {
         ...devices["iPhone 13"],
         browserName: "chromium",
-        launchOptions: { executablePath: "/opt/pw-browsers/chromium" }
       }
     }
   ]

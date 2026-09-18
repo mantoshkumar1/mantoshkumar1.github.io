@@ -89,9 +89,9 @@
             <h2>Current Architecture</h2>
             <p>DogBuild is built on lived dogfooding, not theory. Here's what's real as of September 2026:</p>
             <ul class="case-study-list">
-              <li><strong>GitHub-first evidence:</strong> All project state, decisions, and evidence live append-only on GitHub. Chat is a wake interface only; the repository is the durable source of truth.</li>
-              <li><strong>Three-server MCP portal:</strong> A Cloudflare-hosted gateway providing curated, bounded GitHub access through validated MCP servers. 53 tools classified and independently reviewed.</li>
-              <li><strong>Exact-head CI aggregation:</strong> Read-only capability to observe complete CI state for any exact commit SHA, including post-merge push workflows (not just PR-triggered runs).</li>
+              <li><strong>GitHub-first evidence:</strong> Project execution state (issues, PRs, exact-head evidence) lives on GitHub; documentation architecture split per <a href="https://github.com/mantoshkumar1/dogbuild/issues/183">#183</a>. Chat is a wake interface only; the repository is the durable source of truth.</li>
+              <li><strong>Three-server MCP portal:</strong> A Cloudflare-hosted gateway providing <strong>DOCUMENTED</strong> and <strong>DESIGN_REVIEWED</strong> portal; <strong>LIVE_ENFORCEMENT_PENDING</strong> per <a href="https://github.com/mantoshkumar1/dogbuild/issues/169">#169</a> through validated MCP servers. 53 tools classified and independently reviewed.</li>
+              <li><strong>Exact-head CI aggregation:</strong> Read-only capability to Exact-SHA CI aggregation capability is <strong>IN_REVIEW</strong> per <a href="https://github.com/mantoshkumar1/dogbuild/pull/184">PR #184</a>, including post-merge push workflows (not just PR-triggered runs).</li>
               <li><strong>Deterministic routing:</strong> DogBuild itself makes no product decisions. It enforces boundaries—founder authority, append-only evidence, exact identity validation—while workers do their work.</li>
               <li><strong>Authority tiers:</strong> Founder → Strategy → Workers. The human approves anything irreversible (merge, deploy, delete, spend). Strategy routes work and reconciles evidence. Workers are bounded to assigned tasks.</li>
             </ul>
