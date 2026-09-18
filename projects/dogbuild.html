@@ -95,7 +95,7 @@
             <p>I built DogBuild to test whether a GitHub-first, append-only control model could replace human relay. The core contribution is a <strong>lived dogfooding proof of concept</strong> demonstrating that the architectural approach is viable with two key design changes: record authority and evidence on GitHub (not in chat), and revalidate exact identity before every write. Full deterministic routing and scheduled autonomous invocation remain under development.</p>
             <p><strong>Architecture in use (as of September 2026):</strong></p>
             <ul class="case-study-list">
-              <li><strong>GitHub-first evidence:</strong> All authority decisions, task assignments, worker findings, and execution proof live on <a href="https://github.com/mantoshkumar1/dogbuild/issues/180">control board #180</a>. Chat is a wake interface only.</li>
+              <li><strong>GitHub-first evidence:</strong> The control model records current routing and authority lineage on <a href="https://github.com/mantoshkumar1/dogbuild/issues/180">control board #180</a>. Detailed append-only evidence—plans, findings, corrections, and proof—remains on canonical issues and PRs. Chat is a wake interface only.</li>
               <li><strong>Three-server MCP portal:</strong> A Cloudflare gateway routes requests through three validated MCP servers (Claude, Cursor, Codex), providing documented tool access without needing unrestricted GitHub permissions. Portal connectivity and tool inventory are end-to-end validated through lived use; tool-surface enforcement and least-privilege boundaries remain in development per <a href="https://github.com/mantoshkumar1/dogbuild/issues/169">#169</a> and <a href="https://github.com/mantoshkumar1/dogbuild/issues/167">#167</a>.</li>
               <li><strong>Append-only evidence:</strong> Worker plans, findings, and corrections are all timestamped and preserved on GitHub—corrections supersede earlier evidence without silent rewrites.</li>
               <li><strong>Authority tiers:</strong> Founder approves irreversible actions (merge, deploy, spend). Strategy routes work and reconciles evidence. Workers are bounded to assigned tasks.</li>
@@ -137,7 +137,7 @@
             <h2>Outcome</h2>
             <p><strong>Completed and in use today:</strong></p>
             <ul class="case-study-list">
-              <li>GitHub-first control board and append-only communication model—proves the approach works at scale</li>
+              <li>GitHub-first control board and append-only communication model—demonstrates the approach through lived dogfooding</li>
               <li>Three-server Cloudflare MCP portal—end-to-end validated through lived use</li>
               <li>53-tool MCP inventory and independent <a href="https://github.com/mantoshkumar1/dogbuild/issues/169">Matrix V3 classification</a>—every tool's authority tier is documented</li>
               <li>Founder/Strategy/worker authority model—<a href="https://github.com/mantoshkumar1/dogbuild/issues/180">GitHub-documented</a> and process-in-use through lived dogfooding; universal mechanical enforcement remains under development</li>
@@ -174,7 +174,7 @@
               <div><h3>GitHub as a control plane</h3><p>Using issues, PRs, and exact-SHA proof as the durable source of truth for deterministic multi-agent routing—not as a code repository.</p></div>
               <div><h3>Fail-closed system design</h3><p>How a control plane can stop and ask for human direction when faced with ambiguous or conflicting evidence, rather than silently guessing.</p></div>
             </div>
-            <p class="project-demonstrates-summary">This project demonstrates my ability to build distributed systems that remain auditable, controllable, and transparent to independent review even under real use at scale.</p>
+            <p class="project-demonstrates-summary">This project demonstrates my ability to build distributed systems that remain auditable, controllable, and transparent to independent review through real use within the DogBuild project.</p>
           </section>
 
           <section class="project-reflection">

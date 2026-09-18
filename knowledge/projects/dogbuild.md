@@ -66,7 +66,7 @@ Key milestones achieved:
 - Append-only evidence models that prevent silent history rewrites while still supporting corrections.
 - GitHub as a durable, auditable control plane instead of hidden chat state.
 - Deterministic routing and identity validation as the intended design; scheduled autonomous invocation and full pre-write authority revalidation remain under development.
-- Boundary enforcement that keeps each agent operating within its authority scope.
+- Boundary enforcement that keeps each agent operating within its authority scope—currently documented and validated through lived process; universal mechanical enforcement remains pending <a href="https://github.com/mantoshkumar1/dogbuild/issues/176">#176</a>.
 - Design principles that favor failing closed when evidence is unclear over guessing.
 
 ## Reflection
@@ -74,4 +74,3 @@ Key milestones achieved:
 The core insight is that multi-agent coordination fails when the human becomes the message bus. The hypothesis is that once agents can read and write to a shared, append-only evidence store (GitHub), and once authority is explicit and revalidated before each write, deterministic routing can reduce the need for routine human relay. The challenge is building the governance layer that keeps every agent honest about its authority scope — not harder than multi-agent reasoning, but orthogonal to it. Full autonomous routing without human wake-signal participation remains the target and is not yet proven end-to-end.
 
 Full account: [`vision.md`](https://github.com/mantoshkumar1/dogbuild/blob/main/vision.md) on the DogBuild repository.
-
