@@ -109,7 +109,7 @@ test.describe("DogBuild project discoverability and accessibility", () => {
   test("DogBuild page navigation and breadcrumbs work correctly", async ({ page }) => {
     // Verify breadcrumb navigation from home
     await page.goto("/");
-    await page.getByRole("link", { name: "Projects" }).click();
+    await page.getByRole("link", { name: "Projects", exact: true }).first().click();
     await expect(page).toHaveURL(/\/projects\/$/);
 
     // Click DogBuild card

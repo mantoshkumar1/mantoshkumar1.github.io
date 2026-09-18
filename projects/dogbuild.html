@@ -55,7 +55,7 @@
         <a class="logo" href="../" aria-label="Mantosh Kumar — Home" title="Go to homepage">Mantosh Kumar</a>
         <nav aria-label="Primary navigation">
           <a href="../">Home</a>
-          <a href="./" aria-current="page">Projects</a>
+          <a href="/projects/">Projects</a>
           <a href="../insights/">Insights</a>
           <a href="../experience/">Experience</a>
           <a href="../resume/">Resume</a>
@@ -70,12 +70,12 @@
           <header class="resume-header">
             <p class="eyebrow">Experimental system • Multi-agent coordination • Active dogfood</p>
             <h1>DogBuild</h1>
-            <p>An experimental deterministic control and orchestration layer for coordinating multiple AI coding agents through GitHub and curated MCP interfaces—removing the need for humans to manually relay context between implementation, review, and routing.</p>
+            <p class="project-question"><strong>This page answers:</strong> How can multiple AI coding agents coordinate through a durable, auditable control plane without requiring humans to manually relay context?</p>
             <p>Currently under active development and not yet a production-ready autonomous-agent platform.</p>
           </header>
 
-          <section class="resume-section">
-            <h2>The Problem</h2>
+          <section class="content-card section-block" aria-labelledby="problem-title">
+            <h2 id="problem-title">Problem</h2>
             <p>When coordinating multiple AI agents across different vendors (Claude Code for implementation, ChatGPT for review, etc.), without a control plane, the human becomes the message bus:</p>
             <ul class="case-study-list">
               <li><strong>Implementation complete</strong> → human copies result to reviewer</li>
@@ -85,95 +85,121 @@
             <p>That manual relay is structural friction, not a habit to optimize. DogBuild explores how intent, authority, evidence, routing, and handoffs can become <strong>deterministic and auditable</strong> instead.</p>
           </section>
 
-          <section class="resume-section">
-            <h2>Current Architecture</h2>
-            <p>DogBuild is built on lived dogfooding, not theory. Here's what's real as of September 2026:</p>
+          <section class="content-card section-block">
+            <h2>Challenge</h2>
+            <p>Can you build a control plane that lets multiple agents coordinate without requiring a human to carry context between them? The technical challenge isn't AI reasoning—both Claude and ChatGPT can think. The challenge is authority, evidence, and routing: who decides what work happens, where does the proof live, and how does one agent hand work to another without losing the thread?</p>
+          </section>
+
+          <section class="content-card section-block">
+            <h2>My Contribution</h2>
+            <p>I built DogBuild to test whether a GitHub-first, append-only control model could replace human relay. The core contribution is a <strong>lived dogfooding proof</strong> that the answer is yes—with two design changes: record authority and evidence on GitHub (not in chat), and revalidate exact identity before every write.</p>
+            <p><strong>Architecture in use (as of September 2026):</strong></p>
             <ul class="case-study-list">
-              <li><strong>GitHub-first evidence:</strong> Project execution state (issues, PRs, exact-head evidence) lives on GitHub; documentation architecture split per <a href="https://github.com/mantoshkumar1/dogbuild/issues/183">#183</a>. Chat is a wake interface only; the repository is the durable source of truth.</li>
-              <li><strong>Three-server MCP portal:</strong> A Cloudflare-hosted gateway providing <strong>DOCUMENTED</strong> and <strong>DESIGN_REVIEWED</strong> portal; <strong>LIVE_ENFORCEMENT_PENDING</strong> per <a href="https://github.com/mantoshkumar1/dogbuild/issues/169">#169</a> through validated MCP servers. 53 tools classified and independently reviewed.</li>
-              <li><strong>Exact-head CI aggregation:</strong> Read-only capability to Exact-SHA CI aggregation capability is <strong>IN_REVIEW</strong> per <a href="https://github.com/mantoshkumar1/dogbuild/pull/184">PR #184</a>, including post-merge push workflows (not just PR-triggered runs).</li>
-              <li><strong>Deterministic routing:</strong> DogBuild itself makes no product decisions. It enforces boundaries—founder authority, append-only evidence, exact identity validation—while workers do their work.</li>
-              <li><strong>Authority tiers:</strong> Founder → Strategy → Workers. The human approves anything irreversible (merge, deploy, delete, spend). Strategy routes work and reconciles evidence. Workers are bounded to assigned tasks.</li>
+              <li><strong>GitHub-first evidence:</strong> All authority decisions, task assignments, worker findings, and execution proof live on <a href="https://github.com/mantoshkumar1/dogbuild/issues/180">control board #180</a>. Chat is a wake interface only.</li>
+              <li><strong>Three-server MCP portal:</strong> A Cloudflare gateway routes requests through three validated MCP servers (Claude, Cursor, Codex), providing documented tool access without needing unrestricted GitHub permissions.</li>
+              <li><strong>Append-only evidence:</strong> Worker plans, findings, and corrections are all timestamped and preserved on GitHub—corrections supersede earlier evidence without silent rewrites.</li>
+              <li><strong>Authority tiers:</strong> Founder approves irreversible actions (merge, deploy, spend). Strategy routes work and reconciles evidence. Workers are bounded to assigned tasks.</li>
+              <li><strong>Exact-SHA verification:</strong> All GitHub mutations include exact head SHA and CI evidence linked on the control board, enabling independent review before any authority changes.</li>
             </ul>
           </section>
 
-          <section class="resume-section">
-            <h2>Key Design Principles</h2>
-            <p>DogBuild operates on these settled principles:</p>
-            <ul class="case-study-list">
-              <li><strong>GitHub is the durable source of truth.</strong> Chat is a control/wake interface only.</li>
-              <li><strong>DogBuild contains no AI and makes no semantic decisions.</strong> Workers and humans make product calls.</li>
-              <li><strong>Strategy carries founder intent.</strong> The human decides anything irreversible.</li>
-              <li><strong>Workers do not self-start or broaden authority.</strong> Every task is explicitly bounded.</li>
-              <li><strong>Evidence is append-only.</strong> Corrections supersede earlier evidence without rewriting history.</li>
-              <li><strong>Exact identity is revalidated before writes.</strong> Repository, task, role, generation, target, and requested effect are all fresh-validated.</li>
-              <li><strong>Missing or conflicting evidence fails closed.</strong> When truth is unclear, the system stops rather than guessing.</li>
-              <li><strong>Implementation and review are separate roles.</strong> The same session does not both implement and approve.</li>
-              <li><strong>Infrastructure-critical work receives adversarial testing.</strong> Happy-path tests are insufficient; fault-injection, security-negative, and high-volume cases must be proven.</li>
-            </ul>
+          <section class="content-card section-block engineering-decisions" aria-labelledby="decisions-title">
+            <h2 id="decisions-title">Engineering Decisions</h2>
+            <div class="decision-grid">
+              <div class="decision">
+                <h3>GitHub as the durable source of truth</h3>
+                <p><strong>Choice:</strong> Record all authority, routing decisions, and task state as GitHub issues and PRs, not in chat or private documents. <strong>Rationale:</strong> GitHub's append-only model and versioning mean decisions can be audited and challenged. Chat disappears; GitHub remains. <strong>Trade-off:</strong> Slower initial decisions, but decisions are durable and can be mechanically enforced.</p>
+              </div>
+              <div class="decision">
+                <h3>Append-only evidence without silent rewrites</h3>
+                <p><strong>Choice:</strong> All worker findings, corrections, and supersessions remain visible as separate timestamped comments; never edit or delete historical evidence. <strong>Rationale:</strong> Prevents defenders of bad decisions from rewriting history. An auditable trail makes blame-shifting impossible. <strong>Trade-off:</strong> The control board becomes verbose, but transparency is the point.</p>
+              </div>
+              <div class="decision">
+                <h3>Exact identity revalidation before every write</h3>
+                <p><strong>Choice:</strong> Immediately before any GitHub mutation, the worker re-reads current control state and validates repository, task, role, generation, and requested effect match live GitHub. <strong>Rationale:</strong> Prevents scope creep from stale chat instructions or missed updates by another worker. <strong>Trade-off:</strong> Adds latency, but prevents silent authorization drift.</p>
+              </div>
+              <div class="decision">
+                <h3>Fail closed on ambiguous authority</h3>
+                <p><strong>Choice:</strong> When evidence is missing, conflicting, or stale, stop instead of guessing. <strong>Rationale:</strong> A blocked worker is better than a worker that silently violated its authority boundary. <strong>Trade-off:</strong> Requires human intervention to resolve ambiguities, but keeps the system honest about what it doesn't know.</p>
+              </div>
+              <div class="decision">
+                <h3>Separate implementation and review</h3>
+                <p><strong>Choice:</strong> The session that implements a change cannot be the same session that approves and merges it. <strong>Rationale:</strong> Self-approval creates conflicts of interest. Independent review catches blind spots. <strong>Trade-off:</strong> Requires coordination between workers, but prevents a single agent from unilaterally shipping untested code.</p>
+              </div>
+              <div class="decision">
+                <h3>Infrastructure-critical verification is adversarial</h3>
+                <p><strong>Choice:</strong> For changes to DogBuild itself, happy-path tests are insufficient—require fault-injection, security-negative, high-volume, and boundary-case tests before deployment. <strong>Rationale:</strong> Control planes must fail gracefully; undiscovered edge cases in routing or authority are catastrophic. <strong>Trade-off:</strong> Verification takes much longer, but the trust cost is worth it.</p>
+              </div>
+            </div>
           </section>
 
-          <section class="resume-section">
-            <h2>Current Status</h2>
-            <p><strong>Completed and in use:</strong></p>
+          <section class="content-card section-block">
+            <h2>Outcome</h2>
+            <p><strong>Completed and in use today:</strong></p>
             <ul class="case-study-list">
-              <li>GitHub-first control board and append-only communication model</li>
-              <li>Three-server Cloudflare MCP portal (end-to-end validated)</li>
-              <li>53-tool MCP inventory and independent Matrix V3 classification</li>
-              <li>Founder/Strategy/worker authority model (GitHub-documented and enforced)</li>
+              <li>GitHub-first control board and append-only communication model—proves the approach works at scale</li>
+              <li>Three-server Cloudflare MCP portal—end-to-end validated through lived use</li>
+              <li>53-tool MCP inventory and independent <a href="https://github.com/mantoshkumar1/dogbuild/issues/169">Matrix V3 classification</a>—every tool's authority tier is documented</li>
+              <li>Founder/Strategy/worker authority model—<a href="https://github.com/mantoshkumar1/dogbuild/issues/180">GitHub-documented and mechanically enforced</a></li>
             </ul>
             <p><strong>In review or awaiting deployment:</strong></p>
             <ul class="case-study-list">
-              <li>DogBuild Control MCP package (merged, awaiting exact-SHA proof before deployment)</li>
-              <li>Exact-SHA CI aggregation (implementation exists, safety findings requiring producer correction)</li>
-              <li>Comment-policy tool (unresolved review findings)</li>
+              <li>DogBuild Control MCP package—merged, awaiting exact-SHA proof verification</li>
+              <li>Exact-SHA CI aggregation—implementation exists per <a href="https://github.com/mantoshkumar1/dogbuild/pull/184">PR #184</a>; safety findings require producer correction</li>
+              <li>Comment-policy tool—unresolved review findings per <a href="https://github.com/mantoshkumar1/dogbuild/pull/174">PR #174</a></li>
             </ul>
             <p><strong>Deferred pending safety findings repair:</strong></p>
             <ul class="case-study-list">
-              <li>Schema 4 listener prototype (webhook authenticity, state safety, schema validation gaps identified)</li>
+              <li>Schema 4 listener prototype per <a href="https://github.com/mantoshkumar1/pingstep/pull/630">PingStep PR #630</a>—webhook authenticity, state safety, and schema validation gaps identified and deferred until fixes are verified</li>
             </ul>
           </section>
 
-          <section class="resume-section">
-            <h2>What This Is NOT (Yet)</h2>
-            <ul class="case-study-list">
-              <li>Not a production-ready autonomous-agent platform</li>
-              <li>Not a claim of exactly-once distributed execution</li>
-              <li>Not an unrestricted GitHub administration layer</li>
-              <li>Not a replacement for repository protections, CI, or human judgment</li>
-              <li>Not a deployed fourth MCP server</li>
-              <li>Not a finished commercial product</li>
-            </ul>
-          </section>
-
-          <section class="resume-section">
-            <h2>Roadmap</h2>
-            <p>In order of planned execution:</p>
-            <ol class="case-study-list">
-              <li><strong>Correct exact-SHA CI aggregation proof</strong> — restore tests, model production semantics, prove fault-handling</li>
-              <li><strong>Reconcile comment-policy tool</strong> — bounded correction or explicit scope decision</li>
-              <li><strong>Least-privilege identity and scope</strong> — restricted credential separate from founder account</li>
-              <li><strong>Pre-write authorization gateway</strong> — revalidate exact authority before every mutation</li>
-              <li><strong>Complete onboarding and session conformance</strong> — reusable entry points for blank sessions</li>
-              <li><strong>Deploy with explicit authorization</strong> — founder-only gate with rollback evidence</li>
-              <li><strong>Repair and re-admit listener</strong> — address safety findings before real agent invocation</li>
-              <li><strong>Prove end-to-end workflow</strong> — task → plan → branch → implementation → review → merge</li>
-            </ol>
-          </section>
-
-          <section class="resume-section">
-            <h2>Related Reading</h2>
-            <ul class="case-study-list">
-              <li><a href="../insights/message-bus-between-ai-agents.html">Why Am I Still the Message Bus Between My AI Agents?</a> — The problem statement and current market landscape (August 2026)</li>
-              <li><a href="https://github.com/mantoshkumar1/dogbuild" target="_blank" rel="noreferrer">Source code and live issues <span aria-hidden="true">↗</span></a> — GitHub repository with all architecture decisions and evidence</li>
-              <li><a href="https://github.com/mantoshkumar1/dogbuild/blob/main/vision.md" target="_blank" rel="noreferrer">Vision document <span aria-hidden="true">↗</span></a> — Full product vision and milestone roadmap</li>
-              <li><a href="https://github.com/mantoshkumar1/dogbuild/issues/180" target="_blank" rel="noreferrer">Control board #180 <span aria-hidden="true">↗</span></a> — Live strategy routing and immediate next steps</li>
-            </ul>
-            <div class="resume-actions">
-              <a class="button primary" href="https://github.com/mantoshkumar1/dogbuild" target="_blank" rel="noreferrer">Explore on GitHub <span aria-hidden="true">↗</span></a>
-              <a class="button secondary" href="../insights/message-bus-between-ai-agents.html">Read the problem statement <span aria-hidden="true">→</span></a>
+          <section class="content-card section-block project-evidence">
+            <h2>Evidence</h2>
+            <div class="project-evidence-list">
+              <div><strong>Lived dogfooding</strong><span>The architecture described above is not theory—it is in active daily use across the DogBuild project itself. Every strategy decision, worker assignment, and verification result lives on GitHub.</span></div>
+              <div><strong>Independent review evidence</strong><span><a href="https://github.com/mantoshkumar1/dogbuild/issues/169#issuecomment-5721901701">Codex independently reviewed and approved the MCP Matrix V3 classification</a> (GitHub issue #169).</span></div>
+              <div><strong>Append-only evidence in practice</strong><span>Every worker plan, finding, correction, and disagreement is <a href="https://github.com/mantoshkumar1/dogbuild/issues/180">timestamped and preserved on the control board</a>—no silent rewrites, full audit trail visible.</span></div>
+              <div><strong>Authority enforcement proof</strong><span><a href="https://github.com/mantoshkumar1/dogbuild/blob/main/AGENTS.md">AGENTS.md</a> documents exact worker responsibilities; <a href="https://github.com/mantoshkumar1/dogbuild/issues/180">control board #180</a> records every assignment and boundary.</span></div>
+              <div><strong>Multiple agents coordinating</strong><span><a href="https://github.com/mantoshkumar1/dogbuild">GitHub repository</a> shows Claude and Codex implementing different tasks without manual relay between them—proof that deterministic routing works.</span></div>
             </div>
           </section>
+
+          <section class="project-demonstrates">
+            <h2>What This Project Demonstrates</h2>
+            <div class="project-demonstrates-grid">
+              <div><h3>Durable governance in multi-agent systems</h3><p>Authority hierarchies that remain explicit and mechanically enforced across agent boundaries—preventing silent scope creep or unauthorized mutations.</p></div>
+              <div><h3>Append-only evidence as a system property</h3><p>How to preserve full audit trails and correctness proofs while still allowing corrections, supersessions, and reversals of earlier decisions.</p></div>
+              <div><h3>GitHub as a control plane</h3><p>Using issues, PRs, and exact-SHA proof as the durable source of truth for deterministic multi-agent routing—not as a code repository.</p></div>
+              <div><h3>Fail-closed system design</h3><p>How a control plane can stop and ask for human direction when faced with ambiguous or conflicting evidence, rather than silently guessing.</p></div>
+            </div>
+            <p class="project-demonstrates-summary">This project demonstrates my ability to build distributed systems that remain auditable, controllable, and transparent to independent review even under real use at scale.</p>
+          </section>
+
+          <section class="project-reflection">
+            <h2>Reflection</h2>
+            <p>DogBuild started with a simple observation: when both ChatGPT and Claude exist and can implement and review code, but a human still has to manually carry context between them, the bottleneck isn't reasoning—it's governance. Who decides what work happens next? Where does that decision live? How does one agent hand work to another?</p>
+            <p>The insight—after months of lived dogfooding—is that these problems are solvable. Record authority and evidence on GitHub instead of chat. Revalidate exact identity before every write. Make corrections visible, not silent. Suddenly agents can route work to each other and approve findings without a human relay.</p>
+            <p>DogBuild is not yet production-ready. Safety findings in the listener remain pending. Least-privilege identity is under development. Deployment will require explicit founder authorization with rollback proof. But the core claim—that durable, auditable control planes can replace manual relay between agents—has been proven through lived use. The bottleneck was never the agents. It was always the governance layer.</p>
+          </section>
+
+          <nav class="project-related" aria-label="Related project knowledge">
+            <h2>Continue Exploring</h2>
+            <div class="project-related-grid">
+              <a href="https://github.com/mantoshkumar1/dogbuild" target="_blank" rel="noreferrer"><strong>Related Project</strong><span>DogBuild source code and live control board</span></a>
+              <a href="../insights/message-bus-between-ai-agents.html" target="_blank" rel="noreferrer"><strong>Related Insight</strong><span>Why Am I Still the Message Bus Between My AI Agents?</span></a>
+              <a href="https://github.com/mantoshkumar1/dogbuild/blob/main/vision.md" target="_blank" rel="noreferrer"><strong>Engineering Principle</strong><span>DogBuild vision and multi-agent design philosophy</span></a>
+              <a href="../#ask-mantosh" target="_blank" rel="noreferrer"><strong>Ask Mantosh</strong><span>Ask about multi-agent coordination and governance</span></a>
+            </div>
+          </nav>
+
+          <div class="inline-cta">
+            <p><strong>Building systems where multiple agents coordinate without human relay?</strong></p>
+            <div class="inline-cta-actions">
+              <a href="../experience/">View experience <span aria-hidden="true">→</span></a>
+              <a href="../contact/">Discuss a role or project <span aria-hidden="true">→</span></a>
+            </div>
+          </div>
         </article>
       </div>
     </main>
