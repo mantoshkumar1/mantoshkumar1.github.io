@@ -15,7 +15,8 @@ export default defineConfig({
     screenshot: "only-on-failure",
     trace: "retain-on-failure",
     video: "retain-on-failure",
-    reducedMotion: "reduce"
+    reducedMotion: "reduce",
+    launchArgs: ["--disable-gpu"]
   },
   expect: { timeout: 5_000 },
   webServer: {
@@ -29,11 +30,17 @@ export default defineConfig({
   projects: [
     {
       name: "desktop-chromium",
-      use: { ...devices["Desktop Chrome"], viewport: { width: 1440, height: 1000 } }
+      use: {
+        ...devices["Desktop Chrome"],
+        viewport: { width: 1440, height: 1000 },
+      }
     },
     {
       name: "mobile-chromium",
-      use: { ...devices["iPhone 13"], browserName: "chromium" }
+      use: {
+        ...devices["iPhone 13"],
+        browserName: "chromium",
+      }
     }
   ]
 });

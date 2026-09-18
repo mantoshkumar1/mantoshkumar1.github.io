@@ -393,6 +393,45 @@
       "homepageOrder": 2,
       "live": true
     },
+    "/projects/dogbuild.html": {
+      "title": "DogBuild: Deterministic AI Agent Coordination | Mantosh Kumar",
+      "description": "DogBuild is an experimental deterministic control and orchestration layer for coordinating multiple AI coding agents through GitHub and curated MCP interfaces.",
+      "kind": "project",
+      "entityName": "DogBuild",
+      "dateModified": "2026-09-17",
+      "softwareApplication": true,
+      "applicationCategory": "DeveloperApplication",
+      "breadcrumbs": [
+        {
+          "name": "Projects",
+          "path": "/projects/"
+        }
+      ],
+      "card": {
+        "kicker": "Experimental system • Multi-agent coordination",
+        "title": "DogBuild",
+        "description": "An experimental deterministic control and orchestration layer for coordinating multiple AI coding agents through GitHub and curated MCP interfaces.",
+        "impact": "Explores how intent, authority, evidence, routing, and handoffs can become deterministic and auditable instead of requiring manual relay between agents.",
+        "tech": [
+          "GitHub API",
+          "MCP",
+          "Cloudflare Workers"
+        ],
+        "links": [
+          {
+            "label": "Explore on GitHub ↗",
+            "href": "https://github.com/mantoshkumar1/dogbuild",
+            "external": true
+          },
+          {
+            "label": "See the system →",
+            "href": "projects/dogbuild.html",
+            "detail": true
+          }
+        ]
+      },
+      "live": true
+    },
     "/projects/workflow-automation-toolkit.html": {
       "title": "Workflow Automation Toolkit | Mantosh Kumar",
       "description": "A case study of local Python command-line utilities for repetitive PDF, image, and file-processing tasks.",

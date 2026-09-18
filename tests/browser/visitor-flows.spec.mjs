@@ -93,7 +93,7 @@ test("recruiter path connects home, experience, projects, resume, and contact", 
 test("project and insight cards expose their primary detail destinations", async ({ page }) => {
   await page.goto("/projects/");
   const projects = page.locator(".project-card");
-  await expect(projects).toHaveCount(6);
+  await expect(projects).toHaveCount(7);
   const projectDestinations = [];
   for (let index = 0; index < await projects.count(); index += 1) {
     await expect(projects.nth(index).locator(".project-detail-link")).toHaveAttribute("href", /.+/);
