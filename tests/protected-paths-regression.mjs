@@ -5,116 +5,120 @@ const workflowPath = resolve('.github/workflows/protected-paths.yml');
 const workflowContent = readFileSync(workflowPath, 'utf8');
 
 const tests = [];
+const requiredEvents = ['opened', 'synchronize', 'reopened', 'labeled', 'unlabeled'];
 
-// Helper: Extract event tokens as an exact set
-function parseEventTokens(content) {
-  const eventLineMatch = content.match(/types:\s*\[([^\]]+)\]/);
-  const eventList = eventLineMatch ? eventLineMatch[1] : '';
-  // Split by comma and trim to get exact token list
-  return eventList
+// ========== SHARED VALIDATOR ==========
+// One function that validates the workflow and returns failures
+function validateWorkflow(content) {
+  const failures = [];
+
+  // Extract events from on.pull_request specifically
+  const pullRequestMatch = content.match(/on:\s*\n\s*pull_request:\s*\n[\s\S]*?branches:\s*\[([^\]]*)\]\n\s*types:\s*\[([^\]]*)\]/);
+
+  if (!pullRequestMatch) {
+    failures.push('PARSE_ERROR: Could not find on.pull_request.types block');
+    return failures;
+  }
+
+  const eventList = pullRequestMatch[2];
+  const eventTokens = eventList
     .split(',')
     .map(e => e.trim())
     .filter(e => e.length > 0);
+
+  // Check 1: All required events must be present as exact tokens
+  requiredEvents.forEach(event => {
+    if (!eventTokens.includes(event)) {
+      failures.push(`MISSING_EVENT: ${event}`);
+    }
+  });
+
+  // Check 2: Exact label check with grep -qx (not substring matching)
+  if (!content.includes("grep -qx 'approved-test-change'")) {
+    failures.push('MISSING_EXACT_LABEL_CHECK: grep -qx required');
+  }
+
+  // Check 3: Fail-closed behavior: error message required
+  if (!content.includes('::error::Protected paths changed without review')) {
+    failures.push('MISSING_ERROR_MESSAGE');
+  }
+
+  // Check 4: Fail-closed behavior: exit 1 required (specifically in guard job after error message)
+  // Look for the guard job and verify it has error → exit 1 sequence
+  const guardMatch = content.match(/jobs:\s*\n\s*guard:[\s\S]*?(?=\n  \w+:|$)/);
+  if (guardMatch && guardMatch[0]) {
+    const guardJob = guardMatch[0];
+    // Must have error message followed by exit 1 in proper order
+    const errorPos = guardJob.indexOf('::error::Protected paths changed without review');
+    const exitPos = guardJob.indexOf('exit 1');
+    if (errorPos === -1 || exitPos === -1 || exitPos < errorPos) {
+      failures.push('MISSING_EXIT_1');
+    }
+  } else {
+    failures.push('PARSE_ERROR: Could not find guard job');
+  }
+
+  return failures;
 }
 
-const eventTokens = parseEventTokens(workflowContent);
+// ========== POSITIVE TEST: Real workflow must pass ==========
+const realFailures = validateWorkflow(workflowContent);
+tests.push({
+  name: 'real workflow passes all validation checks',
+  pass: realFailures.length === 0,
+  error: realFailures.length > 0 ? `Failures: ${realFailures.join(', ')}` : 'None'
+});
 
-// Test Suite 1: Exact token verification for all five required events
-const requiredEvents = ['opened', 'synchronize', 'reopened', 'labeled', 'unlabeled'];
+// ========== NEGATIVE TESTS: Mutations must be caught ==========
 
-requiredEvents.forEach(eventName => {
+// Mutation Suite A: Event removal mutations
+requiredEvents.forEach(eventToRemove => {
+  // Create mutated workflow without this event
+  const pullRequestMatch = workflowContent.match(/on:\s*\n\s*pull_request:\s*\n[\s\S]*?branches:\s*\[([^\]]*)\]\n\s*types:\s*\[([^\]]*)\]/);
+  const eventList = pullRequestMatch[2];
+  const eventTokens = eventList
+    .split(',')
+    .map(e => e.trim())
+    .filter(e => e.length > 0);
+
+  const reducedTokens = eventTokens.filter(e => e !== eventToRemove);
+  const mutatedEventString = reducedTokens.map(e => `'${e}'`).join(', ');
+
+  const mutatedContent = workflowContent.replace(
+    /types:\s*\[([^\]]*)\]/,
+    `types: [${mutatedEventString}]`
+  );
+
+  const mutatedFailures = validateWorkflow(mutatedContent);
+
   tests.push({
-    name: `${eventName} event is present as exact token in pull_request types`,
-    pass: eventTokens.includes(eventName),
-    error: `${eventName} event missing from pull_request trigger — ${
-      eventName === 'labeled' || eventName === 'unlabeled'
-        ? 'label application/removal will not start a fresh run'
-        : eventName === 'opened'
-        ? 'initial PR runs will not trigger'
-        : eventName === 'synchronize'
-        ? 'updated commits will not re-run the workflow'
-        : 're-opened PRs will not re-run the workflow'
-    }`
+    name: `removing '${eventToRemove}' event is detected as regression`,
+    pass: mutatedFailures.includes(`MISSING_EVENT: ${eventToRemove}`),
+    error: `Mutation not caught — validator should fail with MISSING_EVENT: ${eventToRemove}`
   });
 });
 
-// Test Suite 2: Exact label name requirement (grep -qx check)
-const grepCheckMatch = workflowContent.match(/grep\s+-qx\s+'approved-test-change'/);
-const hasGrepCheck = Boolean(grepCheckMatch);
-
-tests.push({
-  name: 'exact label name approved-test-change is required (grep -qx)',
-  pass: hasGrepCheck,
-  error: 'exact label name check not found — workflow may accept partial matches or wrong labels'
-});
-
-// Test Suite 3: Fail-closed behavior on missing label
-const hasErrorOnMissing = workflowContent.includes('::error::Protected paths changed without review');
-
-tests.push({
-  name: 'fail-closed behavior preserved when label absent (exit 1)',
-  pass: hasErrorOnMissing && workflowContent.includes('exit 1'),
-  error: 'fail-closed error behavior not found — workflow may pass without approval'
-});
-
-// Test Suite 4: Negative mutation cases — verify removal of each event is detected
-const negativeEventTests = requiredEvents.map(eventToRemove => {
-  // Create a version without this event
-  const reducedTokens = eventTokens.filter(e => e !== eventToRemove);
-  const mutatedEventList = reducedTokens.join(', ');
-  const mutatedContent = workflowContent.replace(
-    /types:\s*\[[^\]]+\]/,
-    `types: [${mutatedEventList}]`
-  );
-  const mutatedTokens = parseEventTokens(mutatedContent);
-  const wouldPass = mutatedTokens.includes(eventToRemove);
-
-  return {
-    name: `removing ${eventToRemove} event is detected as a regression`,
-    pass: !wouldPass, // Mutation should NOT pass the test
-    error: `removing ${eventToRemove} event would NOT be caught by the regression test — false negative`
-  };
-});
-
-tests.push(...negativeEventTests);
-
-// Test Suite 5: Negative mutation case — removing grep -qx and using grep -q (substring matching)
-// This mutation would allow partial label matches instead of exact matches
+// Mutation B: Weaken label check from grep -qx to grep -q
 (function() {
   const mutatedContent = workflowContent.replace(/grep -qx/, 'grep -q');
-  const wouldHaveGrepQx = mutatedContent.includes('grep -qx');
+  const mutatedFailures = validateWorkflow(mutatedContent);
 
   tests.push({
-    name: 'removing -x flag from grep (grep -q) would allow substring label matches — mutation caught',
-    pass: !wouldHaveGrepQx, // Mutation should not have grep -qx
-    error: 'grep -qx check is essential; removing -x flag would allow partial matches'
+    name: "changing 'grep -qx' to 'grep -q' (substring matching) is detected",
+    pass: mutatedFailures.includes('MISSING_EXACT_LABEL_CHECK: grep -qx required'),
+    error: 'Mutation not caught — validator should fail with MISSING_EXACT_LABEL_CHECK'
   });
 })();
 
-// Test Suite 6: Negative mutation case — changing guard exit behavior
-// This mutation would allow the workflow to pass even when label is missing
+// Mutation C: Remove fail-closed exit from exit 1 to exit 0
 (function() {
   const mutatedContent = workflowContent.replace(/exit 1/, 'exit 0');
-  const wouldExitGracefully = mutatedContent.includes('exit 0') &&
-                               mutatedContent.match(/::error::Protected paths changed without review/);
+  const mutatedFailures = validateWorkflow(mutatedContent);
 
   tests.push({
-    name: 'changing exit 1 to exit 0 on missing label would weaken guard — mutation caught',
-    pass: !wouldExitGracefully || workflowContent.includes('exit 1'),
-    error: 'exit 1 is required to fail the guard when label is missing'
-  });
-})();
-
-// Test Suite 7: Negative mutation case — removing the error message
-// This mutation would remove the visibility of the guard failure
-(function() {
-  const withoutError = workflowContent.replace(/::error::Protected paths changed without review[^\n]*\n/, '');
-  const shouldHaveError = workflowContent.includes('::error::Protected paths changed without review');
-
-  tests.push({
-    name: 'removing the error message would hide guard failures — mutation caught',
-    pass: shouldHaveError,
-    error: 'error message is required for visibility when protected paths are changed without review'
+    name: "changing 'exit 1' to 'exit 0' (fail-open) is detected",
+    pass: mutatedFailures.includes('MISSING_EXIT_1'),
+    error: 'Mutation not caught — validator should fail with MISSING_EXIT_1'
   });
 })();
 
