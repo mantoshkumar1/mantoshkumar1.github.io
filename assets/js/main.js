@@ -233,7 +233,7 @@ class ConversationView {
       const related = this.relatedReading(message);
       if (related.length) meta.insertAdjacentHTML("beforeend", `<section class=\"ask-mantosh-related\"><h4>Related reading</h4><div class=\"ask-mantosh-reading-list\">${related.map((item) => `<a href=\"${this.safeUrl(item.url)}\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"ask-mantosh-reading-link\"><span>${this.escape(item.category || "Read")}</span><strong>${this.escape(item.title)}</strong><span aria-hidden=\"true\">→</span></a>`).join("")}</div></section>`);
       if (message.sources?.length) {
-        const sourceList = message.sources.map((source) => `<a class=\"ask-mantosh-source\" href=\"${this.safeUrl(source.url)}\" target=\"_blank\" rel=\"noopener noreferrer\" data-summary=\"${this.escape(source.summary || "Published engineering knowledge")}\"><span aria-hidden=\"true\">✓</span><span>${this.escape(source.label)}</span></a>`).join("");
+        const sourceList = message.sources.map((source) => `<a class=\"ask-mantosh-source\" href=\"${this.safeUrl(source.url)}\" target=\"_blank\" rel=\"noopener noreferrer\" data-summary=\"${this.escape(source.summary || "Published engineering knowledge\")}\"><span aria-hidden=\"true\">✓</span><span>${this.escape(source.label)}</span></a>`).join("");
         meta.insertAdjacentHTML("beforeend", `<footer class=\"ask-mantosh-sources\"><h4>Grounded in</h4><div>${sourceList}</div></footer>`);
       }
     }
@@ -336,7 +336,12 @@ class AskMantoshApp {
       this.elements.backdrop.hidden = false;
       document.body.classList.add("ask-mantosh-open");
       this.elements.toggle.setAttribute("aria-expanded", "true");
-      // Make background content mechanically inactive while modal is open
+      // Snapshot prior inert state of background elements and apply inert while modal is open
+      this.priorInertStates = {
+        header: document.querySelector("header")?.hasAttribute("inert"),
+        main: document.querySelector("main")?.hasAttribute("inert"),
+        footer: document.querySelector("footer")?.hasAttribute("inert"),
+      };
       document.querySelector("header")?.setAttribute("inert", "");
       document.querySelector("main")?.setAttribute("inert", "");
       document.querySelector("footer")?.setAttribute("inert", "");
@@ -349,10 +354,10 @@ class AskMantoshApp {
       this.elements.backdrop.hidden = true;
       document.body.classList.remove("ask-mantosh-open");
       this.elements.toggle.setAttribute("aria-expanded", "false");
-      // Restore background content accessibility
-      document.querySelector("header")?.removeAttribute("inert");
-      document.querySelector("main")?.removeAttribute("inert");
-      document.querySelector("footer")?.removeAttribute("inert");
+      // Restore prior inert state on each background element
+      if (!this.priorInertStates?.header) document.querySelector("header")?.removeAttribute("inert");
+      if (!this.priorInertStates?.main) document.querySelector("main")?.removeAttribute("inert");
+      if (!this.priorInertStates?.footer) document.querySelector("footer")?.removeAttribute("inert");
       this.previousFocus?.focus?.();
     }
   }
@@ -490,7 +495,7 @@ class AskMantoshApp {
     this.view.setStatus("");
   }
   stripResponseSections(text) { return text.replace(/\n*##\s+(?:Sources|Follow-up Questions)\s*\n[\s\S]*$/i, "").trim(); }
-  followUps(text) { const match = /^##\s+Follow-up Questions\s*$([\ s\S]*?)(?=^##\s+|$)/im.exec(text); return match ? match[1].split("\n").map((line) => line.replace(/^\s*(?:[-*]|\d+[.)])\s+/, "").trim()).filter((line) => line.endsWith("?")).slice(0, 3) : []; }
+  followUps(text) { const match = /^##\s+Follow-up Questions\s*$([\s\S]*?)(?=^##\s+|$)/im.exec(text); return match ? match[1].split("\n").map((line) => line.replace(/^\s*(?:[-*]|\d+[.)])\s+/, "").trim()).filter((line) => line.endsWith("?")).slice(0, 3) : []; }
   usableFollowUps(questions) {
     return (questions || []).map((question) => String(question || "").trim())
       .filter((question) => question.endsWith("?") && question.length <= 72 && question.split(/\s+/).length <= 12)
@@ -522,14 +527,14 @@ const initializeAskMantosh = () => {
     const app = new AskMantoshApp(elements);
     app.init();
     document.addEventListener("click", (event) => {
-      const trigger = event.target.closest('a[href=\"#ask-mantosh\"], [data-open-ask-mantosh]');
-      if (!trigger || app.elements.toggle.dataset.clientReady === "true") return;
+      const trigger = event.target.closest('a[href="#ask-mantosh"], [data-open-ask-mantosh]');
+      if (!trigger) return;
       event.preventDefault();
-      event.stopImmediatePropagation();
-      app.elements.toggle.click();
+      app.open();
     });
+    if (window.location.hash === "#ask-mantosh") app.open();
   }
 };
 
-if (document.readyState !== "loading") initializeAskMantosh();
-else document.addEventListener("DOMContentLoaded", initializeAskMantosh);
+if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", initializeAskMantosh);
+else initializeAskMantosh();
