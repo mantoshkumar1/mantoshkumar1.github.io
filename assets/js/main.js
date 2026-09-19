@@ -329,8 +329,33 @@ class AskMantoshApp {
     this.updateExportAvailability();
     this.resize();
   }
-  open() { if (this.elements.panel.hidden) { this.previousFocus = document.activeElement; this.elements.panel.hidden = false; this.elements.backdrop.hidden = false; document.body.classList.add("ask-mantosh-open"); this.elements.toggle.setAttribute("aria-expanded", "true"); requestAnimationFrame(() => this.elements.input.focus()); } }
-  close() { if (!this.elements.panel.hidden) { this.elements.panel.hidden = true; this.elements.backdrop.hidden = true; document.body.classList.remove("ask-mantosh-open"); this.elements.toggle.setAttribute("aria-expanded", "false"); this.previousFocus?.focus?.(); } }
+  open() {
+    if (this.elements.panel.hidden) {
+      this.previousFocus = document.activeElement;
+      this.elements.panel.hidden = false;
+      this.elements.backdrop.hidden = false;
+      document.body.classList.add("ask-mantosh-open");
+      this.elements.toggle.setAttribute("aria-expanded", "true");
+      // Make background content mechanically inactive while modal is open
+      document.querySelector("header")?.setAttribute("inert", "");
+      document.querySelector("main")?.setAttribute("inert", "");
+      document.querySelector("footer")?.setAttribute("inert", "");
+      requestAnimationFrame(() => this.elements.input.focus());
+    }
+  }
+  close() {
+    if (!this.elements.panel.hidden) {
+      this.elements.panel.hidden = true;
+      this.elements.backdrop.hidden = true;
+      document.body.classList.remove("ask-mantosh-open");
+      this.elements.toggle.setAttribute("aria-expanded", "false");
+      // Restore background content accessibility
+      document.querySelector("header")?.removeAttribute("inert");
+      document.querySelector("main")?.removeAttribute("inert");
+      document.querySelector("footer")?.removeAttribute("inert");
+      this.previousFocus?.focus?.();
+    }
+  }
   clearConversation() {
     if (this.messages.length && !window.confirm("Close Ask Mantosh and clear this conversation?")) return;
     this.generation += 1;
@@ -465,7 +490,7 @@ class AskMantoshApp {
     this.view.setStatus("");
   }
   stripResponseSections(text) { return text.replace(/\n*##\s+(?:Sources|Follow-up Questions)\s*\n[\s\S]*$/i, "").trim(); }
-  followUps(text) { const match = /^##\s+Follow-up Questions\s*$([\s\S]*?)(?=^##\s+|$)/im.exec(text); return match ? match[1].split("\n").map((line) => line.replace(/^\s*(?:[-*]|\d+[.)])\s+/, "").trim()).filter((line) => line.endsWith("?")).slice(0, 3) : []; }
+  followUps(text) { const match = /^##\s+Follow-up Questions\s*$([\ s\S]*?)(?=^##\s+|$)/im.exec(text); return match ? match[1].split("\n").map((line) => line.replace(/^\s*(?:[-*]|\d+[.)])\s+/, "").trim()).filter((line) => line.endsWith("?")).slice(0, 3) : []; }
   usableFollowUps(questions) {
     return (questions || []).map((question) => String(question || "").trim())
       .filter((question) => question.endsWith("?") && question.length <= 72 && question.split(/\s+/).length <= 12)
@@ -497,14 +522,14 @@ const initializeAskMantosh = () => {
     const app = new AskMantoshApp(elements);
     app.init();
     document.addEventListener("click", (event) => {
-      const trigger = event.target.closest('a[href="#ask-mantosh"], [data-open-ask-mantosh]');
-      if (!trigger) return;
+      const trigger = event.target.closest('a[href=\"#ask-mantosh\"], [data-open-ask-mantosh]');
+      if (!trigger || app.elements.toggle.dataset.clientReady === "true") return;
       event.preventDefault();
-      app.open();
+      event.stopImmediatePropagation();
+      app.elements.toggle.click();
     });
-    if (window.location.hash === "#ask-mantosh") app.open();
   }
 };
 
-if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", initializeAskMantosh);
-else initializeAskMantosh();
+if (document.readyState !== "loading") initializeAskMantosh();
+else document.addEventListener("DOMContentLoaded", initializeAskMantosh);
