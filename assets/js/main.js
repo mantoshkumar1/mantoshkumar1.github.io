@@ -108,7 +108,7 @@ class MarkdownService {
     target.querySelectorAll("pre code").forEach((code) => {
       highlight.highlightElement(code);
       const pre = code.parentElement;
-      const language = [...code.classList].find((name) => name.startsWith("language-"))?. replace("language-", "") || "text";
+      const language = [...code.classList].find((name) => name.startsWith("language-"))?.replace("language-", "") || "text";
       const toolbar = document.createElement("div");
       toolbar.className = "ask-mantosh-code-toolbar";
       toolbar.innerHTML = `<span>${language}</span><button type="button" data-copy-code aria-label="Copy ${language} code">Copy code</button>`;
@@ -233,7 +233,7 @@ class ConversationView {
       const related = this.relatedReading(message);
       if (related.length) meta.insertAdjacentHTML("beforeend", `<section class=\"ask-mantosh-related\"><h4>Related reading</h4><div class=\"ask-mantosh-reading-list\">${related.map((item) => `<a href=\"${this.safeUrl(item.url)}\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"ask-mantosh-reading-link\"><span>${this.escape(item.category || "Read")}</span><strong>${this.escape(item.title)}</strong><span aria-hidden=\"true\">→</span></a>`).join("")}</div></section>`);
       if (message.sources?.length) {
-        const sourceList = message.sources.map((source) => `<a class=\"ask-mantosh-source\" href=\"${this.safeUrl(source.url)}\" target=\"_blank\" rel=\"noopener noreferrer\" data-summary=\"${this.escape(source.summary || \"Published engineering knowledge\")}\"><span aria-hidden=\"true\">✓</span><span>${this.escape(source.label)}</span></a>`).join("");
+        const sourceList = message.sources.map((source) => `<a class=\"ask-mantosh-source\" href=\"${this.safeUrl(source.url)}\" target=\"_blank\" rel=\"noopener noreferrer\" data-summary=\"${this.escape(source.summary || "Published engineering knowledge")}\"><span aria-hidden=\"true\">✓</span><span>${this.escape(source.label)}</span></a>`).join("");
         meta.insertAdjacentHTML("beforeend", `<footer class=\"ask-mantosh-sources\"><h4>Grounded in</h4><div>${sourceList}</div></footer>`);
       }
     }
@@ -259,7 +259,7 @@ class ConversationView {
     const visible = compact ? this.followUps.slice(0, 1) : this.followUps;
     this.suggestions.hidden = !this.followUps.length;
     this.suggestions.classList.toggle("is-compact", compact && visible.length > 0);
-    this.suggestions.innerHTML = `<div>${visible.map((question) => `<button class=\"ask-mantosh-chip${compact ? \" ask-mantosh-next\" : \"\"}\" type=\"button\" data-suggestion=\"${this.escape(question)}\">${compact ? '<span class=\"ask-mantosh-next-label\">Next question</span>' : ""}<span>${this.escape(question)}</span>${compact ? '<span aria-hidden=\"true\">→</span>' : ""}</button>`).join("")}</div>`;
+    this.suggestions.innerHTML = `<div>${visible.map((question) => `<button class=\"ask-mantosh-chip${compact ? " ask-mantosh-next" : ""}\" type=\"button\" data-suggestion=\"${this.escape(question)}\">${compact ? '<span class=\"ask-mantosh-next-label\">Next question</span>' : ""}<span>${this.escape(question)}</span>${compact ? '<span aria-hidden=\"true\">→</span>' : ""}</button>`).join("")}</div>`;
     this.onAsk = onAsk;
   }
   handleAction(event) {
@@ -527,7 +527,7 @@ const initializeAskMantosh = () => {
     const app = new AskMantoshApp(elements);
     app.init();
     document.addEventListener("click", (event) => {
-      const trigger = event.target.closest('a[href=\"#ask-mantosh\"], [data-open-ask-mantosh]');
+      const trigger = event.target.closest('a[href="#ask-mantosh"], [data-open-ask-mantosh]');
       if (!trigger) return;
       event.preventDefault();
       app.open();
