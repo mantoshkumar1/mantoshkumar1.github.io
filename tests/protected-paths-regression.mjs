@@ -73,6 +73,7 @@ tests.push({
 // ========== NEGATIVE TESTS: Mutations must be caught ==========
 
 // Mutation Suite A: Event removal mutations
+// EXACT ONE-ELEMENT FAILURE SET REQUIRED: Each mutation produces exactly one failure
 requiredEvents.forEach(eventToRemove => {
   // Create mutated workflow without this event
   const pullRequestMatch = workflowContent.match(/on:\s*\n\s*pull_request:\s*\n[\s\S]*?branches:\s*\[([^\]]*)\]\n\s*types:\s*\[([^\]]*)\]/);
@@ -95,8 +96,10 @@ requiredEvents.forEach(eventToRemove => {
 
   tests.push({
     name: `removing '${eventToRemove}' event is detected as regression`,
-    pass: mutatedFailures.includes(`MISSING_EVENT: ${eventToRemove}`),
-    error: `Mutation not caught — validator should fail with MISSING_EVENT: ${eventToRemove}`
+    pass: mutatedFailures.length === 1 && mutatedFailures[0] === `MISSING_EVENT: ${eventToRemove}`,
+    error: mutatedFailures.length === 1 
+      ? `Mutation not caught — validator should fail with MISSING_EVENT: ${eventToRemove}`
+      : `Expected exactly 1 failure; got ${mutatedFailures.length}: ${mutatedFailures.join(', ')}`
   });
 });
 
@@ -107,8 +110,10 @@ requiredEvents.forEach(eventToRemove => {
 
   tests.push({
     name: "changing 'grep -qx' to 'grep -q' (substring matching) is detected",
-    pass: mutatedFailures.includes('MISSING_EXACT_LABEL_CHECK: grep -qx required'),
-    error: 'Mutation not caught — validator should fail with MISSING_EXACT_LABEL_CHECK'
+    pass: mutatedFailures.length === 1 && mutatedFailures[0] === 'MISSING_EXACT_LABEL_CHECK: grep -qx required',
+    error: mutatedFailures.length === 1
+      ? 'Mutation not caught — validator should fail with MISSING_EXACT_LABEL_CHECK'
+      : `Expected exactly 1 failure; got ${mutatedFailures.length}: ${mutatedFailures.join(', ')}`
   });
 })();
 
@@ -119,8 +124,10 @@ requiredEvents.forEach(eventToRemove => {
 
   tests.push({
     name: "changing 'exit 1' to 'exit 0' (fail-open) is detected",
-    pass: mutatedFailures.includes('MISSING_EXIT_1'),
-    error: 'Mutation not caught — validator should fail with MISSING_EXIT_1'
+    pass: mutatedFailures.length === 1 && mutatedFailures[0] === 'MISSING_EXIT_1',
+    error: mutatedFailures.length === 1
+      ? 'Mutation not caught — validator should fail with MISSING_EXIT_1'
+      : `Expected exactly 1 failure; got ${mutatedFailures.length}: ${mutatedFailures.join(', ')}`
   });
 })();
 
