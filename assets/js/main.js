@@ -336,15 +336,18 @@ class AskMantoshApp {
       this.elements.backdrop.hidden = false;
       document.body.classList.add("ask-mantosh-open");
       this.elements.toggle.setAttribute("aria-expanded", "true");
-      // Snapshot prior inert state of background elements and apply inert while modal is open
-      this.priorInertStates = {
-        header: document.querySelector("header")?.hasAttribute("inert"),
-        main: document.querySelector("main")?.hasAttribute("inert"),
-        footer: document.querySelector("footer")?.hasAttribute("inert"),
-      };
-      document.querySelector("header")?.setAttribute("inert", "");
-      document.querySelector("main")?.setAttribute("inert", "");
-      document.querySelector("footer")?.setAttribute("inert", "");
+      // Snapshot all direct body children except panel and backdrop, including prior inert state
+      // Skip script, style, and other non-interactive elements
+      this.priorInertStates = [];
+      for (const child of document.body.children) {
+        if (child.id === "ask-mantosh-panel" || child.id === "ask-mantosh-backdrop") continue;
+        if (child.tagName === "SCRIPT" || child.tagName === "STYLE" || child.tagName === "SPAN") continue;
+        this.priorInertStates.push({
+          element: child,
+          hadInert: child.hasAttribute("inert")
+        });
+        child.setAttribute("inert", "");
+      }
       requestAnimationFrame(() => this.elements.input.focus());
     }
   }
@@ -354,10 +357,14 @@ class AskMantoshApp {
       this.elements.backdrop.hidden = true;
       document.body.classList.remove("ask-mantosh-open");
       this.elements.toggle.setAttribute("aria-expanded", "false");
-      // Restore prior inert state on each background element
-      if (!this.priorInertStates?.header) document.querySelector("header")?.removeAttribute("inert");
-      if (!this.priorInertStates?.main) document.querySelector("main")?.removeAttribute("inert");
-      if (!this.priorInertStates?.footer) document.querySelector("footer")?.removeAttribute("inert");
+      // Restore exact prior inert state on each background element
+      if (this.priorInertStates) {
+        for (const { element, hadInert } of this.priorInertStates) {
+          if (!hadInert) {
+            element.removeAttribute("inert");
+          }
+        }
+      }
       this.previousFocus?.focus?.();
     }
   }
