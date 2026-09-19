@@ -526,6 +526,7 @@ const initializeAskMantosh = () => {
   if (Object.values(elements).every(Boolean)) {
     const app = new AskMantoshApp(elements);
     app.init();
+    elements.toggle.addEventListener("click", () => app.open());
     document.addEventListener("click", (event) => {
       const trigger = event.target.closest('a[href="#ask-mantosh"], [data-open-ask-mantosh]');
       if (!trigger) return;
