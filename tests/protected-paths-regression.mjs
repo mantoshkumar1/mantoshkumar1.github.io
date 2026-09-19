@@ -24,6 +24,7 @@ function validateWorkflow(content) {
   const eventTokens = eventList
     .split(',')
     .map(e => e.trim())
+    .map(e => e.replace(/^['\"]|['\"]$/g, ''))  // Strip surrounding quotes
     .filter(e => e.length > 0);
 
   // Check 1: All required events must be present as exact tokens
@@ -79,6 +80,7 @@ requiredEvents.forEach(eventToRemove => {
   const eventTokens = eventList
     .split(',')
     .map(e => e.trim())
+    .map(e => e.replace(/^['\"]|['\"]$/g, ''))  // Strip surrounding quotes
     .filter(e => e.length > 0);
 
   const reducedTokens = eventTokens.filter(e => e !== eventToRemove);
