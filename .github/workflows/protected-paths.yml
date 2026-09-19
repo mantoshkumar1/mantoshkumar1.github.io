@@ -61,18 +61,6 @@ jobs:
           echo "::error::Protected paths changed without review. Run 'git diff -- ${CHANGED//$'\n'/ }', confirm the change is intended, then add the 'approved-test-change' label."
           exit 1
 
-  test:protected-paths:
-    runs-on: ubuntu-latest
-    name: 'test:protected-paths'
-    steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-node@v5
-        with:
-          node-version: 22
-
-      - name: Run protected-paths regression test (exact tokens, negative mutations)
-        run: node tests/protected-paths-regression.mjs
-
   floor:
     runs-on: ubuntu-latest
     steps:

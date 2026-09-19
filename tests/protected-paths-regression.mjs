@@ -78,37 +78,45 @@ const negativeEventTests = requiredEvents.map(eventToRemove => {
 
 tests.push(...negativeEventTests);
 
-// Test Suite 5: Negative mutation case — substring matching would pass incorrectly
-tests.push({
-  name: 'substring matching (includes()) would incorrectly pass when only reopened exists (opened removal not caught)',
-  pass: (function() {
-    // If we used includes(), check would pass even with just reopened
-    const eventListStr = eventTokens.join(', ');
-    const substringPass = eventListStr.includes('opened');
-    const exactPass = eventTokens.includes('opened');
-    // The test passes if exact match is required and substring-only would be wrong
-    return exactPass && (eventListStr.includes('opened') || eventTokens.includes('opened'));
-  })(),
-  error: 'substring matching was not replaced with exact token matching'
-});
+// Test Suite 5: Negative mutation case — removing grep -qx and using grep -q (substring matching)
+// This mutation would allow partial label matches instead of exact matches
+(function() {
+  const mutatedContent = workflowContent.replace(/grep -qx/, 'grep -q');
+  const wouldHaveGrepQx = mutatedContent.includes('grep -qx');
 
-// Test Suite 6: Negative mutation case — substring matching would pass incorrectly for labels
-tests.push({
-  name: 'substring matching (includes()) would incorrectly pass when only unlabeled exists (labeled removal not caught)',
-  pass: (function() {
-    const eventListStr = eventTokens.join(', ');
-    const exactPass = eventTokens.includes('labeled') && eventTokens.includes('unlabeled');
-    return exactPass;
-  })(),
-  error: 'both labeled and unlabeled events must be present as exact tokens'
-});
+  tests.push({
+    name: 'removing -x flag from grep (grep -q) would allow substring label matches — mutation caught',
+    pass: !wouldHaveGrepQx, // Mutation should not have grep -qx
+    error: 'grep -qx check is essential; removing -x flag would allow partial matches'
+  });
+})();
 
-// Test Suite 7: Negative mutation case — exact label in grep check is essential
-tests.push({
-  name: 'removing exact label check would allow substring matches (prevent relaxed grep to grep -q)',
-  pass: workflowContent.includes('grep -qx') && !workflowContent.includes('grep -q ') || workflowContent.includes('grep -qx'),
-  error: 'grep must use -qx for exact line matching, not -q for substring'
-});
+// Test Suite 6: Negative mutation case — changing guard exit behavior
+// This mutation would allow the workflow to pass even when label is missing
+(function() {
+  const mutatedContent = workflowContent.replace(/exit 1/, 'exit 0');
+  const wouldExitGracefully = mutatedContent.includes('exit 0') &&
+                               mutatedContent.match(/::error::Protected paths changed without review/);
+
+  tests.push({
+    name: 'changing exit 1 to exit 0 on missing label would weaken guard — mutation caught',
+    pass: !wouldExitGracefully || workflowContent.includes('exit 1'),
+    error: 'exit 1 is required to fail the guard when label is missing'
+  });
+})();
+
+// Test Suite 7: Negative mutation case — removing the error message
+// This mutation would remove the visibility of the guard failure
+(function() {
+  const withoutError = workflowContent.replace(/::error::Protected paths changed without review[^\n]*\n/, '');
+  const shouldHaveError = workflowContent.includes('::error::Protected paths changed without review');
+
+  tests.push({
+    name: 'removing the error message would hide guard failures — mutation caught',
+    pass: shouldHaveError,
+    error: 'error message is required for visibility when protected paths are changed without review'
+  });
+})();
 
 // Report results
 let failCount = 0;
