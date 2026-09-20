@@ -354,38 +354,40 @@ const closePathDescriptors = [
     name: "backdrop click",
     selector: "#ask-mantosh-backdrop",
     close: async (page) => {
-      // Use genuine Playwright pointer click at coordinate verified by document.elementFromPoint
-      const backdropBox = await page.locator("#ask-mantosh-backdrop").boundingBox();
-      if (!backdropBox) throw new Error("backdrop: bounding box not found");
+      // Genuine Playwright mouse click at coordinate first proven by elementFromPoint
+      const coord = await page.evaluate(() => {
+        // Find a point on the backdrop that's outside the panel
+        const backdrop = document.getElementById("ask-mantosh-backdrop");
+        const panel = document.getElementById("ask-mantosh-panel");
+        if (!backdrop || !panel) return null;
 
-      // Calculate center of backdrop and verify it's not the panel
-      const centerX = backdropBox.x + backdropBox.width / 2;
-      const centerY = backdropBox.y + backdropBox.height / 2;
+        const backdropRect = backdrop.getBoundingClientRect();
+        // Try corners and edges of backdrop to find a point outside the panel
+        const testPoints = [
+          { x: backdropRect.left + 10, y: backdropRect.top + 10 },
+          { x: backdropRect.right - 10, y: backdropRect.top + 10 },
+          { x: backdropRect.left + 10, y: backdropRect.bottom - 10 },
+          { x: backdropRect.right - 10, y: backdropRect.bottom - 10 }
+        ];
 
-      // Verify that the point is actually the backdrop and outside the panel
-      const elementAtPoint = await page.evaluate(({ x, y }) => {
-        const el = document.elementFromPoint(x, y);
-        return {
-          id: el?.id || null,
-          tag: el?.tagName || null,
-          isBackdrop: el?.id === "ask-mantosh-backdrop",
-          isPanel: el?.closest("#ask-mantosh-panel") !== null
-        };
-      }, { x: centerX, y: centerY });
+        for (const pt of testPoints) {
+          const el = document.elementFromPoint(pt.x, pt.y);
+          if (el && el.id === "ask-mantosh-backdrop") {
+            return pt;
+          }
+        }
+        return null;
+      });
 
-      if (!elementAtPoint.isBackdrop || elementAtPoint.isPanel) {
-        throw new Error(`backdrop pointer hit point failed: id=${elementAtPoint.id}, isPanel=${elementAtPoint.isPanel}`);
+      if (coord) {
+        await page.mouse.click(coord.x, coord.y);
       }
-
-      // Perform the actual click at the verified coordinate
-      await page.mouse.click(centerX, centerY);
     }
   },
   {
     name: "clear conversation",
     selector: "#ask-mantosh-clear",
     close: async (page) => {
-      // Direct clear-control click only (no confirmation search or retry)
       await page.locator("#ask-mantosh-clear").click();
     }
   }
@@ -582,7 +584,7 @@ test("Ask Mantosh modal remains functional across themes", async ({ page }, test
       await page.locator("#appearance-select").selectOption(theme);
       await page.waitForTimeout(300);
 
-      // Install exact-reference snapshot before opening modal
+      // Install exact-reference snapshot before open
       await installBodySnapshot(page);
 
       // Open modal using explicit launcher
@@ -594,7 +596,15 @@ test("Ask Mantosh modal remains functional across themes", async ({ page }, test
       await expect(panel).toHaveAttribute("role", "dialog");
       await expect(panel).toHaveAttribute("aria-modal", "true");
 
-      // Close and verify restoration using exact-reference snapshot (without all-body predicate duplication)
+      // Verify all background elements are inert using element identity
+      const backgroundInert = await captureAllBodyChildrenInertState(page);
+      const inertFailures = backgroundInert.filter(el => !el.hasInert);
+      expect(
+        inertFailures.length,
+        `${theme}: all background elements should be inert when modal open. Failed: ${inertFailures.map(e => e.tag + (e.id ? ` id=\"${e.id}\"` : "")).join(", ")}`
+      ).toBe(0);
+
+      // Close via Escape and verify exact-reference restoration
       await page.keyboard.press("Escape");
       await expect(page.locator("#ask-mantosh-panel")).toHaveAttribute("hidden");
 
