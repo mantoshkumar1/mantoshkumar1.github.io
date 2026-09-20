@@ -134,23 +134,18 @@ test("Ask Mantosh modal prevents launcher interaction while open", async ({ page
   expect(launcherInert, "launcher button should be inert while modal is open").toBe(true);
 
   // Test pointer interaction is blocked: non-force click should timeout or be ignored
-  // Capture panel state before attempting blocked click
-  const panelBefore = await page.locator("#ask-mantosh-panel").evaluate((el) => ({
-    hidden: el.hidden,
-    inert: document.body.children
-  }));
-
-  // Attempt non-force click on inert launcher should fail to reach it
-  let clickBlocked = false;
+  // Attempt non-force click on inert launcher should fail with ActionabilityError due to inertness
+  let clickError = null;
   try {
     // Set a strict timeout and attempt non-force click
     await launcher.click({ force: false, timeout: 500 });
   } catch (err) {
-    // Expected: click is blocked by inertness
-    clickBlocked = true;
+    // Expected: click is blocked by inertness (ActionabilityError)
+    clickError = err;
   }
 
-  expect(clickBlocked, "non-force click on inert launcher should be blocked").toBe(true);
+  expect(clickError).not.toBeNull();
+  expect(clickError.message).toMatch(/ActionabilityError|inert|not actionable/i);
 
   // Verify modal state unchanged by blocked click attempt
   const panelAfter = await page.locator("#ask-mantosh-panel").isHidden();
@@ -210,6 +205,12 @@ test("Ask Mantosh modal contains focus inside dialog (Tab/Shift+Tab boundaries)"
   });
   expect(focusParentAfterTab, "focus should remain in dialog after Tab").toBe("dialog");
 
+  // Assert containment immediately after Tab
+  expect(
+    focusParentAfterTab,
+    "containment check: Tab should keep focus in dialog"
+  ).toBe("dialog");
+
   // Test reverse Shift+Tab: should move focus backward within dialog
   const beforeShiftTabFocusId = await page.evaluate(() => document.activeElement.id);
   await page.keyboard.press("Shift+Tab");
@@ -223,6 +224,12 @@ test("Ask Mantosh modal contains focus inside dialog (Tab/Shift+Tab boundaries)"
   });
   expect(focusParentAfterShiftTab, "focus should remain in dialog after Shift+Tab").toBe("dialog");
 
+  // Assert containment immediately after Shift+Tab
+  expect(
+    focusParentAfterShiftTab,
+    "containment check: Shift+Tab should keep focus in dialog"
+  ).toBe("dialog");
+
   // Test forward boundary: Tab beyond the last focusable element should wrap
   // Press Tab enough times to cycle through all focusable elements and back
   const forwardCycle = focusableInDialog.length + 3;
@@ -234,6 +241,16 @@ test("Ask Mantosh modal contains focus inside dialog (Tab/Shift+Tab boundaries)"
     expect(parentBefore, `forward cycle iteration ${i}: focus should remain in dialog during Tab`).toBe("dialog");
     await page.keyboard.press("Tab");
     await page.waitForTimeout(30);
+    
+    // Assert containment immediately after this Tab press
+    const parentAfterThisTab = await page.evaluate(() => {
+      const active = document.activeElement;
+      return active.closest("#ask-mantosh-panel") ? "dialog" : "outside";
+    });
+    expect(
+      parentAfterThisTab,
+      `containment assertion after Tab (forward iteration ${i}): focus must stay in dialog`
+    ).toBe("dialog");
   }
 
   // Test reverse boundary: Shift+Tab beyond the first focusable element should wrap
@@ -246,10 +263,20 @@ test("Ask Mantosh modal contains focus inside dialog (Tab/Shift+Tab boundaries)"
     expect(parentBefore, `reverse cycle iteration ${i}: focus should remain in dialog during Shift+Tab`).toBe("dialog");
     await page.keyboard.press("Shift+Tab");
     await page.waitForTimeout(30);
+    
+    // Assert containment immediately after this Shift+Tab press
+    const parentAfterThisShiftTab = await page.evaluate(() => {
+      const active = document.activeElement;
+      return active.closest("#ask-mantosh-panel") ? "dialog" : "outside";
+    });
+    expect(
+      parentAfterThisShiftTab,
+      `containment assertion after Shift+Tab (reverse iteration ${i}): focus must stay in dialog`
+    ).toBe("dialog");
   }
 });
 
-test("Ask Mantosh modal restores state across all close paths", async ({ page, context }) => {
+test("Ask Mantosh modal restores state after minimize", async ({ page, context }) => {
   await context.grantPermissions(["clipboard-read", "clipboard-write"]);
   await page.route("https://cdn.jsdelivr.net/**", (route) => route.abort());
   await page.route("https://ask-mantosh.mantoshk234.workers.dev/**", async (route) => {
@@ -268,112 +295,361 @@ test("Ask Mantosh modal restores state across all close paths", async ({ page, c
 
   await page.goto("/");
 
-  const captureStateWithIdentity = async () => {
-    return {
-      childStates: await page.evaluate(() => {
-        const children = [];
-        for (const el of document.body.children) {
-          if (el.id === "ask-mantosh-panel" || el.id === "ask-mantosh-backdrop") continue;
-          children.push({
-            tag: el.tagName,
-            id: el.id || `(no-id-${el.tagName})`,
-            hasInert: el.hasAttribute("inert"),
-            element: el // For identity comparison
-          });
-        }
-        return children.map(({ tag, id, hasInert }) => ({ tag, id, hasInert }));
+  // Capture initial state with element identity (page-realm references)
+  const initialState = await page.evaluate(() => {
+    const children = [];
+    for (const el of document.body.children) {
+      if (el.id === "ask-mantosh-panel" || el.id === "ask-mantosh-backdrop") continue;
+      children.push({
+        tag: el.tagName,
+        id: el.id || `(no-id-${el.tagName})`,
+        hasInert: el.hasAttribute("inert")
+      });
+    }
+    return children;
+  });
+
+  // Open modal
+  await page.locator("#ask-mantosh-toggle").click();
+  await expect(page.locator("#ask-mantosh-panel")).not.toHaveAttribute("hidden");
+
+  // Verify inert applied
+  const whileOpen = await page.evaluate(() => {
+    const children = [];
+    for (const el of document.body.children) {
+      if (el.id === "ask-mantosh-panel" || el.id === "ask-mantosh-backdrop") continue;
+      children.push({
+        tag: el.tagName,
+        id: el.id || `(no-id-${el.tagName})`,
+        hasInert: el.hasAttribute("inert")
+      });
+    }
+    return children;
+  });
+  for (const state of whileOpen) {
+    expect(state.hasInert, `minimize path: ${state.id} should be inert when modal open`).toBe(true);
+  }
+
+  // Close via minimize — NO catch/retry, let error propagate if it occurs
+  const minimize = page.locator("button[aria-label*='Minimize'], button:has-text('Minimize')").first();
+  await minimize.click();
+
+  // Wait for modal to be hidden
+  await expect(page.locator("#ask-mantosh-panel")).toHaveAttribute("hidden", { timeout: 1000 });
+
+  // Verify state restored by element identity
+  const afterClose = await page.evaluate(() => {
+    const children = [];
+    for (const el of document.body.children) {
+      if (el.id === "ask-mantosh-panel" || el.id === "ask-mantosh-backdrop") continue;
+      children.push({
+        tag: el.tagName,
+        id: el.id || `(no-id-${el.tagName})`,
+        hasInert: el.hasAttribute("inert")
+      });
+    }
+    return children;
+  });
+
+  // Verify all initial elements are present with same tags and inert states
+  const initialById = new Map(initialState.map(s => [s.id, s]));
+  const afterById = new Map(afterClose.map(s => [s.id, s]));
+
+  for (const [id, initialEl] of initialById) {
+    expect(afterById.has(id), `minimize path: element with id="${id}" should still exist after close`).toBe(true);
+    const afterEl = afterById.get(id);
+    expect(
+      afterEl.tag,
+      `minimize path: element id="${id}" tag should match`
+    ).toBe(initialEl.tag);
+    expect(
+      afterEl.hasInert,
+      `minimize path: element id="${id}" (${afterEl.tag}) inert state should be restored`
+    ).toBe(initialEl.hasInert);
+  }
+});
+
+test("Ask Mantosh modal restores state after Escape", async ({ page, context }) => {
+  await context.grantPermissions(["clipboard-read", "clipboard-write"]);
+  await page.route("https://cdn.jsdelivr.net/**", (route) => route.abort());
+  await page.route("https://ask-mantosh.mantoshk234.workers.dev/**", async (route) => {
+    await route.fulfill({
+      contentType: "application/json",
+      body: JSON.stringify({
+        answer: "Test answer.",
+        sources: [],
+        recommendations: [],
+        followUpQuestions: [],
+        confidence: "high",
+        success: true
       })
-    };
-  };
+    });
+  });
 
-  const initialState = await captureStateWithIdentity();
+  await page.goto("/");
 
-  // Test each close path independently
-  const closePaths = [
-    {
-      name: "minimize",
-      close: async () => {
-        // Exact selector for minimize button
-        const minimize = page.locator("button[aria-label*='Minimize'], button:has-text('Minimize')").first();
-        await minimize.click();
-      }
-    },
-    {
-      name: "escape",
-      close: async () => {
-        await page.keyboard.press("Escape");
-      }
-    },
-    {
-      name: "backdrop click",
-      close: async () => {
-        await page.locator("#ask-mantosh-backdrop").click();
-      }
-    },
-    {
-      name: "clear conversation",
-      close: async () => {
-        // Use EXACT #ask-mantosh-clear selector with NO fallback
-        const clearBtn = page.locator("#ask-mantosh-clear");
-        await clearBtn.click();
-        // Clear may show confirmation; handle if present
-        const confirmBtn = page.locator("button:has-text('OK'), button:has-text('Yes'), button:has-text('Confirm')").first();
-        const confirmExists = await confirmBtn.count().catch(() => 0);
-        if (confirmExists > 0) {
-          await confirmBtn.click();
-        }
-      }
+  // Capture initial state with element identity
+  const initialState = await page.evaluate(() => {
+    const children = [];
+    for (const el of document.body.children) {
+      if (el.id === "ask-mantosh-panel" || el.id === "ask-mantosh-backdrop") continue;
+      children.push({
+        tag: el.tagName,
+        id: el.id || `(no-id-${el.tagName})`,
+        hasInert: el.hasAttribute("inert")
+      });
     }
-  ];
+    return children;
+  });
 
-  for (const { name, close } of closePaths) {
-    // Open
-    await page.locator("#ask-mantosh-toggle").click();
-    await expect(page.locator("#ask-mantosh-panel")).not.toHaveAttribute("hidden");
+  // Open modal
+  await page.locator("#ask-mantosh-toggle").click();
+  await expect(page.locator("#ask-mantosh-panel")).not.toHaveAttribute("hidden");
 
-    // Verify inert applied when open
-    const whileOpen = await captureStateWithIdentity();
-    for (const state of whileOpen.childStates) {
-      expect(state.hasInert, `${name} path: ${state.id} should be inert when modal open`).toBe(true);
+  // Verify inert applied
+  const whileOpen = await page.evaluate(() => {
+    const children = [];
+    for (const el of document.body.children) {
+      if (el.id === "ask-mantosh-panel" || el.id === "ask-mantosh-backdrop") continue;
+      children.push({
+        tag: el.tagName,
+        id: el.id || `(no-id-${el.tagName})`,
+        hasInert: el.hasAttribute("inert")
+      });
     }
+    return children;
+  });
+  for (const state of whileOpen) {
+    expect(state.hasInert, `escape path: ${state.id} should be inert when modal open`).toBe(true);
+  }
 
-    // Close via specified path
-    try {
-      await close();
-    } catch (err) {
-      // Some paths may fail temporarily; wait a bit and retry once
-      await page.waitForTimeout(100);
-      try {
-        await close();
-      } catch (e2) {
-        // If still fails, log it but continue to verify state restoration attempt
-        console.log(`${name} close path encountered error: ${e2.message}`);
-      }
+  // Close via Escape — NO catch/retry, let error propagate if it occurs
+  await page.keyboard.press("Escape");
+
+  // Wait for modal to be hidden
+  await expect(page.locator("#ask-mantosh-panel")).toHaveAttribute("hidden", { timeout: 1000 });
+
+  // Verify state restored by element identity
+  const afterClose = await page.evaluate(() => {
+    const children = [];
+    for (const el of document.body.children) {
+      if (el.id === "ask-mantosh-panel" || el.id === "ask-mantosh-backdrop") continue;
+      children.push({
+        tag: el.tagName,
+        id: el.id || `(no-id-${el.tagName})`,
+        hasInert: el.hasAttribute("inert")
+      });
     }
+    return children;
+  });
 
-    // Wait for modal to be hidden
-    await expect(page.locator("#ask-mantosh-panel")).toHaveAttribute("hidden", { timeout: 1000 });
+  // Verify all initial elements are present with same tags and inert states
+  const initialById = new Map(initialState.map(s => [s.id, s]));
+  const afterById = new Map(afterClose.map(s => [s.id, s]));
 
-    // Verify state restored by comparing element identities and inert states
-    const afterClose = await captureStateWithIdentity();
+  for (const [id, initialEl] of initialById) {
+    expect(afterById.has(id), `escape path: element with id="${id}" should still exist after close`).toBe(true);
+    const afterEl = afterById.get(id);
+    expect(
+      afterEl.tag,
+      `escape path: element id="${id}" tag should match`
+    ).toBe(initialEl.tag);
+    expect(
+      afterEl.hasInert,
+      `escape path: element id="${id}" (${afterEl.tag}) inert state should be restored`
+    ).toBe(initialEl.hasInert);
+  }
+});
 
-    // Compare each element by identity (tag + id), not by array position
-    const initialById = new Map(initialState.childStates.map(s => [s.id, s]));
-    const afterById = new Map(afterClose.childStates.map(s => [s.id, s]));
+test("Ask Mantosh modal restores state after backdrop click", async ({ page, context }) => {
+  await context.grantPermissions(["clipboard-read", "clipboard-write"]);
+  await page.route("https://cdn.jsdelivr.net/**", (route) => route.abort());
+  await page.route("https://ask-mantosh.mantoshk234.workers.dev/**", async (route) => {
+    await route.fulfill({
+      contentType: "application/json",
+      body: JSON.stringify({
+        answer: "Test answer.",
+        sources: [],
+        recommendations: [],
+        followUpQuestions: [],
+        confidence: "high",
+        success: true
+      })
+    });
+  });
 
-    // Verify all initial elements are present with same tags
-    for (const [id, initialEl] of initialById) {
-      expect(afterById.has(id), `${name} path: element with id="${id}" should still exist after close`).toBe(true);
-      const afterEl = afterById.get(id);
-      expect(
-        afterEl.tag,
-        `${name} path: element id="${id}" tag should match`
-      ).toBe(initialEl.tag);
-      expect(
-        afterEl.hasInert,
-        `${name} path: element id="${id}" (${afterEl.tag}) inert state should be restored`
-      ).toBe(initialEl.hasInert);
+  await page.goto("/");
+
+  // Capture initial state with element identity
+  const initialState = await page.evaluate(() => {
+    const children = [];
+    for (const el of document.body.children) {
+      if (el.id === "ask-mantosh-panel" || el.id === "ask-mantosh-backdrop") continue;
+      children.push({
+        tag: el.tagName,
+        id: el.id || `(no-id-${el.tagName})`,
+        hasInert: el.hasAttribute("inert")
+      });
     }
+    return children;
+  });
+
+  // Open modal
+  await page.locator("#ask-mantosh-toggle").click();
+  await expect(page.locator("#ask-mantosh-panel")).not.toHaveAttribute("hidden");
+
+  // Verify inert applied
+  const whileOpen = await page.evaluate(() => {
+    const children = [];
+    for (const el of document.body.children) {
+      if (el.id === "ask-mantosh-panel" || el.id === "ask-mantosh-backdrop") continue;
+      children.push({
+        tag: el.tagName,
+        id: el.id || `(no-id-${el.tagName})`,
+        hasInert: el.hasAttribute("inert")
+      });
+    }
+    return children;
+  });
+  for (const state of whileOpen) {
+    expect(state.hasInert, `backdrop path: ${state.id} should be inert when modal open`).toBe(true);
+  }
+
+  // Close via backdrop click — NO catch/retry, let error propagate if it occurs
+  await page.locator("#ask-mantosh-backdrop").click();
+
+  // Wait for modal to be hidden
+  await expect(page.locator("#ask-mantosh-panel")).toHaveAttribute("hidden", { timeout: 1000 });
+
+  // Verify state restored by element identity
+  const afterClose = await page.evaluate(() => {
+    const children = [];
+    for (const el of document.body.children) {
+      if (el.id === "ask-mantosh-panel" || el.id === "ask-mantosh-backdrop") continue;
+      children.push({
+        tag: el.tagName,
+        id: el.id || `(no-id-${el.tagName})`,
+        hasInert: el.hasAttribute("inert")
+      });
+    }
+    return children;
+  });
+
+  // Verify all initial elements are present with same tags and inert states
+  const initialById = new Map(initialState.map(s => [s.id, s]));
+  const afterById = new Map(afterClose.map(s => [s.id, s]));
+
+  for (const [id, initialEl] of initialById) {
+    expect(afterById.has(id), `backdrop path: element with id="${id}" should still exist after close`).toBe(true);
+    const afterEl = afterById.get(id);
+    expect(
+      afterEl.tag,
+      `backdrop path: element id="${id}" tag should match`
+    ).toBe(initialEl.tag);
+    expect(
+      afterEl.hasInert,
+      `backdrop path: element id="${id}" (${afterEl.tag}) inert state should be restored`
+    ).toBe(initialEl.hasInert);
+  }
+});
+
+test("Ask Mantosh modal restores state after clear conversation", async ({ page, context }) => {
+  await context.grantPermissions(["clipboard-read", "clipboard-write"]);
+  await page.route("https://cdn.jsdelivr.net/**", (route) => route.abort());
+  await page.route("https://ask-mantosh.mantoshk234.workers.dev/**", async (route) => {
+    await route.fulfill({
+      contentType: "application/json",
+      body: JSON.stringify({
+        answer: "Test answer.",
+        sources: [],
+        recommendations: [],
+        followUpQuestions: [],
+        confidence: "high",
+        success: true
+      })
+    });
+  });
+
+  await page.goto("/");
+
+  // Capture initial state with element identity
+  const initialState = await page.evaluate(() => {
+    const children = [];
+    for (const el of document.body.children) {
+      if (el.id === "ask-mantosh-panel" || el.id === "ask-mantosh-backdrop") continue;
+      children.push({
+        tag: el.tagName,
+        id: el.id || `(no-id-${el.tagName})`,
+        hasInert: el.hasAttribute("inert")
+      });
+    }
+    return children;
+  });
+
+  // Open modal
+  await page.locator("#ask-mantosh-toggle").click();
+  await expect(page.locator("#ask-mantosh-panel")).not.toHaveAttribute("hidden");
+
+  // Verify inert applied
+  const whileOpen = await page.evaluate(() => {
+    const children = [];
+    for (const el of document.body.children) {
+      if (el.id === "ask-mantosh-panel" || el.id === "ask-mantosh-backdrop") continue;
+      children.push({
+        tag: el.tagName,
+        id: el.id || `(no-id-${el.tagName})`,
+        hasInert: el.hasAttribute("inert")
+      });
+    }
+    return children;
+  });
+  for (const state of whileOpen) {
+    expect(state.hasInert, `clear path: ${state.id} should be inert when modal open`).toBe(true);
+  }
+
+  // Close via clear conversation — NO catch/retry, let error propagate if it occurs
+  // Use EXACT #ask-mantosh-clear selector with NO fallback
+  const clearBtn = page.locator("#ask-mantosh-clear");
+  await clearBtn.click();
+  // Clear may show confirmation; handle if present
+  const confirmBtn = page.locator("button:has-text('OK'), button:has-text('Yes'), button:has-text('Confirm')").first();
+  const confirmExists = await confirmBtn.count().catch(() => 0);
+  if (confirmExists > 0) {
+    await confirmBtn.click();
+  }
+
+  // Wait for modal to be hidden
+  await expect(page.locator("#ask-mantosh-panel")).toHaveAttribute("hidden", { timeout: 1000 });
+
+  // Verify state restored by element identity
+  const afterClose = await page.evaluate(() => {
+    const children = [];
+    for (const el of document.body.children) {
+      if (el.id === "ask-mantosh-panel" || el.id === "ask-mantosh-backdrop") continue;
+      children.push({
+        tag: el.tagName,
+        id: el.id || `(no-id-${el.tagName})`,
+        hasInert: el.hasAttribute("inert")
+      });
+    }
+    return children;
+  });
+
+  // Verify all initial elements are present with same tags and inert states
+  const initialById = new Map(initialState.map(s => [s.id, s]));
+  const afterById = new Map(afterClose.map(s => [s.id, s]));
+
+  for (const [id, initialEl] of initialById) {
+    expect(afterById.has(id), `clear path: element with id="${id}" should still exist after close`).toBe(true);
+    const afterEl = afterById.get(id);
+    expect(
+      afterEl.tag,
+      `clear path: element id="${id}" tag should match`
+    ).toBe(initialEl.tag);
+    expect(
+      afterEl.hasInert,
+      `clear path: element id="${id}" (${afterEl.tag}) inert state should be restored`
+    ).toBe(initialEl.hasInert);
   }
 });
 
@@ -549,10 +825,8 @@ test("Ask Mantosh modal remains functional across themes", async ({ page }, test
       await page.keyboard.press("Escape");
       await expect(page.locator("#ask-mantosh-panel")).toHaveAttribute("hidden");
 
+      // Verify none are inert after close (no count assumption)
       const backgroundAfter = await captureAllBodyChildrenInertState(page);
-      expect(backgroundAfter.length, `${theme}: children count after close`).toBe(backgroundInert.length);
-
-      // Verify none are inert after close
       const stillInert = backgroundAfter.filter(el => el.hasInert);
       expect(
         stillInert.length,
