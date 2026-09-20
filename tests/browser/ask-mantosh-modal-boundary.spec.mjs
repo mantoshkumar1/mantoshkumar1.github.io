@@ -354,21 +354,39 @@ const closePathDescriptors = [
     name: "backdrop click",
     selector: "#ask-mantosh-backdrop",
     close: async (page) => {
-      await page.locator("#ask-mantosh-backdrop").click();
+      // Use genuine Playwright pointer click at coordinate verified by document.elementFromPoint
+      const backdropBox = await page.locator("#ask-mantosh-backdrop").boundingBox();
+      if (!backdropBox) throw new Error("backdrop: bounding box not found");
+
+      // Calculate center of backdrop and verify it's not the panel
+      const centerX = backdropBox.x + backdropBox.width / 2;
+      const centerY = backdropBox.y + backdropBox.height / 2;
+
+      // Verify that the point is actually the backdrop and outside the panel
+      const elementAtPoint = await page.evaluate(({ x, y }) => {
+        const el = document.elementFromPoint(x, y);
+        return {
+          id: el?.id || null,
+          tag: el?.tagName || null,
+          isBackdrop: el?.id === "ask-mantosh-backdrop",
+          isPanel: el?.closest("#ask-mantosh-panel") !== null
+        };
+      }, { x: centerX, y: centerY });
+
+      if (!elementAtPoint.isBackdrop || elementAtPoint.isPanel) {
+        throw new Error(`backdrop pointer hit point failed: id=${elementAtPoint.id}, isPanel=${elementAtPoint.isPanel}`);
+      }
+
+      // Perform the actual click at the verified coordinate
+      await page.mouse.click(centerX, centerY);
     }
   },
   {
     name: "clear conversation",
     selector: "#ask-mantosh-clear",
     close: async (page) => {
-      const clearBtn = page.locator("#ask-mantosh-clear");
-      await clearBtn.click();
-      // Clear may show confirmation; handle if present
-      const confirmBtn = page.locator("button:has-text('OK'), button:has-text('Yes'), button:has-text('Confirm')").first();
-      const confirmExists = (await confirmBtn.count().catch(() => 0)) > 0;
-      if (confirmExists) {
-        await confirmBtn.click();
-      }
+      // Direct clear-control click only (no confirmation search or retry)
+      await page.locator("#ask-mantosh-clear").click();
     }
   }
 ];
@@ -564,6 +582,9 @@ test("Ask Mantosh modal remains functional across themes", async ({ page }, test
       await page.locator("#appearance-select").selectOption(theme);
       await page.waitForTimeout(300);
 
+      // Install exact-reference snapshot before opening modal
+      await installBodySnapshot(page);
+
       // Open modal using explicit launcher
       await page.locator("#ask-mantosh-toggle").click();
       await expect(page.locator("#ask-mantosh-panel")).not.toHaveAttribute("hidden");
@@ -573,25 +594,13 @@ test("Ask Mantosh modal remains functional across themes", async ({ page }, test
       await expect(panel).toHaveAttribute("role", "dialog");
       await expect(panel).toHaveAttribute("aria-modal", "true");
 
-      // Verify all background elements are inert using element identity
-      const backgroundInert = await captureAllBodyChildrenInertState(page);
-      const inertFailures = backgroundInert.filter(el => !el.hasInert);
-      expect(
-        inertFailures.length,
-        `${theme}: all background elements should be inert when modal open. Failed: ${inertFailures.map(e => e.tag + (e.id ? ` id=\"${e.id}\"` : "")).join(", ")}`
-      ).toBe(0);
-
-      // Close and verify restoration WITHOUT duplicating the all-body predicate
+      // Close and verify restoration using exact-reference snapshot (without all-body predicate duplication)
       await page.keyboard.press("Escape");
       await expect(page.locator("#ask-mantosh-panel")).toHaveAttribute("hidden");
 
-      // Verify none are inert after close (no count assumption)
-      const backgroundAfter = await captureAllBodyChildrenInertState(page);
-      const stillInert = backgroundAfter.filter(el => el.hasInert);
-      expect(
-        stillInert.length,
-        `${theme}: background elements should not be inert after modal close. Still inert: ${stillInert.map(e => e.tag + (e.id ? ` id=\"${e.id}\"` : "")).join(", ")}`
-      ).toBe(0);
+      // Verify exact-reference restoration (returns only failure diagnostics, assert empty)
+      const failures = await restoreAndVerify(page);
+      expect(failures, `${theme}: exact-reference restoration`).toEqual([]);
     });
   }
 });
