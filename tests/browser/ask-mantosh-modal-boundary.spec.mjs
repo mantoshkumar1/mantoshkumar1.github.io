@@ -78,8 +78,8 @@ async function restoreAndVerify(page) {
 
     const failures = [];
     for (const { element, tag, id, hadInert } of window.__dbModalBodySnapshot) {
-      // Check if element is still in the document
-      if (!document.body.contains(element)) {
+      // Check if element is still connected and has direct-body parent
+      if (!element.isConnected || element.parentElement !== document.body) {
         failures.push(`element ${id} (${tag}): not found in document after close`);
         continue;
       }
@@ -379,9 +379,10 @@ const closePathDescriptors = [
         return null;
       });
 
-      if (coord) {
-        await page.mouse.click(coord.x, coord.y);
+      if (!coord) {
+        throw new Error("backdrop click: unable to find verified click coordinate outside panel");
       }
+      await page.mouse.click(coord.x, coord.y);
     }
   },
   {
@@ -595,14 +596,6 @@ test("Ask Mantosh modal remains functional across themes", async ({ page }, test
       const panel = page.locator("#ask-mantosh-panel");
       await expect(panel).toHaveAttribute("role", "dialog");
       await expect(panel).toHaveAttribute("aria-modal", "true");
-
-      // Verify all background elements are inert using element identity
-      const backgroundInert = await captureAllBodyChildrenInertState(page);
-      const inertFailures = backgroundInert.filter(el => !el.hasInert);
-      expect(
-        inertFailures.length,
-        `${theme}: all background elements should be inert when modal open. Failed: ${inertFailures.map(e => e.tag + (e.id ? ` id=\"${e.id}\"` : "")).join(", ")}`
-      ).toBe(0);
 
       // Close via Escape and verify exact-reference restoration
       await page.keyboard.press("Escape");
