@@ -241,8 +241,9 @@ test("Ask Mantosh modal contains focus inside dialog (Tab/Shift+Tab boundaries)"
   await expect(page.locator("#ask-mantosh-input")).toBeFocused();
 
   // Derive actual enabled, visible, keyboard-tabbable dialog descendants
+  // Store actual element references in page realm for object-identity comparison
   const tabbables = await page.locator("#ask-mantosh-panel").evaluate((panel) => {
-    const selector = "button, [href], input, select, textarea, [tabindex]:not([tabindex='-1'])";
+    const selector = "button, [href], input, select, textarea, [tabindex]";
     const candidates = Array.from(panel.querySelectorAll(selector));
 
     // Filter to only enabled, visible, keyboard-tabbable elements
@@ -266,20 +267,19 @@ test("Ask Mantosh modal contains focus inside dialog (Tab/Shift+Tab boundaries)"
         parent = parent.parentElement;
       }
 
-      // Check computed tabIndex (negative means not tabbable via Tab key)
-      const tabindex = el.getAttribute("tabindex");
-      if (tabindex !== null) {
-        const tabindexNum = parseInt(tabindex, 10);
-        if (tabindexNum < 0) return false;
-      }
+      // Enforce element.tabIndex >= 0 for actual keyboard tabbability
+      if (el.tabIndex < 0) return false;
 
       return true;
     });
 
+    // Store actual page-realm element references (no ID serialization or refind)
+    window.__dbFocusTestTabbables = tabbableElements;
+
     return tabbableElements.map((el, idx) => ({
+      index: idx,
       id: el.id || `(no-id-${el.tagName})`,
       tag: el.tagName,
-      index: idx,
       text: el.textContent?.substring(0, 20) || ""
     }));
   });
@@ -288,37 +288,63 @@ test("Ask Mantosh modal contains focus inside dialog (Tab/Shift+Tab boundaries)"
   expect(tabbables.length >= 2, "dialog should have at least two enabled, visible, keyboard-tabbable elements").toBe(true);
 
   // Prove exact last→first on Tab
-  // Focus the last tabbable element
+  // Focus the last tabbable element by actual reference (not ID lookup/refind)
   const lastTabbable = tabbables[tabbables.length - 1];
-  await page.evaluate((id) => {
-    const el = document.getElementById(id) || document.querySelector(`[id="${id}"]`);
-    if (el) el.focus();
-  }, lastTabbable.id);
+  await page.evaluate((lastIndex) => {
+    const tabbables = window.__dbFocusTestTabbables;
+    if (tabbables && tabbables[lastIndex]) {
+      tabbables[lastIndex].focus();
+    }
+  }, lastTabbable.index);
 
-  // Verify the last element is focused
-  let currentFocusId = await page.evaluate(() => document.activeElement.id || "(no-id)");
-  expect(currentFocusId, "should focus the last tabbable element").toBe(lastTabbable.id);
+  // Verify the last element is focused by actual reference
+  const focusedLastRef = await page.evaluate(() => {
+    const tabbables = window.__dbFocusTestTabbables;
+    if (!tabbables) return null;
+    const activeEl = document.activeElement;
+    return tabbables.indexOf(activeEl);
+  });
+  expect(focusedLastRef, "should focus the last tabbable element by object identity").toBe(lastTabbable.index);
 
   // Press Tab from last → should cycle to first
   await page.keyboard.press("Tab");
 
   const firstTabbable = tabbables[0];
-  const focusAfterTabFromLast = await page.evaluate(() => document.activeElement.id || "(no-id)");
-  expect(focusAfterTabFromLast, "Tab from last tabbable should cycle to first tabbable").toBe(firstTabbable.id);
+  const focusAfterTabFromLastRef = await page.evaluate(() => {
+    const tabbables = window.__dbFocusTestTabbables;
+    if (!tabbables) return -1;
+    const activeEl = document.activeElement;
+    return tabbables.indexOf(activeEl);
+  });
+  expect(focusAfterTabFromLastRef, "Tab from last tabbable should cycle to first tabbable").toBe(firstTabbable.index);
+
+  // Verify movement and containment
+  const isInPanel = await page.evaluate(() => {
+    const panel = document.getElementById("ask-mantosh-panel");
+    const activeEl = document.activeElement;
+    return activeEl.closest("#ask-mantosh-panel") === panel;
+  });
+  expect(isInPanel, "focus must remain in dialog after Tab wrap").toBe(true);
 
   // Prove exact first→last on Shift+Tab
   // Already at first tabbable, so press Shift+Tab → should cycle to last
   await page.keyboard.press("Shift+Tab");
 
-  const focusAfterShiftTabFromFirst = await page.evaluate(() => document.activeElement.id || "(no-id)");
-  expect(focusAfterShiftTabFromFirst, "Shift+Tab from first tabbable should cycle to last tabbable").toBe(lastTabbable.id);
+  const focusAfterShiftTabFromFirstRef = await page.evaluate(() => {
+    const tabbables = window.__dbFocusTestTabbables;
+    if (!tabbables) return -1;
+    const activeEl = document.activeElement;
+    return tabbables.indexOf(activeEl);
+  });
+  expect(focusAfterShiftTabFromFirstRef, "Shift+Tab from first tabbable should cycle to last tabbable").toBe(lastTabbable.index);
 
   // Verify containment throughout cycling
-  const containmentTest = await page.evaluate(() => {
-    const active = document.activeElement;
-    return active.closest("#ask-mantosh-panel") ? "dialog" : "outside";
+  const finalContainmentTest = await page.evaluate(() => {
+    const panel = document.getElementById("ask-mantosh-panel");
+    const activeEl = document.activeElement;
+    return activeEl.closest("#ask-mantosh-panel") === panel;
   });
-  expect(containmentTest, "focus must remain in dialog during exact cycling").toBe("dialog");
+  expect(finalContainmentTest, "focus must remain in dialog during exact cycling").toBe(true);
 });
 
 // Close-path test descriptors (R68 mechanical harness normalization)
