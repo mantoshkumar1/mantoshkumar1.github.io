@@ -321,7 +321,7 @@ class AskMantoshApp {
     form.addEventListener("submit", (event) => { event.preventDefault(); this.ask(input.value); });
     suggestions.addEventListener("click", (event) => { const button = event.target.closest("[data-suggestion]"); if (button) this.ask(button.dataset.suggestion); });
     input.addEventListener("input", () => this.resize()); input.addEventListener("keydown", (event) => { if (event.key === "Enter" && !event.shiftKey) { event.preventDefault(); this.ask(input.value); } });
-    document.addEventListener("keydown", (event) => { if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") { event.preventDefault(); this.open(); } if (event.key === "Escape" && !panel.hidden) this.close(); });
+    document.addEventListener("keydown", (event) => { if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") { event.preventDefault(); this.open(); } if (event.key === "Escape" && !panel.hasAttribute("hidden")) this.close(); });
     panel.addEventListener("keydown", (event) => this.trapFocus(event));
     this.view.onAsk = (question) => this.ask(question);
     this.view.onRetry = (messageId) => this.retry(messageId);
@@ -330,10 +330,10 @@ class AskMantoshApp {
     this.resize();
   }
   open() {
-    if (this.elements.panel.hidden) {
+    if (this.elements.panel.hasAttribute("hidden")) {
       this.previousFocus = document.activeElement;
-      this.elements.panel.hidden = false;
-      this.elements.backdrop.hidden = false;
+      this.elements.panel.removeAttribute("hidden");
+      this.elements.backdrop.removeAttribute("hidden");
       document.body.classList.add("ask-mantosh-open");
       this.elements.toggle.setAttribute("aria-expanded", "true");
       // Snapshot all direct body children except panel and backdrop, including prior inert state
@@ -350,9 +350,9 @@ class AskMantoshApp {
     }
   }
   close() {
-    if (!this.elements.panel.hidden) {
-      this.elements.panel.hidden = true;
-      this.elements.backdrop.hidden = true;
+    if (!this.elements.panel.hasAttribute("hidden")) {
+      this.elements.panel.setAttribute("hidden", "");
+      this.elements.backdrop.setAttribute("hidden", "");
       document.body.classList.remove("ask-mantosh-open");
       this.elements.toggle.setAttribute("aria-expanded", "false");
       // Restore exact prior inert state on each background element
