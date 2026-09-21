@@ -43,7 +43,7 @@ function verifyAllInertState(elements, expectedInert, context) {
   if (failures.length > 0) {
     throw new Error(
       `${context}: Found ${failures.length} element(s) with unexpected inert state:\n` +
-      failures.map(el => `  ${el.tag}${el.id ? ` id="${el.id}"` : ""} inert=${el.hasInert} (expected ${expectedInert})`).join("\n")
+      failures.map(el => `  ${el.tag}${el.id ? ` id=\"${el.id}\"` : ""} inert=${el.hasInert} (expected ${expectedInert})`).join("\n")
     );
   }
 }
@@ -156,7 +156,7 @@ test("Ask Mantosh modal makes all non-dialog direct body children inert while op
   for (let i = 0; i < initialState.length; i++) {
     expect(
       afterClose[i].hasInert,
-      `restore: ${afterClose[i].tag}${afterClose[i].id ? ` id="${afterClose[i].id}"` : ""} inert state`
+      `restore: ${afterClose[i].tag}${afterClose[i].id ? ` id=\"${afterClose[i].id}\"` : ""} inert state`
     ).toBe(initialState[i].hasInert);
   }
 });
@@ -258,6 +258,21 @@ test("Ask Mantosh modal contains focus inside dialog (Tab/Shift+Tab boundaries)"
       const rect = el.getBoundingClientRect();
       if (rect.width === 0 || rect.height === 0) return false;
 
+      // Check if element or ancestor is inert
+      if (el.hasAttribute("inert")) return false;
+      let parent = el.parentElement;
+      while (parent && parent !== panel) {
+        if (parent.hasAttribute("inert")) return false;
+        parent = parent.parentElement;
+      }
+
+      // Check computed tabIndex (negative means not tabbable via Tab key)
+      const tabindex = el.getAttribute("tabindex");
+      if (tabindex !== null) {
+        const tabindexNum = parseInt(tabindex, 10);
+        if (tabindexNum < 0) return false;
+      }
+
       return true;
     });
 
@@ -286,7 +301,6 @@ test("Ask Mantosh modal contains focus inside dialog (Tab/Shift+Tab boundaries)"
 
   // Press Tab from last → should cycle to first
   await page.keyboard.press("Tab");
-  await page.waitForTimeout(50);
 
   const firstTabbable = tabbables[0];
   const focusAfterTabFromLast = await page.evaluate(() => document.activeElement.id || "(no-id)");
@@ -295,7 +309,6 @@ test("Ask Mantosh modal contains focus inside dialog (Tab/Shift+Tab boundaries)"
   // Prove exact first→last on Shift+Tab
   // Already at first tabbable, so press Shift+Tab → should cycle to last
   await page.keyboard.press("Shift+Tab");
-  await page.waitForTimeout(50);
 
   const focusAfterShiftTabFromFirst = await page.evaluate(() => document.activeElement.id || "(no-id)");
   expect(focusAfterShiftTabFromFirst, "Shift+Tab from first tabbable should cycle to last tabbable").toBe(lastTabbable.id);
