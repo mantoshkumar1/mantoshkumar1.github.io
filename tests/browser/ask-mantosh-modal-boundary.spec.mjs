@@ -43,7 +43,7 @@ function verifyAllInertState(elements, expectedInert, context) {
   if (failures.length > 0) {
     throw new Error(
       `${context}: Found ${failures.length} element(s) with unexpected inert state:\n` +
-      failures.map(el => `  ${el.tag}${el.id ? ` id=\"${el.id}\"` : ""} inert=${el.hasInert} (expected ${expectedInert})`).join("\n")
+      failures.map(el => `  ${el.tag}${el.id ? ` id="${el.id}"` : ""} inert=${el.hasInert} (expected ${expectedInert})`).join("\n")
     );
   }
 }
@@ -156,7 +156,7 @@ test("Ask Mantosh modal makes all non-dialog direct body children inert while op
   for (let i = 0; i < initialState.length; i++) {
     expect(
       afterClose[i].hasInert,
-      `restore: ${afterClose[i].tag}${afterClose[i].id ? ` id=\"${afterClose[i].id}\"` : ""} inert state`
+      `restore: ${afterClose[i].tag}${afterClose[i].id ? ` id="${afterClose[i].id}"` : ""} inert state`
     ).toBe(initialState[i].hasInert);
   }
 });
@@ -240,98 +240,72 @@ test("Ask Mantosh modal contains focus inside dialog (Tab/Shift+Tab boundaries)"
   await expect(page.locator("#ask-mantosh-panel")).not.toHaveAttribute("hidden");
   await expect(page.locator("#ask-mantosh-input")).toBeFocused();
 
-  // Get all focusable elements within the dialog
-  const focusableInDialog = await page.locator("#ask-mantosh-panel").evaluate((panel) => {
+  // Derive actual enabled, visible, keyboard-tabbable dialog descendants
+  const tabbables = await page.locator("#ask-mantosh-panel").evaluate((panel) => {
     const selector = "button, [href], input, select, textarea, [tabindex]:not([tabindex='-1'])";
-    const elements = Array.from(panel.querySelectorAll(selector));
-    return elements.map(el => ({ id: el.id, tag: el.tagName, text: el.textContent?.substring(0, 20) || "" }));
+    const candidates = Array.from(panel.querySelectorAll(selector));
+
+    // Filter to only enabled, visible, keyboard-tabbable elements
+    const tabbableElements = candidates.filter(el => {
+      // Check if disabled
+      if (el.hasAttribute("disabled") || el.getAttribute("aria-disabled") === "true") return false;
+
+      // Check if hidden or display: none
+      const style = window.getComputedStyle(el);
+      if (style.display === "none" || style.visibility === "hidden") return false;
+
+      // Check if element is in the document and visible
+      const rect = el.getBoundingClientRect();
+      if (rect.width === 0 || rect.height === 0) return false;
+
+      return true;
+    });
+
+    return tabbableElements.map((el, idx) => ({
+      id: el.id || `(no-id-${el.tagName})`,
+      tag: el.tagName,
+      index: idx,
+      text: el.textContent?.substring(0, 20) || ""
+    }));
   });
 
-  expect(focusableInDialog.length > 0, "dialog should have focusable elements").toBe(true);
+  // Assert at least two tabbable elements
+  expect(tabbables.length >= 2, "dialog should have at least two enabled, visible, keyboard-tabbable elements").toBe(true);
 
-  // Test forward Tab: should cycle through dialog focusable elements
-  const initialFocusId = await page.evaluate(() => document.activeElement.id);
+  // Prove exact last→first on Tab
+  // Focus the last tabbable element
+  const lastTabbable = tabbables[tabbables.length - 1];
+  await page.evaluate((id) => {
+    const el = document.getElementById(id) || document.querySelector(`[id="${id}"]`);
+    if (el) el.focus();
+  }, lastTabbable.id);
+
+  // Verify the last element is focused
+  let currentFocusId = await page.evaluate(() => document.activeElement.id || "(no-id)");
+  expect(currentFocusId, "should focus the last tabbable element").toBe(lastTabbable.id);
+
+  // Press Tab from last → should cycle to first
   await page.keyboard.press("Tab");
   await page.waitForTimeout(50);
-  const afterTabFocusId = await page.evaluate(() => document.activeElement.id);
 
-  // Verify focus moved to next element within dialog
-  expect(afterTabFocusId, "forward Tab should move focus within dialog").not.toBe("");
-  const focusParentAfterTab = await page.evaluate(() => {
-    const active = document.activeElement;
-    return active.closest("#ask-mantosh-panel") ? "dialog" : "outside";
-  });
-  expect(focusParentAfterTab, "focus should remain in dialog after Tab").toBe("dialog");
+  const firstTabbable = tabbables[0];
+  const focusAfterTabFromLast = await page.evaluate(() => document.activeElement.id || "(no-id)");
+  expect(focusAfterTabFromLast, "Tab from last tabbable should cycle to first tabbable").toBe(firstTabbable.id);
 
-  // Assert containment immediately after Tab
-  expect(
-    focusParentAfterTab,
-    "containment check: Tab should keep focus in dialog"
-  ).toBe("dialog");
-
-  // Test reverse Shift+Tab: should move focus backward within dialog
-  const beforeShiftTabFocusId = await page.evaluate(() => document.activeElement.id);
+  // Prove exact first→last on Shift+Tab
+  // Already at first tabbable, so press Shift+Tab → should cycle to last
   await page.keyboard.press("Shift+Tab");
   await page.waitForTimeout(50);
-  const afterShiftTabFocusId = await page.evaluate(() => document.activeElement.id);
 
-  // Focus should move, likely back to initial element or previous in tab order
-  const focusParentAfterShiftTab = await page.evaluate(() => {
+  const focusAfterShiftTabFromFirst = await page.evaluate(() => document.activeElement.id || "(no-id)");
+  expect(focusAfterShiftTabFromFirst, "Shift+Tab from first tabbable should cycle to last tabbable").toBe(lastTabbable.id);
+
+  // Verify containment throughout cycling
+  const containmentTest = await page.evaluate(() => {
     const active = document.activeElement;
     return active.closest("#ask-mantosh-panel") ? "dialog" : "outside";
   });
-  expect(focusParentAfterShiftTab, "focus should remain in dialog after Shift+Tab").toBe("dialog");
-
-  // Assert containment immediately after Shift+Tab
-  expect(
-    focusParentAfterShiftTab,
-    "containment check: Shift+Tab should keep focus in dialog"
-  ).toBe("dialog");
-
-  // Test forward boundary: Tab beyond the last focusable element should wrap
-  // Press Tab enough times to cycle through all focusable elements and back
-  const forwardCycle = focusableInDialog.length + 3;
-  for (let i = 0; i < forwardCycle; i++) {
-    const parentBefore = await page.evaluate(() => {
-      const active = document.activeElement;
-      return active.closest("#ask-mantosh-panel") ? "dialog" : "outside";
-    });
-    expect(parentBefore, `forward cycle iteration ${i}: focus should remain in dialog during Tab`).toBe("dialog");
-    await page.keyboard.press("Tab");
-    await page.waitForTimeout(30);
-
-    // Assert containment immediately after this Tab press
-    const parentAfterThisTab = await page.evaluate(() => {
-      const active = document.activeElement;
-      return active.closest("#ask-mantosh-panel") ? "dialog" : "outside";
-    });
-    expect(
-      parentAfterThisTab,
-      `containment assertion after Tab (forward iteration ${i}): focus must stay in dialog`
-    ).toBe("dialog");
-  }
-
-  // Test reverse boundary: Shift+Tab beyond the first focusable element should wrap
-  const reverseCycle = focusableInDialog.length + 3;
-  for (let i = 0; i < reverseCycle; i++) {
-    const parentBefore = await page.evaluate(() => {
-      const active = document.activeElement;
-      return active.closest("#ask-mantosh-panel") ? "dialog" : "outside";
-    });
-    expect(parentBefore, `reverse cycle iteration ${i}: focus should remain in dialog during Shift+Tab`).toBe("dialog");
-    await page.keyboard.press("Shift+Tab");
-    await page.waitForTimeout(30);
-
-    // Assert containment immediately after this Shift+Tab press
-    const parentAfterThisShiftTab = await page.evaluate(() => {
-      const active = document.activeElement;
-      return active.closest("#ask-mantosh-panel") ? "dialog" : "outside";
-    });
-    expect(
-      parentAfterThisShiftTab,
-      `containment assertion after Shift+Tab (reverse iteration ${i}): focus must stay in dialog`
-    ).toBe("dialog");
-  }
+  expect(containmentTest, "focus must remain in dialog during exact cycling").toBe("dialog");
 });
 
 // Close-path test descriptors (R68 mechanical harness normalization)
