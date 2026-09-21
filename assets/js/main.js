@@ -233,7 +233,7 @@ class ConversationView {
       const related = this.relatedReading(message);
       if (related.length) meta.insertAdjacentHTML("beforeend", `<section class=\"ask-mantosh-related\"><h4>Related reading</h4><div class=\"ask-mantosh-reading-list\">${related.map((item) => `<a href=\"${this.safeUrl(item.url)}\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"ask-mantosh-reading-link\"><span>${this.escape(item.category || "Read")}</span><strong>${this.escape(item.title)}</strong><span aria-hidden=\"true\">→</span></a>`).join("")}</div></section>`);
       if (message.sources?.length) {
-        const sourceList = message.sources.map((source) => `<a class=\"ask-mantosh-source\" href=\"${this.safeUrl(source.url)}\" target=\"_blank\" rel=\"noopener noreferrer\" data-summary=\"${this.escape(source.summary || "Published engineering knowledge")}\"><span aria-hidden=\"true\">✓</span><span>${this.escape(source.label)}</span></a>`).join("");
+        const sourceList = message.sources.map((source) => `<a class=\"ask-mantosh-source\" href=\"${this.safeUrl(source.url)}\" target=\"_blank\" rel=\"noopener noreferrer\" data-summary=\"${this.escape(source.summary || "Published engineering knowledge\")}\"><span aria-hidden=\"true\">✓</span><span>${this.escape(source.label)}</span></a>`).join("");
         meta.insertAdjacentHTML("beforeend", `<footer class=\"ask-mantosh-sources\"><h4>Grounded in</h4><div>${sourceList}</div></footer>`);
       }
     }
@@ -337,11 +337,9 @@ class AskMantoshApp {
       document.body.classList.add("ask-mantosh-open");
       this.elements.toggle.setAttribute("aria-expanded", "true");
       // Snapshot all direct body children except panel and backdrop, including prior inert state
-      // Skip script, style, and other non-interactive elements
       this.priorInertStates = [];
       for (const child of document.body.children) {
         if (child.id === "ask-mantosh-panel" || child.id === "ask-mantosh-backdrop") continue;
-        if (child.tagName === "SCRIPT" || child.tagName === "STYLE" || child.tagName === "SPAN") continue;
         this.priorInertStates.push({
           element: child,
           hadInert: child.hasAttribute("inert")
