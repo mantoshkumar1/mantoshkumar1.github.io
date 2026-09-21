@@ -43,7 +43,7 @@ function verifyAllInertState(elements, expectedInert, context) {
   if (failures.length > 0) {
     throw new Error(
       `${context}: Found ${failures.length} element(s) with unexpected inert state:\n` +
-      failures.map(el => `  ${el.tag}${el.id ? ` id=\"${el.id}\"` : ""} inert=${el.hasInert} (expected ${expectedInert})`).join("\n")
+      failures.map(el => `  ${el.tag}${el.id ? ` id="${el.id}"` : ""} inert=${el.hasInert} (expected ${expectedInert})`).join("\n")
     );
   }
 }
@@ -59,6 +59,7 @@ async function installBodySnapshot(page) {
       .map((element) => ({
         element,
         tag: element.tagName,
+        id: element.id || `(no-id-${element.tagName})`,
         hadInert: element.hasAttribute("inert")
       }));
   });
@@ -76,22 +77,28 @@ async function restoreAndVerify(page) {
     }
 
     const failures = [];
-    for (const { element, tag, hadInert } of window.__dbModalBodySnapshot) {
+    for (const { element, tag, id, hadInert } of window.__dbModalBodySnapshot) {
       // Check if element is still connected and has direct-body parent
       if (!element.isConnected || element.parentElement !== document.body) {
-        failures.push(`element (${tag}): not found in document after close`);
+        failures.push(`element ${id} (${tag}): not found in document after close`);
         continue;
       }
 
       // Check if tag changed
       if (element.tagName !== tag) {
-        failures.push(`element (${tag}): tag changed from ${tag} to ${element.tagName}`);
+        failures.push(`element ${id}: tag changed from ${tag} to ${element.tagName}`);
+      }
+
+      // Check if ID changed
+      const currentId = element.id || `(no-id-${element.tagName})`;
+      if (currentId !== id) {
+        failures.push(`element ${id}: ID changed to ${currentId}`);
       }
 
       // Check if inert state was restored correctly
       const currentInert = element.hasAttribute("inert");
       if (currentInert !== hadInert) {
-        failures.push(`element (${tag}): inert state not restored (expected ${hadInert}, got ${currentInert})`);
+        failures.push(`element ${id} (${tag}): inert state not restored (expected ${hadInert}, got ${currentInert})`);
       }
     }
 
@@ -149,7 +156,7 @@ test("Ask Mantosh modal makes all non-dialog direct body children inert while op
   for (let i = 0; i < initialState.length; i++) {
     expect(
       afterClose[i].hasInert,
-      `restore: ${afterClose[i].tag}${afterClose[i].id ? ` id=\"${afterClose[i].id}\"` : ""} inert state`
+      `restore: ${afterClose[i].tag}${afterClose[i].id ? ` id="${afterClose[i].id}"` : ""} inert state`
     ).toBe(initialState[i].hasInert);
   }
 });
