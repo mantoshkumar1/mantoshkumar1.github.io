@@ -278,6 +278,7 @@ test("Ask Mantosh modal contains focus inside dialog (Tab/Shift+Tab boundaries)"
 
     return tabbableElements.map((el, idx) => ({
       index: idx,
+      id: el.id || `(no-id-${el.tagName})`,
       tag: el.tagName,
       text: el.textContent?.substring(0, 20) || ""
     }));
