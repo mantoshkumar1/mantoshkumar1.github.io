@@ -336,19 +336,16 @@ class AskMantoshApp {
       this.elements.backdrop.hidden = false;
       document.body.classList.add("ask-mantosh-open");
       this.elements.toggle.setAttribute("aria-expanded", "true");
-      // Snapshot all direct body children except panel and backdrop, including prior inert state
-      // Skip script, style, and other non-interactive elements
       this.priorInertStates = [];
       for (const child of document.body.children) {
-        if (child.id === "ask-mantosh-panel" || child.id === "ask-mantosh-backdrop") continue;
-        if (child.tagName === "SCRIPT" || child.tagName === "STYLE" || child.tagName === "SPAN") continue;
+        if (child === this.elements.panel || child === this.elements.backdrop) continue;
         this.priorInertStates.push({
           element: child,
-          hadInert: child.hasAttribute("inert")
+          priorInert: child.getAttribute("inert")
         });
         child.setAttribute("inert", "");
       }
-      requestAnimationFrame(() => this.elements.input.focus());
+      requestAnimationFrame(() => { if (!this.elements.panel.hidden) this.elements.input.focus(); });
     }
   }
   close() {
@@ -357,14 +354,11 @@ class AskMantoshApp {
       this.elements.backdrop.hidden = true;
       document.body.classList.remove("ask-mantosh-open");
       this.elements.toggle.setAttribute("aria-expanded", "false");
-      // Restore exact prior inert state on each background element
-      if (this.priorInertStates) {
-        for (const { element, hadInert } of this.priorInertStates) {
-          if (!hadInert) {
-            element.removeAttribute("inert");
-          }
-        }
+      for (const { element, priorInert } of this.priorInertStates || []) {
+        if (priorInert === null) element.removeAttribute("inert");
+        else element.setAttribute("inert", priorInert);
       }
+      this.priorInertStates = null;
       this.previousFocus?.focus?.();
     }
   }
@@ -414,11 +408,24 @@ class AskMantoshApp {
   }
   trapFocus(event) {
     if (event.key !== "Tab") return;
-    const focusable = [...this.elements.panel.querySelectorAll("button:not([disabled]), a[href], textarea:not([disabled])")];
-    if (!focusable.length) return;
+    const panel = this.elements.panel;
+    const selector = "button, [href], input, select, textarea, [tabindex]";
+    const focusable = [...panel.querySelectorAll(selector)].filter((element) => {
+      if (element.matches(":disabled") || element.getAttribute("aria-disabled") === "true") return false;
+      if (element.closest("[hidden], [inert]")) return false;
+      const style = window.getComputedStyle(element);
+      if (style.display === "none" || style.visibility === "hidden") return false;
+      const rect = element.getBoundingClientRect();
+      return rect.width > 0 && rect.height > 0 && element.tabIndex >= 0;
+    });
+    if (!focusable.length) { event.preventDefault(); panel.focus(); return; }
     const first = focusable[0]; const last = focusable.at(-1);
-    if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
-    if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+    const active = document.activeElement;
+    if (event.shiftKey && (active === first || !panel.contains(active))) {
+      event.preventDefault(); last.focus();
+    } else if (!event.shiftKey && (active === last || !panel.contains(active))) {
+      event.preventDefault(); first.focus();
+    }
   }
   resize() { const { input } = this.elements; input.style.height = "auto"; input.style.height = `${Math.min(input.scrollHeight, 150)}px`; }
   add(role, text, extra = {}) { const message = { id: ++this.id, role, text, ...extra }; this.messages.push(message); this.view.add(message); this.saveSession(); return message; }
