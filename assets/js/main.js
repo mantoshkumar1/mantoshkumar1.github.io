@@ -259,7 +259,7 @@ class ConversationView {
     const visible = compact ? this.followUps.slice(0, 1) : this.followUps;
     this.suggestions.hidden = !this.followUps.length;
     this.suggestions.classList.toggle("is-compact", compact && visible.length > 0);
-    this.suggestions.innerHTML = `<div>${visible.map((question) => `<button class=\"ask-mantosh-chip${compact ? \" ask-mantosh-next\" : \"\"}\" type=\"button\" data-suggestion=\"${this.escape(question)}\">${compact ? '<span class=\"ask-mantosh-next-label\">Next question</span>' : ""}<span>${this.escape(question)}</span>${compact ? '<span aria-hidden=\"true\">→</span>' : ""}</button>`).join("")}</div>`;
+    this.suggestions.innerHTML = `<div>${visible.map((question) => `<button class=\"ask-mantosh-chip${compact ? " ask-mantosh-next" : ""}\" type=\"button\" data-suggestion=\"${this.escape(question)}\">${compact ? '<span class="ask-mantosh-next-label">Next question</span>' : ""}<span>${this.escape(question)}</span>${compact ? '<span aria-hidden="true">→</span>' : ""}</button>`).join("")}</div>`;
     this.onAsk = onAsk;
   }
   handleAction(event) {
@@ -502,7 +502,7 @@ class AskMantoshApp {
     this.view.setStatus("");
   }
   stripResponseSections(text) { return text.replace(/\n*##\s+(?:Sources|Follow-up Questions)\s*\n[\s\S]*$/i, "").trim(); }
-  followUps(text) { const match = /^##\s+Follow-up Questions\s*$(\s\S]*?)(?=^##\s+|$)/im.exec(text); return match ? match[1].split("\n").map((line) => line.replace(/^\s*(?:[-*]|\d+[.)])\s+/, "").trim()).filter((line) => line.endsWith("?")).slice(0, 3) : []; }
+  followUps(text) { const match = /^##\s+Follow-up Questions\s*$([\s\S]*?)(?=^##\s+|$)/im.exec(text); return match ? match[1].split("\n").map((line) => line.replace(/^\s*(?:[-*]|\d+[.)])\s+/, "").trim()).filter((line) => line.endsWith("?")).slice(0, 3) : []; }
   usableFollowUps(questions) {
     return (questions || []).map((question) => String(question || "").trim())
       .filter((question) => question.endsWith("?") && question.length <= 72 && question.split(/\s+/).length <= 12)
