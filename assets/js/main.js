@@ -281,6 +281,7 @@ class AskMantoshApp {
     this.elements = elements; this.messages = []; this.id = 0; this.controller = null; this.generation = 0;
     this.emptyStatusTimer = null;
     this.storageKey = "ask-mantosh-conversation-v1";
+    this.clientScript = document.currentScript;
     this.conversationId = this.newConversationId();
     this.view = new ConversationView({ ...elements, markdown: new MarkdownService() }); this.view.getMessage = (id) => this.messages.find((message) => String(message.id) === String(id));
     this.api = new ChatApi(elements.panel.dataset.apiUrl || window.ASK_MANTOSH_API_URL || "");
@@ -359,6 +360,8 @@ class AskMantoshApp {
         else element.setAttribute("inert", priorInert);
       }
       this.priorInertStates = null;
+      this.clientScript?.remove();
+      this.clientScript = null;
       this.previousFocus?.focus?.();
     }
   }
