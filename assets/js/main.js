@@ -318,6 +318,7 @@ class AskMantoshApp {
   }
   init() {
     const { toggle, exportButton, minimize, clear, backdrop, panel, form, input, send, suggestions } = this.elements;
+    send.style.transitionProperty = "transform";
     toggle.addEventListener("click", () => this.open()); exportButton.addEventListener("click", () => this.exportConversation()); minimize.addEventListener("click", () => this.close()); clear.addEventListener("click", () => this.clearConversation()); backdrop.addEventListener("click", () => this.close());
     form.addEventListener("submit", (event) => { event.preventDefault(); this.ask(input.value); });
     suggestions.addEventListener("click", (event) => { const button = event.target.closest("[data-suggestion]"); if (button) this.ask(button.dataset.suggestion); });
