@@ -281,6 +281,7 @@ class AskMantoshApp {
     this.elements = elements; this.messages = []; this.id = 0; this.controller = null; this.generation = 0;
     this.emptyStatusTimer = null;
     this.storageKey = "ask-mantosh-conversation-v1";
+    this.clientScript = document.currentScript;
     this.conversationId = this.newConversationId();
     this.view = new ConversationView({ ...elements, markdown: new MarkdownService() }); this.view.getMessage = (id) => this.messages.find((message) => String(message.id) === String(id));
     this.api = new ChatApi(elements.panel.dataset.apiUrl || window.ASK_MANTOSH_API_URL || "");
@@ -317,6 +318,7 @@ class AskMantoshApp {
   }
   init() {
     const { toggle, exportButton, minimize, clear, backdrop, panel, form, input, send, suggestions } = this.elements;
+    send.style.transitionProperty = "transform";
     toggle.addEventListener("click", () => this.open()); exportButton.addEventListener("click", () => this.exportConversation()); minimize.addEventListener("click", () => this.close()); clear.addEventListener("click", () => this.clearConversation()); backdrop.addEventListener("click", () => this.close());
     form.addEventListener("submit", (event) => { event.preventDefault(); this.ask(input.value); });
     suggestions.addEventListener("click", (event) => { const button = event.target.closest("[data-suggestion]"); if (button) this.ask(button.dataset.suggestion); });
@@ -329,8 +331,41 @@ class AskMantoshApp {
     this.updateExportAvailability();
     this.resize();
   }
-  open() { if (this.elements.panel.hidden) { this.previousFocus = document.activeElement; this.elements.panel.hidden = false; this.elements.backdrop.hidden = false; document.body.classList.add("ask-mantosh-open"); this.elements.toggle.setAttribute("aria-expanded", "true"); requestAnimationFrame(() => this.elements.input.focus()); } }
-  close() { if (!this.elements.panel.hidden) { this.elements.panel.hidden = true; this.elements.backdrop.hidden = true; document.body.classList.remove("ask-mantosh-open"); this.elements.toggle.setAttribute("aria-expanded", "false"); this.previousFocus?.focus?.(); } }
+  open() {
+    if (this.elements.panel.hidden) {
+      this.previousFocus = document.activeElement;
+      this.elements.panel.hidden = false;
+      this.elements.backdrop.hidden = false;
+      document.body.classList.add("ask-mantosh-open");
+      this.elements.toggle.setAttribute("aria-expanded", "true");
+      this.priorInertStates = [];
+      for (const child of document.body.children) {
+        if (child === this.elements.panel || child === this.elements.backdrop) continue;
+        this.priorInertStates.push({
+          element: child,
+          priorInert: child.getAttribute("inert")
+        });
+        child.setAttribute("inert", "");
+      }
+      requestAnimationFrame(() => { if (!this.elements.panel.hidden) this.elements.input.focus(); });
+    }
+  }
+  close() {
+    if (!this.elements.panel.hidden) {
+      this.elements.panel.hidden = true;
+      this.elements.backdrop.hidden = true;
+      document.body.classList.remove("ask-mantosh-open");
+      this.elements.toggle.setAttribute("aria-expanded", "false");
+      for (const { element, priorInert } of this.priorInertStates || []) {
+        if (priorInert === null) element.removeAttribute("inert");
+        else element.setAttribute("inert", priorInert);
+      }
+      this.priorInertStates = null;
+      this.clientScript?.remove();
+      this.clientScript = null;
+      this.previousFocus?.focus?.();
+    }
+  }
   clearConversation() {
     if (this.messages.length && !window.confirm("Close Ask Mantosh and clear this conversation?")) return;
     this.generation += 1;
@@ -377,11 +412,24 @@ class AskMantoshApp {
   }
   trapFocus(event) {
     if (event.key !== "Tab") return;
-    const focusable = [...this.elements.panel.querySelectorAll("button:not([disabled]), a[href], textarea:not([disabled])")];
-    if (!focusable.length) return;
+    const panel = this.elements.panel;
+    const selector = "button, [href], input, select, textarea, [tabindex]";
+    const focusable = [...panel.querySelectorAll(selector)].filter((element) => {
+      if (element.matches(":disabled") || element.getAttribute("aria-disabled") === "true") return false;
+      if (element.closest("[hidden], [inert]")) return false;
+      const style = window.getComputedStyle(element);
+      if (style.display === "none" || style.visibility === "hidden") return false;
+      const rect = element.getBoundingClientRect();
+      return rect.width > 0 && rect.height > 0 && element.tabIndex >= 0;
+    });
+    if (!focusable.length) { event.preventDefault(); panel.focus(); return; }
     const first = focusable[0]; const last = focusable.at(-1);
-    if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
-    if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+    const active = document.activeElement;
+    if (event.shiftKey && (active === first || !panel.contains(active))) {
+      event.preventDefault(); last.focus();
+    } else if (!event.shiftKey && (active === last || !panel.contains(active))) {
+      event.preventDefault(); first.focus();
+    }
   }
   resize() { const { input } = this.elements; input.style.height = "auto"; input.style.height = `${Math.min(input.scrollHeight, 150)}px`; }
   add(role, text, extra = {}) { const message = { id: ++this.id, role, text, ...extra }; this.messages.push(message); this.view.add(message); this.saveSession(); return message; }
