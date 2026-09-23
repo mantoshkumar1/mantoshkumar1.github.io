@@ -169,14 +169,14 @@ test.describe("DogBuild project discoverability and accessibility", () => {
     expect(githubHref).toBe("https://github.com/mantoshkumar1/dogbuild");
 
     // Assert internal navigation response succeeds
-    let internalNavResponse;
-    page.once("response", (response) => {
-      if (response.url().includes("/insights/")) {
-        internalNavResponse = response;
-      }
+    const internalNavPromise = page.waitForResponse((response) => {
+      const url = new URL(response.url());
+      return url.pathname === "/insights/message-bus-between-ai-agents.html" &&
+        response.request().isNavigationRequest();
     });
     await page.getByRole("link", { name: "Read the problem statement" }).click();
+    const internalNavResponse = await internalNavPromise;
     await expect(page).toHaveURL(/\/insights\/message-bus-between-ai-agents\.html$/);
-    expect(internalNavResponse?.status(), "Internal navigation should succeed").toBeLessThan(400);
+    expect(internalNavResponse.status(), "Internal navigation should succeed").toBeLessThan(400);
   });
 });
