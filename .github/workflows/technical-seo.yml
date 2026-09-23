@@ -18,6 +18,7 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - run: npm run test:protected-paths
       - run: npx playwright install --with-deps chromium
       - run: node scripts/generate-seo.mjs
       - run: node scripts/audit-homepage-insights.mjs
