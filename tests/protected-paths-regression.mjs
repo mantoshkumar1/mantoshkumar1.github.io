@@ -85,11 +85,15 @@ requiredEvents.forEach(eventToRemove => {
     .filter(e => e.length > 0);
 
   const reducedTokens = eventTokens.filter(e => e !== eventToRemove);
-  const mutatedEventString = reducedTokens.map(e => `'${e}'`).join(', ');
-
-  const mutatedContent = workflowContent.replace(
-    /types:\s*\[([^\]]*)\]/,
+  const mutatedEventString = reducedTokens.join(', ');
+  const pullRequestBlock = pullRequestMatch[0];
+  const mutatedPullRequestBlock = pullRequestBlock.replace(
+    /types:\s*\[[^\]]*\]/,
     `types: [${mutatedEventString}]`
+  );
+  const mutatedContent = workflowContent.replace(
+    pullRequestBlock,
+    mutatedPullRequestBlock
   );
 
   const mutatedFailures = validateWorkflow(mutatedContent);
