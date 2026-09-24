@@ -407,8 +407,9 @@ function homepageProjectsCards(entries) {
     const card = page.card;
     const tech = card.tech.map((tag) => `                <span>${escapeHtml(tag)}</span>`).join("\n");
     const links = card.links.map((link) => `                ${renderProjectLink(link)}`).join("\n");
-    const live = page.live
-      ? `\n              <p class="project-live"><span class="project-live-dot" aria-hidden="true"></span>Live</p>`
+    const status = page.homepageStatus || (page.live ? "Live" : null);
+    const live = status
+      ? `\n              <p class="project-live"><span class="project-live-dot" aria-hidden="true"></span>${escapeHtml(status)}</p>`
       : "";
     return `            <article class="card project-card">
               <p class="card-kicker">${escapeHtml(card.kicker)}</p>${live}
