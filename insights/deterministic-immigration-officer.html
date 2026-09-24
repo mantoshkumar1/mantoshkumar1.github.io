@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- seo:page {"datePublished":"2026-08-29","dateModified":"2026-08-29"} -->
+    <title>Deterministic Systems Should Be the Immigration Officers for AI | Mantosh Kumar</title>
+    <script src="../assets/js/theme-init.js?v=20260713-1"></script>
+    <link rel="stylesheet" href="../assets/css/style.css?v=20260716-15" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+    <header class="navbar">
+      <div class="container nav-wrap">
+        <a class="logo" href="../" aria-label="Mantosh Kumar — Home" title="Go to homepage">Mantosh Kumar</a>
+        <nav aria-label="Primary navigation">
+          <a href="../">Home</a>
+          <a href="../projects/">Projects</a>
+          <a href="../insights/" aria-current="page">Insights</a>
+          <a href="../experience/">Experience</a>
+          <a href="../resume/">Resume</a>
+          <a class="nav-cta" href="../contact/">Discuss a role</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="page-shell reading-shell" id="main-content" tabindex="-1">
+      <div class="container">
+        <article class="resume-card case-study reading-page">
+          <header class="resume-header">
+            <p class="eyebrow">AI-assisted engineering • 6 minute read • <time datetime="2026-08-29">Aug 29, 2026</time></p>
+            <h1>Deterministic systems should be the immigration officers for AI</h1>
+            <p>Do not ask an AI agent to remember every safety rule. Put deterministic checks at the borders and make unsafe transitions mechanically impossible.</p>
+          </header>
+
+          <section class="resume-section">
+            <h2>The insight came from a real failure</h2>
+            <p>While dogfooding a multi-agent workflow, two independently reviewed changes were intended to enter staging one after another. The second change had been reviewed against an older staging base. By the time it was merged, staging already contained the first change, so the resulting tree was not the exact tree that had been independently reviewed.</p>
+            <p>GitHub accepted the squash merge. The deterministic staging gate did not. It stopped before deployment because the final tree no longer matched the reviewed head.</p>
+            <p>The important lesson was not “make the gate smarter.” The gate was right to refuse the transition.</p>
+          </section>
+
+          <section class="resume-section">
+            <h2>Think of the gate as an immigration officer</h2>
+            <p>An immigration officer does not ask whether a traveller seems reasonable. The officer checks identity, documents, route, authority, and admissibility against explicit rules. If the proof is missing or inconsistent, entry stops.</p>
+            <p>AI-controlled engineering needs the same model at every dangerous boundary.</p>
+            <pre><code>AI proposes action
+      │
+      ▼
+Deterministic border check
+  identity
+  authority
+  exact state
+  exact sequence
+  required evidence
+      │
+      ├── FAIL → stop, explain why, no side effect
+      │
+      └── PASS → permit exactly one bounded transition
+                      │
+                      ▼
+                 New trusted state</code></pre>
+          </section>
+
+          <section class="resume-section">
+            <h2>The architecture</h2>
+            <pre><code>┌─────────────────────┐
+│ Founder / Strategy  │
+│ intent + authority  │
+└──────────┬──────────┘
+           │
+           ▼
+┌─────────────────────┐
+│ AI implementation   │
+│ proposes a change   │
+└──────────┬──────────┘
+           │
+           ▼
+┌──────────────────────────────┐
+│ Deterministic immigration    │
+│ officer                      │
+│                              │
+│ • exact base?                │
+│ • exact reviewed head/tree?  │
+│ • allowed actor?             │
+│ • allowed route?             │
+│ • required tests green?      │
+│ • authority still fresh?     │
+└──────────┬───────────────────┘
+           │
+       ┌───┴───┐
+       │       │
+      DENY    ALLOW
+       │       │
+       ▼       ▼
+  no effect   one bounded
+  + evidence  transition</code></pre>
+            <p>The AI can be creative before the border. The border itself should be boring.</p>
+          </section>
+
+          <section class="resume-section">
+            <h2>A concrete example: serial staging</h2>
+            <p>Suppose staging is at commit <code>A</code>. PR-1 is reviewed against <code>A</code>, producing reviewed head <code>B</code>. The only acceptable transition is:</p>
+            <pre><code>A → B</code></pre>
+            <p>Now PR-2 was also originally prepared against <code>A</code>. If PR-1 lands first, PR-2 must not simply be merged because it is “conflict-free.” Its exact reviewed tree is stale.</p>
+            <p>The correct sequence is:</p>
+            <pre><code>A
+└─ review PR-1 → B
+   └─ deterministic gate accepts B
+      └─ rebuild/rebase PR-2 on B → C
+         └─ independent review of exact C
+            └─ deterministic gate accepts C</code></pre>
+            <p>This is intentionally slower than allowing a wave of loosely compatible merges. It is also much easier to reason about: every accepted staging state corresponds to one exact reviewed state.</p>
+          </section>
+
+          <section class="resume-section">
+            <h2>One happy path is a safety feature</h2>
+            <p>AI agents tend to add options, fallbacks, abstractions, and alternate routes. That can look sophisticated while quietly expanding the state space you now have to reason about.</p>
+            <p>For high-risk actions, I prefer one happy path and explicit refusal everywhere else:</p>
+            <ul class="case-study-list">
+              <li><strong>Staging entry:</strong> one canonical reviewed transition.</li>
+              <li><strong>Production promotion:</strong> one human-controlled path.</li>
+              <li><strong>Secrets:</strong> only approved stores and identities.</li>
+              <li><strong>Billing/provider actions:</strong> exact allowlisted operations.</li>
+              <li><strong>Destructive actions:</strong> explicit authority plus deterministic preconditions.</li>
+            </ul>
+            <p>If another path becomes necessary, add it deliberately as a new contract. Do not let an AI infer that two paths are “basically equivalent.”</p>
+          </section>
+
+          <section class="resume-section">
+            <h2>The test plane matters more than the feature code</h2>
+            <p>With AI-generated code, implementation is becoming cheap. The scarce asset is the protected definition of what must be true.</p>
+            <p>That changes the job of Strategy. The first responsibility is not to write the feature. It is to define the happy path, encode the tests and deterministic constraints, and protect their meaning from being weakened just because the generated implementation does not fit.</p>
+            <pre><code>Founder intent
+   ↓
+Test intent + deterministic constraints
+   ↓
+AI implementation
+   ↓
+Independent review
+   ↓
+Deterministic verification
+   ↓
+Acceptance</code></pre>
+            <p>If an implementation cannot pass without changing the test, the default assumption should be that the implementation is wrong. A test changes only when the product intent changed or the test itself is proven incorrect.</p>
+          </section>
+
+          <section class="resume-section">
+            <h2>Where I would put immigration officers</h2>
+            <ul class="case-study-list">
+              <li>task branch → staging</li>
+              <li>staging → production</li>
+              <li>workflow dispatch and deployment</li>
+              <li>provider and billing mutations</li>
+              <li>secret access</li>
+              <li>repository administration</li>
+              <li>data deletion and irreversible migration steps</li>
+              <li>authority changes and role escalation</li>
+            </ul>
+            <p>The more irreversible the action, the less the final decision should depend on a model remembering prose.</p>
+          </section>
+
+          <section class="resume-section">
+            <h2>The principle</h2>
+            <p><strong>Do not make AI safe by asking it to behave safely. Put deterministic systems at the borders and make unsafe transitions impossible.</strong></p>
+            <p>Let the agents reason, draft, implement, review, and explore. But when something is about to cross a meaningful boundary, treat it like a traveller entering a country: exact identity, exact authority, exact documents, exact route. Otherwise, no entry.</p>
+          </section>
+
+          <section class="resume-section">
+            <h2>Evidence boundary</h2>
+            <p>This article is a first-person engineering lesson derived from my own ongoing AI-assisted development workflow and a staging-governance failure I observed while dogfooding it. It describes the architectural principle and the failure mode without claiming external adoption, universal correctness, or measured business outcomes.</p>
+            <div class="resume-actions">
+              <a class="button primary" href="../newsletter/">Get new insights by email <span aria-hidden="true">→</span></a>
+              <a class="button secondary" href="make-the-banks-deterministic.html">Read: A river can't be deterministic <span aria-hidden="true">→</span></a>
+              <a class="button secondary" href="tests-are-the-cheapest-check.html">Read: Tests are the cheapest check <span aria-hidden="true">→</span></a>
+            </div>
+          </section>
+        </article>
+      </div>
+    </main>
+    <script src="/assets/js/ask-mantosh-widget.js?v=20260716-17"></script>
+  </body>
+</html>
