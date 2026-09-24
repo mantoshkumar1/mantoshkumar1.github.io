@@ -94,6 +94,7 @@ test("project and insight cards expose their primary detail destinations", async
   await page.goto("/projects/");
   const projects = page.locator(".project-card");
   await expect(projects).toHaveCount(7);
+  await expect(projects.first().locator("h3")).toHaveText("DogBuild");
   const projectDestinations = [];
   for (let index = 0; index < await projects.count(); index += 1) {
     await expect(projects.nth(index).locator(".project-detail-link")).toHaveAttribute("href", /.+/);
@@ -123,7 +124,8 @@ test("project and insight cards expose their primary detail destinations", async
     await expect(related).toContainText("Ask Mantosh");
   }
   await page.goto("/projects/");
-  await projects.nth(1).locator(".project-detail-link").click();
+  const photoSahiCard = projects.filter({ has: page.getByRole("heading", { name: "PhotoSahi", exact: true }) });
+  await photoSahiCard.locator(".project-detail-link").click();
   await expect(page).toHaveURL(/\/projects\/photosahi\.html$/);
 
   await page.goto("/insights/");
