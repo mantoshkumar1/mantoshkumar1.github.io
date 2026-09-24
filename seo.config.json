@@ -350,7 +350,7 @@
           }
         ]
       },
-      "homepageOrder": 1,
+      "homepageOrder": 2,
       "live": true
     },
     "/projects/photosahi.html": {
@@ -390,7 +390,7 @@
           }
         ]
       },
-      "homepageOrder": 2,
+      "homepageOrder": 3,
       "live": true
     },
     "/projects/dogbuild.html": {
@@ -430,7 +430,9 @@
           }
         ]
       },
-      "live": true
+      "live": true,
+      "homepageOrder": 1,
+      "homepageStatus": "Active dogfood"
     },
     "/projects/workflow-automation-toolkit.html": {
       "title": "Workflow Automation Toolkit | Mantosh Kumar",
@@ -482,8 +484,7 @@
             "detail": true
           }
         ]
-      },
-      "homepageOrder": 3
+      }
     },
     "/projects/validation-platform-optical-networking.html": {
       "title": "Validation Platform and Release Intelligence | Mantosh Kumar",
