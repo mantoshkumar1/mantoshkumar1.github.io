@@ -90,6 +90,39 @@
             <p>Can you build a control plane that lets multiple agents coordinate without requiring a human to carry context between them? The technical challenge isn't AI reasoning—both Claude and ChatGPT can think. The challenge is authority, evidence, and routing: who decides what work happens, where does the proof live, and how does one agent hand work to another without losing the thread?</p>
           </section>
 
+          <section class="content-card section-block dogbuild-map" aria-labelledby="dogbuild-map-title">
+            <h2 id="dogbuild-map-title">How the handoff works today</h2>
+            <p>GitHub holds the durable control record. People and agents use MCP access to read current authority, publish work, and inspect exact-head evidence; the board points to the active route.</p>
+            <figure aria-describedby="dogbuild-map-caption">
+              <div class="dogbuild-map-grid">
+                <div class="dogbuild-map-node dogbuild-map-founder">
+                  <strong>Founder</strong>
+                  <span>Sets scope and makes merge or deployment decisions.</span>
+                </div>
+                <div class="dogbuild-map-node dogbuild-map-strategy">
+                  <strong>ChatGPT Strategy</strong>
+                  <span>Reads and reconciles the board through the DogBuild MCP Server.</span>
+                </div>
+                <div class="dogbuild-map-hub">
+                  <strong>GitHub · source of truth</strong>
+                  <span><a href="https://github.com/mantoshkumar1/dogbuild/issues/180">Control board #180</a>: current routing and authority</span>
+                  <span><a href="https://github.com/mantoshkumar1/dogbuild/issues">Task issues</a> and PRs: plans, findings, corrections and handoffs</span>
+                  <span>Exact commits, checks and artifacts: reviewable proof</span>
+                </div>
+                <div class="dogbuild-map-node dogbuild-map-workers">
+                  <strong>Claude, Cursor and Codex</strong>
+                  <span>Use the Cloudflare MCP portal's validated server connections for bounded task access.</span>
+                </div>
+                <div class="dogbuild-map-node dogbuild-map-ci">
+                  <strong>GitHub Actions</strong>
+                  <span>Runs checks for a specific commit and publishes CI evidence.</span>
+                </div>
+              </div>
+              <figcaption id="dogbuild-map-caption">The lines show today's GitHub-first evidence flow. Chat remains a wake interface; the durable handoff is on the linked issue or PR.</figcaption>
+            </figure>
+            <p class="dogbuild-map-planned"><strong>Still in development:</strong> event-driven listener invocation, universal pre-write authority enforcement, and least-privilege tool boundaries. The diagram does not claim those controls are deployed.</p>
+          </section>
+
           <section class="content-card section-block">
             <h2>My Contribution</h2>
             <p>I built DogBuild to test whether a GitHub-first, append-only control model could replace human relay. The core contribution is a <strong>lived dogfooding proof of concept</strong> demonstrating that the architectural approach is viable with two key design changes: record authority and evidence on GitHub (not in chat), and revalidate exact identity before every write. Full deterministic routing and scheduled autonomous invocation remain under development.</p>
