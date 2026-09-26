@@ -9,17 +9,14 @@ related_topics: [engineering-capabilities, workflow-automation, distributed-vali
 visibility: "public"
 url: "/experience/"
 fact_location: "Toronto, Canada"
-fact_relocation_target: "Dubai/Abu Dhabi, UAE"
 fact_time_zone: "America/Toronto"
 fact_citizenship: "Canadian"
 fact_work_authorization: [Canada, United States, India]
-fact_relocation_availability: "Available to relocate to the UAE"
 fact_current_employer: "Nokia"
 fact_current_role: "Staff Software Engineer"
 fact_employment_history: [Aricent, Cisco, Intel, Siemens, KI Labs, Nokia]
 fact_experience_years: "More than 14 years"
 fact_target_roles: ["Staff Backend Engineer", "Staff Platform Engineer", "Staff AI Infrastructure Engineer", "Principal Engineer"]
-fact_target_locations: ["Dubai", "Abu Dhabi"]
 fact_capabilities: [Platform engineering, Engineering automation, Backend systems, Networking, Distributed validation, Operational intelligence]
 fact_skills: [Python, Java, C++, SQL, PostgreSQL, Django, REST APIs, Linux, Git, CI/CD, SDN, NFV]
 fact_ownership_summary: "Mantosh led a two-person effort to move thousands of tests for an optical-networking product from a legacy validation framework to a distributed CI/CD platform."
