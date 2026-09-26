@@ -4,11 +4,11 @@ slug: "mantosh-kumar-professional-experience"
 category: "resume"
 tags: [professional-experience, platform-engineering, automation, backend-systems, networking, distributed-validation, python]
 summary: "Role-by-role public résumé evidence covering Mantosh Kumar's engineering work at Nokia, KI Labs, Siemens, Intel, Cisco, and Aricent."
-last_updated: "2026-07-15"
+last_updated: "2026-09-26"
 related_topics: [engineering-capabilities, technical-skills, platform-engineering, backend-development, networking, career-history]
 visibility: "public"
 url: "/resume/"
-resume_pdf_sha256: "d7b15344e1f4015c43b8dae08afdbd535efd869829859a5c73be9f997c666b99"
+resume_pdf_sha256: "423c44249bf6be8ded88d8c5fafab518678c7fff9bb02f0d76910ee2482d972a"
 ---
 
 # Mantosh Kumar Résumé: Professional Experience

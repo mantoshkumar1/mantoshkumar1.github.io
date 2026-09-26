@@ -2,7 +2,7 @@
 
 Canonical URL: https://mantoshkumar1.github.io/
 
-Mantosh Kumar is a Staff Software Engineer publishing documented engineering projects and case studies.
+Mantosh Kumar is a Staff Software Engineer publishing documented engineering projects and case studies. He is actively targeting Staff or Principal Backend, Platform, or AI Infrastructure roles and is particularly interested in opportunities in Dubai or Abu Dhabi, with availability to relocate to the UAE.
 
 His résumé-backed capabilities include engineering platforms and automation, Python backend and data systems, networking and distributed validation, observability, quality analytics, and AI-assisted engineering tools.
 
@@ -45,7 +45,7 @@ His résumé-backed capabilities include engineering platforms and automation, P
 
 ## Ask Mantosh
 
-Ask Mantosh is an AI interface to Mantosh's published engineering knowledge. It is intended to answer from documented public work and provide source links when available.
+Ask Mantosh is an AI interface to Mantosh's published engineering knowledge. It is intended to answer from documented public work and provide source links when available. Mantosh is actively seeking Staff or Principal Backend, Platform, or AI Infrastructure roles in Dubai/Abu Dhabi and is available to relocate to the UAE.
 
 ## Discovery files
 

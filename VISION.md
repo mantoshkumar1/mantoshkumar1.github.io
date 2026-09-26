@@ -3,7 +3,7 @@
 ## Goal
 Create a permanent home for Mantosh Kumar's engineering work that demonstrates how he thinks, what he builds, and the impact of that work.
 
-The primary commercial objective is to attract Staff Engineer and Principal Engineer opportunities from companies and recruiters. Staff Software Engineer remains Mantosh's documented current title; Principal Engineer is a target level. Engineering contracts remain a secondary path. Public positioning should remain location-neutral beyond Mantosh's current Toronto, Canada location and verified work authorization.
+The primary commercial objective is to attract Staff Engineer and Principal Engineer opportunities from companies and recruiters. Staff Software Engineer remains Mantosh's documented current title; Principal Engineer is a target level. Engineering contracts remain a secondary path. **Mantosh is currently based in Toronto, Canada and is actively targeting Staff or Principal Backend, Platform, or AI Infrastructure roles in Dubai and Abu Dhabi, with availability to relocate to the UAE. This geographic targeting is distinct from and does not modify his current Toronto location or verified work authorization for Canada, United States, and India.**
 
 Optimize for credible commercial conversion: help a recruiter or client assess fit, remove practical hiring uncertainty, and start a valuable conversation. Do not frame Mantosh as a superhero, inflate titles, or publish claims that cannot survive verification. Earnings are an intended outcome of trusted positioning, not a visitor-facing boast.
 
@@ -14,7 +14,7 @@ A visitor should be able to understand within two minutes:
 - What systems he has built.
 - How he thinks.
 - How to contact him.
-- That he is open to Staff or Principal Engineer opportunities and engineering contracts.
+- That he is open to Staff or Principal Engineer opportunities, particularly in Dubai/Abu Dhabi, and engineering contracts.
 
 ## Core Principles
 - Keep the platform intentionally simple.

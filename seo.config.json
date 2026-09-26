@@ -3,7 +3,7 @@
     "name": "Mantosh Kumar",
     "url": "https://mantoshkumar1.github.io",
     "author": "Mantosh Kumar",
-    "description": "Platform engineering, automation, backend systems, and operational intelligence.",
+    "description": "Platform engineering, automation, backend systems, and operational intelligence. Actively targeting Staff/Principal Backend, Platform, or AI Infrastructure roles in Dubai/Abu Dhabi.",
     "socialImage": "/assets/seo/social-default.jpg",
     "themeColor": "#060b12",
     "language": "en",
@@ -15,7 +15,7 @@
   "pages": {
     "/": {
       "title": "Mantosh Kumar | Platform Engineering, Automation & AI Systems",
-      "description": "Staff Software Engineer Mantosh Kumar builds platforms, automation, backend systems, and operational intelligence and is open to Staff and Principal Engineer opportunities.",
+      "description": "Staff Software Engineer Mantosh Kumar builds platforms, automation, backend systems, and operational intelligence. Actively targeting Staff/Principal roles in Dubai/Abu Dhabi, available to relocate to the UAE.",
       "kind": "home"
     },
     "/projects/": {
@@ -286,13 +286,13 @@
     },
     "/resume/": {
       "title": "Staff & Principal Engineer Resume | Mantosh Kumar",
-      "description": "Resume for Staff Software Engineer Mantosh Kumar, open to Staff and Principal Engineer opportunities with 14+ years across platforms, automation, backend systems, and networking.",
+      "description": "Resume for Staff Software Engineer Mantosh Kumar actively targeting Staff/Principal Backend, Platform, or AI Infrastructure roles in Dubai/Abu Dhabi. Available to relocate to the UAE.",
       "kind": "page",
       "schemaType": "ProfilePage"
     },
     "/contact/": {
       "title": "Contact Mantosh Kumar | Staff & Principal Engineer Roles",
-      "description": "Discuss Staff or Principal Engineer opportunities or platform, automation, backend, and operational intelligence contracts with Mantosh Kumar.",
+      "description": "Contact Mantosh Kumar for Staff or Principal Engineer opportunities or platform, automation, backend, and operational intelligence contracts. Actively targeting roles in Dubai/Abu Dhabi. Available to relocate to the UAE.",
       "kind": "page",
       "schemaType": "ContactPage"
     },
