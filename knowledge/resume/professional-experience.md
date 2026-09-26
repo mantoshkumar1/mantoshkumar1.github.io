@@ -2,8 +2,8 @@
 title: "Mantosh Kumar Résumé: Professional Experience"
 slug: "mantosh-kumar-professional-experience"
 category: "resume"
-tags: [professional-experience, platform-engineering, automation, backend-systems, networking, distributed-validation, python]
-summary: "Role-by-role public résumé evidence covering Mantosh Kumar's engineering work at Nokia, KI Labs, Siemens, Intel, Cisco, and Aricent."
+tags: [professional-experience, platform-engineering, automation, backend-systems, networking, distributed-validation, python, dubai, abu-dhabi, uae, relocation]
+summary: "Role-by-role public résumé evidence across Nokia, KI Labs, Siemens, Intel, Cisco, and Aricent, with published Dubai/Abu Dhabi target roles and UAE relocation availability."
 last_updated: "2026-09-26"
 related_topics: [engineering-capabilities, technical-skills, platform-engineering, backend-development, networking, career-history]
 visibility: "public"
@@ -14,6 +14,8 @@ resume_pdf_sha256: "423c44249bf6be8ded88d8c5fafab518678c7fff9bb02f0d76910ee2482d
 # Mantosh Kumar Résumé: Professional Experience
 
 This document makes the role-by-role evidence in Mantosh Kumar's public résumé available to Ask Mantosh. It supports questions about prior work, responsibilities, career progression, technical experience, and where that documented experience may be relevant.
+
+The published résumé identifies Mantosh as a Toronto-based Canadian citizen and Staff Software Engineer targeting Staff/Principal Backend, Platform, or AI Infrastructure roles in Dubai or Abu Dhabi. He is available to relocate to the UAE. This does not claim current UAE residence or UAE work authorization. The résumé does not publish a phone number.
 
 ## Nokia Corporation — Staff Software Engineer
 
