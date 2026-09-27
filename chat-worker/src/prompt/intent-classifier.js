@@ -50,6 +50,13 @@ const PROFILE_PATTERNS = [
   SUBJECTIVE_PROFILE_PATTERN
 ];
 
+// These short questions ask for the public professional overview itself. Keep
+// the match narrow so questions about private life or a specific project still
+// use the normal evidence and scope checks.
+export function isPublicProfileOverviewQuestion(question) {
+  return /^(?:(?:tell me about|who is|describe)\s+(?:this (?:guy|person|engineer)|mantosh(?: kumar)?|him)|what (?:kind|type) of (?:guy|person|engineer) is (?:mantosh|he))[?.!\s]*$/i.test(String(question || "").trim());
+}
+
 const PROBLEM_PATTERNS = [
   /\b(?:my|our|we|i)\s+(?:problem|issue|challenge|need|struggle|want|have|are trying)\b/i,
   /\b(?:help|guide|advise|approach|solve|improve|automate|design|build|debug|scale)\b/i,

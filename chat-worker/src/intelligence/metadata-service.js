@@ -46,6 +46,20 @@ export class MetadataService {
     return entries.length ? Object.fromEntries(entries) : null;
   }
 
+  async publicProfileOverview() {
+    if (!this.db) return null;
+    const path = "knowledge/faq/about-mantosh.md";
+    const [facts, document] = await Promise.all([
+      this.profileFacts(),
+      this.db.prepare(
+        "SELECT path, title, slug, category, tags, summary, related_topics, url FROM documents WHERE path = ? AND visibility = 'public' AND url <> '' LIMIT 1"
+      ).bind(path).first()
+    ]);
+    return facts && document?.path === path && document.category === "faq" && document.url === "/experience/"
+      ? { facts, source: recommendationSource(document) }
+      : null;
+  }
+
   async outsideNokiaEvidence() {
     if (!this.db) return null;
     const path = "knowledge/experience/outside-nokia-experience.md";

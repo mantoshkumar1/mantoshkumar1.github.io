@@ -6,7 +6,7 @@ import { handleIndexRequest } from "./indexer.js";
 import { AnalyticsService, ConfidenceScorer, MemoryManager, MetadataService, RecommendationEngine, SearchRouter } from "./intelligence/index.js";
 import { createResponse } from "./ai.js";
 import { enforceFreeUsageLimit, enforceStrictRequestLimit } from "./quota.js";
-import { buildPrompt, classifyQuestionIntent, conciseAchievementResponse, expandRetrievalQuery, formatError, formatResponse, isAnswerable, isScopedWorkQuestion, isSubjectiveProfileQuestion, unavailableResponse } from "./prompt/index.js";
+import { buildPrompt, classifyQuestionIntent, conciseAchievementResponse, expandRetrievalQuery, formatError, formatResponse, isAnswerable, isPublicProfileOverviewQuestion, isScopedWorkQuestion, isSubjectiveProfileQuestion, unavailableResponse } from "./prompt/index.js";
 import { enforceRateLimit } from "./rate-limit.js";
 import { assessLexicalRelevance, retrieveKnowledge, searchLexicalKnowledge } from "./retrieval.js";
 import { parseChatRequest } from "./validation.js";
@@ -69,6 +69,37 @@ function socialResponse(response, conversationId) {
     answer: response.answer, sources: [], relatedArticles: [], relatedProjects: [], relatedNotes: [], recommendations: [],
     followUpQuestions: response.followUpQuestions, suggestedQuestions: response.followUpQuestions, confidence: response.confidence || "high",
     conversationId, success: true
+  };
+}
+
+function safeProfileText(value) {
+  return typeof value === "string" && /^[\p{L}\p{N}][\p{L}\p{N}\s.,'&()+/-]*$/u.test(value) ? value.trim() : null;
+}
+
+function publicProfileResponse(evidence, conversationId) {
+  if (!evidence) return null;
+  const { facts, source } = evidence;
+  const role = safeProfileText(facts.current_role);
+  const employer = safeProfileText(facts.current_employer);
+  const location = safeProfileText(facts.location);
+  const years = safeProfileText(facts.experience_years);
+  const capabilities = Array.isArray(facts.capabilities) && facts.capabilities.length > 0
+    ? facts.capabilities.map(safeProfileText) : [];
+  if (!role || !employer || !location || !years || !capabilities.length || capabilities.some((item) => !item)) return null;
+  const citation = `[Faq: About Mantosh and Where His Experience Can Help](${source.url})`;
+  const followUpQuestions = [
+    "What engineering work has Mantosh personally owned?",
+    "Which projects demonstrate his approach?",
+    "Where is Mantosh based?"
+  ];
+  const answer = [
+    "## In brief",
+    `Mantosh Kumar is a ${role} at ${employer}, based in ${location}, with ${years.toLowerCase()} of documented engineering experience. His published capabilities include ${capabilities.join(", ")}. ${citation}`,
+    "", "## Sources", `- ${citation}`
+  ].join("\n");
+  return {
+    answer, sources: [source], relatedArticles: [], relatedProjects: [], relatedNotes: [], recommendations: [],
+    followUpQuestions, suggestedQuestions: followUpQuestions, confidence: "high", conversationId, action: null, success: true
   };
 }
 
@@ -196,6 +227,17 @@ export default {
         analytics.trackInBackground(ctx, route.destination.type === "project" ? "project_view" : "navigation", route.destination.id || route.destination.type);
         ctx?.waitUntil?.(memory.recordTurn({ conversationId, question, answer: result.answer, sources: [] }));
         return json(result, 200, origin);
+      }
+
+      if (isPublicProfileOverviewQuestion(question)) {
+        const result = publicProfileResponse(await metadataService.publicProfileOverview(), conversationId);
+        if (result) {
+          analytics.trackInBackground(ctx, "knowledge_answer", "profile");
+          ctx?.waitUntil?.(memory.recordTurn({ conversationId, question, answer: result.answer, sources: result.sources }));
+          return wantsStream
+            ? eventStream([{ type: "metadata", data: result }, { type: "response.output_text.delta", data: { delta: result.answer } }, { type: "done", data: {} }], origin)
+            : json(result, 200, origin);
+        }
       }
 
       const cacheable = !wantsStream && conversation.messages.length === 0 && !conversation.summary && isCacheableQuestion(question);
