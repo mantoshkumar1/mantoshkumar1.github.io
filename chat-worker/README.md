@@ -56,19 +56,11 @@ npx wrangler d1 migrations apply personal-website-knowledge --remote
 
 The optional browser event endpoint is `POST /analytics/recommendation-click` with `{"recommendationId":"knowledge/projects/example.md"}`. It records an aggregate click count only.
 
-## Deploy
+## Release
 
-Prerequisites: a Cloudflare account and Node.js 20+.
+Production releases use the founder-dispatched [Release Ask Mantosh Worker](../.github/workflows/release-ask-mantosh.yml) workflow. It requires an exact main SHA, an exact currently active Worker version, passing tests and dry run, and approval through the `ask-mantosh-production` GitHub environment before deploying. There is no push or schedule trigger. See the [release setup and procedure](docs/DEPLOYMENT.md) before the first run. A failed post-deploy check requires an explicit production inspection and rollback decision.
 
-```bash
-cd chat-worker
-npm install
-npx wrangler login
-npx wrangler secret put INDEXER_TOKEN
-npm run deploy
-```
-
-`wrangler.toml` already contains the production Worker name, exact GitHub Pages origin, D1 binding, Vectorize binding, Workers AI binding, and mandatory rate-limiter binding. Running `npm run deploy` updates that production Worker. Review the diff, run tests, and validate the bundle with `npx wrangler deploy --dry-run` before deploying; do not treat the production command as a preview deployment. After deployment, record the immutable Worker version in [`../docs/SYSTEM_STATE.md`](../docs/SYSTEM_STATE.md) and run the documented production smoke tests.
+`wrangler.toml` contains the production Worker name, exact GitHub Pages origin, D1, Vectorize, Workers AI, and mandatory rate-limiter bindings. `npm run deploy` remains a direct production command for exceptional recovery by an authorized operator; it is not the normal release path.
 
 For local development, create an untracked `.dev.vars` file:
 

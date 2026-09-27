@@ -1,0 +1,174 @@
+name: Release Ask Mantosh Worker
+
+# A founder starts a specific release from main. There is no push or schedule trigger.
+on:
+  workflow_dispatch:
+    inputs:
+      expected_sha:
+        description: Full 40-character main commit approved for release
+        required: true
+        type: string
+      expected_prior_version:
+        description: Current 100% production Worker version (UUID)
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ask-mantosh-production-release
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require founder, main, and exact commit
+        env:
+          EXPECTED_SHA: ${{ inputs.expected_sha }}
+          EXPECTED_PRIOR_VERSION: ${{ inputs.expected_prior_version }}
+        run: |
+          set -euo pipefail
+          [[ "$GITHUB_REPOSITORY" == 'mantoshkumar1/mantoshkumar1.github.io' ]]
+          [[ "$GITHUB_ACTOR" == 'mantoshkumar1' ]]
+          [[ "$GITHUB_REF" == 'refs/heads/main' ]]
+          [[ "$EXPECTED_SHA" =~ ^[0-9a-f]{40}$ ]]
+          [[ "$EXPECTED_PRIOR_VERSION" =~ ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$ ]]
+          [[ "$GITHUB_SHA" == "$EXPECTED_SHA" ]]
+          [[ "$(git ls-remote "https://github.com/${GITHUB_REPOSITORY}.git" refs/heads/main | cut -f1)" == "$EXPECTED_SHA" ]]
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ inputs.expected_sha }}
+          persist-credentials: false
+      - name: Confirm checked-out commit
+        env:
+          EXPECTED_SHA: ${{ inputs.expected_sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install locked dependencies
+        run: |
+          npm ci
+          npm ci --prefix chat-worker
+      - name: Run Worker tests and evaluation
+        run: npm test --prefix chat-worker
+      - name: Run browser tests
+        run: |
+          npx playwright install --with-deps chromium
+          npm run test:browser
+      - name: Validate Worker bundle without deploying
+        working-directory: chat-worker
+        run: npx wrangler deploy --dry-run
+
+  release:
+    needs: verify
+    runs-on: ubuntu-latest
+    # Configure this environment with a founder required reviewer and the
+    # two environment-only secrets named below before the first dispatch.
+    environment: ask-mantosh-production
+    permissions:
+      contents: read
+      issues: write
+    env:
+      EXPECTED_SHA: ${{ inputs.expected_sha }}
+      EXPECTED_PRIOR_VERSION: ${{ inputs.expected_prior_version }}
+      CLOUDFLARE_API_TOKEN: ${{ secrets.ASK_MANTOSH_CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.ASK_MANTOSH_CLOUDFLARE_ACCOUNT_ID }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ inputs.expected_sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install locked Worker dependencies
+        run: npm ci --prefix chat-worker
+      - name: Recheck source and credentials after approval
+        run: |
+          set -euo pipefail
+          [[ "$GITHUB_REPOSITORY" == 'mantoshkumar1/mantoshkumar1.github.io' ]]
+          [[ "$GITHUB_ACTOR" == 'mantoshkumar1' ]]
+          [[ "$GITHUB_REF" == 'refs/heads/main' ]]
+          [[ "$GITHUB_SHA" == "$EXPECTED_SHA" ]]
+          [[ "$(git rev-parse HEAD)" == "$EXPECTED_SHA" ]]
+          [[ "$(git ls-remote origin refs/heads/main | cut -f1)" == "$EXPECTED_SHA" ]]
+          [[ -n "$CLOUDFLARE_API_TOKEN" && -n "$CLOUDFLARE_ACCOUNT_ID" ]]
+      - name: Verify exact production version before write
+        id: prior
+        working-directory: chat-worker
+        run: |
+          set -euo pipefail
+          npx wrangler deployments status --json > "$RUNNER_TEMP/prior-deployment.json"
+          actual=$(jq -er 'if (.versions | length) == 1 and .versions[0].percentage == 100 then .versions[0].version_id else empty end' "$RUNNER_TEMP/prior-deployment.json")
+          [[ "$actual" == "$EXPECTED_PRIOR_VERSION" ]] || { echo "::error::Production version changed or traffic is split; stop and re-authorize."; exit 1; }
+          echo "version=$actual" >> "$GITHUB_OUTPUT"
+      - name: Recheck main immediately before deploy
+        run: test "$(git ls-remote origin refs/heads/main | cut -f1)" = "$EXPECTED_SHA"
+      - name: Deploy existing Worker configuration
+        id: deploy
+        working-directory: chat-worker
+        run: npx wrangler deploy
+      - name: Verify new immutable production version
+        id: current
+        working-directory: chat-worker
+        run: |
+          set -euo pipefail
+          npx wrangler deployments status --json > "$RUNNER_TEMP/new-deployment.json"
+          actual=$(jq -er 'if (.versions | length) == 1 and .versions[0].percentage == 100 then .versions[0].version_id else empty end' "$RUNNER_TEMP/new-deployment.json")
+          [[ "$actual" =~ ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$ ]]
+          [[ "$actual" != "$EXPECTED_PRIOR_VERSION" ]] || { echo "::error::No new production version observed."; exit 1; }
+          echo "version=$actual" >> "$GITHUB_OUTPUT"
+      - name: Smoke production health, profile answer, and stream
+        id: smoke
+        run: |
+          node --input-type=module <<'NODE'
+          import assert from 'node:assert/strict';
+          const base = 'https://ask-mantosh.mantoshk234.workers.dev';
+          const health = await fetch(`${base}/health`);
+          assert.equal(health.status, 200);
+          assert.equal((await health.json()).service, 'ask-mantosh');
+          const headers = { Origin: 'https://mantoshkumar1.github.io', 'Content-Type': 'application/json' };
+          const body = JSON.stringify({ question: 'Tell me about this guy?' });
+          const response = await fetch(`${base}/chat`, { method: 'POST', headers, body });
+          assert.equal(response.status, 200);
+          const answer = await response.json();
+          assert.equal(answer.success, true);
+          assert.match(answer.answer, /Mantosh Kumar/);
+          assert.ok(answer.sources?.some((source) => source.url?.includes('/experience/')));
+          const streamed = await fetch(`${base}/chat`, {
+            method: 'POST', headers: { ...headers, Accept: 'text/event-stream' }, body
+          });
+          assert.equal(streamed.status, 200);
+          assert.match(streamed.headers.get('content-type') ?? '', /^text\/event-stream/);
+          const events = await streamed.text();
+          assert.match(events, /event: done/);
+          assert.match(events, /Mantosh Kumar/);
+          NODE
+      - name: Record release receipt on issue 77
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PRIOR_VERSION: ${{ steps.prior.outputs.version }}
+          NEW_VERSION: ${{ steps.current.outputs.version }}
+          DEPLOY_OUTCOME: ${{ steps.deploy.outcome }}
+          SMOKE_OUTCOME: ${{ steps.smoke.outcome }}
+        run: |
+          {
+            echo 'Ask Mantosh manual release receipt'
+            echo
+            echo "- Run: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+            echo "- Exact source commit: \`${EXPECTED_SHA}\`"
+            echo "- Authorized prior production version: \`${EXPECTED_PRIOR_VERSION}\`"
+            echo "- Observed prior version: \`${PRIOR_VERSION:-unavailable}\`"
+            echo "- Deploy step: ${DEPLOY_OUTCOME:-not run}"
+            echo "- Observed new production version: \`${NEW_VERSION:-unavailable}\`"
+            echo "- Production smoke: ${SMOKE_OUTCOME:-not run}"
+            echo '- If deploy ran but verification or smoke failed, inspect production and decide rollback explicitly; this workflow does not roll back automatically.'
+          } > "$RUNNER_TEMP/release-receipt.md"
+          cat "$RUNNER_TEMP/release-receipt.md" >> "$GITHUB_STEP_SUMMARY"
+          gh issue comment 77 --repo "$GITHUB_REPOSITORY" --body-file "$RUNNER_TEMP/release-receipt.md"

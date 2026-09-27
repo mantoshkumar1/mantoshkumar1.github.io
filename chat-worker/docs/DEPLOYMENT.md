@@ -9,19 +9,46 @@ production knowledge storage. Set production origins explicitly.
 
 ## Worker release sequence
 
-1. Run unit tests and prompt-injection fixtures.
-2. When prompts, formatting, or answer policy change, increment
+The production path is [Release Ask Mantosh Worker](../../.github/workflows/release-ask-mantosh.yml).
+It is started manually from `main`; a push, schedule, or Pages deployment does
+not release the Worker. Before its first use, the founder must create the
+`ask-mantosh-production` GitHub environment with `mantoshkumar1` as a required
+reviewer and set **environment secrets** `ASK_MANTOSH_CLOUDFLARE_API_TOKEN`
+(a token scoped to the required Worker/account operations) and
+`ASK_MANTOSH_CLOUDFLARE_ACCOUNT_ID`. If the founder initiates and approves the
+same run, leave GitHub's optional **Prevent self-review** setting off. Do not
+put these values in repository secrets, files, issue comments, or workflow
+inputs. The workflow fails if the credentials are absent.
+
+After the workflow has passed protected-path review and merged:
+
+1. Confirm the intended full 40-character `main` SHA and the current Cloudflare
+   production Worker version serving 100% of traffic. Enter both exact values
+   as the workflow's `expected_sha` and `expected_prior_version` inputs.
+2. Dispatch the workflow from `main` as `mantoshkumar1`. It checks the exact
+   source, runs Worker tests and the offline evaluation, runs browser tests,
+   and validates the bundle with Wrangler's dry run. Review the pending
+   `ask-mantosh-production` deployment and approve it deliberately.
+3. After approval, the workflow rechecks `main` and the active production
+   version. Any move or traffic split stops the release before deployment.
+   It deploys only the existing `ask-mantosh` configuration, verifies the new
+   immutable version, and smokes health, the exact public-profile question,
+   and SSE. The run summary and issue #77 record the source and prior/new
+   versions. If a check after deployment fails, inspect production and decide
+   rollback explicitly; the workflow does not roll back automatically.
+4. Update [`../../docs/SYSTEM_STATE.md`](../../docs/SYSTEM_STATE.md) and the
+   DogBuild control board from the actual successful release receipt.
+
+For each Worker change, also follow these application steps:
+
+1. When prompts, formatting, or answer policy change, increment
    `ANSWER_POLICY_VERSION` so eligible cached responses cannot retain the old
    behavior.
-3. Apply additive D1 migrations required by the release.
-4. Validate the bundle with `npx wrangler deploy --dry-run`, deploy with Wrangler,
-   and run `/health`, a grounded-answer smoke test, an
-   unrelated-question test, and an SSE stream test.
-5. Record the immutable production Worker version in
-   [`../../docs/SYSTEM_STATE.md`](../../docs/SYSTEM_STATE.md).
-6. If a separate staging environment exists, promote the tested immutable
+2. Apply additive D1 migrations required by the release; the manual release
+   workflow deliberately does not change the database schema.
+3. If a separate staging environment exists, promote the tested immutable
    version rather than rebuilding it.
-7. Run a full knowledge sync only when schema or indexing behavior requires it;
+4. Run a full knowledge sync only when schema or indexing behavior requires it;
    normal Markdown changes use the automatic changed-file workflow.
 
 The Worker must expose `GET /health` with no sensitive configuration detail.
