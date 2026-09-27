@@ -75,8 +75,6 @@ jobs:
     env:
       EXPECTED_SHA: ${{ inputs.expected_sha }}
       EXPECTED_PRIOR_VERSION: ${{ inputs.expected_prior_version }}
-      CLOUDFLARE_API_TOKEN: ${{ secrets.ASK_MANTOSH_CLOUDFLARE_API_TOKEN }}
-      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.ASK_MANTOSH_CLOUDFLARE_ACCOUNT_ID }}
     steps:
       - uses: actions/checkout@v5
         with:
@@ -88,7 +86,7 @@ jobs:
           cache: npm
       - name: Install locked Worker dependencies
         run: npm ci --prefix chat-worker
-      - name: Recheck source and credentials after approval
+      - name: Recheck source after approval
         run: |
           set -euo pipefail
           [[ "$GITHUB_REPOSITORY" == 'mantoshkumar1/mantoshkumar1.github.io' ]]
@@ -97,12 +95,15 @@ jobs:
           [[ "$GITHUB_SHA" == "$EXPECTED_SHA" ]]
           [[ "$(git rev-parse HEAD)" == "$EXPECTED_SHA" ]]
           [[ "$(git ls-remote origin refs/heads/main | cut -f1)" == "$EXPECTED_SHA" ]]
-          [[ -n "$CLOUDFLARE_API_TOKEN" && -n "$CLOUDFLARE_ACCOUNT_ID" ]]
       - name: Verify exact production version before write
         id: prior
         working-directory: chat-worker
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.ASK_MANTOSH_CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.ASK_MANTOSH_CLOUDFLARE_ACCOUNT_ID }}
         run: |
           set -euo pipefail
+          [[ -n "$CLOUDFLARE_API_TOKEN" && -n "$CLOUDFLARE_ACCOUNT_ID" ]]
           npx wrangler deployments status --json > "$RUNNER_TEMP/prior-deployment.json"
           actual=$(jq -er 'if (.versions | length) == 1 and .versions[0].percentage == 100 then .versions[0].version_id else empty end' "$RUNNER_TEMP/prior-deployment.json")
           [[ "$actual" == "$EXPECTED_PRIOR_VERSION" ]] || { echo "::error::Production version changed or traffic is split; stop and re-authorize."; exit 1; }
@@ -112,10 +113,16 @@ jobs:
       - name: Deploy existing Worker configuration
         id: deploy
         working-directory: chat-worker
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.ASK_MANTOSH_CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.ASK_MANTOSH_CLOUDFLARE_ACCOUNT_ID }}
         run: npx wrangler deploy
       - name: Verify new immutable production version
         id: current
         working-directory: chat-worker
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.ASK_MANTOSH_CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.ASK_MANTOSH_CLOUDFLARE_ACCOUNT_ID }}
         run: |
           set -euo pipefail
           npx wrangler deployments status --json > "$RUNNER_TEMP/new-deployment.json"
