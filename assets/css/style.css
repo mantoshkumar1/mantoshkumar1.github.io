@@ -1671,12 +1671,142 @@ body.ask-mantosh-open {
 /* DogBuild is a long-form case study nested inside a resume card. Give its
    sections their own insets and rhythm without changing other project pages. */
 .dogbuild-page > .content-card {
-  padding: clamp(1.25rem, 2.5vw, 2rem);
-  margin-top: clamp(1.5rem, 3vw, 2.25rem);
+  padding: clamp(1.35rem, 3vw, 2.2rem);
+  margin-top: clamp(2.25rem, 4vw, 3rem);
 }
 
 .dogbuild-page > .content-card h2 {
-  margin-bottom: .65rem;
+  margin-bottom: .9rem;
+}
+
+.dogbuild-page > .content-card > p,
+.dogbuild-page > .content-card > .case-study-list {
+  max-width: 72ch;
+  line-height: 1.72;
+}
+
+.dogbuild-page > .content-card > p + p {
+  margin-top: 1.25rem;
+}
+
+.dogbuild-page > .project-demonstrates,
+.dogbuild-page > .project-reflection,
+.dogbuild-page > .project-related {
+  margin-top: clamp(2.25rem, 4vw, 3rem);
+}
+
+.dogbuild-map figure {
+  margin: 1.5rem 0 0;
+}
+
+.dogbuild-map-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr) minmax(0, 1fr);
+  grid-template-areas:
+    "founder hub workers"
+    "strategy hub ci";
+  gap: 1.2rem 1.65rem;
+  align-items: stretch;
+}
+
+.dogbuild-map-node,
+.dogbuild-map-hub {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: .5rem;
+  min-width: 0;
+  padding: 1.15rem;
+  border: 1px solid var(--border);
+  border-radius: 15px;
+  background: rgba(255, 255, 255, .035);
+}
+
+.dogbuild-map-node strong,
+.dogbuild-map-hub strong {
+  color: var(--text);
+  font-size: 1rem;
+}
+
+.dogbuild-map-node span,
+.dogbuild-map-hub span {
+  color: var(--muted);
+  font-size: .88rem;
+  line-height: 1.5;
+}
+
+.dogbuild-map-founder { grid-area: founder; }
+.dogbuild-map-strategy { grid-area: strategy; }
+.dogbuild-map-workers { grid-area: workers; }
+.dogbuild-map-ci { grid-area: ci; }
+
+.dogbuild-map-hub {
+  grid-area: hub;
+  gap: .8rem;
+  border-color: var(--primary);
+  background: rgba(59, 130, 246, .1);
+  box-shadow: 0 0 0 1px rgba(59, 130, 246, .12);
+}
+
+.dogbuild-map-hub strong {
+  font-size: 1.2rem;
+}
+
+.dogbuild-map-hub span {
+  padding-left: .7rem;
+  border-left: 2px solid var(--primary);
+}
+
+.dogbuild-map-founder::after,
+.dogbuild-map-strategy::after,
+.dogbuild-map-workers::before,
+.dogbuild-map-ci::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 1.65rem;
+  border-top: 2px solid var(--primary);
+  opacity: .75;
+}
+
+.dogbuild-map-founder::after,
+.dogbuild-map-strategy::after { right: -1.65rem; }
+.dogbuild-map-workers::before,
+.dogbuild-map-ci::before { left: -1.65rem; }
+
+.dogbuild-map figcaption {
+  margin-top: 1rem;
+  color: var(--muted);
+  font-size: .88rem;
+  line-height: 1.6;
+}
+
+.dogbuild-page > .content-card > .dogbuild-map-planned {
+  max-width: none;
+  margin-top: 1.35rem;
+  padding: .9rem 1rem;
+  border: 1px dashed var(--border-strong);
+  border-radius: 12px;
+  color: var(--muted);
+  font-size: .9rem;
+}
+
+.dogbuild-map-planned strong {
+  color: var(--text);
+}
+
+@media (max-width: 900px) {
+  .dogbuild-map-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-areas: "hub hub" "founder workers" "strategy ci";
+    gap: .85rem;
+  }
+
+  .dogbuild-map-founder::after,
+  .dogbuild-map-strategy::after,
+  .dogbuild-map-workers::before,
+  .dogbuild-map-ci::before { display: none; }
 }
 
 .dogbuild-page > .inline-cta {
@@ -1707,6 +1837,17 @@ body.ask-mantosh-open {
 }
 
 @media (max-width: 640px) {
+  .dogbuild-map-grid {
+    grid-template-columns: 1fr;
+    grid-template-areas: "hub" "founder" "strategy" "workers" "ci";
+    gap: .75rem;
+  }
+
+  .dogbuild-map-founder::after,
+  .dogbuild-map-strategy::after,
+  .dogbuild-map-workers::before,
+  .dogbuild-map-ci::before { display: none; }
+
   .dogbuild-page > .inline-cta .inline-cta-actions {
     grid-template-columns: 1fr;
   }

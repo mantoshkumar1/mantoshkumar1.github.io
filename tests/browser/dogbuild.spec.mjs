@@ -75,7 +75,7 @@ test.describe("DogBuild project discoverability and accessibility", () => {
         expect(result.violations, `${viewport.name}: ${JSON.stringify(result.violations, null, 2)}`).toEqual([]);
 
         // Take screenshot for evidence
-        const screenshot = await page.screenshot({ fullPage: true, animations: "disabled" });
+        const screenshot = await page.screenshot({ fullPage: true, animations: "disabled", timeout: 15_000 });
         await testInfo.attach(`dogbuild-${viewport.name}`, { body: screenshot, contentType: "image/png" });
       });
     }
