@@ -12,6 +12,10 @@ on:
         description: Current 100% production Worker version (UUID)
         required: true
         type: string
+      conformance_comment_id:
+        description: Founder conformance record comment ID on issue 77
+        required: true
+        type: string
 
 permissions:
   contents: read
@@ -23,6 +27,9 @@ concurrency:
 jobs:
   verify:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: read
     steps:
       - name: Require founder, main, and exact commit
         env:
@@ -32,6 +39,7 @@ jobs:
           set -euo pipefail
           [[ "$GITHUB_REPOSITORY" == 'mantoshkumar1/mantoshkumar1.github.io' ]]
           [[ "$GITHUB_ACTOR" == 'mantoshkumar1' ]]
+          [[ "$GITHUB_TRIGGERING_ACTOR" == 'mantoshkumar1' ]]
           [[ "$GITHUB_REF" == 'refs/heads/main' ]]
           [[ "$EXPECTED_SHA" =~ ^[0-9a-f]{40}$ ]]
           [[ "$EXPECTED_PRIOR_VERSION" =~ ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$ ]]
@@ -45,6 +53,41 @@ jobs:
         env:
           EXPECTED_SHA: ${{ inputs.expected_sha }}
         run: test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
+      - name: Validate founder's pre-dispatch conformance record
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CONFORMANCE_COMMENT_ID: ${{ inputs.conformance_comment_id }}
+          EXPECTED_SHA: ${{ inputs.expected_sha }}
+          EXPECTED_PRIOR_VERSION: ${{ inputs.expected_prior_version }}
+        run: |
+          set -euo pipefail
+          [[ "$CONFORMANCE_COMMENT_ID" =~ ^[1-9][0-9]*$ ]]
+          gh api "repos/$GITHUB_REPOSITORY/issues/comments/$CONFORMANCE_COMMENT_ID" > "$RUNNER_TEMP/conformance.json"
+          python3 - <<'PY'
+          import json, os, re, subprocess
+          from pathlib import Path
+          comment = json.loads(Path(os.environ['RUNNER_TEMP'], 'conformance.json').read_text())
+          assert comment['user']['login'] == 'mantoshkumar1'
+          assert comment['issue_url'].endswith('/issues/77')
+          assert comment['created_at'] == comment['updated_at'], 'Edited conformance record: publish a new comment'
+          record = json.loads(comment['body'])
+          assert record['schema'] == 'ask-mantosh-release-conformance-v1'
+          assert record['expected_sha'] == os.environ['EXPECTED_SHA']
+          assert record['expected_prior_version'] == os.environ['EXPECTED_PRIOR_VERSION']
+          assert record['environment'] == 'ask-mantosh-production'
+          assert record['founder_required_reviewer'] == 'mantoshkumar1'
+          assert record['prevent_self_review'] is False
+          assert record['environment_only_secrets'] is True
+          assert record['no_repository_or_organization_fallback'] is True
+          assert record['token_worker_editor_scope_verified'] is True
+          assert record['live_bindings_verified'] is True
+          assert record['exclusive_production_writer_window'] is True
+          assert record['worker'] == 'ask-mantosh'
+          assert re.fullmatch(r'[0-9a-f]{32}', record['account_id'])
+          assert record['wrangler_blob'] == subprocess.check_output(['git', 'hash-object', 'chat-worker/wrangler.toml'], text=True).strip()
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
+              print('account_id=' + record['account_id'], file=output)
+          PY
       - uses: actions/setup-node@v5
         with:
           node-version: 22
@@ -80,90 +123,178 @@ jobs:
         with:
           ref: ${{ inputs.expected_sha }}
           persist-credentials: false
+      - name: Recheck source after approval
+        run: |
+          set -euo pipefail
+          [[ "$GITHUB_REPOSITORY" == 'mantoshkumar1/mantoshkumar1.github.io' ]]
+          [[ "$GITHUB_ACTOR" == 'mantoshkumar1' ]]
+          [[ "$GITHUB_TRIGGERING_ACTOR" == 'mantoshkumar1' ]]
+          [[ "$GITHUB_REF" == 'refs/heads/main' ]]
+          [[ "$GITHUB_SHA" == "$EXPECTED_SHA" ]]
+          [[ "$(git rev-parse HEAD)" == "$EXPECTED_SHA" ]]
+          [[ "$(git ls-remote origin refs/heads/main | cut -f1)" == "$EXPECTED_SHA" ]]
+      - name: Revalidate founder conformance after approval
+        id: conformance
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CONFORMANCE_COMMENT_ID: ${{ inputs.conformance_comment_id }}
+        run: |
+          set -euo pipefail
+          [[ "$CONFORMANCE_COMMENT_ID" =~ ^[1-9][0-9]*$ ]]
+          gh api "repos/$GITHUB_REPOSITORY/issues/comments/$CONFORMANCE_COMMENT_ID" > "$RUNNER_TEMP/conformance.json"
+          python3 - <<'PY'
+          import json, os, re, subprocess
+          from pathlib import Path
+          comment = json.loads(Path(os.environ['RUNNER_TEMP'], 'conformance.json').read_text())
+          assert comment['user']['login'] == 'mantoshkumar1'
+          assert comment['issue_url'].endswith('/issues/77')
+          assert comment['created_at'] == comment['updated_at'], 'Edited conformance record: publish a new comment'
+          record = json.loads(comment['body'])
+          required = {
+              'schema': 'ask-mantosh-release-conformance-v1',
+              'expected_sha': os.environ['EXPECTED_SHA'],
+              'expected_prior_version': os.environ['EXPECTED_PRIOR_VERSION'],
+              'environment': 'ask-mantosh-production',
+              'founder_required_reviewer': 'mantoshkumar1',
+              'prevent_self_review': False,
+              'environment_only_secrets': True,
+              'no_repository_or_organization_fallback': True,
+              'token_worker_editor_scope_verified': True,
+              'live_bindings_verified': True,
+              'exclusive_production_writer_window': True,
+              'worker': 'ask-mantosh',
+              'wrangler_blob': subprocess.check_output(['git', 'hash-object', 'chat-worker/wrangler.toml'], text=True).strip(),
+          }
+          assert all(record.get(key) == value for key, value in required.items())
+          assert re.fullmatch(r'[0-9a-f]{32}', record['account_id'])
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
+              print('account_id=' + record['account_id'], file=output)
+          PY
       - uses: actions/setup-node@v5
         with:
           node-version: 22
           cache: npm
       - name: Install locked Worker dependencies
         run: npm ci --prefix chat-worker
-      - name: Recheck source after approval
-        run: |
-          set -euo pipefail
-          [[ "$GITHUB_REPOSITORY" == 'mantoshkumar1/mantoshkumar1.github.io' ]]
-          [[ "$GITHUB_ACTOR" == 'mantoshkumar1' ]]
-          [[ "$GITHUB_REF" == 'refs/heads/main' ]]
-          [[ "$GITHUB_SHA" == "$EXPECTED_SHA" ]]
-          [[ "$(git rev-parse HEAD)" == "$EXPECTED_SHA" ]]
-          [[ "$(git ls-remote origin refs/heads/main | cut -f1)" == "$EXPECTED_SHA" ]]
       - name: Verify exact production version before write
         id: prior
         working-directory: chat-worker
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.ASK_MANTOSH_CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.ASK_MANTOSH_CLOUDFLARE_ACCOUNT_ID }}
+          EXPECTED_ACCOUNT_ID: ${{ steps.conformance.outputs.account_id }}
         run: |
           set -euo pipefail
           [[ -n "$CLOUDFLARE_API_TOKEN" && -n "$CLOUDFLARE_ACCOUNT_ID" ]]
+          [[ "$CLOUDFLARE_ACCOUNT_ID" == "$EXPECTED_ACCOUNT_ID" ]]
+          [[ "$(git ls-remote origin refs/heads/main | cut -f1)" == "$EXPECTED_SHA" ]]
           npx wrangler deployments status --json > "$RUNNER_TEMP/prior-deployment.json"
           actual=$(jq -er 'if (.versions | length) == 1 and .versions[0].percentage == 100 then .versions[0].version_id else empty end' "$RUNNER_TEMP/prior-deployment.json")
           [[ "$actual" == "$EXPECTED_PRIOR_VERSION" ]] || { echo "::error::Production version changed or traffic is split; stop and re-authorize."; exit 1; }
           echo "version=$actual" >> "$GITHUB_OUTPUT"
-      - name: Recheck main immediately before deploy
-        run: test "$(git ls-remote origin refs/heads/main | cut -f1)" = "$EXPECTED_SHA"
       - name: Deploy existing Worker configuration
         id: deploy
         working-directory: chat-worker
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.ASK_MANTOSH_CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.ASK_MANTOSH_CLOUDFLARE_ACCOUNT_ID }}
-        run: npx wrangler deploy
-      - name: Verify new immutable production version
+          NO_COLOR: '1'
+        run: |
+          set -uo pipefail
+          echo 'attempted=true' >> "$GITHUB_OUTPUT"
+          npx wrangler deploy > "$RUNNER_TEMP/wrangler-deploy.log" 2>&1
+          deploy_exit=$?
+          cat "$RUNNER_TEMP/wrangler-deploy.log"
+          version=$(sed -nE 's/^Current Version ID: ([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$/\1/p' "$RUNNER_TEMP/wrangler-deploy.log" | tail -1)
+          echo "exit_code=$deploy_exit" >> "$GITHUB_OUTPUT"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          # Keep this step successful so production is re-queried after every attempt.
+          exit 0
+      - name: Observe and correlate production after every deploy attempt
         id: current
+        if: always() && steps.deploy.outputs.attempted == 'true'
         working-directory: chat-worker
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.ASK_MANTOSH_CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.ASK_MANTOSH_CLOUDFLARE_ACCOUNT_ID }}
+          DEPLOY_VERSION: ${{ steps.deploy.outputs.version }}
+          DEPLOY_EXIT_CODE: ${{ steps.deploy.outputs.exit_code }}
         run: |
           set -euo pipefail
-          npx wrangler deployments status --json > "$RUNNER_TEMP/new-deployment.json"
-          actual=$(jq -er 'if (.versions | length) == 1 and .versions[0].percentage == 100 then .versions[0].version_id else empty end' "$RUNNER_TEMP/new-deployment.json")
-          [[ "$actual" =~ ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$ ]]
-          [[ "$actual" != "$EXPECTED_PRIOR_VERSION" ]] || { echo "::error::No new production version observed."; exit 1; }
-          echo "version=$actual" >> "$GITHUB_OUTPUT"
+          observed=unknown
+          if npx wrangler deployments status --json > "$RUNNER_TEMP/new-deployment.json"; then
+            observed=$(jq -er 'if (.versions | length) == 1 and .versions[0].percentage == 100 then .versions[0].version_id else empty end' "$RUNNER_TEMP/new-deployment.json") || observed=unknown
+          fi
+          correlation=unknown
+          if [[ "$observed" == "$EXPECTED_PRIOR_VERSION" ]]; then
+            correlation=unchanged
+          elif [[ "$observed" != unknown && -n "$DEPLOY_VERSION" ]]; then
+            if [[ "$observed" == "$DEPLOY_VERSION" ]]; then correlation=moved-to-this-run
+            else correlation=moved-by-another-writer; fi
+          fi
+          echo "version=$observed" >> "$GITHUB_OUTPUT"
+          echo "correlation=$correlation" >> "$GITHUB_OUTPUT"
+          [[ "$DEPLOY_EXIT_CODE" == 0 && "$correlation" == moved-to-this-run ]] || {
+            echo "::error::Production outcome $correlation; inspect manually before any rollback or retry."
+            exit 1
+          }
       - name: Smoke production health, profile answer, and stream
         id: smoke
         run: |
           node --input-type=module <<'NODE'
           import assert from 'node:assert/strict';
           const base = 'https://ask-mantosh.mantoshk234.workers.dev';
-          const health = await fetch(`${base}/health`);
-          assert.equal(health.status, 200);
-          assert.equal((await health.json()).service, 'ask-mantosh');
+          async function waitFor(label, check) {
+            let lastError;
+            for (let attempt = 1; attempt <= 12; attempt += 1) {
+              try { await check(); return; }
+              catch (error) {
+                lastError = error;
+                if (attempt < 12) await new Promise((resolve) => setTimeout(resolve, 5_000));
+              }
+            }
+            throw new Error(`${label}: ${lastError?.message || 'failed'}`);
+          }
+          await waitFor('health', async () => {
+            const health = await fetch(`${base}/health`, { signal: AbortSignal.timeout(10_000) });
+            assert.equal(health.status, 200);
+            assert.equal((await health.json()).service, 'ask-mantosh');
+          });
           const headers = { Origin: 'https://mantoshkumar1.github.io', 'Content-Type': 'application/json' };
           const body = JSON.stringify({ question: 'Tell me about this guy?' });
-          const response = await fetch(`${base}/chat`, { method: 'POST', headers, body });
-          assert.equal(response.status, 200);
-          const answer = await response.json();
-          assert.equal(answer.success, true);
-          assert.match(answer.answer, /Mantosh Kumar/);
-          assert.ok(answer.sources?.some((source) => source.url?.includes('/experience/')));
-          const streamed = await fetch(`${base}/chat`, {
-            method: 'POST', headers: { ...headers, Accept: 'text/event-stream' }, body
+          await waitFor('public profile', async () => {
+            const response = await fetch(`${base}/chat`, { method: 'POST', headers, body, signal: AbortSignal.timeout(10_000) });
+            assert.equal(response.status, 200);
+            const answer = await response.json();
+            assert.equal(answer.success, true);
+            assert.match(answer.answer, /Mantosh Kumar/);
+            assert.ok(answer.sources?.some((source) => source.url?.includes('/experience/')));
           });
-          assert.equal(streamed.status, 200);
-          assert.match(streamed.headers.get('content-type') ?? '', /^text\/event-stream/);
-          const events = await streamed.text();
-          assert.match(events, /event: done/);
-          assert.match(events, /Mantosh Kumar/);
+          await waitFor('profile stream', async () => {
+            const streamed = await fetch(`${base}/chat`, {
+              method: 'POST', headers: { ...headers, Accept: 'text/event-stream' }, body,
+              signal: AbortSignal.timeout(10_000)
+            });
+            assert.equal(streamed.status, 200);
+            assert.match(streamed.headers.get('content-type') ?? '', /^text\/event-stream/);
+            const events = await streamed.text();
+            assert.match(events, /event: done/);
+            assert.match(events, /Mantosh Kumar/);
+          });
           NODE
       - name: Record release receipt on issue 77
         if: always()
         env:
           GH_TOKEN: ${{ github.token }}
           PRIOR_VERSION: ${{ steps.prior.outputs.version }}
-          NEW_VERSION: ${{ steps.current.outputs.version }}
+          OBSERVED_VERSION: ${{ steps.current.outputs.version }}
+          DEPLOY_VERSION: ${{ steps.deploy.outputs.version }}
+          DEPLOY_EXIT_CODE: ${{ steps.deploy.outputs.exit_code }}
           DEPLOY_OUTCOME: ${{ steps.deploy.outcome }}
+          CURRENT_OUTCOME: ${{ steps.current.outcome }}
+          CORRELATION: ${{ steps.current.outputs.correlation }}
           SMOKE_OUTCOME: ${{ steps.smoke.outcome }}
+          CONFORMANCE_COMMENT_ID: ${{ inputs.conformance_comment_id }}
         run: |
           {
             echo 'Ask Mantosh manual release receipt'
@@ -172,8 +303,12 @@ jobs:
             echo "- Exact source commit: \`${EXPECTED_SHA}\`"
             echo "- Authorized prior production version: \`${EXPECTED_PRIOR_VERSION}\`"
             echo "- Observed prior version: \`${PRIOR_VERSION:-unavailable}\`"
-            echo "- Deploy step: ${DEPLOY_OUTCOME:-not run}"
-            echo "- Observed new production version: \`${NEW_VERSION:-unavailable}\`"
+            echo "- Founder conformance record: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/issues/77#issuecomment-${CONFORMANCE_COMMENT_ID}"
+            echo "- Deploy attempt step: ${DEPLOY_OUTCOME:-not run}; Wrangler exit: ${DEPLOY_EXIT_CODE:-not run}"
+            echo "- Version reported by this deploy: \`${DEPLOY_VERSION:-unavailable}\`"
+            echo "- Post-attempt observation step: ${CURRENT_OUTCOME:-not run}"
+            echo "- Observed current production version: \`${OBSERVED_VERSION:-unavailable}\`"
+            echo "- Version correlation: ${CORRELATION:-unknown}"
             echo "- Production smoke: ${SMOKE_OUTCOME:-not run}"
             echo '- If deploy ran but verification or smoke failed, inspect production and decide rollback explicitly; this workflow does not roll back automatically.'
           } > "$RUNNER_TEMP/release-receipt.md"

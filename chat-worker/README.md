@@ -58,9 +58,9 @@ The optional browser event endpoint is `POST /analytics/recommendation-click` wi
 
 ## Release
 
-Production releases use the founder-dispatched [Release Ask Mantosh Worker](../.github/workflows/release-ask-mantosh.yml) workflow. It requires an exact main SHA, an exact currently active Worker version, passing tests and dry run, and approval through the `ask-mantosh-production` GitHub environment before deploying. There is no push or schedule trigger. See the [release setup and procedure](docs/DEPLOYMENT.md) before the first run. A failed post-deploy check requires an explicit production inspection and rollback decision.
+Production releases use the founder-dispatched [Release Ask Mantosh Worker](../.github/workflows/release-ask-mantosh.yml) workflow. It requires an exact main SHA, an exact currently active Worker version, a founder conformance record for the protected environment and exclusive writer window, passing tests and dry run, and approval through `ask-mantosh-production` before deploying. There is no push or schedule trigger. See the [release setup and procedure](docs/DEPLOYMENT.md) before the first run. A failed post-deploy check requires production inspection and an explicit rollback decision.
 
-`wrangler.toml` contains the production Worker name, exact GitHub Pages origin, D1, Vectorize, Workers AI, and mandatory rate-limiter bindings. `npm run deploy` remains a direct production command for exceptional recovery by an authorized operator; it is not the normal release path.
+`wrangler.toml` contains the production Worker name, exact GitHub Pages origin, D1, Vectorize, Workers AI, and mandatory rate-limiter bindings. `npm run deploy` remains a direct production command only for founder-authorized emergency recovery. Before using it, record the exact main commit, account, active version, binding/configuration check and rollback target on issue #77; afterward record the new version, smoke outcome and reason for bypass, then reconcile the DogBuild control board. It is not the normal release path.
 
 For local development, create an untracked `.dev.vars` file:
 

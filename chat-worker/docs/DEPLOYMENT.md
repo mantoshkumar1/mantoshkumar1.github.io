@@ -11,32 +11,86 @@ production knowledge storage. Set production origins explicitly.
 
 The production path is [Release Ask Mantosh Worker](../../.github/workflows/release-ask-mantosh.yml).
 It is started manually from `main`; a push, schedule, or Pages deployment does
-not release the Worker. Before its first use, the founder must create the
-`ask-mantosh-production` GitHub environment with `mantoshkumar1` as a required
-reviewer and set **environment secrets** `ASK_MANTOSH_CLOUDFLARE_API_TOKEN`
-(a token scoped to the required Worker/account operations) and
-`ASK_MANTOSH_CLOUDFLARE_ACCOUNT_ID`. If the founder initiates and approves the
-same run, leave GitHub's optional **Prevent self-review** setting off. Do not
-put these values in repository secrets, files, issue comments, or workflow
-inputs. The workflow fails if the credentials are absent.
+not release the Worker. The release workflow checks the original actor and
+the current triggering actor, including on re-runs.
+
+Before its first use, the founder must create the `ask-mantosh-production`
+GitHub environment with `mantoshkumar1` as a required reviewer and set
+**environment secrets** `ASK_MANTOSH_CLOUDFLARE_API_TOKEN` and
+`ASK_MANTOSH_CLOUDFLARE_ACCOUNT_ID`. The token should have Cloudflare Workers
+**Editor** for only the existing `ask-mantosh` Worker in the intended account;
+the current `wrangler.toml` does not change routes or domains and does not
+require D1/Vectorize data permissions for deployment. Verify the actual token
+scope in Cloudflare ([Workers roles and permissions](https://developers.cloudflare.com/workers/authorization/workers/)). If the founder initiates and approves the same run, leave
+GitHub's optional **Prevent self-review** setting off. Confirm the two secret
+names exist **only** at the environment level, with no same-named repository or
+organization fallback. Do not put the token in files, issue comments, or
+workflow inputs. The account ID is recorded separately as a non-secret release
+identity; the workflow compares it with the environment value before any
+Cloudflare write.
+
+The YAML cannot prove that GitHub's environment has a required reviewer or
+that a resolved secret came from that environment. Before **each dispatch**,
+the founder must read back the environment protection, environment-only secret
+names and absence of fallbacks, Cloudflare token scope, current account and
+Worker bindings/configuration, and the active 100% version. Confirm that no
+other dashboard, CI or CLI writer will deploy this Worker during the release.
+Publish a new, unedited JSON comment on [issue #77](https://github.com/mantoshkumar1/mantoshkumar1.github.io/issues/77)
+with these asserted facts (no token value):
+
+The `wrangler_blob` is the `sha` returned by the [GitHub main-branch file API](https://api.github.com/repos/mantoshkumar1/mantoshkumar1.github.io/contents/chat-worker/wrangler.toml?ref=main); it is also `git hash-object chat-worker/wrangler.toml`. The comment body must be the JSON object itself, without Markdown fencing.
+
+```json
+{
+  "schema": "ask-mantosh-release-conformance-v1",
+  "expected_sha": "FULL_CURRENT_MAIN_SHA",
+  "expected_prior_version": "CURRENT_100_PERCENT_VERSION_UUID",
+  "environment": "ask-mantosh-production",
+  "founder_required_reviewer": "mantoshkumar1",
+  "prevent_self_review": false,
+  "environment_only_secrets": true,
+  "no_repository_or_organization_fallback": true,
+  "token_worker_editor_scope_verified": true,
+  "live_bindings_verified": true,
+  "exclusive_production_writer_window": true,
+  "worker": "ask-mantosh",
+  "account_id": "32_LOWERCASE_HEX_ACCOUNT_ID",
+  "wrangler_blob": "GIT_BLOB_SHA_OF_CHAT_WORKER_WRANGLER_TOML"
+}
+```
+
+The workflow checks the comment author, issue, edit state and exact identities
+both before testing and after environment approval. The comment is a founder
+attestation, **not** automatic proof of Cloudflare or GitHub settings. If any
+item cannot be confirmed, do not dispatch; never mark an unknown fact `true`.
 
 After the workflow has passed protected-path review and merged:
 
 1. Confirm the intended full 40-character `main` SHA and the current Cloudflare
    production Worker version serving 100% of traffic. Enter both exact values
-   as the workflow's `expected_sha` and `expected_prior_version` inputs.
+   and the new conformance comment's numeric ID as the workflow inputs.
 2. Dispatch the workflow from `main` as `mantoshkumar1`. It checks the exact
    source, runs Worker tests and the offline evaluation, runs browser tests,
    and validates the bundle with Wrangler's dry run. Review the pending
    `ask-mantosh-production` deployment and approve it deliberately.
-3. After approval, the workflow rechecks `main` and the active production
-   version. Any move or traffic split stops the release before deployment.
-   It deploys only the existing `ask-mantosh` configuration, verifies the new
-   immutable version, and smokes health, the exact public-profile question,
-   and SSE. The run summary and issue #77 record the source and prior/new
-   versions. If a check after deployment fails, inspect production and decide
-   rollback explicitly; the workflow does not roll back automatically.
-4. Update [`../../docs/SYSTEM_STATE.md`](../../docs/SYSTEM_STATE.md) and the
+3. After approval, the workflow rechecks `main` and the conformance record,
+   installs locked Worker dependencies, compares the Cloudflare account ID,
+   then queries the active production version immediately before deploy. A
+   version mismatch or traffic split stops it before the write. This is a read
+   followed by a write, **not** Cloudflare compare-and-swap: another writer can
+   still race between them. The founder's exclusive-writer window is therefore
+   required. The workflow deploys only the existing `ask-mantosh` configuration.
+4. It queries production after **every** deploy attempt, including a Wrangler
+   error, and compares the observed 100% version to the version reported by
+   that attempt. Success requires a zero Wrangler exit, exact correlation and
+   passing health, public-profile and SSE smokes. Those probes retry up to
+   12 times at five-second intervals. If live public-profile facts are missing,
+   the fail-closed answer may cause smoke failure; inspect the D1 evidence.
+   The run summary and issue #77 record the prior version, Wrangler exit,
+   reported version, observed version and correlation. An uncertain or
+   post-write failure requires production inspection and an explicit rollback
+   decision. There is no automatic rollback.
+5. Update [`../../docs/SYSTEM_STATE.md`](../../docs/SYSTEM_STATE.md) and the
    DogBuild control board from the actual successful release receipt.
 
 For each Worker change, also follow these application steps:
