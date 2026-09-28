@@ -137,7 +137,18 @@ This path uses a separate `ask-mantosh-auto-production` GitHub environment,
 so the existing required-reviewer `ask-mantosh-production` environment and
 manual release remain intact. **Do not configure the automatic environment
 before the first manual release and protected-path review of its workflow.**
-One-time activation then requires the founder to restrict that environment
+Automatic activation is currently blocked by the external-writer race recorded
+in [issue #77](https://github.com/mantoshkumar1/mantoshkumar1.github.io/issues/77#issuecomment-5862232109).
+Even after a successful manual baseline and protected-path review, keep this
+environment without a token until an enforceable exclusive-writer boundary
+for every dashboard, CLI and CI deployment path is demonstrated and an
+external write between the final pre-write read and deploy is proven to block
+a clean receipt. A promise not to deploy elsewhere is insufficient for
+unattended release. If that boundary is unavailable, continue to use the
+manual founder-gated path; do not activate this workflow.
+
+If this block is resolved in a separately reviewed exact-head correction,
+one-time activation then requires the founder to restrict that environment
 to `main`, set only its two environment secrets
 `ASK_MANTOSH_CLOUDFLARE_API_TOKEN` (Workers Editor limited to the existing
 `ask-mantosh`) and `ASK_MANTOSH_CLOUDFLARE_ACCOUNT_ID`, confirm no same-name
@@ -150,10 +161,10 @@ in-progress cancellation; pending merge releases are queued. This excludes
 overlapping deployments **from these two workflows**. The Cloudflare version
 comparison and post-deploy checks detect many external writes but do not
 provide a Cloudflare compare-and-swap or lock out dashboard, CLI, other CI,
-and secret writers. Only activate automatic release after confirming the
-ordinary operating rule that nobody else deploys `ask-mantosh` while a
-release is in flight. If that cannot be maintained, keep the automatic
-environment without a token and use the manual founder-gated path. D1
+and secret writers. Do not activate automatic release based solely on an
+ordinary operating rule; the external-writer exclusion above must be
+enforced. Keep the automatic environment without a token and use the manual
+founder-gated path until it is. D1
 migrations and binding identity changes need a separate reviewed release
 plan.
 

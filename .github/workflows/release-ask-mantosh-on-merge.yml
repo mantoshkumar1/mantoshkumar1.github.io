@@ -52,7 +52,7 @@ jobs:
           assert pr['base']['ref'] == 'main'
           print('Founder merge PR:', pr['html_url'])
           PY
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
         with:
           ref: ${{ github.sha }}
           fetch-depth: 0
@@ -91,7 +91,7 @@ jobs:
           assert config['ratelimits'][0]['namespace_id'] == '31001'
           assert config['ai']['binding'] == 'AI'
           PY
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
         with:
           node-version: 22
           cache: npm
@@ -120,7 +120,7 @@ jobs:
     env:
       EXPECTED_SHA: ${{ github.sha }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
         with:
           ref: ${{ github.sha }}
           persist-credentials: false
@@ -165,12 +165,20 @@ jobs:
               print('EXPECTED_PRIOR_VERSION=' + match.group(1), file=output)
           print('Baseline receipt:', receipt['html_url'])
           PY
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
         with:
           node-version: 22
           cache: npm
       - name: Install locked Worker dependencies
         run: npm ci --prefix chat-worker
+      - name: Revalidate release source immediately before credentials
+        run: |
+          set -euo pipefail
+          [[ "$(git rev-parse HEAD)" == "$EXPECTED_SHA" ]]
+          [[ "$(git ls-remote origin refs/heads/main | cut -f1)" == "$EXPECTED_SHA" ]]
+          git diff --exit-code --quiet HEAD -- .github/workflows/release-ask-mantosh-on-merge.yml chat-worker/src chat-worker/wrangler.toml chat-worker/package.json chat-worker/package-lock.json
+          test -z "$(git ls-files --others -- chat-worker/src chat-worker/wrangler.toml chat-worker/package.json chat-worker/package-lock.json)"
+          [[ "$(git hash-object chat-worker/wrangler.toml)" == "$(git rev-parse HEAD:chat-worker/wrangler.toml)" ]]
       - name: Verify exact production version before write
         id: prior
         working-directory: chat-worker
