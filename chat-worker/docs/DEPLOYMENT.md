@@ -110,6 +110,53 @@ Deploy a changed knowledge document, then verify its answer becomes visible.
 The optional KV cache-version binding is not enabled in the committed
 production configuration, so the current correctness boundary is TTL expiry.
 
+## Future automatic release after founder merge
+
+The first release still follows the manual sequence above. It establishes a successful,
+GitHub Actions-authored release receipt on issue #77. The separate
+[merge-triggered release](../../.github/workflows/release-ask-mantosh-on-merge.yml)
+is prepared for later Worker changes. It has no schedule and does not run for
+static Pages, knowledge Markdown, tests or documentation changes.
+
+After a reviewed exact-head PR is founder-merged into `main`, a change to
+`chat-worker/src/**`, `wrangler.toml`, or the Worker package files starts a
+release of that exact merge commit. The workflow requires the push actor and
+associated merged PR to be the founder, rechecks current `main`, rejects a
+migration in that merge, pins the existing Worker and storage identities, then
+runs Worker tests, evaluation, browser tests and a Wrangler dry run. It reads
+the latest unedited successful GitHub Actions release receipt on #77 as the
+expected prior version; if no successful manual baseline exists, or the latest
+receipt records a failure, it stops. The production job compares that version
+to the authenticated 100%-traffic Cloudflare version before writing. It
+deploys, correlates the version, checks health/profile/stream, checks the
+100%-traffic version again, and posts a receipt on #77. A changed `main`,
+split traffic, missing secret, drift, uncertain deploy or smoke failure
+fails closed and requires a human decision. No automatic rollback occurs.
+
+This path uses a separate `ask-mantosh-auto-production` GitHub environment,
+so the existing required-reviewer `ask-mantosh-production` environment and
+manual release remain intact. **Do not configure the automatic environment
+before the first manual release and protected-path review of its workflow.**
+One-time activation then requires the founder to restrict that environment
+to `main`, set only its two environment secrets
+`ASK_MANTOSH_CLOUDFLARE_API_TOKEN` (Workers Editor limited to the existing
+`ask-mantosh`) and `ASK_MANTOSH_CLOUDFLARE_ACCOUNT_ID`, confirm no same-name
+repository or organization secret fallback, and deliberately leave the
+automatic environment without a required reviewer. Its lack of a second
+approval means the founder's PR merge is the production decision.
+
+The two GitHub release workflows share one concurrency group with no
+in-progress cancellation; pending merge releases are queued. This excludes
+overlapping deployments **from these two workflows**. The Cloudflare version
+comparison and post-deploy checks detect many external writes but do not
+provide a Cloudflare compare-and-swap or lock out dashboard, CLI, other CI,
+and secret writers. Only activate automatic release after confirming the
+ordinary operating rule that nobody else deploys `ask-mantosh` while a
+release is in flight. If that cannot be maintained, keep the automatic
+environment without a token and use the manual founder-gated path. D1
+migrations and binding identity changes need a separate reviewed release
+plan.
+
 ## Rollback and recovery
 
 Use `wrangler rollback` (or promote the prior Worker version) for code rollback.
