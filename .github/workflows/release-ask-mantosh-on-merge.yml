@@ -41,15 +41,16 @@ jobs:
           [[ "$GITHUB_SHA" =~ ^[0-9a-f]{40}$ ]]
           [[ "$(git ls-remote "https://github.com/${GITHUB_REPOSITORY}.git" refs/heads/main | cut -f1)" == "$GITHUB_SHA" ]]
           gh api "repos/$GITHUB_REPOSITORY/commits/$GITHUB_SHA/pulls" > "$RUNNER_TEMP/associated-prs.json"
+          pr_number=$(jq -er --arg sha "$GITHUB_SHA" '[.[] | select(.merge_commit_sha == $sha and .merged_at != null and .base.ref == "main")] | if length == 1 then .[0].number else empty end' "$RUNNER_TEMP/associated-prs.json")
+          gh api "repos/$GITHUB_REPOSITORY/pulls/$pr_number" > "$RUNNER_TEMP/merged-pr.json"
           python3 - <<'PY'
           import json, os
           from pathlib import Path
-          prs = json.loads(Path(os.environ['RUNNER_TEMP'], 'associated-prs.json').read_text())
-          matches = [p for p in prs if p.get('merge_commit_sha') == os.environ['GITHUB_SHA']
-                     and p.get('merged_at') and (p.get('merged_by') or {}).get('login') == 'mantoshkumar1'
-                     and (p.get('base') or {}).get('ref') == 'main']
-          assert len(matches) == 1, 'Exact main commit needs one founder-merged PR'
-          print('Founder merge PR:', matches[0]['html_url'])
+          pr = json.loads(Path(os.environ['RUNNER_TEMP'], 'merged-pr.json').read_text())
+          assert pr['merge_commit_sha'] == os.environ['GITHUB_SHA']
+          assert pr['merged_at'] and pr['merged_by']['login'] == 'mantoshkumar1'
+          assert pr['base']['ref'] == 'main'
+          print('Founder merge PR:', pr['html_url'])
           PY
       - uses: actions/checkout@v5
         with:
@@ -179,6 +180,10 @@ jobs:
           actual=$(jq -er 'if (.versions | length) == 1 and .versions[0].percentage == 100 then .versions[0].version_id else empty end' "$RUNNER_TEMP/prior-deployment.json")
           [[ "$actual" == "$EXPECTED_PRIOR_VERSION" ]] || { echo "::error::Production version changed or traffic is split; stop and re-authorize."; exit 1; }
           echo "version=$actual" >> "$GITHUB_OUTPUT"
+      - name: Recheck current main immediately before write
+        run: |
+          set -euo pipefail
+          [[ "$(git ls-remote origin refs/heads/main | cut -f1)" == "$EXPECTED_SHA" ]]
       - name: Deploy existing Worker configuration
         id: deploy
         working-directory: chat-worker
@@ -317,3 +322,26 @@ jobs:
           } > "$RUNNER_TEMP/release-receipt.md"
           cat "$RUNNER_TEMP/release-receipt.md" >> "$GITHUB_STEP_SUMMARY"
           gh issue comment 77 --repo "$GITHUB_REPOSITORY" --body-file "$RUNNER_TEMP/release-receipt.md"
+
+  report-verification-failure:
+    needs: verify
+    if: always() && needs.verify.result != 'success'
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Record blocked automatic candidate on issue 77
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERIFY_RESULT: ${{ needs.verify.result }}
+        run: |
+          set -euo pipefail
+          {
+            echo 'Ask Mantosh automatic release blocked before production'
+            echo
+            echo "- Run: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+            echo "- Exact source commit: \`${GITHUB_SHA}\`"
+            echo "- Verification result: ${VERIFY_RESULT}"
+            echo '- No production job started; inspect the exact run before a new release decision.'
+          } > "$RUNNER_TEMP/blocked-receipt.md"
+          gh issue comment 77 --repo "$GITHUB_REPOSITORY" --body-file "$RUNNER_TEMP/blocked-receipt.md"
