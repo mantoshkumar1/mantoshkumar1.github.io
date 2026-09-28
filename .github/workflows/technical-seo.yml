@@ -20,6 +20,21 @@ jobs:
       - run: node --test tests/release-workflows.test.mjs
       - run: node scripts/audit-knowledge-sync.mjs
 
+  worker-toolchain:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
+        with:
+          node-version: 22
+      - name: Install locked Worker toolchain
+        run: npm ci --prefix chat-worker
+      - name: Reject high-severity advisories
+        run: npm audit --prefix chat-worker --audit-level=high
+      - name: Validate Worker bundle without deploying
+        working-directory: chat-worker
+        run: npx wrangler deploy --dry-run
+
   audit:
     runs-on: ubuntu-latest
     steps:

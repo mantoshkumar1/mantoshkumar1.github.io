@@ -11,6 +11,7 @@ const knowledge = file('sync-knowledge.yml');
 const manual = file('release-ask-mantosh.yml');
 const automaticPath = path.join(root, '.github/workflows/release-ask-mantosh-on-merge.yml');
 const automatic = existsSync(automaticPath) ? file('release-ask-mantosh-on-merge.yml') : null;
+const technicalSeo = file('technical-seo.yml');
 
 function topLevelBlock(source, key) {
   const match = source.match(new RegExp(`^${key}:\\n([\\s\\S]*?)(?=^[^\\s#][^\\n]*:|(?![\\s\\S]))`, 'm'));
@@ -89,6 +90,16 @@ test('knowledge sync uses its own OIDC-protected indexer and never deploys Worke
   assert.match(sync, /audience=ask-mantosh-indexer/);
   assert.match(sync, /sync-knowledge\.mjs --base/);
   assert.doesNotMatch(sync, /wrangler\s+(?:versions\s+)?deploy\b/);
+});
+
+test('Worker toolchain gets a separate visible audit and dry-run check on PR and main', () => {
+  const toolchain = job(technicalSeo, 'worker-toolchain');
+  assert.match(technicalSeo, /^  pull_request:$/m);
+  assert.match(technicalSeo, /^  push:$/m);
+  assert.match(toolchain, /npm ci --prefix chat-worker/);
+  assert.match(toolchain, /npm audit --prefix chat-worker --audit-level=high/);
+  assert.match(toolchain, /wrangler deploy --dry-run/);
+  assert.doesNotMatch(toolchain, /CLOUDFLARE_API_TOKEN|CLOUDFLARE_ACCOUNT_ID/);
 });
 
 test('manual Worker release stays dispatch-only with a protected production boundary', () => {
