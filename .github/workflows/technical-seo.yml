@@ -17,6 +17,7 @@ jobs:
         with:
           node-version: 22
       - run: node --test tests/knowledge-sync-contract.test.mjs
+      - run: node --test tests/release-workflows.test.mjs
       - run: node scripts/audit-knowledge-sync.mjs
 
   audit:

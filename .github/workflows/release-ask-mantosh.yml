@@ -97,6 +97,8 @@ jobs:
         run: |
           npm ci
           npm ci --prefix chat-worker
+      - name: Reject high-severity Worker toolchain advisories
+        run: npm audit --prefix chat-worker --audit-level=high
       - name: Run Worker tests and evaluation
         run: npm test --prefix chat-worker
       - name: Run browser tests
@@ -177,6 +179,8 @@ jobs:
           cache: npm
       - name: Install locked Worker dependencies
         run: npm ci --prefix chat-worker
+      - name: Reject high-severity Worker toolchain advisories before write
+        run: npm audit --prefix chat-worker --audit-level=high
       - name: Verify exact production version before write
         id: prior
         working-directory: chat-worker
