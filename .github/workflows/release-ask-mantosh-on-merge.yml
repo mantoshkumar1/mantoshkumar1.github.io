@@ -69,8 +69,14 @@ jobs:
           import tomllib
           from pathlib import Path
           config = tomllib.loads(Path('chat-worker/wrangler.toml').read_text())
+          assert set(config) == {
+              'name', 'main', 'compatibility_date', 'workers_dev', 'vars',
+              'secrets', 'ratelimits', 'd1_databases', 'vectorize', 'ai',
+          }, 'New deployment surface needs a separate release review'
           assert config['name'] == 'ask-mantosh'
+          assert config['main'] == 'src/index.js'
           assert config['workers_dev'] is True
+          assert config['secrets']['required'] == ['INDEXER_TOKEN']
           assert config['d1_databases'] == [{
               'binding': 'KNOWLEDGE_DB',
               'database_name': 'personal-website-knowledge',
@@ -80,6 +86,7 @@ jobs:
               'binding': 'KNOWLEDGE_INDEX',
               'index_name': 'ask-mantosh-knowledge-v3',
           }]
+          assert len(config['ratelimits']) == 1
           assert config['ratelimits'][0]['name'] == 'RATE_LIMITER'
           assert config['ratelimits'][0]['namespace_id'] == '31001'
           assert config['ai']['binding'] == 'AI'
