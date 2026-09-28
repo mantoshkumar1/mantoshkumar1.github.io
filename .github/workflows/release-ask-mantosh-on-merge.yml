@@ -1,0 +1,319 @@
+name: Release Ask Mantosh Worker on founder merge
+
+# The first production release and baseline must use the separately gated manual workflow.
+# A later founder merge of Worker code/config starts this release; docs/tests alone do not.
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'chat-worker/src/**'
+      - 'chat-worker/wrangler.toml'
+      - 'chat-worker/package.json'
+      - 'chat-worker/package-lock.json'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ask-mantosh-production-release
+  queue: max
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: read
+      pull-requests: read
+    steps:
+      - name: Require founder merge and exact current main
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          [[ "$GITHUB_EVENT_NAME" == push ]]
+          [[ "$GITHUB_REPOSITORY" == 'mantoshkumar1/mantoshkumar1.github.io' ]]
+          [[ "$GITHUB_ACTOR" == 'mantoshkumar1' ]]
+          [[ "$GITHUB_TRIGGERING_ACTOR" == 'mantoshkumar1' ]]
+          [[ "$GITHUB_RUN_ATTEMPT" == 1 ]]
+          [[ "$GITHUB_REF" == 'refs/heads/main' ]]
+          [[ "$GITHUB_SHA" =~ ^[0-9a-f]{40}$ ]]
+          [[ "$(git ls-remote "https://github.com/${GITHUB_REPOSITORY}.git" refs/heads/main | cut -f1)" == "$GITHUB_SHA" ]]
+          gh api "repos/$GITHUB_REPOSITORY/commits/$GITHUB_SHA/pulls" > "$RUNNER_TEMP/associated-prs.json"
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          prs = json.loads(Path(os.environ['RUNNER_TEMP'], 'associated-prs.json').read_text())
+          matches = [p for p in prs if p.get('merge_commit_sha') == os.environ['GITHUB_SHA']
+                     and p.get('merged_at') and (p.get('merged_by') or {}).get('login') == 'mantoshkumar1'
+                     and (p.get('base') or {}).get('ref') == 'main']
+          assert len(matches) == 1, 'Exact main commit needs one founder-merged PR'
+          print('Founder merge PR:', matches[0]['html_url'])
+          PY
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Confirm checked-out commit
+        env:
+          EXPECTED_SHA: ${{ github.sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
+      - name: Require existing Worker and unchanged storage bindings
+        run: |
+          set -euo pipefail
+          test -z "$(git diff --name-only HEAD^ HEAD -- chat-worker/migrations)"
+          python3 - <<'PY'
+          import tomllib
+          from pathlib import Path
+          config = tomllib.loads(Path('chat-worker/wrangler.toml').read_text())
+          assert config['name'] == 'ask-mantosh'
+          assert config['workers_dev'] is True
+          assert config['d1_databases'] == [{
+              'binding': 'KNOWLEDGE_DB',
+              'database_name': 'personal-website-knowledge',
+              'database_id': '66ebeda4-a0f0-480e-bcbd-78d44875dc8e',
+          }]
+          assert config['vectorize'] == [{
+              'binding': 'KNOWLEDGE_INDEX',
+              'index_name': 'ask-mantosh-knowledge-v3',
+          }]
+          assert config['ratelimits'][0]['name'] == 'RATE_LIMITER'
+          assert config['ratelimits'][0]['namespace_id'] == '31001'
+          assert config['ai']['binding'] == 'AI'
+          PY
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install locked dependencies
+        run: |
+          npm ci
+          npm ci --prefix chat-worker
+      - name: Run Worker tests and evaluation
+        run: npm test --prefix chat-worker
+      - name: Run browser tests
+        run: |
+          npx playwright install --with-deps chromium
+          npm run test:browser
+      - name: Validate Worker bundle without deploying
+        working-directory: chat-worker
+        run: npx wrangler deploy --dry-run
+
+  release:
+    needs: verify
+    runs-on: ubuntu-latest
+    # Separate main-only environment; set up only after first manual release and review.
+    environment: ask-mantosh-auto-production
+    permissions:
+      contents: read
+      issues: write
+    env:
+      EXPECTED_SHA: ${{ github.sha }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - name: Recheck source before production
+        run: |
+          set -euo pipefail
+          [[ "$GITHUB_REPOSITORY" == 'mantoshkumar1/mantoshkumar1.github.io' ]]
+          [[ "$GITHUB_ACTOR" == 'mantoshkumar1' ]]
+          [[ "$GITHUB_TRIGGERING_ACTOR" == 'mantoshkumar1' ]]
+          [[ "$GITHUB_RUN_ATTEMPT" == 1 ]]
+          [[ "$GITHUB_REF" == 'refs/heads/main' ]]
+          [[ "$GITHUB_SHA" == "$EXPECTED_SHA" ]]
+          [[ "$(git rev-parse HEAD)" == "$EXPECTED_SHA" ]]
+          [[ "$(git ls-remote origin refs/heads/main | cut -f1)" == "$EXPECTED_SHA" ]]
+      - name: Load last issue 77 release receipt as baseline
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh api "repos/$GITHUB_REPOSITORY/issues/77/comments?per_page=100" --paginate --slurp > "$RUNNER_TEMP/release-comments.json"
+          python3 - <<'PY'
+          import json, os, re
+          from pathlib import Path
+          pages = json.loads(Path(os.environ['RUNNER_TEMP'], 'release-comments.json').read_text())
+          comments = [comment for page in pages for comment in page]
+          receipts = [c for c in comments if c.get('body', '').startswith(
+              ('Ask Mantosh manual release receipt', 'Ask Mantosh automatic release receipt'))]
+          assert receipts, 'No initial manual receipt: first deploy must use the gated manual path'
+          receipt = max(receipts, key=lambda c: c['id'])
+          assert receipt['user']['login'] == 'github-actions[bot]', 'Latest receipt is not from GitHub Actions'
+          assert receipt['created_at'] == receipt['updated_at'], 'Edited receipt is not a baseline'
+          body = receipt['body']
+          assert re.search(r'^- Version correlation: moved-to-this-run$', body, re.M)
+          assert re.search(r'^- Production smoke: success$', body, re.M)
+          if body.startswith('Ask Mantosh automatic release receipt'):
+              assert re.search(r'^- Final production observation: success$', body, re.M)
+          source = re.search(r'^- Exact source commit: `([0-9a-f]{40})`$', body, re.M)
+          assert source and source.group(1) != os.environ['GITHUB_SHA'], 'Already released this commit'
+          match = re.search(r'^- Observed current production version: `([0-9a-f-]{36})`$', body, re.M)
+          assert match and re.fullmatch(r'[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}', match.group(1))
+          with open(os.environ['GITHUB_ENV'], 'a') as output:
+              print('EXPECTED_PRIOR_VERSION=' + match.group(1), file=output)
+          print('Baseline receipt:', receipt['html_url'])
+          PY
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install locked Worker dependencies
+        run: npm ci --prefix chat-worker
+      - name: Verify exact production version before write
+        id: prior
+        working-directory: chat-worker
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.ASK_MANTOSH_CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.ASK_MANTOSH_CLOUDFLARE_ACCOUNT_ID }}
+          EXPECTED_ACCOUNT_ID: b2ff1962d5e1ea3be0e9f9ad95afd75e
+        run: |
+          set -euo pipefail
+          [[ -n "$CLOUDFLARE_API_TOKEN" && -n "$CLOUDFLARE_ACCOUNT_ID" ]]
+          [[ "$CLOUDFLARE_ACCOUNT_ID" == "$EXPECTED_ACCOUNT_ID" ]]
+          [[ "$(git ls-remote origin refs/heads/main | cut -f1)" == "$EXPECTED_SHA" ]]
+          npx wrangler deployments status --json > "$RUNNER_TEMP/prior-deployment.json"
+          actual=$(jq -er 'if (.versions | length) == 1 and .versions[0].percentage == 100 then .versions[0].version_id else empty end' "$RUNNER_TEMP/prior-deployment.json")
+          [[ "$actual" == "$EXPECTED_PRIOR_VERSION" ]] || { echo "::error::Production version changed or traffic is split; stop and re-authorize."; exit 1; }
+          echo "version=$actual" >> "$GITHUB_OUTPUT"
+      - name: Deploy existing Worker configuration
+        id: deploy
+        working-directory: chat-worker
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.ASK_MANTOSH_CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.ASK_MANTOSH_CLOUDFLARE_ACCOUNT_ID }}
+          NO_COLOR: '1'
+        run: |
+          set -uo pipefail
+          echo 'attempted=true' >> "$GITHUB_OUTPUT"
+          npx wrangler deploy --message "GitHub founder merge $EXPECTED_SHA" > "$RUNNER_TEMP/wrangler-deploy.log" 2>&1
+          deploy_exit=$?
+          cat "$RUNNER_TEMP/wrangler-deploy.log"
+          version=$(sed -nE 's/^Current Version ID: ([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$/\1/p' "$RUNNER_TEMP/wrangler-deploy.log" | tail -1)
+          echo "exit_code=$deploy_exit" >> "$GITHUB_OUTPUT"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          # Keep this step successful so production is re-queried after every attempt.
+          exit 0
+      - name: Observe and correlate production after every deploy attempt
+        id: current
+        if: always() && steps.deploy.outputs.attempted == 'true'
+        working-directory: chat-worker
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.ASK_MANTOSH_CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.ASK_MANTOSH_CLOUDFLARE_ACCOUNT_ID }}
+          DEPLOY_VERSION: ${{ steps.deploy.outputs.version }}
+          DEPLOY_EXIT_CODE: ${{ steps.deploy.outputs.exit_code }}
+        run: |
+          set -euo pipefail
+          observed=unknown
+          if npx wrangler deployments status --json > "$RUNNER_TEMP/new-deployment.json"; then
+            observed=$(jq -er 'if (.versions | length) == 1 and .versions[0].percentage == 100 then .versions[0].version_id else empty end' "$RUNNER_TEMP/new-deployment.json") || observed=unknown
+          fi
+          correlation=unknown
+          if [[ "$observed" == "$EXPECTED_PRIOR_VERSION" ]]; then
+            correlation=unchanged
+          elif [[ "$observed" != unknown && -n "$DEPLOY_VERSION" ]]; then
+            if [[ "$observed" == "$DEPLOY_VERSION" ]]; then correlation=moved-to-this-run
+            else correlation=moved-by-another-writer; fi
+          fi
+          echo "version=$observed" >> "$GITHUB_OUTPUT"
+          echo "correlation=$correlation" >> "$GITHUB_OUTPUT"
+          [[ "$DEPLOY_EXIT_CODE" == 0 && "$correlation" == moved-to-this-run ]] || {
+            echo "::error::Production outcome $correlation; inspect manually before any rollback or retry."
+            exit 1
+          }
+      - name: Smoke production health, profile answer, and stream
+        id: smoke
+        run: |
+          node --input-type=module <<'NODE'
+          import assert from 'node:assert/strict';
+          const base = 'https://ask-mantosh.mantoshk234.workers.dev';
+          async function waitFor(label, check) {
+            let lastError;
+            for (let attempt = 1; attempt <= 12; attempt += 1) {
+              try { await check(); return; }
+              catch (error) {
+                lastError = error;
+                if (attempt < 12) await new Promise((resolve) => setTimeout(resolve, 5_000));
+              }
+            }
+            throw new Error(`${label}: ${lastError?.message || 'failed'}`);
+          }
+          await waitFor('health', async () => {
+            const health = await fetch(`${base}/health`, { signal: AbortSignal.timeout(10_000) });
+            assert.equal(health.status, 200);
+            assert.equal((await health.json()).service, 'ask-mantosh');
+          });
+          const headers = { Origin: 'https://mantoshkumar1.github.io', 'Content-Type': 'application/json' };
+          const body = JSON.stringify({ question: 'Tell me about this guy?' });
+          await waitFor('public profile', async () => {
+            const response = await fetch(`${base}/chat`, { method: 'POST', headers, body, signal: AbortSignal.timeout(10_000) });
+            assert.equal(response.status, 200);
+            const answer = await response.json();
+            assert.equal(answer.success, true);
+            assert.match(answer.answer, /Mantosh Kumar/);
+            assert.ok(answer.sources?.some((source) => source.url?.includes('/experience/')));
+          });
+          await waitFor('profile stream', async () => {
+            const streamed = await fetch(`${base}/chat`, {
+              method: 'POST', headers: { ...headers, Accept: 'text/event-stream' }, body,
+              signal: AbortSignal.timeout(10_000)
+            });
+            assert.equal(streamed.status, 200);
+            assert.match(streamed.headers.get('content-type') ?? '', /^text\/event-stream/);
+            const events = await streamed.text();
+            assert.match(events, /event: done/);
+            assert.match(events, /Mantosh Kumar/);
+          });
+          NODE
+      - name: Confirm live version again after smoke
+        id: final
+        working-directory: chat-worker
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.ASK_MANTOSH_CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.ASK_MANTOSH_CLOUDFLARE_ACCOUNT_ID }}
+          DEPLOY_VERSION: ${{ steps.deploy.outputs.version }}
+        run: |
+          set -euo pipefail
+          npx wrangler deployments status --json > "$RUNNER_TEMP/final-deployment.json"
+          actual=$(jq -er 'if (.versions | length) == 1 and .versions[0].percentage == 100 then .versions[0].version_id else empty end' "$RUNNER_TEMP/final-deployment.json")
+          [[ "$actual" == "$DEPLOY_VERSION" ]] || {
+            echo "::error::Another production version is serving after smoke; inspect manually."
+            exit 1
+          }
+      - name: Record release receipt on issue 77
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PRIOR_VERSION: ${{ steps.prior.outputs.version }}
+          OBSERVED_VERSION: ${{ steps.current.outputs.version }}
+          DEPLOY_VERSION: ${{ steps.deploy.outputs.version }}
+          DEPLOY_EXIT_CODE: ${{ steps.deploy.outputs.exit_code }}
+          DEPLOY_OUTCOME: ${{ steps.deploy.outcome }}
+          CURRENT_OUTCOME: ${{ steps.current.outcome }}
+          CORRELATION: ${{ steps.current.outputs.correlation }}
+          SMOKE_OUTCOME: ${{ steps.smoke.outcome }}
+          FINAL_OUTCOME: ${{ steps.final.outcome }}
+        run: |
+          {
+            echo 'Ask Mantosh automatic release receipt'
+            echo
+            echo "- Run: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+            echo "- Exact source commit: \`${EXPECTED_SHA}\`"
+            echo "- Authorized prior production version: \`${EXPECTED_PRIOR_VERSION}\`"
+            echo "- Observed prior version: \`${PRIOR_VERSION:-unavailable}\`"
+            echo '- Authorization: founder-merged PR for the exact source commit (verified by the run).'
+            echo "- Deploy attempt step: ${DEPLOY_OUTCOME:-not run}; Wrangler exit: ${DEPLOY_EXIT_CODE:-not run}"
+            echo "- Version reported by this deploy: \`${DEPLOY_VERSION:-unavailable}\`"
+            echo "- Post-attempt observation step: ${CURRENT_OUTCOME:-not run}"
+            echo "- Observed current production version: \`${OBSERVED_VERSION:-unavailable}\`"
+            echo "- Version correlation: ${CORRELATION:-unknown}"
+            echo "- Production smoke: ${SMOKE_OUTCOME:-not run}"
+            echo "- Final production observation: ${FINAL_OUTCOME:-not run}"
+            echo '- If deploy ran but verification or smoke failed, inspect production and decide rollback explicitly; this workflow does not roll back automatically.'
+          } > "$RUNNER_TEMP/release-receipt.md"
+          cat "$RUNNER_TEMP/release-receipt.md" >> "$GITHUB_STEP_SUMMARY"
+          gh issue comment 77 --repo "$GITHUB_REPOSITORY" --body-file "$RUNNER_TEMP/release-receipt.md"
