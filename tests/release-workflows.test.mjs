@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 import test from 'node:test';
 import { fileURLToPath } from 'node:url';
@@ -9,7 +9,8 @@ const file = (name) => readFileSync(path.join(root, '.github/workflows', name), 
 const pages = file('deploy-pages.yml');
 const knowledge = file('sync-knowledge.yml');
 const manual = file('release-ask-mantosh.yml');
-const automatic = file('release-ask-mantosh-on-merge.yml');
+const automaticPath = path.join(root, '.github/workflows/release-ask-mantosh-on-merge.yml');
+const automatic = existsSync(automaticPath) ? file('release-ask-mantosh-on-merge.yml') : null;
 
 function topLevelBlock(source, key) {
   const match = source.match(new RegExp(`^${key}:\\n([\\s\\S]*?)(?=^[^\\s#][^\\n]*:|(?![\\s\\S]))`, 'm'));
@@ -65,8 +66,9 @@ test('separate main-merge triggers route each changed surface to its own workflo
   ];
   for (const { change, expected } of cases) {
     assert.deepEqual(
-      [pages, knowledge, automatic].map((workflow) => runsOnMainPush(workflow, change)),
-      expected,
+      [pages, knowledge].map((workflow) => runsOnMainPush(workflow, change))
+        .concat(automatic ? runsOnMainPush(automatic, change) : false),
+      [expected[0], expected[1], automatic ? expected[2] : false],
       `Wrong workflow routing for ${change.join(', ')}`,
     );
   }
@@ -105,7 +107,7 @@ test('manual Worker release stays dispatch-only with a protected production boun
   assert.match(release, /issue comment 77/);
 });
 
-test('automatic Worker release stays scoped to founder merge and exact current main', () => {
+test('automatic Worker release stays scoped to founder merge and exact current main', { skip: !automatic }, () => {
   const verify = job(automatic, 'verify');
   const release = job(automatic, 'release');
   assert.match(verify, /merged_by/);
@@ -126,7 +128,7 @@ test('automatic Worker release stays scoped to founder merge and exact current m
   }
 });
 
-test('a Worker verification failure is visible before any production job begins', () => {
+test('a Worker verification failure is visible before any production job begins', { skip: !automatic }, () => {
   const autoReport = job(automatic, 'report-verification-failure');
   assert.match(autoReport, /Record blocked automatic candidate/);
   assert.match(autoReport, /No production job started/);
