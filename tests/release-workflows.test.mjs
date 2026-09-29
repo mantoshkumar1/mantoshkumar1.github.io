@@ -26,6 +26,18 @@ function job(source, name) {
   return match[1];
 }
 
+function jobSteps(source) {
+  const boundaries = [...source.matchAll(/^      - (?:name|uses):/gm)].map((match) => match.index);
+  assert.ok(boundaries.length > 0, 'Missing job steps');
+  return boundaries.map((start, index) => source.slice(start, boundaries[index + 1]));
+}
+
+function stepIndex(steps, expression, label) {
+  const index = steps.findIndex((step) => expression.test(step));
+  assert.notEqual(index, -1, `Missing ${label} step`);
+  return index;
+}
+
 function globMatches(pattern, filename) {
   const segments = pattern.split('/');
   let expression = '^';
@@ -94,12 +106,17 @@ test('knowledge sync uses its own OIDC-protected indexer and never deploys Worke
 
 test('Worker toolchain gets a separate visible audit and dry-run check on PR and main', () => {
   const toolchain = job(technicalSeo, 'worker-toolchain');
+  const steps = jobSteps(toolchain);
   assert.match(technicalSeo, /^  pull_request:$/m);
   assert.match(technicalSeo, /^  push:$/m);
   assert.match(toolchain, /npm ci --prefix chat-worker/);
   assert.match(toolchain, /npm audit --prefix chat-worker --audit-level=high/);
   assert.match(toolchain, /wrangler deploy --dry-run/);
   assert.doesNotMatch(toolchain, /CLOUDFLARE_API_TOKEN|CLOUDFLARE_ACCOUNT_ID/);
+  const install = stepIndex(steps, /npm ci --prefix chat-worker/, 'locked Worker install');
+  const audit = stepIndex(steps, /npm audit --prefix chat-worker --audit-level=high/, 'high-severity audit');
+  const dryRun = stepIndex(steps, /wrangler deploy --dry-run/, 'Worker dry run');
+  assert.ok(install < audit && audit < dryRun, 'Audit must follow install and precede dry run');
 });
 
 test('manual Worker release stays dispatch-only with a protected production boundary', () => {
@@ -108,11 +125,28 @@ test('manual Worker release stays dispatch-only with a protected production boun
   assert.doesNotMatch(on, /^  push:/m);
   const verify = job(manual, 'verify');
   const release = job(manual, 'release');
+  const verifySteps = jobSteps(verify);
+  const releaseSteps = jobSteps(release);
   assert.doesNotMatch(verify, /CLOUDFLARE_API_TOKEN|wrangler deploy(?! --dry-run)/);
   assert.match(verify, /npm audit --prefix chat-worker --audit-level=high/);
+  const verifyInstall = stepIndex(verifySteps, /npm ci --prefix chat-worker/, 'verify locked Worker install');
+  const verifyAudit = stepIndex(verifySteps, /npm audit --prefix chat-worker --audit-level=high/, 'verify high-severity audit');
+  assert.ok(verifyInstall < verifyAudit, 'Verify audit must follow locked install');
+  for (const [expression, label] of [
+    [/npm test --prefix chat-worker/, 'Worker tests'],
+    [/npm run test:browser/, 'browser tests'],
+    [/wrangler deploy --dry-run/, 'Worker dry run'],
+  ]) {
+    assert.ok(verifyAudit < stepIndex(verifySteps, expression, label), `Verify audit must precede ${label}`);
+  }
   assert.match(release, /needs: verify/);
   assert.match(release, /environment: ask-mantosh-production/);
   assert.match(release, /npm audit --prefix chat-worker --audit-level=high/);
+  const releaseInstall = stepIndex(releaseSteps, /npm ci --prefix chat-worker/, 'release locked Worker install');
+  const releaseAudit = stepIndex(releaseSteps, /npm audit --prefix chat-worker --audit-level=high/, 'release high-severity audit');
+  const firstCredential = stepIndex(releaseSteps, /\$\{\{\s*secrets\.ASK_MANTOSH_CLOUDFLARE_/, 'first Cloudflare credential');
+  assert.ok(releaseInstall < releaseAudit, 'Release audit must follow locked install');
+  assert.ok(releaseAudit < firstCredential, 'Release audit must precede the first Cloudflare credential');
   assert.match(release, /EXPECTED_PRIOR_VERSION/);
   assert.match(release, /Smoke production/);
   assert.match(release, /issue comment 77/);
