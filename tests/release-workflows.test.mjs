@@ -55,9 +55,7 @@ function auditStep(steps, index, label) {
 }
 
 function assertNoWorkflowSecret(source) {
-  const jobs = source.match(/^jobs:$/m);
-  assert.ok(jobs, 'Workflow jobs block must be present');
-  assert.doesNotMatch(source.slice(0, jobs.index), secretReference, 'Workflow preamble must not expose a secret');
+  assert.doesNotMatch(source.replace(topLevelBlock(source, 'jobs'), ''), secretReference, 'Workflow-level configuration must not expose a secret');
 }
 
 function assertToolchainGate(source) {
@@ -212,8 +210,11 @@ test('release gate rejects early credentials, bypassed audits and lost deploy re
   const audit = 'run: npm audit --prefix chat-worker --audit-level=high';
   const hoisted = manual.replace(/^jobs:$/m, 'env:\n  CLOUDFLARE_API_TOKEN: ${{ secrets.ASK_MANTOSH_CLOUDFLARE_API_TOKEN }}\n\njobs:');
   assert.notEqual(hoisted, manual, 'Workflow-level secret mutation must change the fixture');
-  assert.throws(() => assertReleaseGate(hoisted), /Workflow preamble must not expose a secret/);
-  assert.throws(() => assertVerifyGate(hoisted), /Workflow preamble must not expose a secret/);
+  const appended = manual + '\nenv:\n  CLOUDFLARE_API_TOKEN: ${{ secrets.ASK_MANTOSH_CLOUDFLARE_API_TOKEN }}\n';
+  for (const changed of [hoisted, appended]) {
+    assert.throws(() => assertReleaseGate(changed), /Workflow-level configuration must not expose a secret/);
+    assert.throws(() => assertVerifyGate(changed), /Workflow-level configuration must not expose a secret/);
+  }
   const mutations = [
     ['    runs-on: ubuntu-latest', "    runs-on: ubuntu-latest\n    env:\n      EARLY: ${{ secrets.OTHER_TOKEN }}"],
     ['run: npm ci --prefix chat-worker', "env:\n          EARLY: ${{ secrets.CF_TOKEN_OTHER }}\n        run: npm ci --prefix chat-worker"],
@@ -263,7 +264,10 @@ test('deploy step records a failed Wrangler command under the runner shell', () 
 test('verify and toolchain audits reject early credentials and bypasses', () => {
   const hoisted = technicalSeo.replace(/^jobs:$/m, 'env:\n  CLOUDFLARE_API_TOKEN: ${{ secrets.ASK_MANTOSH_CLOUDFLARE_API_TOKEN }}\n\njobs:');
   assert.notEqual(hoisted, technicalSeo, 'Toolchain workflow mutation must change the fixture');
-  assert.throws(() => assertToolchainGate(hoisted), /Workflow preamble must not expose a secret/);
+  const appended = technicalSeo + '\nenv:\n  CLOUDFLARE_API_TOKEN: ${{ secrets.ASK_MANTOSH_CLOUDFLARE_API_TOKEN }}\n';
+  for (const changed of [hoisted, appended]) {
+    assert.throws(() => assertToolchainGate(changed), /Workflow-level configuration must not expose a secret/);
+  }
   for (const name of ['verify', 'worker-toolchain']) {
     const source = name === 'verify' ? manual : technicalSeo;
     const validate = name === 'verify' ? assertVerifyGate : assertToolchainGate;
