@@ -1,5 +1,7 @@
 import assert from 'node:assert/strict';
-import { existsSync, readFileSync } from 'node:fs';
+import { spawnSync } from 'node:child_process';
+import { existsSync, mkdtempSync, readFileSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 import path from 'node:path';
 import test from 'node:test';
 import { fileURLToPath } from 'node:url';
@@ -12,6 +14,7 @@ const manual = file('release-ask-mantosh.yml');
 const automaticPath = path.join(root, '.github/workflows/release-ask-mantosh-on-merge.yml');
 const automatic = existsSync(automaticPath) ? file('release-ask-mantosh-on-merge.yml') : null;
 const technicalSeo = file('technical-seo.yml');
+const secretReference = /\$\{\{[^}]*\bsecrets\s*(?:\.|\[)/i;
 
 function topLevelBlock(source, key) {
   const match = source.match(new RegExp(`^${key}:\\n([\\s\\S]*?)(?=^[^\\s#][^\\n]*:|(?![\\s\\S]))`, 'm'));
@@ -26,6 +29,13 @@ function job(source, name) {
   return match[1];
 }
 
+function mutateJob(source, name, find, replacement) {
+  const original = job(source, name);
+  const changed = original.replace(find, replacement);
+  assert.notEqual(changed, original, `Mutation for ${name} must change the job`);
+  return source.replace(original, changed);
+}
+
 function jobSteps(source) {
   const boundaries = [...source.matchAll(/^      - (?:name|uses):/gm)].map((match) => match.index);
   assert.ok(boundaries.length > 0, 'Missing job steps');
@@ -36,6 +46,62 @@ function stepIndex(steps, expression, label) {
   const index = steps.findIndex((step) => expression.test(step));
   assert.notEqual(index, -1, `Missing ${label} step`);
   return index;
+}
+
+function auditStep(steps, index, label) {
+  const step = steps[index];
+  assert.match(step, /^        run: npm audit --prefix chat-worker --audit-level=high$/m, `${label} must run the high audit`);
+  assert.doesNotMatch(step, /^        (?:continue-on-error|if):/m, `${label} must not skip or ignore the audit`);
+}
+
+function assertToolchainGate(source) {
+  const toolchain = job(source, 'worker-toolchain');
+  const steps = jobSteps(toolchain);
+  assert.doesNotMatch(toolchain, secretReference);
+  const install = stepIndex(steps, /npm ci --prefix chat-worker/, 'locked Worker install');
+  const audit = stepIndex(steps, /npm audit --prefix chat-worker --audit-level=high/, 'high-severity audit');
+  const dryRun = stepIndex(steps, /wrangler deploy --dry-run/, 'Worker dry run');
+  auditStep(steps, audit, 'Worker toolchain');
+  assert.ok(install < audit && audit < dryRun, 'Audit must follow install and precede dry run');
+}
+
+function assertVerifyGate(source) {
+  const verify = job(source, 'verify');
+  const steps = jobSteps(verify);
+  assert.doesNotMatch(verify, secretReference);
+  assert.doesNotMatch(verify, /wrangler deploy(?! --dry-run)/);
+  const install = stepIndex(steps, /npm ci --prefix chat-worker/, 'verify locked Worker install');
+  const audit = stepIndex(steps, /npm audit --prefix chat-worker --audit-level=high/, 'verify high-severity audit');
+  auditStep(steps, audit, 'Verify');
+  assert.ok(install < audit, 'Verify audit must follow locked install');
+  for (const [expression, label] of [
+    [/npm test --prefix chat-worker/, 'Worker tests'],
+    [/npm run test:browser/, 'browser tests'],
+    [/wrangler deploy --dry-run/, 'Worker dry run'],
+  ]) {
+    assert.ok(audit < stepIndex(steps, expression, label), `Verify audit must precede ${label}`);
+  }
+}
+
+function assertReleaseGate(source) {
+  const release = job(source, 'release');
+  const steps = jobSteps(release);
+  assert.doesNotMatch(release.slice(0, release.indexOf(steps[0])), secretReference, 'Release job preamble must not expose a secret');
+  const install = stepIndex(steps, /npm ci --prefix chat-worker/, 'release locked Worker install');
+  const audit = stepIndex(steps, /npm audit --prefix chat-worker --audit-level=high/, 'release high-severity audit');
+  const firstCredential = stepIndex(steps, secretReference, 'first credential');
+  auditStep(steps, audit, 'Release');
+  assert.ok(install < audit, 'Release audit must follow locked install');
+  assert.ok(audit < firstCredential, 'Release audit must precede the first credential');
+}
+
+function assertDeployFailureCapture(source) {
+  const steps = jobSteps(job(source, 'release'));
+  const deploy = steps[stepIndex(steps, /^      - name: Deploy existing Worker configuration$/m, 'deploy')];
+  assert.match(deploy, /set -uo pipefail\n\s+set \+e\n[\s\S]*?npx wrangler deploy > "\$RUNNER_TEMP\/wrangler-deploy\.log" 2>&1\n\s+deploy_exit=\$\?/, 'Deploy must capture Wrangler exit under the runner bash -e shell');
+  assert.match(deploy, /cat "\$RUNNER_TEMP\/wrangler-deploy\.log"/);
+  assert.match(deploy, /echo "exit_code=\$deploy_exit" >> "\$GITHUB_OUTPUT"/);
+  assert.match(job(source, 'release'), /if: always\(\) && steps\.deploy\.outputs\.attempted == 'true'/);
 }
 
 function globMatches(pattern, filename) {
@@ -60,6 +126,7 @@ function runsOnMainPush(source, changedPaths) {
   const push = events.match(/^  push:\n([\s\S]*?)(?=^  [a-z][a-z0-9_-]*:|(?![\s\S]))/m);
   if (!push) return false;
   assert.match(push[1], /^    branches: \[main\]$/m, 'Main-only push expected');
+  assert.doesNotMatch(push[1], /^    paths-ignore:|^    paths:\s*\[|^      -\s+['"]?!/m, 'Unsupported path filter must fail closed');
   const paths = push[1].match(/^    paths:\n((?:^      - .+\n?)+)/m);
   if (!paths) return true;
   const patterns = [...paths[1].matchAll(/^      - (.+)$/gm)]
@@ -106,17 +173,12 @@ test('knowledge sync uses its own OIDC-protected indexer and never deploys Worke
 
 test('Worker toolchain gets a separate visible audit and dry-run check on PR and main', () => {
   const toolchain = job(technicalSeo, 'worker-toolchain');
-  const steps = jobSteps(toolchain);
   assert.match(technicalSeo, /^  pull_request:$/m);
   assert.match(technicalSeo, /^  push:$/m);
   assert.match(toolchain, /npm ci --prefix chat-worker/);
   assert.match(toolchain, /npm audit --prefix chat-worker --audit-level=high/);
   assert.match(toolchain, /wrangler deploy --dry-run/);
-  assert.doesNotMatch(toolchain, /CLOUDFLARE_API_TOKEN|CLOUDFLARE_ACCOUNT_ID/);
-  const install = stepIndex(steps, /npm ci --prefix chat-worker/, 'locked Worker install');
-  const audit = stepIndex(steps, /npm audit --prefix chat-worker --audit-level=high/, 'high-severity audit');
-  const dryRun = stepIndex(steps, /wrangler deploy --dry-run/, 'Worker dry run');
-  assert.ok(install < audit && audit < dryRun, 'Audit must follow install and precede dry run');
+  assertToolchainGate(technicalSeo);
 });
 
 test('manual Worker release stays dispatch-only with a protected production boundary', () => {
@@ -125,31 +187,90 @@ test('manual Worker release stays dispatch-only with a protected production boun
   assert.doesNotMatch(on, /^  push:/m);
   const verify = job(manual, 'verify');
   const release = job(manual, 'release');
-  const verifySteps = jobSteps(verify);
-  const releaseSteps = jobSteps(release);
-  assert.doesNotMatch(verify, /CLOUDFLARE_API_TOKEN|wrangler deploy(?! --dry-run)/);
   assert.match(verify, /npm audit --prefix chat-worker --audit-level=high/);
-  const verifyInstall = stepIndex(verifySteps, /npm ci --prefix chat-worker/, 'verify locked Worker install');
-  const verifyAudit = stepIndex(verifySteps, /npm audit --prefix chat-worker --audit-level=high/, 'verify high-severity audit');
-  assert.ok(verifyInstall < verifyAudit, 'Verify audit must follow locked install');
-  for (const [expression, label] of [
-    [/npm test --prefix chat-worker/, 'Worker tests'],
-    [/npm run test:browser/, 'browser tests'],
-    [/wrangler deploy --dry-run/, 'Worker dry run'],
-  ]) {
-    assert.ok(verifyAudit < stepIndex(verifySteps, expression, label), `Verify audit must precede ${label}`);
-  }
+  assertVerifyGate(manual);
   assert.match(release, /needs: verify/);
   assert.match(release, /environment: ask-mantosh-production/);
   assert.match(release, /npm audit --prefix chat-worker --audit-level=high/);
-  const releaseInstall = stepIndex(releaseSteps, /npm ci --prefix chat-worker/, 'release locked Worker install');
-  const releaseAudit = stepIndex(releaseSteps, /npm audit --prefix chat-worker --audit-level=high/, 'release high-severity audit');
-  const firstCredential = stepIndex(releaseSteps, /\$\{\{\s*secrets\.ASK_MANTOSH_CLOUDFLARE_/, 'first Cloudflare credential');
-  assert.ok(releaseInstall < releaseAudit, 'Release audit must follow locked install');
-  assert.ok(releaseAudit < firstCredential, 'Release audit must precede the first Cloudflare credential');
+  assertReleaseGate(manual);
+  assertDeployFailureCapture(manual);
   assert.match(release, /EXPECTED_PRIOR_VERSION/);
   assert.match(release, /Smoke production/);
   assert.match(release, /issue comment 77/);
+});
+
+test('release gate rejects early credentials, bypassed audits and lost deploy results', () => {
+  const audit = 'run: npm audit --prefix chat-worker --audit-level=high';
+  const mutations = [
+    ['    runs-on: ubuntu-latest', "    runs-on: ubuntu-latest\n    env:\n      EARLY: ${{ secrets.OTHER_TOKEN }}"],
+    ['run: npm ci --prefix chat-worker', "env:\n          EARLY: ${{ secrets.CF_TOKEN_OTHER }}\n        run: npm ci --prefix chat-worker"],
+    ['run: npm ci --prefix chat-worker', "env:\n          EARLY: ${{ secrets.ask_mantosh_cloudflare_api_token }}\n        run: npm ci --prefix chat-worker"],
+    [audit, 'continue-on-error: true\n        ' + audit],
+    [audit, 'if: false\n        ' + audit],
+    [audit, audit + ' || true'],
+    [audit, 'run: echo npm audit --prefix chat-worker --audit-level=high'],
+  ];
+  for (const [find, replacement] of mutations) {
+    const changed = mutateJob(manual, 'release', find, replacement);
+    assert.throws(() => assertReleaseGate(changed));
+  }
+  assert.throws(() => assertDeployFailureCapture(
+    mutateJob(manual, 'release', '          set +e\n', '          set -e\n'),
+  ));
+});
+
+test('deploy step records a failed Wrangler command under the runner shell', () => {
+  const steps = jobSteps(job(manual, 'release'));
+  const deploy = steps[stepIndex(steps, /^      - name: Deploy existing Worker configuration$/m, 'deploy')];
+  const run = deploy.match(/^        run: \|\n((?:^          .*\n)+)/m)?.[1];
+  assert.ok(run, 'Deploy shell block must be present');
+  const version = '11111111-2222-3333-4444-555555555555';
+  const command = 'npx wrangler deploy > "$RUNNER_TEMP/wrangler-deploy.log" 2>&1';
+  const mock = `bash -c 'printf "Current Version ID: ${version}\\n"; exit 1' > "$RUNNER_TEMP/wrangler-deploy.log" 2>&1`;
+  const script = run.replace(/^          /gm, '').replace(command, mock);
+  assert.notEqual(script, run.replace(/^          /gm, ''), 'Wrangler must be replaced with a local failure fixture');
+  assert.doesNotMatch(script, /npx wrangler deploy/);
+  const dir = mkdtempSync(path.join(tmpdir(), 'ask-mantosh-deploy-test-'));
+  try {
+    const result = spawnSync('bash', ['-e', '-c', script], {
+      encoding: 'utf8',
+      env: { ...process.env, RUNNER_TEMP: dir, GITHUB_OUTPUT: path.join(dir, 'outputs') },
+    });
+    assert.equal(result.status, 0, result.stderr);
+    assert.match(result.stdout, new RegExp(version));
+    const outputs = readFileSync(path.join(dir, 'outputs'), 'utf8');
+    assert.match(outputs, /^attempted=true$/m);
+    assert.match(outputs, /^exit_code=1$/m);
+    assert.match(outputs, new RegExp(`^version=${version}$`, 'm'));
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('verify and toolchain audits reject early credentials and bypasses', () => {
+  for (const name of ['verify', 'worker-toolchain']) {
+    const source = name === 'verify' ? manual : technicalSeo;
+    const validate = name === 'verify' ? assertVerifyGate : assertToolchainGate;
+    assert.throws(() => validate(mutateJob(source, name,
+      'run: npm ci --prefix chat-worker',
+      "env:\n          EARLY: ${{ secrets.CF_TOKEN_OTHER }}\n        run: npm ci --prefix chat-worker")));
+    assert.throws(() => validate(mutateJob(source, name,
+      'run: npm audit --prefix chat-worker --audit-level=high',
+      'run: npm audit --prefix chat-worker --audit-level=high || true')));
+  }
+});
+
+test('routing rejects alternate path filter forms until modeled explicitly', () => {
+  const mainPush = '  push:\n    branches: [main]\n';
+  for (const filter of [
+    "    paths-ignore: ['chat-worker/**']\n",
+    "    paths: ['index.html']\n",
+    "    paths:\n      - '!chat-worker/**'\n",
+  ]) {
+    const changed = pages.replace(mainPush, mainPush + filter);
+    assert.notEqual(changed, pages, 'Pages push fixture must be modified');
+    assert.throws(() => runsOnMainPush(changed, ['chat-worker/src/indexer.js']));
+  }
 });
 
 test('automatic Worker release stays scoped to founder merge and exact current main', { skip: !automatic }, () => {

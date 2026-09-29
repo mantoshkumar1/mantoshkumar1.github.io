@@ -205,6 +205,7 @@ jobs:
           NO_COLOR: '1'
         run: |
           set -uo pipefail
+          set +e
           echo 'attempted=true' >> "$GITHUB_OUTPUT"
           npx wrangler deploy > "$RUNNER_TEMP/wrangler-deploy.log" 2>&1
           deploy_exit=$?
