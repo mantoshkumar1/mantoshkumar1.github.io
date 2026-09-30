@@ -39,7 +39,7 @@ jobs:
           [[ "$GITHUB_RUN_ATTEMPT" == 1 ]]
           [[ "$GITHUB_REF" == 'refs/heads/main' ]]
           [[ "$GITHUB_SHA" =~ ^[0-9a-f]{40}$ ]]
-          [[ "$(git ls-remote "https://github.com/${GITHUB_REPOSITORY}.git" refs/heads/main | cut -f1)" == "$GITHUB_SHA" ]]
+          [[ "$(git ls-remote \"https://github.com/${GITHUB_REPOSITORY}.git\" refs/heads/main | cut -f1)" == "$GITHUB_SHA" ]]
           gh api "repos/$GITHUB_REPOSITORY/commits/$GITHUB_SHA/pulls" > "$RUNNER_TEMP/associated-prs.json"
           pr_number=$(jq -er --arg sha "$GITHUB_SHA" '[.[] | select(.merge_commit_sha == $sha and .merged_at != null and .base.ref == "main")] | if length == 1 then .[0].number else empty end' "$RUNNER_TEMP/associated-prs.json")
           gh api "repos/$GITHUB_REPOSITORY/pulls/$pr_number" > "$RUNNER_TEMP/merged-pr.json"
@@ -212,6 +212,7 @@ jobs:
           NO_COLOR: '1'
         run: |
           set -uo pipefail
+          set +e
           echo 'attempted=true' >> "$GITHUB_OUTPUT"
           npx wrangler deploy --message "GitHub founder merge $EXPECTED_SHA" > "$RUNNER_TEMP/wrangler-deploy.log" 2>&1
           deploy_exit=$?

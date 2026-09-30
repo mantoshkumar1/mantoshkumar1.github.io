@@ -22,7 +22,6 @@ permissions:
 
 concurrency:
   group: ask-mantosh-production-release
-  queue: max
   cancel-in-progress: false
 
 jobs:
@@ -112,8 +111,6 @@ jobs:
   release:
     needs: verify
     runs-on: ubuntu-latest
-    # Configure this environment with a founder required reviewer and the
-    # two environment-only secrets named below before the first dispatch.
     environment: ask-mantosh-production
     permissions:
       contents: read
@@ -206,6 +203,7 @@ jobs:
           NO_COLOR: '1'
         run: |
           set -uo pipefail
+          set +e
           echo 'attempted=true' >> "$GITHUB_OUTPUT"
           npx wrangler deploy > "$RUNNER_TEMP/wrangler-deploy.log" 2>&1
           deploy_exit=$?
@@ -213,7 +211,6 @@ jobs:
           version=$(sed -nE 's/^Current Version ID: ([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$/\1/p' "$RUNNER_TEMP/wrangler-deploy.log" | tail -1)
           echo "exit_code=$deploy_exit" >> "$GITHUB_OUTPUT"
           echo "version=$version" >> "$GITHUB_OUTPUT"
-          # Keep this step successful so production is re-queried after every attempt.
           exit 0
       - name: Observe and correlate production after every deploy attempt
         id: current
