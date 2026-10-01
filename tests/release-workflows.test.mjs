@@ -105,7 +105,11 @@ function assertReleaseGate(source) {
 function assertDeployFailureCapture(source) {
   const steps = jobSteps(job(source, 'release'));
   const deploy = steps[stepIndex(steps, /^      - name: Deploy existing Worker configuration$/m, 'deploy')];
-  assert.match(deploy, /set -uo pipefail\n\s+set \+e\n[\s\S]*?npx wrangler deploy > "\$RUNNER_TEMP\/wrangler-deploy\.log" 2>&1\n\s+deploy_exit=\$\?/, 'Deploy must capture Wrangler exit under the runner bash -e shell');
+  const command = source.startsWith('name: Release Ask Mantosh Worker on founder merge\n')
+    ? 'npx wrangler deploy --message "GitHub founder merge $EXPECTED_SHA"'
+    : 'npx wrangler deploy';
+  assert.match(deploy, /set -uo pipefail\n\s+set \+e\n/, 'Deploy must disable the runner bash -e exit');
+  assert.ok(deploy.includes(`${command} > "$RUNNER_TEMP/wrangler-deploy.log" 2>&1\n          deploy_exit=$?`), 'Deploy must capture Wrangler exit under the runner bash -e shell');
   assert.match(deploy, /cat "\$RUNNER_TEMP\/wrangler-deploy\.log"/);
   assert.match(deploy, /echo "exit_code=\$deploy_exit" >> "\$GITHUB_OUTPUT"/);
   assert.match(job(source, 'release'), /if: always\(\) && steps\.deploy\.outputs\.attempted == 'true'/);
@@ -208,13 +212,6 @@ test('manual Worker release stays dispatch-only with a protected production boun
 
 test('release gate rejects early credentials, bypassed audits and lost deploy results', () => {
   const audit = 'run: npm audit --prefix chat-worker --audit-level=high';
-  const hoisted = manual.replace(/^jobs:$/m, 'env:\n  CLOUDFLARE_API_TOKEN: ${{ secrets.ASK_MANTOSH_CLOUDFLARE_API_TOKEN }}\n\njobs:');
-  assert.notEqual(hoisted, manual, 'Workflow-level secret mutation must change the fixture');
-  const appended = manual + '\nenv:\n  CLOUDFLARE_API_TOKEN: ${{ secrets.ASK_MANTOSH_CLOUDFLARE_API_TOKEN }}\n';
-  for (const changed of [hoisted, appended]) {
-    assert.throws(() => assertReleaseGate(changed), /Workflow-level configuration must not expose a secret/);
-    assert.throws(() => assertVerifyGate(changed), /Workflow-level configuration must not expose a secret/);
-  }
   const mutations = [
     ['    runs-on: ubuntu-latest', "    runs-on: ubuntu-latest\n    env:\n      EARLY: ${{ secrets.OTHER_TOKEN }}"],
     ['run: npm ci --prefix chat-worker', "env:\n          EARLY: ${{ secrets.CF_TOKEN_OTHER }}\n        run: npm ci --prefix chat-worker"],
@@ -224,40 +221,53 @@ test('release gate rejects early credentials, bypassed audits and lost deploy re
     [audit, audit + ' || true'],
     [audit, 'run: echo npm audit --prefix chat-worker --audit-level=high'],
   ];
-  for (const [find, replacement] of mutations) {
-    const changed = mutateJob(manual, 'release', find, replacement);
-    assert.throws(() => assertReleaseGate(changed));
+  for (const source of [manual, automatic].filter(Boolean)) {
+    const hoisted = source.replace(/^jobs:$/m, 'env:\n  CLOUDFLARE_API_TOKEN: ${{ secrets.ASK_MANTOSH_CLOUDFLARE_API_TOKEN }}\n\njobs:');
+    assert.notEqual(hoisted, source, 'Workflow-level secret mutation must change the fixture');
+    const appended = source + '\nenv:\n  CLOUDFLARE_API_TOKEN: ${{ secrets.ASK_MANTOSH_CLOUDFLARE_API_TOKEN }}\n';
+    for (const changed of [hoisted, appended]) {
+      assert.throws(() => assertReleaseGate(changed), /Workflow-level configuration must not expose a secret/);
+      assert.throws(() => assertVerifyGate(changed), /Workflow-level configuration must not expose a secret/);
+    }
+    for (const [find, replacement] of mutations) {
+      const changed = mutateJob(source, 'release', find, replacement);
+      assert.throws(() => assertReleaseGate(changed));
+    }
+    assert.throws(() => assertDeployFailureCapture(
+      mutateJob(source, 'release', '          set +e\n', '          set -e\n'),
+    ));
   }
-  assert.throws(() => assertDeployFailureCapture(
-    mutateJob(manual, 'release', '          set +e\n', '          set -e\n'),
-  ));
 });
 
 test('deploy step records a failed Wrangler command under the runner shell', () => {
-  const steps = jobSteps(job(manual, 'release'));
-  const deploy = steps[stepIndex(steps, /^      - name: Deploy existing Worker configuration$/m, 'deploy')];
-  const run = deploy.match(/^        run: \|\n((?:^          .*\n)+)/m)?.[1];
-  assert.ok(run, 'Deploy shell block must be present');
-  const version = '11111111-2222-3333-4444-555555555555';
-  const command = 'npx wrangler deploy > "$RUNNER_TEMP/wrangler-deploy.log" 2>&1';
-  const mock = `bash -c 'printf "Current Version ID: ${version}\\n"; exit 1' > "$RUNNER_TEMP/wrangler-deploy.log" 2>&1`;
-  const script = run.replace(/^          /gm, '').replace(command, mock);
-  assert.notEqual(script, run.replace(/^          /gm, ''), 'Wrangler must be replaced with a local failure fixture');
-  assert.doesNotMatch(script, /npx wrangler deploy/);
-  const dir = mkdtempSync(path.join(tmpdir(), 'ask-mantosh-deploy-test-'));
-  try {
-    const result = spawnSync('bash', ['-e', '-c', script], {
-      encoding: 'utf8',
-      env: { ...process.env, RUNNER_TEMP: dir, GITHUB_OUTPUT: path.join(dir, 'outputs') },
-    });
-    assert.equal(result.status, 0, result.stderr);
-    assert.match(result.stdout, new RegExp(version));
-    const outputs = readFileSync(path.join(dir, 'outputs'), 'utf8');
-    assert.match(outputs, /^attempted=true$/m);
-    assert.match(outputs, /^exit_code=1$/m);
-    assert.match(outputs, new RegExp(`^version=${version}$`, 'm'));
-  } finally {
-    rmSync(dir, { recursive: true, force: true });
+  for (const source of [manual, automatic].filter(Boolean)) {
+    const steps = jobSteps(job(source, 'release'));
+    const deploy = steps[stepIndex(steps, /^      - name: Deploy existing Worker configuration$/m, 'deploy')];
+    const run = deploy.match(/^        run: \|\n((?:^          .*\n)+)/m)?.[1];
+    assert.ok(run, 'Deploy shell block must be present');
+    const version = '11111111-2222-3333-4444-555555555555';
+    const command = source === automatic
+      ? 'npx wrangler deploy --message "GitHub founder merge $EXPECTED_SHA" > "$RUNNER_TEMP/wrangler-deploy.log" 2>&1'
+      : 'npx wrangler deploy > "$RUNNER_TEMP/wrangler-deploy.log" 2>&1';
+    const mock = `bash -c 'printf "Current Version ID: ${version}\\n"; exit 1' > "$RUNNER_TEMP/wrangler-deploy.log" 2>&1`;
+    const script = run.replace(/^          /gm, '').replace(command, mock);
+    assert.notEqual(script, run.replace(/^          /gm, ''), 'Wrangler must be replaced with a local failure fixture');
+    assert.doesNotMatch(script, /npx wrangler deploy/);
+    const dir = mkdtempSync(path.join(tmpdir(), 'ask-mantosh-deploy-test-'));
+    try {
+      const result = spawnSync('bash', ['-e', '-c', script], {
+        encoding: 'utf8',
+        env: { ...process.env, RUNNER_TEMP: dir, GITHUB_OUTPUT: path.join(dir, 'outputs') },
+      });
+      assert.equal(result.status, 0, result.stderr);
+      assert.match(result.stdout, new RegExp(version));
+      const outputs = readFileSync(path.join(dir, 'outputs'), 'utf8');
+      assert.match(outputs, /^attempted=true$/m);
+      assert.match(outputs, /^exit_code=1$/m);
+      assert.match(outputs, new RegExp(`^version=${version}$`, 'm'));
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
   }
 });
 
@@ -268,8 +278,7 @@ test('verify and toolchain audits reject early credentials and bypasses', () => 
   for (const changed of [hoisted, appended]) {
     assert.throws(() => assertToolchainGate(changed), /Workflow-level configuration must not expose a secret/);
   }
-  for (const name of ['verify', 'worker-toolchain']) {
-    const source = name === 'verify' ? manual : technicalSeo;
+  for (const [source, name] of [[manual, 'verify'], [automatic, 'verify'], [technicalSeo, 'worker-toolchain']].filter(([source]) => source)) {
     const validate = name === 'verify' ? assertVerifyGate : assertToolchainGate;
     assert.throws(() => validate(mutateJob(source, name,
       'run: npm ci --prefix chat-worker',
@@ -299,10 +308,13 @@ test('automatic Worker release stays scoped to founder merge and exact current m
   assert.match(verify, /merged_by/);
   assert.match(verify, /GITHUB_SHA/);
   assert.match(verify, /npm audit --prefix chat-worker --audit-level=high/);
+  assertVerifyGate(automatic);
   assert.doesNotMatch(verify, /CLOUDFLARE_API_TOKEN|wrangler deploy(?! --dry-run)/);
   assert.match(release, /needs: verify/);
   assert.match(release, /environment: ask-mantosh-auto-production/);
   assert.match(release, /npm audit --prefix chat-worker --audit-level=high/);
+  assertReleaseGate(automatic);
+  assertDeployFailureCapture(automatic);
   assert.match(release, /latest successful|last issue 77 release receipt/i);
   assert.match(release, /Observe and correlate production after every deploy attempt/);
   assert.match(release, /Smoke production health, profile answer, and stream/);
