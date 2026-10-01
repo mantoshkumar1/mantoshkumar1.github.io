@@ -44,7 +44,7 @@ jobs:
           [[ "$EXPECTED_SHA" =~ ^[0-9a-f]{40}$ ]]
           [[ "$EXPECTED_PRIOR_VERSION" =~ ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$ ]]
           [[ "$GITHUB_SHA" == "$EXPECTED_SHA" ]]
-          [[ "$(git ls-remote "https://github.com/${GITHUB_REPOSITORY}.git" refs/heads/main | cut -f1)" == "$EXPECTED_SHA" ]]
+          [[ "$(git ls-remote \"https://github.com/${GITHUB_REPOSITORY}.git\" refs/heads/main | cut -f1)" == "$EXPECTED_SHA" ]]
       - uses: actions/checkout@v5
         with:
           ref: ${{ inputs.expected_sha }}
