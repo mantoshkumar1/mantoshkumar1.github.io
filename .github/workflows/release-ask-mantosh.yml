@@ -44,7 +44,7 @@ jobs:
           [[ "$EXPECTED_SHA" =~ ^[0-9a-f]{40}$ ]]
           [[ "$EXPECTED_PRIOR_VERSION" =~ ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$ ]]
           [[ "$GITHUB_SHA" == "$EXPECTED_SHA" ]]
-          [[ "$(git ls-remote \"https://github.com/${GITHUB_REPOSITORY}.git\" refs/heads/main | cut -f1)" == "$EXPECTED_SHA" ]]
+          [[ "$(git ls-remote "https://github.com/${GITHUB_REPOSITORY}.git" refs/heads/main | cut -f1)" == "$EXPECTED_SHA" ]]
       - uses: actions/checkout@v5
         with:
           ref: ${{ inputs.expected_sha }}
@@ -111,6 +111,8 @@ jobs:
   release:
     needs: verify
     runs-on: ubuntu-latest
+    # Configure this environment with a founder required reviewer and the
+    # two environment-only secrets named below before the first dispatch.
     environment: ask-mantosh-production
     permissions:
       contents: read
@@ -211,6 +213,7 @@ jobs:
           version=$(sed -nE 's/^Current Version ID: ([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$/\1/p' "$RUNNER_TEMP/wrangler-deploy.log" | tail -1)
           echo "exit_code=$deploy_exit" >> "$GITHUB_OUTPUT"
           echo "version=$version" >> "$GITHUB_OUTPUT"
+          # Keep this step successful so production is re-queried after every attempt.
           exit 0
       - name: Observe and correlate production after every deploy attempt
         id: current
