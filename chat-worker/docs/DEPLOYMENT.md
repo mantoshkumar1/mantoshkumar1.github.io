@@ -127,13 +127,25 @@ temporary fallback and an emergency recovery tool.
 A founder merge of Worker source, `wrangler.toml`, or Worker package files to
 `main` triggers the exact-commit verify and release jobs. The verify job checks
 the founder merge, source, fixed bindings, tests, evaluation, browser checks,
-audit, and Wrangler dry run. The release job reads the latest successful,
-unedited issue #77 release receipt and checks that its version is still serving
-100% before deploying. It then correlates the new version, checks health,
-profile and SSE responses, rechecks the live version, and posts a receipt.
-Drift, uncertain deployment, or smoke failure requires inspection; there is
-no automatic retry or rollback. Static Pages, knowledge Markdown, tests, and
+audit, and Wrangler dry run. The release job selects the **latest matching**
+manual or automatic issue #77 release receipt by comment ID. That single
+receipt must itself be unedited, successful, and correlated to its run; the
+job does not skip a failed receipt to find an older success. It checks that
+receipt's version is still serving 100% before deploying, then correlates the
+new version, checks health, profile and SSE responses, rechecks the live
+version, and posts a receipt even when the release job fails. A failed latest
+release receipt blocks later automatic releases until a separately authorized
+successful baseline release or reviewed reconciliation. A verification-job
+comment headed "blocked before production" has a different prefix and does
+not become this baseline. Static Pages, knowledge Markdown, tests, and
 documentation changes do not trigger this release.
+
+The current workflow has no automatic retry or rollback. The founder's
+[automatic recovery requirement](https://github.com/mantoshkumar1/mantoshkumar1.github.io/issues/77#issuecomment-5971086967)
+is planned as a separate reviewed correction and is **not implemented**.
+Before activation, its exact-version guard, storage compatibility proof,
+persistent pause and recovery receipt must be designed and tested. A manual
+rollback is an emergency fallback, not the target ordinary failure path.
 
 ### One routine writer: pre-activation inventory
 
@@ -174,16 +186,21 @@ sensitive settings:
    independently usable **routine** deployment token after cutover. After
    placement, read back that only the two intended environment secret names
    exist and that no fallback has appeared; never expose their values.
-4. The current 100% production version, exact `main` SHA, last successful
-   unedited issue #77 receipt, fixed bindings, and absence of any active or
-   pending release run. Confirm that no Worker source/config changes are merged
-   during the cutover. A mismatch blocks activation.
-5. Deterministic race evidence: inject a simulated external deployment after
-   the final version read but before the deploy in an isolated fixture. The
-   existing read-then-write workflow would overwrite it, so that test cannot
-   be marked safe merely because the later receipt detects some races. The
-   accepted boundary must demonstrate that the simulated outside identity
-   lacks deploy permission during normal operation; if it can deploy, activation
+4. The current 100% production version, exact `main` SHA, and **latest
+   matching** manual/automatic issue #77 release receipt, which must itself be
+   successful, unedited and correlated; also verify fixed bindings and the
+   absence of active or pending release runs. A failed latest receipt or
+   version mismatch requires a separately authorized successful baseline or
+   reviewed reconciliation before activation. Confirm no Worker source/config
+   changes are merged during cutover.
+5. Isolated permission-denial evidence can show that the intended policy
+   rejects an outside routine identity in a fixture, but it neither injects a
+   deployment race nor proves exclusion from the actual production Worker.
+   There is **no workflow protection** against an identity that can deploy
+   between the final read and write: the run could overwrite that deployment
+   and report success. Activation depends on the effective production access
+   inventory in item 2 and coordinated founder break-glass procedure. If any
+   other routine identity can deploy, or its access is unknown, activation
    remains blocked. Review the complete evidence and exact workflow head
    independently before the founder enables the automatic environment token.
 
@@ -196,20 +213,27 @@ and its coordination are part of the release contract, not an atomic lock.
 
 ### Emergency deployment and recovery
 
-Before using founder break-glass access, disable the automatic workflow or
-remove its production environment credential and wait until every active and
-pending automatic release is finished or cancelled **before** an external
-production write. Record the reason, actor, starting version, and resulting
-version on issue #77. Never use break-glass during an active automatic
-deployment. If the automatic workflow has already started writing or its
-outcome is ambiguous, inspect production first; do not infer that cancelling
-the run undid a write.
+Before using founder break-glass access, **disable the automatic workflow**
+and wait until every active and pending automatic release has finished or been
+cancelled **before** an external production write. Removing its environment
+credential alone is not an equivalent pause: a Worker-path merge can still
+start the release job, fail on missing credentials, and post a failed latest
+receipt that blocks future automatic baselines. Disabling the workflow
+produces no release receipt, but any Worker-path merge during that pause is
+**unreleased** and must be explicitly reconciled before resumption. Record
+the reason, actor, starting version, and resulting version on issue #77.
+Never use break-glass during an active automatic deployment. If the automatic
+workflow has already started writing or its outcome is ambiguous, inspect
+production first; cancelling the run does not undo a write.
 
-After an emergency deployment, keep automation paused. Its last successful
-receipt may refer to an older production version and must not be silently
-treated as a new baseline. Inspect production, test the resulting version,
-and perform a separately founder-approved recovery/baseline release or
-reviewed reconciliation procedure. If the manual workflow is used to establish
+After an emergency deployment, keep automation paused. The latest matching
+receipt may be a failure, or it may be a success for an older production
+version; neither can silently become the new baseline. The same recovery
+rule applies after a tokenless release-job failure or an out-of-band version
+drift, even when no emergency deployment was intended. Inspect production,
+test the resulting version, reconcile any Worker-path merge skipped while the
+workflow was disabled, and perform a separately founder-approved successful
+recovery/baseline release or reviewed reconciliation procedure. If the manual workflow is used to establish
 a new receipt, first keep automation paused and drained, temporarily restore
 its scoped manual environment credential under the founder gate, complete the
 manual release/receipt, then remove that credential again before resuming the
@@ -226,8 +250,8 @@ drained credential transition described above and configure the
 `ASK_MANTOSH_CLOUDFLARE_API_TOKEN` and
 `ASK_MANTOSH_CLOUDFLARE_ACCOUNT_ID`, restricted to `main` and with no
 required reviewer. Verify the post-placement environment secret names and
-absence of repository/organization fallbacks before allowing new merges. The founder's merge is then the ordinary production
-decision. No token belongs in repository files or comments. D1 migrations
+absence of repository/organization fallbacks before allowing new merges.
+The founder's merge is then the ordinary production decision. No token belongs in repository files or comments. D1 migrations
 and binding changes require their own reviewed release plan.
 
 ## Rollback and recovery
