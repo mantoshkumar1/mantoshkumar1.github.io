@@ -10,9 +10,11 @@ production knowledge storage. Set production origins explicitly.
 ## Worker release sequence
 
 The production path is [Release Ask Mantosh Worker](../../.github/workflows/release-ask-mantosh.yml).
-It is started manually from `main`; a push, schedule, or Pages deployment does
-not release the Worker. The release workflow checks the original actor and
-the current triggering actor, including on re-runs.
+This founder-gated manual workflow is started from `main`; a push, schedule,
+or Pages deployment does not start **this manual workflow**. The separate
+merge-triggered workflow described below will release Worker changes after
+its access boundary is reviewed and activated. Both workflows check their
+respective actor/source conditions.
 
 Before its first use, the founder must create the `ask-mantosh-production`
 GitHub environment with `mantoshkumar1` as a required reviewer and set
@@ -110,63 +112,147 @@ Deploy a changed knowledge document, then verify its answer becomes visible.
 The optional KV cache-version binding is not enabled in the committed
 production configuration, so the current correctness boundary is TTL expiry.
 
-## Future automatic release after founder merge
+## Automatic release after founder merge
 
-The first release still follows the manual sequence above. It establishes a successful,
-GitHub Actions-authored release receipt on issue #77. The separate
-[merge-triggered release](../../.github/workflows/release-ask-mantosh-on-merge.yml)
-is prepared for later Worker changes. It has no schedule and does not run for
-static Pages, knowledge Markdown, tests or documentation changes.
+The founder-approved first manual release has succeeded:
+[run 37079825108](https://github.com/mantoshkumar1/mantoshkumar1.github.io/actions/runs/37079825108)
+recorded an unedited GitHub Actions receipt on
+[issue #77](https://github.com/mantoshkumar1/mantoshkumar1.github.io/issues/77#issuecomment-5963376265)
+for production version `8feaaf72-ba35-408b-a37f-20719c37a596`.
+That is the baseline for the prepared
+[merge-triggered workflow](../../.github/workflows/release-ask-mantosh-on-merge.yml).
+Automatic release is the target operating path; the manual workflow is a
+temporary fallback and an emergency recovery tool.
 
-After a reviewed exact-head PR is founder-merged into `main`, a change to
-`chat-worker/src/**`, `wrangler.toml`, or the Worker package files starts a
-release of that exact merge commit. The workflow requires the push actor and
-associated merged PR to be the founder, rechecks current `main`, rejects a
-migration in that merge, pins the existing Worker and storage identities, then
-runs Worker tests, evaluation, browser tests and a Wrangler dry run. It reads
-the latest unedited successful GitHub Actions release receipt on #77 as the
-expected prior version; if no successful manual baseline exists, or the latest
-receipt records a failure, it stops. The production job compares that version
-to the authenticated 100%-traffic Cloudflare version before writing. It
-deploys, correlates the version, checks health/profile/stream, checks the
-100%-traffic version again, and posts a receipt on #77. A changed `main`,
-split traffic, missing secret, drift, uncertain deploy or smoke failure
-fails closed and requires a human decision. No automatic rollback occurs.
+A founder merge of Worker source, `wrangler.toml`, or Worker package files to
+`main` triggers the exact-commit verify and release jobs. The verify job checks
+the founder merge, source, fixed bindings, tests, evaluation, browser checks,
+audit, and Wrangler dry run. The release job selects the **latest matching**
+manual or automatic issue #77 release receipt by comment ID. That single
+receipt must itself be unedited, successful, and correlated to its run; the
+job does not skip a failed receipt to find an older success. It checks that
+receipt's version is still serving 100% before deploying, then correlates the
+new version, checks health, profile and SSE responses, rechecks the live
+version, and posts a receipt even when the release job fails. A failed latest
+release receipt blocks later automatic releases until a separately authorized
+successful baseline release or reviewed reconciliation. A verification-job
+comment headed "blocked before production" has a different prefix and does
+not become this baseline. Static Pages, knowledge Markdown, tests, and
+documentation changes do not trigger this release.
 
-This path uses a separate `ask-mantosh-auto-production` GitHub environment,
-so the existing required-reviewer `ask-mantosh-production` environment and
-manual release remain intact. **Do not configure the automatic environment
-before the first manual release and protected-path review of its workflow.**
-Automatic activation is currently blocked by the external-writer race recorded
-in [issue #77](https://github.com/mantoshkumar1/mantoshkumar1.github.io/issues/77#issuecomment-5862232109).
-Even after a successful manual baseline and protected-path review, keep this
-environment without a token until an enforceable exclusive-writer boundary
-for every dashboard, CLI and CI deployment path is demonstrated and an
-external write between the final pre-write read and deploy is proven to block
-a clean receipt. A promise not to deploy elsewhere is insufficient for
-unattended release. If that boundary is unavailable, continue to use the
-manual founder-gated path; do not activate this workflow.
+The current workflow has no automatic retry or rollback. The founder's
+[automatic recovery requirement](https://github.com/mantoshkumar1/mantoshkumar1.github.io/issues/77#issuecomment-5971086967)
+is planned as a separate reviewed correction and is **not implemented**.
+Before activation, its exact-version guard, storage compatibility proof,
+persistent pause and recovery receipt must be designed and tested. A manual
+rollback is an emergency fallback, not the target ordinary failure path.
 
-If this block is resolved in a separately reviewed exact-head correction,
-one-time activation then requires the founder to restrict that environment
-to `main`, set only its two environment secrets
-`ASK_MANTOSH_CLOUDFLARE_API_TOKEN` (Workers Editor limited to the existing
-`ask-mantosh`) and `ASK_MANTOSH_CLOUDFLARE_ACCOUNT_ID`, confirm no same-name
-repository or organization secret fallback, and deliberately leave the
-automatic environment without a required reviewer. Its lack of a second
-approval means the founder's PR merge is the production decision.
+### One routine writer: pre-activation inventory
 
-The two GitHub release workflows share one concurrency group with no
-in-progress cancellation; pending merge releases are queued. This excludes
-overlapping deployments **from these two workflows**. The Cloudflare version
-comparison and post-deploy checks detect many external writes but do not
-provide a Cloudflare compare-and-swap or lock out dashboard, CLI, other CI,
-and secret writers. Do not activate automatic release based solely on an
-ordinary operating rule; the external-writer exclusion above must be
-enforced. Keep the automatic environment without a token and use the manual
-founder-gated path until it is. D1
-migrations and binding identity changes need a separate reviewed release
-plan.
+[The founder's operating decision](https://github.com/mantoshkumar1/mantoshkumar1.github.io/issues/77#issuecomment-5968430413)
+is GitHub Actions as the only **routine** production writer. Founder emergency
+access outside GitHub remains break-glass. This narrows the operating boundary:
+it does not claim a provider compare-and-swap, and emergency access can still
+race if used without first pausing and draining the automatic workflow.
+[F-88-1](https://github.com/mantoshkumar1/mantoshkumar1.github.io/issues/77#issuecomment-5862232109)
+therefore remains an activation block until the following access evidence and
+exception procedure have been reviewed. Keep `ask-mantosh-auto-production`
+tokenless while the inventory is incomplete.
+
+Record the following on issue #77 without token values, account keys, or
+sensitive settings:
+
+1. The live `ask-mantosh` deployment writer inventory: account members and
+   user groups (including product-wide/inherited roles), account and user API
+   tokens, Wrangler sessions, other CI, Cloudflare native Git integration,
+   and the manual GitHub workflow. Identify each routine writer and each
+   retained emergency identity.
+2. Effective account- and Worker-level permission policies for **each**
+   routine member, group, token, Wrangler session and integration, including
+   inherited/product-wide access. Record evidence that every alternative
+   routine writer was removed, disabled or reduced to non-deploying access
+   for the actual production Worker. A denied operation against an isolated
+   Worker can test equivalent policy mechanics but cannot prove production
+   denial by itself. Do not make an unauthorized production write merely to
+   test access. If effective production access cannot be determined, block
+   activation instead of inferring exclusion from a proxy test.
+3. Before credential placement, verify the intended automatic token's
+   effective **Editor** scope for only the existing `ask-mantosh` Worker and
+   account, and read back the automatic environment's `main` restriction and
+   no-required-reviewer policy. Check for same-named repository/organization
+   secret fallbacks. Pause and drain all release runs before retiring the
+   manual environment's routine deployment token and placing the automatic
+   environment-only credentials. The manual environment must not retain an
+   independently usable **routine** deployment token after cutover. After
+   placement, read back that only the two intended environment secret names
+   exist and that no fallback has appeared; never expose their values.
+4. The current 100% production version, exact `main` SHA, and **latest
+   matching** manual/automatic issue #77 release receipt, which must itself be
+   successful, unedited and correlated; also verify fixed bindings and the
+   absence of active or pending release runs. A failed latest receipt or
+   version mismatch requires a separately authorized successful baseline or
+   reviewed reconciliation before activation. Confirm no Worker source/config
+   changes are merged during cutover.
+5. Isolated permission-denial evidence can show that the intended policy
+   rejects an outside routine identity in a fixture, but it neither injects a
+   deployment race nor proves exclusion from the actual production Worker.
+   There is **no workflow protection** against an identity that can deploy
+   between the final read and write: the run could overwrite that deployment
+   and report success. Activation depends on the effective production access
+   inventory in item 2 and coordinated founder break-glass procedure. If any
+   other routine identity can deploy, or its access is unknown, activation
+   remains blocked. Review the complete evidence and exact workflow head
+   independently before the founder enables the automatic environment token.
+
+The two GitHub workflows share `ask-mantosh-production-release` concurrency
+without in-progress cancellation. This serializes those workflows only; it
+does not constrain Cloudflare dashboard, CLI or other CI writers. The
+Cloudflare deployment API's published parameters do not provide an
+expected-prior-version conditional write. The accepted break-glass exception
+and its coordination are part of the release contract, not an atomic lock.
+
+### Emergency deployment and recovery
+
+Before using founder break-glass access, **disable the automatic workflow**
+and wait until every active and pending automatic release has finished or been
+cancelled **before** an external production write. Removing its environment
+credential alone is not an equivalent pause: a Worker-path merge can still
+start the release job, fail on missing credentials, and post a failed latest
+receipt that blocks future automatic baselines. Disabling the workflow
+produces no release receipt, but any Worker-path merge during that pause is
+**unreleased** and must be explicitly reconciled before resumption. Record
+the reason, actor, starting version, and resulting version on issue #77.
+Never use break-glass during an active automatic deployment. If the automatic
+workflow has already started writing or its outcome is ambiguous, inspect
+production first; cancelling the run does not undo a write.
+
+After an emergency deployment, keep automation paused. The latest matching
+receipt may be a failure, or it may be a success for an older production
+version; neither can silently become the new baseline. The same recovery
+rule applies after a tokenless release-job failure or an out-of-band version
+drift, even when no emergency deployment was intended. Inspect production,
+test the resulting version, reconcile any Worker-path merge skipped while the
+workflow was disabled, and perform a separately founder-approved successful
+recovery/baseline release or reviewed reconciliation procedure. If the manual workflow is used to establish
+a new receipt, first keep automation paused and drained, temporarily restore
+its scoped manual environment credential under the founder gate, complete the
+manual release/receipt, then remove that credential again before resuming the
+one-routine-writer automatic path. Recheck the writer inventory and live
+version before re-enabling automatic credentials. An external write without
+this pause is a release incident: stop automation and investigate.
+
+### Activation
+
+Only after the inventory, access boundary, race evidence, exact-head review
+and separate founder cutover decision may the founder perform the paused,
+drained credential transition described above and configure the
+`ask-mantosh-auto-production` environment with
+`ASK_MANTOSH_CLOUDFLARE_API_TOKEN` and
+`ASK_MANTOSH_CLOUDFLARE_ACCOUNT_ID`, restricted to `main` and with no
+required reviewer. Verify the post-placement environment secret names and
+absence of repository/organization fallbacks before allowing new merges.
+The founder's merge is then the ordinary production decision. No token belongs in repository files or comments. D1 migrations
+and binding changes require their own reviewed release plan.
 
 ## Rollback and recovery
 
