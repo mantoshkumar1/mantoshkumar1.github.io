@@ -10,9 +10,11 @@ production knowledge storage. Set production origins explicitly.
 ## Worker release sequence
 
 The production path is [Release Ask Mantosh Worker](../../.github/workflows/release-ask-mantosh.yml).
-It is started manually from `main`; a push, schedule, or Pages deployment does
-not release the Worker. The release workflow checks the original actor and
-the current triggering actor, including on re-runs.
+This founder-gated manual workflow is started from `main`; a push, schedule,
+or Pages deployment does not start **this manual workflow**. The separate
+merge-triggered workflow described below will release Worker changes after
+its access boundary is reviewed and activated. Both workflows check their
+respective actor/source conditions.
 
 Before its first use, the founder must create the `ask-mantosh-production`
 GitHub environment with `mantoshkumar1` as a required reviewer and set
@@ -153,18 +155,25 @@ sensitive settings:
    tokens, Wrangler sessions, other CI, Cloudflare native Git integration,
    and the manual GitHub workflow. Identify each routine writer and each
    retained emergency identity.
-2. Evidence that all other **routine** deployment identities and integrations
-   for this Worker were removed, disabled, or reduced to non-deploying access.
-   Test with a non-authorized routine identity that a production deployment is
-   denied. Do not reveal credentials or make a real production deployment just
-   to perform the negative test; use permission readback or a non-production
-   isolated Worker with equivalent policy when needed.
-3. The automatic token's effective **Editor** scope for only the existing
-   `ask-mantosh` Worker and account. Verify that the automatic environment is
-   restricted to `main`, has no required reviewer, contains the two named
-   environment secrets only, and has no same-named repository/organization
-   fallback. The manual environment must not retain an independently usable
-   **routine** deployment token after cutover.
+2. Effective account- and Worker-level permission policies for **each**
+   routine member, group, token, Wrangler session and integration, including
+   inherited/product-wide access. Record evidence that every alternative
+   routine writer was removed, disabled or reduced to non-deploying access
+   for the actual production Worker. A denied operation against an isolated
+   Worker can test equivalent policy mechanics but cannot prove production
+   denial by itself. Do not make an unauthorized production write merely to
+   test access. If effective production access cannot be determined, block
+   activation instead of inferring exclusion from a proxy test.
+3. Before credential placement, verify the intended automatic token's
+   effective **Editor** scope for only the existing `ask-mantosh` Worker and
+   account, and read back the automatic environment's `main` restriction and
+   no-required-reviewer policy. Check for same-named repository/organization
+   secret fallbacks. Pause and drain all release runs before retiring the
+   manual environment's routine deployment token and placing the automatic
+   environment-only credentials. The manual environment must not retain an
+   independently usable **routine** deployment token after cutover. After
+   placement, read back that only the two intended environment secret names
+   exist and that no fallback has appeared; never expose their values.
 4. The current 100% production version, exact `main` SHA, last successful
    unedited issue #77 receipt, fixed bindings, and absence of any active or
    pending release run. Confirm that no Worker source/config changes are merged
@@ -200,18 +209,24 @@ After an emergency deployment, keep automation paused. Its last successful
 receipt may refer to an older production version and must not be silently
 treated as a new baseline. Inspect production, test the resulting version,
 and perform a separately founder-approved recovery/baseline release or
-reviewed reconciliation procedure. Recheck the writer inventory and live
+reviewed reconciliation procedure. If the manual workflow is used to establish
+a new receipt, first keep automation paused and drained, temporarily restore
+its scoped manual environment credential under the founder gate, complete the
+manual release/receipt, then remove that credential again before resuming the
+one-routine-writer automatic path. Recheck the writer inventory and live
 version before re-enabling automatic credentials. An external write without
 this pause is a release incident: stop automation and investigate.
 
 ### Activation
 
 Only after the inventory, access boundary, race evidence, exact-head review
-and separate founder cutover decision may the founder configure the
+and separate founder cutover decision may the founder perform the paused,
+drained credential transition described above and configure the
 `ask-mantosh-auto-production` environment with
 `ASK_MANTOSH_CLOUDFLARE_API_TOKEN` and
 `ASK_MANTOSH_CLOUDFLARE_ACCOUNT_ID`, restricted to `main` and with no
-required reviewer. The founder's merge is then the ordinary production
+required reviewer. Verify the post-placement environment secret names and
+absence of repository/organization fallbacks before allowing new merges. The founder's merge is then the ordinary production
 decision. No token belongs in repository files or comments. D1 migrations
 and binding changes require their own reviewed release plan.
 
