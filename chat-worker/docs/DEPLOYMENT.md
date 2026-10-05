@@ -121,8 +121,11 @@ recorded an unedited GitHub Actions receipt on
 for production version `8feaaf72-ba35-408b-a37f-20719c37a596`.
 That is the baseline for the prepared
 [merge-triggered workflow](../../.github/workflows/release-ask-mantosh-on-merge.yml).
-Automatic release is the target operating path; the manual workflow is a
-temporary fallback and an emergency recovery tool.
+Automatic release is the target operating path. The founder-gated manual
+workflow remains available for a reviewed current-`main` release or a new
+successful baseline after an incident; it cannot select an arbitrary earlier
+Worker version. An older-version restore needs a separate, explicit emergency
+action and a live compatibility check.
 
 A founder merge of Worker source, `wrangler.toml`, or Worker package files to
 `main` triggers the exact-commit verify and release jobs. The verify job checks
@@ -140,12 +143,13 @@ comment headed "blocked before production" has a different prefix and does
 not become this baseline. Static Pages, knowledge Markdown, tests, and
 documentation changes do not trigger this release.
 
-The current workflow has no automatic retry or rollback. The founder's
-[automatic recovery requirement](https://github.com/mantoshkumar1/mantoshkumar1.github.io/issues/77#issuecomment-5971086967)
-is planned as a separate reviewed correction and is **not implemented**.
-Before activation, its exact-version guard, storage compatibility proof,
-persistent pause and recovery receipt must be designed and tested. A manual
-rollback is an emergency fallback, not the target ordinary failure path.
+The [founder selected a simple release path](https://github.com/mantoshkumar1/mantoshkumar1.github.io/issues/77#issuecomment-5986017191)
+for this personal portfolio. The current workflow has no automatic retry or
+rollback. On a failed or uncertain release, inspect the actual production
+version and the latest run/receipt, then make a separately reviewed manual
+recovery decision before another automatic release. No unattended monitoring
+service is part of this cutover; the Action records its own result. Successful
+ordinary Worker merges do not require a second founder approval after cutover.
 
 ### One routine writer: pre-activation inventory
 
@@ -205,8 +209,12 @@ sensitive settings:
    independently before the founder enables the automatic environment token.
 
 The two GitHub workflows share `ask-mantosh-production-release` concurrency
-without in-progress cancellation. This serializes those workflows only; it
-does not constrain Cloudflare dashboard, CLI or other CI writers. The
+without in-progress cancellation. This serializes their running deployments,
+but GitHub Actions can replace an already pending run when another run enters
+the same concurrency group. It is not a lossless release queue. Before treating
+a later run as a successful baseline, reconcile any skipped or cancelled
+qualifying Worker merge. This concurrency setting does not constrain
+Cloudflare dashboard, CLI or other CI writers. The
 Cloudflare deployment API's published parameters do not provide an
 expected-prior-version conditional write. The accepted break-glass exception
 and its coordination are part of the release contract, not an atomic lock.
@@ -233,8 +241,9 @@ rule applies after a tokenless release-job failure or an out-of-band version
 drift, even when no emergency deployment was intended. Inspect production,
 test the resulting version, reconcile any Worker-path merge skipped while the
 workflow was disabled, and perform a separately founder-approved successful
-recovery/baseline release or reviewed reconciliation procedure. If the manual workflow is used to establish
-a new receipt, first keep automation paused and drained, temporarily restore
+current-`main` baseline release or reviewed reconciliation procedure. If the
+manual workflow is used to establish a new receipt, first keep automation
+paused and drained, temporarily restore
 its scoped manual environment credential under the founder gate, complete the
 manual release/receipt, then remove that credential again before resuming the
 one-routine-writer automatic path. Recheck the writer inventory and live
@@ -256,7 +265,14 @@ and binding changes require their own reviewed release plan.
 
 ## Rollback and recovery
 
-Use `wrangler rollback` (or promote the prior Worker version) for code rollback.
+For an emergency code restore, first identify an explicitly selected known-good
+Worker version, confirm that its code can safely read the current D1 and
+Vectorize data, and inspect the actual live deployment. The founder may then
+use `wrangler rollback` with the chosen version (or promote that exact version)
+after pausing and draining automatic releases. Verify the restored live version
+and health/profile/SSE behavior, record the incident on #77, and keep
+rerunning releases blocked until the baseline is reconciled. The manual GitHub
+workflow deploys current `main`; it is not the historical-version restore.
 Do not roll back D1 migrations destructively: use additive migrations, restore
 with D1 time-travel only after confirming the target time, then reindex from
 Git. Git-tracked Markdown plus a deterministic sync job is the recovery source
