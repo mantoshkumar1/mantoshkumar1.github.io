@@ -1,4 +1,4 @@
-name: Release Ask Mantosh Worker
+name: Ask Mantosh Worker — manual release
 
 # A founder starts a specific release from main. There is no push or schedule trigger.
 on:

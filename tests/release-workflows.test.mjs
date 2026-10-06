@@ -105,7 +105,7 @@ function assertReleaseGate(source) {
 function assertDeployFailureCapture(source) {
   const steps = jobSteps(job(source, 'release'));
   const deploy = steps[stepIndex(steps, /^      - name: Deploy existing Worker configuration$/m, 'deploy')];
-  const command = source.startsWith('name: Release Ask Mantosh Worker on founder merge\n')
+  const command = source === automatic
     ? 'npx wrangler deploy --message "GitHub founder merge $EXPECTED_SHA"'
     : 'npx wrangler deploy';
   assert.match(deploy, /set -uo pipefail\n\s+set \+e\n/, 'Deploy must disable the runner bash -e exit');

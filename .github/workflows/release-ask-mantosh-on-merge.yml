@@ -1,4 +1,4 @@
-name: Release Ask Mantosh Worker on founder merge
+name: Ask Mantosh Worker — auto release after Worker merge
 
 # The first production release and baseline must use the separately gated manual workflow.
 # A later founder merge of Worker code/config starts this release; docs/tests alone do not.
