@@ -31,12 +31,22 @@ workflow inputs. The account ID is recorded separately as a non-secret release
 identity; the workflow compares it with the environment value before any
 Cloudflare write.
 
+The manual environment **keeps** this scoped credential for as long as the
+manual workflow is meant to stay usable as the founder-gated break-glass path.
+Placing the same saved token and account ID in the separate automatic
+environment (see [Automatic release after founder merge](#automatic-release-after-founder-merge))
+does not remove, rotate or replace the manual environment's credential.
+
 The YAML cannot prove that GitHub's environment has a required reviewer or
 that a resolved secret came from that environment. Before **each dispatch**,
 the founder must read back the environment protection, environment-only secret
 names and absence of fallbacks, Cloudflare token scope, current account and
 Worker bindings/configuration, and the active 100% version. Confirm that no
 other dashboard, CI or CLI writer will deploy this Worker during the release.
+**The automatic release workflow is such a writer.** Once automatic release has
+been enabled, do not dispatch the manual workflow until the automatic workflow
+has been disabled and every active and pending automatic run has finished or
+been cancelled (see [Emergency deployment and recovery](#emergency-deployment-and-recovery)).
 Publish a new, unedited JSON comment on [issue #77](https://github.com/mantoshkumar1/mantoshkumar1.github.io/issues/77)
 with these asserted facts (no token value):
 
@@ -66,6 +76,15 @@ both before testing and after environment approval. The comment is a founder
 attestation, **not** automatic proof of Cloudflare or GitHub settings. If any
 item cannot be confirmed, do not dispatch; never mark an unknown fact `true`.
 
+`exclusive_production_writer_window` asserts that no other process can write
+the production Worker for the duration of the release. With the automatic
+workflow enabled, that is **not** true: the automatic workflow can start on a
+qualifying founder merge and write with the same Cloudflare identity. The
+founder may mark it `true` only after the automatic workflow has been disabled
+and drained (no active or pending automatic run) and no dashboard, CLI or other
+CI writer will deploy during the window. If the automatic workflow is live or
+its queue is unknown, do not attest `true` and do not dispatch.
+
 After the workflow has passed protected-path review and merged:
 
 1. Confirm the intended full 40-character `main` SHA and the current Cloudflare
@@ -74,7 +93,10 @@ After the workflow has passed protected-path review and merged:
 2. Dispatch the workflow from `main` as `mantoshkumar1`. It checks the exact
    source, runs Worker tests and the offline evaluation, runs browser tests,
    and validates the bundle with Wrangler's dry run. Review the pending
-   `ask-mantosh-production` deployment and approve it deliberately.
+   `ask-mantosh-production` deployment and approve or reject it promptly and
+   deliberately. A run left waiting for environment approval still occupies
+   the shared release concurrency group (see
+   [Concurrency and skipped merges](#concurrency-and-skipped-merges)).
 3. After approval, the workflow rechecks `main` and the conformance record,
    installs locked Worker dependencies, compares the Cloudflare account ID,
    then queries the active production version immediately before deploy. A
@@ -155,13 +177,21 @@ ordinary Worker merges do not require a second founder approval after cutover.
 
 [The founder's operating decision](https://github.com/mantoshkumar1/mantoshkumar1.github.io/issues/77#issuecomment-5968430413)
 is GitHub Actions as the only **routine** production writer. Founder emergency
-access outside GitHub remains break-glass. This narrows the operating boundary:
-it does not claim a provider compare-and-swap, and emergency access can still
-race if used without first pausing and draining the automatic workflow.
+access outside GitHub remains break-glass. The
+[dual-path configuration](https://github.com/mantoshkumar1/mantoshkumar1.github.io/issues/77#issuecomment-6046181901)
+keeps the founder-gated manual workflow ready as a second, **non-routine**
+break-glass path: the same scoped Cloudflare credential is held by both the
+automatic and the manual GitHub environment. The automatic workflow is the one
+routine writer; the manual workflow is used only after a failure or incident,
+and never alongside a live automatic workflow. This narrows the operating
+boundary: it does not claim a provider compare-and-swap, and emergency access
+can still race if used without first pausing and draining the automatic
+workflow.
 [F-88-1](https://github.com/mantoshkumar1/mantoshkumar1.github.io/issues/77#issuecomment-5862232109)
 therefore remains an activation block until the following access evidence and
 exception procedure have been reviewed. Keep `ask-mantosh-auto-production`
-tokenless while the inventory is incomplete.
+tokenless **only until credential placement**, and do not place its credential
+while the inventory is incomplete.
 
 Record the following on issue #77 without token values, account keys, or
 sensitive settings:
@@ -184,12 +214,17 @@ sensitive settings:
    effective **Editor** scope for only the existing `ask-mantosh` Worker and
    account, and read back the automatic environment's `main` restriction and
    no-required-reviewer policy. Check for same-named repository/organization
-   secret fallbacks. Pause and drain all release runs before retiring the
-   manual environment's routine deployment token and placing the automatic
-   environment-only credentials. The manual environment must not retain an
-   independently usable **routine** deployment token after cutover. After
-   placement, read back that only the two intended environment secret names
-   exist and that no fallback has appeared; never expose their values.
+   secret fallbacks. Pause and drain all release runs before placing the
+   automatic environment-only credentials. Copy the **same saved token value**
+   and account ID into the automatic environment; do not create a second
+   token and do not revoke the existing one. The manual environment
+   **keeps** its credential and required reviewer unchanged, as the
+   founder-gated break-glass path. After placement, read back that exactly the
+   two intended environment secret names exist in **each** of the two
+   environments and that no repository or organization fallback has appeared;
+   never expose their values. The same token in two GitHub environments is
+   still one Cloudflare identity, but it is now reachable through two GitHub
+   write paths; record both in the writer inventory.
 4. The current 100% production version, exact `main` SHA, and **latest
    matching** manual/automatic issue #77 release receipt, which must itself be
    successful, unedited and correlated; also verify fixed bindings and the
@@ -208,14 +243,42 @@ sensitive settings:
    remains blocked. Review the complete evidence and exact workflow head
    independently before the founder enables the automatic environment token.
 
+### Shared credential exposure
+
+The automatic environment has **no required reviewer**, and the same token sits
+in the manual environment behind one. Once the token is placed in the
+automatic environment, it is available to every qualifying job on `main` that
+targets that environment. The manual environment's required reviewer therefore
+gates only **manual** jobs; it does not protect the credential from the
+automatic path. The credential's effective protection is the weaker of the
+two environments, not the stronger.
+
+The controls that bound this exposure are: the automatic environment's
+`main`-only deployment-branch policy, founder-only write access to `main`
+(including branch protection), the protected-path check on
+`.github/workflows/**` and tests, the exact-founder-merge and exact-`main`
+checks inside the workflow, and the absence of any repository or organization
+fallback secret. These are access-control and review measures, not a
+provider-side guarantee. Consider also giving `ask-mantosh-production` a
+`main`-only deployment-branch policy; its reviewer approval remains the
+primary gate for manual jobs. The workflow YAML cannot prove that any of these
+GitHub settings is in place, so read each back privately before enabling the
+automatic workflow.
+
+### Concurrency and skipped merges
+
 The two GitHub workflows share `ask-mantosh-production-release` concurrency
 without in-progress cancellation. This serializes their running deployments,
-but GitHub Actions can replace an already pending run when another run enters
-the same concurrency group. It is not a lossless release queue. Before treating
-a later run as a successful baseline, reconcile any skipped or cancelled
-qualifying Worker merge. This concurrency setting does not constrain
-Cloudflare dashboard, CLI or other CI writers. The
-Cloudflare deployment API's published parameters do not provide an
+but GitHub Actions allows one running and at most one pending run in a group,
+and a newer pending run replaces an older pending one. It is not a lossless
+release queue. A manual run left waiting for environment approval holds the
+group while later qualifying Worker merges queue behind it, and a second queued
+merge can replace the first. Any qualifying Worker merge whose automatic run
+was replaced, skipped or cancelled is **unreleased**; reconcile it explicitly
+before treating a later run as a successful baseline. Approve or reject a
+pending manual deployment promptly rather than leaving it waiting. This
+concurrency setting does not constrain Cloudflare dashboard, CLI or other CI
+writers. The Cloudflare deployment API's published parameters do not provide an
 expected-prior-version conditional write. The accepted break-glass exception
 and its coordination are part of the release contract, not an atomic lock.
 
@@ -234,6 +297,14 @@ Never use break-glass during an active automatic deployment. If the automatic
 workflow has already started writing or its outcome is ambiguous, inspect
 production first; cancelling the run does not undo a write.
 
+The same rule governs the manual GitHub workflow: **never dispatch it while the
+automatic workflow is enabled.** Disable the automatic workflow, wait for active
+and pending runs to drain, inspect the live version and latest receipt, and
+only then dispatch, approve or reject promptly, and complete the release
+before resuming. A failed or uncertain manual run also posts a failed latest
+receipt, which blocks automatic releases until a reviewed successful baseline
+exists, so dispatch it deliberately and not as a casual retry.
+
 After an emergency deployment, keep automation paused. The latest matching
 receipt may be a failure, or it may be a success for an older production
 version; neither can silently become the new baseline. The same recovery
@@ -242,25 +313,29 @@ drift, even when no emergency deployment was intended. Inspect production,
 test the resulting version, reconcile any Worker-path merge skipped while the
 workflow was disabled, and perform a separately founder-approved successful
 current-`main` baseline release or reviewed reconciliation procedure. If the
-manual workflow is used to establish a new receipt, first keep automation
-paused and drained, temporarily restore
-its scoped manual environment credential under the founder gate, complete the
-manual release/receipt, then remove that credential again before resuming the
-one-routine-writer automatic path. Recheck the writer inventory and live
-version before re-enabling automatic credentials. An external write without
-this pause is a release incident: stop automation and investigate.
+manual workflow is used to establish a new receipt, keep automation paused and
+drained, then complete the manual release and receipt under the founder gate
+using the credential its environment retains. No credential is removed
+afterwards. Before resuming the one-routine-writer automatic path, recheck the
+writer inventory and live version, and confirm the latest matching receipt is a
+successful, correlated baseline for the version now serving 100% of traffic.
+An external write without this pause is a release incident: stop automation
+and investigate.
 
 ### Activation
 
 Only after the inventory, access boundary, race evidence, exact-head review
 and separate founder cutover decision may the founder perform the paused,
-drained credential transition described above and configure the
+drained credential placement described above: configure the
 `ask-mantosh-auto-production` environment with
 `ASK_MANTOSH_CLOUDFLARE_API_TOKEN` and
-`ASK_MANTOSH_CLOUDFLARE_ACCOUNT_ID`, restricted to `main` and with no
-required reviewer. Verify the post-placement environment secret names and
-absence of repository/organization fallbacks before allowing new merges.
-The founder's merge is then the ordinary production decision. No token belongs in repository files or comments. D1 migrations
+`ASK_MANTOSH_CLOUDFLARE_ACCOUNT_ID` (the same saved scoped token and the same
+account ID the manual environment holds), restricted to `main` and with no
+required reviewer, and leave `ask-mantosh-production` and its credential and
+reviewer unchanged. Verify the post-placement secret names in both environments
+and the absence of repository/organization fallbacks before allowing new
+merges. The founder's merge is then the ordinary production decision. No token
+belongs in repository files or comments. D1 migrations
 and binding changes require their own reviewed release plan.
 
 ## Rollback and recovery
