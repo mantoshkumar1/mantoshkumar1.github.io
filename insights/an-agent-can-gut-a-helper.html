@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- seo:generated:start -->
+    <meta name="description" content="Why assertions belong inline in the test rather than behind a helper, and why that old readability preference now also limits blast radius." />
+    <meta name="author" content="Mantosh Kumar" />
+    <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1" />
+    <meta name="theme-color" content="#060b12" />
+    <meta name="application-name" content="Mantosh Kumar" />
+    <meta name="apple-mobile-web-app-title" content="Mantosh Kumar" />
+    <link rel="canonical" href="https://mantoshkumar1.github.io/insights/an-agent-can-gut-a-helper.html" />
+    <link rel="alternate" type="application/rss+xml" title="Mantosh Kumar — Engineering Writing and Systems" href="https://mantoshkumar1.github.io/feed.xml" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta property="og:locale" content="en_CA" />
+    <meta property="og:title" content="An Agent Can Gut a Helper. It Can't Gut a Line You're Reading. | Mantosh Kumar" />
+    <meta property="og:description" content="Why assertions belong inline in the test rather than behind a helper, and why that old readability preference now also limits blast radius." />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://mantoshkumar1.github.io/insights/an-agent-can-gut-a-helper.html" />
+    <meta property="og:site_name" content="Mantosh Kumar" />
+    <meta property="og:image" content="https://mantoshkumar1.github.io/assets/seo/social-default.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="An Agent Can Gut a Helper. It Can't Gut a Line You're Reading. | Mantosh Kumar" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="An Agent Can Gut a Helper. It Can't Gut a Line You're Reading. | Mantosh Kumar" />
+    <meta name="twitter:description" content="Why assertions belong inline in the test rather than behind a helper, and why that old readability preference now also limits blast radius." />
+    <meta name="twitter:image" content="https://mantoshkumar1.github.io/assets/seo/social-default.jpg" />
+    <meta name="twitter:image:alt" content="An Agent Can Gut a Helper. It Can't Gut a Line You're Reading. | Mantosh Kumar" />
+    <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","@id":"https://mantoshkumar1.github.io/insights/an-agent-can-gut-a-helper.html#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://mantoshkumar1.github.io"},{"@type":"ListItem","position":2,"name":"Insights","item":"https://mantoshkumar1.github.io/insights/"},{"@type":"ListItem","position":3,"name":"An Agent Can Gut a Helper. It Can't Gut a Line You're Reading.","item":"https://mantoshkumar1.github.io/insights/an-agent-can-gut-a-helper.html"}]},{"@id":"https://mantoshkumar1.github.io/insights/an-agent-can-gut-a-helper.html#webpage","@type":"TechArticle","name":"An Agent Can Gut a Helper. It Can't Gut a Line You're Reading. | Mantosh Kumar","description":"Why assertions belong inline in the test rather than behind a helper, and why that old readability preference now also limits blast radius.","url":"https://mantoshkumar1.github.io/insights/an-agent-can-gut-a-helper.html","inLanguage":"en","isPartOf":{"@id":"https://mantoshkumar1.github.io/#website"},"breadcrumb":{"@id":"https://mantoshkumar1.github.io/insights/an-agent-can-gut-a-helper.html#breadcrumb"},"headline":"An Agent Can Gut a Helper. It Can't Gut a Line You're Reading.","author":{"@type":"Person","name":"Mantosh Kumar","url":"https://mantoshkumar1.github.io"},"datePublished":"2026-10-10","dateModified":"2026-10-10"}]}</script>
+    <script>
+      window.addEventListener("load", () => {
+        const analytics = document.createElement("script");
+        analytics.defer = true;
+        analytics.dataset.domain = "mantoshkumar1.github.io";
+        analytics.src = "https://plausible.io/js/script.js";
+        document.head.append(analytics);
+      }, { once: true });
+    </script>
+    <script defer src="/assets/js/ai-referral-analytics.js"></script>
+    <!-- seo:generated:end -->
+
+<!-- seo:page {"datePublished":"2026-08-22","dateModified":"2026-08-22"} -->
+    <title>An Agent Can Gut a Helper. It Can't Gut a Line You're Reading. | Mantosh Kumar</title>
+    <script src="../assets/js/theme-init.js?v=20260713-1"></script>
+    <link rel="stylesheet" href="../assets/css/style.css?v=20260716-15" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+    <header class="navbar">
+      <div class="container nav-wrap">
+        <a class="logo" href="../" aria-label="Mantosh Kumar — Home" title="Go to homepage">Mantosh Kumar</a>
+        <nav aria-label="Primary navigation">
+          <a href="../">Home</a>
+          <a href="../projects/">Projects</a>
+          <a href="../insights/" aria-current="page">Insights</a>
+          <a href="../experience/">Experience</a>
+          <a href="../resume/">Resume</a>
+          <a class="nav-cta" href="../contact/">Discuss a role</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="page-shell reading-shell" id="main-content" tabindex="-1">
+      <div class="container">
+        <article class="resume-card case-study reading-page">
+          <header class="resume-header">
+            <p class="eyebrow">AI-assisted engineering • 3 minute read</p>
+            <h1>An agent can gut a helper. It can't gut a line you're reading.</h1>
+            <p>Keep the assertion in the test. A test whose meaning lives in another file cannot be reviewed by reading it.</p>
+          </header>
+
+          <section class="resume-section">
+            <h2>Two tests</h2>
+            <pre><code>// I can review this
+assert.equal(res.status, 429);
+
+// I have to go somewhere else to review this
+assertRateLimited(res);</code></pre>
+            <p>The second one is tidier. It's also unreviewable at a glance. To know what it checks I have to open another file, and if I'm honest, I don't. I read the name, decide it sounds right, and move on.</p>
+            <p>That's fine when I wrote the helper last week. It stops being fine when an agent is editing that helper and I'm reading 40 lines of test diff to decide whether a change is safe.</p>
+          </section>
+
+          <section class="resume-section">
+            <h2>What review actually saw</h2>
+            <figure class="reading-figure">
+              <style>
+                .fig-dg { --dg-line: #8ea3bd; --dg-accent: #7cb2ff; --dg-warn: #e2725b; --dg-fill: #18222f; --dg-tint: rgba(124,178,255,0.16); --dg-text: #f8fafc; --dg-muted: #aebdd0; }
+                html[data-theme="light"] .fig-dg { --dg-line: #64748b; --dg-accent: #1d4ed8; --dg-warn: #b23c1f; --dg-fill: #ffffff; --dg-tint: rgba(29,78,216,0.10); --dg-text: #111827; --dg-muted: #536174; }
+              </style>
+              <svg class="fig-dg" viewBox="0 0 680 165" width="100%" role="img" aria-labelledby="f4-t f4-d" style="max-width:600px;height:auto;display:block;margin:0 auto">
+                <title id="f4-t">The reviewed line names a helper whose body no longer checks anything</title>
+                <desc id="f4-d">On the left, the line visible in the diff reads assertRateLimited and looks fine. An arrow crosses into another file where the helper body returns early and checks nothing. The reviewer approved the name, not the assertion.</desc>
+                <defs><marker id="f4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+                <text x="160" y="24" text-anchor="middle" dominant-baseline="central" fill="var(--dg-muted)" font-family="Inter, sans-serif" font-size="12" font-weight="500">What you read in the diff</text>
+                <rect x="20" y="40" width="280" height="70" rx="8" fill="var(--dg-tint)" stroke="var(--dg-accent)" stroke-width="2.5"/>
+                <text x="160" y="66" text-anchor="middle" dominant-baseline="central" fill="var(--dg-text)" font-family="Inter, sans-serif" font-size="13" font-weight="500">assertRateLimited(res)</text>
+                <text x="160" y="88" text-anchor="middle" dominant-baseline="central" fill="var(--dg-accent)" font-family="Inter, sans-serif" font-size="12" font-weight="500">looks fine</text>
+                <path d="M300 75 L372 75" fill="none" stroke="var(--dg-line)" stroke-width="1.75" stroke-dasharray="6 5" marker-end="url(#f4)"/>
+                <text x="336" y="62" text-anchor="middle" dominant-baseline="central" fill="var(--dg-muted)" font-family="Inter, sans-serif" font-size="12" font-weight="400">another file</text>
+                <text x="500" y="24" text-anchor="middle" dominant-baseline="central" fill="var(--dg-muted)" font-family="Inter, sans-serif" font-size="12" font-weight="500">Where the meaning lives</text>
+                <rect x="380" y="40" width="280" height="70" rx="8" fill="var(--dg-fill)" stroke="var(--dg-warn)" stroke-width="2.5" stroke-dasharray="6 5"/>
+                <text x="520" y="66" text-anchor="middle" dominant-baseline="central" fill="var(--dg-text)" font-family="Inter, sans-serif" font-size="13" font-weight="500">if (!res) return;</text>
+                <text x="520" y="88" text-anchor="middle" dominant-baseline="central" fill="var(--dg-warn)" font-family="Inter, sans-serif" font-size="12" font-weight="500">checks nothing now</text>
+                <text x="340" y="146" text-anchor="middle" dominant-baseline="central" fill="var(--dg-muted)" font-family="Inter, sans-serif" font-size="12" font-weight="400">You approved the name. The assertion was somewhere else.</text>
+              </svg>
+              <figcaption>You approved the name. The assertion was somewhere else.</figcaption>
+            </figure>
+          </section>
+
+          <section class="resume-section">
+            <h2>The old name for this</h2>
+            <p>Prefer repetition over indirection in tests. Sometimes written as DAMP over DRY.</p>
+            <p>It predates agents by a decade, and the reasoning never depended on them: tests are documentation that runs. Documentation with the important part in a footnote isn't documentation.</p>
+            <p>DRY is a rule about <em>code you maintain</em>. A test is not that. A test is a claim you check by reading.</p>
+          </section>
+
+          <section class="resume-section">
+            <h2>Where the line sits</h2>
+            <p>Helpers for setup are fine. Hide all of it:</p>
+            <ul class="case-study-list">
+              <li>building the request</li>
+              <li>seeding the database</li>
+              <li>spinning up a fixture</li>
+              <li>logging in a user</li>
+            </ul>
+            <p>The line that decides pass or fail stays in the test.</p>
+            <p>That's the whole rule. Setup can live anywhere. The assertion lives where you'll see it.</p>
+          </section>
+
+          <section class="resume-section">
+            <h2>Why it matters more now</h2>
+            <p><a href="agent-edits-what-the-test-imports.html">Protecting a test file does not protect what it imports</a>. A hollowed-out helper neuters every test that calls it, without touching a single owned path.</p>
+            <p>An assertion sitting in the test can't be hollowed out somewhere else. It has to be edited where you'd see it, in the diff you already read.</p>
+            <p>So the old advice about readability turns out to also be advice about blast radius. Nice when that happens.</p>
+          </section>
+
+          <section class="resume-section">
+            <h2>Evidence boundary</h2>
+            <p>A personal preference from my own testing work, not a measured result. The tradeoff is real: this style produces more repetition, and some teams reasonably choose otherwise.</p>
+          </section>
+
+          <section class="resume-section">
+            <div class="resume-actions">
+              <a class="button primary" href="../newsletter/">Get new insights by email <span aria-hidden="true">→</span></a>
+              <a class="button secondary" href="make-the-banks-deterministic.html">A river can&#39;t be deterministic <span aria-hidden="true">→</span></a>
+            </div>
+          </section>
+        </article>
+      </div>
+    </main>
+    <script src="/assets/js/ask-mantosh-widget.js?v=20260716-17"></script>
+  </body>
+</html>

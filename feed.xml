@@ -18,6 +18,16 @@
     <summary>Path-based protection covers files, not the helpers and config those files depend on. What to protect instead, and why CODEOWNERS fails for a solo maintainer.</summary>
   </entry>
   <entry>
+    <title>An Agent Can Gut a Helper. It Can't Gut a Line You're Reading.</title>
+    <id>https://mantoshkumar1.github.io/insights/an-agent-can-gut-a-helper.html</id>
+    <link href="https://mantoshkumar1.github.io/insights/an-agent-can-gut-a-helper.html" />
+    <published>2026-10-10T12:00:00Z</published>
+    <updated>2026-10-10T12:00:00Z</updated>
+    <author><name>Mantosh Kumar</name></author>
+    <category term="engineering-insight" />
+    <summary>Why assertions belong inline in the test rather than behind a helper, and why that old readability preference now also limits blast radius.</summary>
+  </entry>
+  <entry>
     <title>My Agent's Tests Passed. Nothing Was Watching the Risk.</title>
     <id>https://mantoshkumar1.github.io/insights/nothing-was-watching-the-risk.html</id>
     <link href="https://mantoshkumar1.github.io/insights/nothing-was-watching-the-risk.html" />

@@ -81,6 +81,28 @@
         "cta": "Read the note"
       }
     },
+    "/insights/an-agent-can-gut-a-helper.html": {
+      "title": "An Agent Can Gut a Helper. It Can't Gut a Line You're Reading. | Mantosh Kumar",
+      "description": "Why assertions belong inline in the test rather than behind a helper, and why that old readability preference now also limits blast radius.",
+      "kind": "article",
+      "schemaType": "TechArticle",
+      "datePublished": "2026-10-10",
+      "dateModified": "2026-10-10",
+      "homepageRank": 3,
+      "breadcrumbs": [
+        {
+          "name": "Insights",
+          "path": "/insights/"
+        }
+      ],
+      "card": {
+        "kicker": "AI-assisted engineering",
+        "readTime": "3 minute read",
+        "title": "An agent can gut a helper. It can't gut a line you're reading.",
+        "summary": "Keep the assertion in the test. A test whose meaning lives in another file cannot be reviewed by reading it.",
+        "cta": "Read the note"
+      }
+    },
     "/insights/tests-are-the-cheapest-check.html": {
       "title": "Your Agent's Tests Are the Cheapest Check You Have | Mantosh Kumar",
       "description": "Five failures a passing test suite will not catch when an agent writes the code, and why only one of the fixes depends on someone remembering it.",
