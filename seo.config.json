@@ -59,6 +59,28 @@
         "cta": "Read the note"
       }
     },
+    "/insights/agent-edits-what-the-test-imports.html": {
+      "title": "Your Agent Never Edits the Test. It Edits What the Test Imports. | Mantosh Kumar",
+      "description": "Path-based protection covers files, not the helpers and config those files depend on. What to protect instead, and why CODEOWNERS fails for a solo maintainer.",
+      "kind": "article",
+      "schemaType": "TechArticle",
+      "datePublished": "2026-10-10",
+      "dateModified": "2026-10-10",
+      "homepageRank": 2,
+      "breadcrumbs": [
+        {
+          "name": "Insights",
+          "path": "/insights/"
+        }
+      ],
+      "card": {
+        "kicker": "AI-assisted engineering",
+        "readTime": "4 minute read",
+        "title": "Your agent never edits the test. It edits what the test imports.",
+        "summary": "CODEOWNERS on your test folder covers a file. It does not cover the truth of what the file says.",
+        "cta": "Read the note"
+      }
+    },
     "/insights/tests-are-the-cheapest-check.html": {
       "title": "Your Agent's Tests Are the Cheapest Check You Have | Mantosh Kumar",
       "description": "Five failures a passing test suite will not catch when an agent writes the code, and why only one of the fixes depends on someone remembering it.",

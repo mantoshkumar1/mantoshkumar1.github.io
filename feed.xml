@@ -8,6 +8,16 @@
   <author><name>Mantosh Kumar</name></author>
   <subtitle>Platform engineering, automation, backend systems, and operational intelligence. Actively targeting Staff/Principal Backend, Platform, or AI Infrastructure roles in Dubai/Abu Dhabi.</subtitle>
   <entry>
+    <title>Your Agent Never Edits the Test. It Edits What the Test Imports.</title>
+    <id>https://mantoshkumar1.github.io/insights/agent-edits-what-the-test-imports.html</id>
+    <link href="https://mantoshkumar1.github.io/insights/agent-edits-what-the-test-imports.html" />
+    <published>2026-10-10T12:00:00Z</published>
+    <updated>2026-10-10T12:00:00Z</updated>
+    <author><name>Mantosh Kumar</name></author>
+    <category term="engineering-insight" />
+    <summary>Path-based protection covers files, not the helpers and config those files depend on. What to protect instead, and why CODEOWNERS fails for a solo maintainer.</summary>
+  </entry>
+  <entry>
     <title>My Agent's Tests Passed. Nothing Was Watching the Risk.</title>
     <id>https://mantoshkumar1.github.io/insights/nothing-was-watching-the-risk.html</id>
     <link href="https://mantoshkumar1.github.io/insights/nothing-was-watching-the-risk.html" />

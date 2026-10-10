@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- seo:generated:start -->
+    <meta name="description" content="Path-based protection covers files, not the helpers and config those files depend on. What to protect instead, and why CODEOWNERS fails for a solo maintainer." />
+    <meta name="author" content="Mantosh Kumar" />
+    <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1" />
+    <meta name="theme-color" content="#060b12" />
+    <meta name="application-name" content="Mantosh Kumar" />
+    <meta name="apple-mobile-web-app-title" content="Mantosh Kumar" />
+    <link rel="canonical" href="https://mantoshkumar1.github.io/insights/agent-edits-what-the-test-imports.html" />
+    <link rel="alternate" type="application/rss+xml" title="Mantosh Kumar — Engineering Writing and Systems" href="https://mantoshkumar1.github.io/feed.xml" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta property="og:locale" content="en_CA" />
+    <meta property="og:title" content="Your Agent Never Edits the Test. It Edits What the Test Imports. | Mantosh Kumar" />
+    <meta property="og:description" content="Path-based protection covers files, not the helpers and config those files depend on. What to protect instead, and why CODEOWNERS fails for a solo maintainer." />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://mantoshkumar1.github.io/insights/agent-edits-what-the-test-imports.html" />
+    <meta property="og:site_name" content="Mantosh Kumar" />
+    <meta property="og:image" content="https://mantoshkumar1.github.io/assets/seo/social-default.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Your Agent Never Edits the Test. It Edits What the Test Imports. | Mantosh Kumar" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Your Agent Never Edits the Test. It Edits What the Test Imports. | Mantosh Kumar" />
+    <meta name="twitter:description" content="Path-based protection covers files, not the helpers and config those files depend on. What to protect instead, and why CODEOWNERS fails for a solo maintainer." />
+    <meta name="twitter:image" content="https://mantoshkumar1.github.io/assets/seo/social-default.jpg" />
+    <meta name="twitter:image:alt" content="Your Agent Never Edits the Test. It Edits What the Test Imports. | Mantosh Kumar" />
+    <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","@id":"https://mantoshkumar1.github.io/insights/agent-edits-what-the-test-imports.html#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://mantoshkumar1.github.io"},{"@type":"ListItem","position":2,"name":"Insights","item":"https://mantoshkumar1.github.io/insights/"},{"@type":"ListItem","position":3,"name":"Your Agent Never Edits the Test. It Edits What the Test Imports.","item":"https://mantoshkumar1.github.io/insights/agent-edits-what-the-test-imports.html"}]},{"@id":"https://mantoshkumar1.github.io/insights/agent-edits-what-the-test-imports.html#webpage","@type":"TechArticle","name":"Your Agent Never Edits the Test. It Edits What the Test Imports. | Mantosh Kumar","description":"Path-based protection covers files, not the helpers and config those files depend on. What to protect instead, and why CODEOWNERS fails for a solo maintainer.","url":"https://mantoshkumar1.github.io/insights/agent-edits-what-the-test-imports.html","inLanguage":"en","isPartOf":{"@id":"https://mantoshkumar1.github.io/#website"},"breadcrumb":{"@id":"https://mantoshkumar1.github.io/insights/agent-edits-what-the-test-imports.html#breadcrumb"},"headline":"Your Agent Never Edits the Test. It Edits What the Test Imports.","author":{"@type":"Person","name":"Mantosh Kumar","url":"https://mantoshkumar1.github.io"},"datePublished":"2026-10-10","dateModified":"2026-10-10"}]}</script>
+    <script>
+      window.addEventListener("load", () => {
+        const analytics = document.createElement("script");
+        analytics.defer = true;
+        analytics.dataset.domain = "mantoshkumar1.github.io";
+        analytics.src = "https://plausible.io/js/script.js";
+        document.head.append(analytics);
+      }, { once: true });
+    </script>
+    <script defer src="/assets/js/ai-referral-analytics.js"></script>
+    <!-- seo:generated:end -->
+
+<!-- seo:page {"datePublished":"2026-08-22","dateModified":"2026-08-22"} -->
+    <title>Your Agent Never Edits the Test. It Edits What the Test Imports. | Mantosh Kumar</title>
+    <script src="../assets/js/theme-init.js?v=20260713-1"></script>
+    <link rel="stylesheet" href="../assets/css/style.css?v=20260716-15" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+    <header class="navbar">
+      <div class="container nav-wrap">
+        <a class="logo" href="../" aria-label="Mantosh Kumar — Home" title="Go to homepage">Mantosh Kumar</a>
+        <nav aria-label="Primary navigation">
+          <a href="../">Home</a>
+          <a href="../projects/">Projects</a>
+          <a href="../insights/" aria-current="page">Insights</a>
+          <a href="../experience/">Experience</a>
+          <a href="../resume/">Resume</a>
+          <a class="nav-cta" href="../contact/">Discuss a role</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="page-shell reading-shell" id="main-content" tabindex="-1">
+      <div class="container">
+        <article class="resume-card case-study reading-page">
+          <header class="resume-header">
+            <p class="eyebrow">AI-assisted engineering • 4 minute read</p>
+            <h1>Your agent never edits the test. It edits what the test imports.</h1>
+            <p>CODEOWNERS on your test folder covers a file. It does not cover the truth of what the file says.</p>
+          </header>
+
+          <section class="resume-section">
+            <h2>The gap</h2>
+            <p>Say <code>worker.test.js</code> is protected. CODEOWNERS covers it, CI flags any change, the test count is pinned. Good.</p>
+            <p>Now the agent edits <code>test-helpers.js</code>. Nobody protected that. It makes <code>assertValidAnswer()</code> return early.</p>
+            <p>Every test still runs. Still passes. The test file never moved — same name, same body, same count. CODEOWNERS stays quiet, because nothing it owns was touched.</p>
+          </section>
+
+          <section class="resume-section">
+            <h2>What the list actually covers</h2>
+            <figure class="reading-figure">
+              <style>
+                .fig-dg { --dg-line: #8ea3bd; --dg-accent: #7cb2ff; --dg-warn: #e2725b; --dg-fill: #18222f; --dg-tint: rgba(124,178,255,0.16); --dg-text: #f8fafc; --dg-muted: #aebdd0; }
+                html[data-theme="light"] .fig-dg { --dg-line: #64748b; --dg-accent: #1d4ed8; --dg-warn: #b23c1f; --dg-fill: #ffffff; --dg-tint: rgba(29,78,216,0.10); --dg-text: #111827; --dg-muted: #536174; }
+              </style>
+              <svg class="fig-dg" viewBox="0 0 680 356" width="100%" role="img" aria-labelledby="f3-t f3-d" style="max-width:580px;height:auto;display:block;margin:0 auto">
+                <title id="f3-t">The protected list covers the test file but not the helper it imports</title>
+                <desc id="f3-d">A protected list encloses worker.test.js, which never moved. Outside the list sits test-helpers.js, which nobody protected and which the test imports. Both paths lead to an all-green run with CODEOWNERS quiet, and the change merges.</desc>
+                <defs><marker id="f3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+                <rect x="40" y="26" width="300" height="150" rx="10" fill="none" stroke="var(--dg-accent)" stroke-width="2.5"/>
+                <text x="56" y="48" text-anchor="start" dominant-baseline="central" fill="var(--dg-accent)" font-family="Inter, sans-serif" font-size="12" font-weight="500">Protected list</text>
+                <rect x="70" y="72" width="240" height="60" rx="8" fill="var(--dg-tint)" stroke="var(--dg-accent)" stroke-width="2.5"/>
+                <text x="190" y="94" text-anchor="middle" dominant-baseline="central" fill="var(--dg-text)" font-family="Inter, sans-serif" font-size="14" font-weight="500">worker.test.js</text>
+                <text x="190" y="113" text-anchor="middle" dominant-baseline="central" fill="var(--dg-accent)" font-family="Inter, sans-serif" font-size="12" font-weight="500">never moved</text>
+                <rect x="400" y="72" width="240" height="60" rx="8" fill="var(--dg-fill)" stroke="var(--dg-warn)" stroke-width="2.5" stroke-dasharray="6 5"/>
+                <text x="520" y="94" text-anchor="middle" dominant-baseline="central" fill="var(--dg-text)" font-family="Inter, sans-serif" font-size="14" font-weight="500">test-helpers.js</text>
+                <text x="520" y="113" text-anchor="middle" dominant-baseline="central" fill="var(--dg-warn)" font-family="Inter, sans-serif" font-size="12" font-weight="500">nobody protected it</text>
+                <path d="M310 102 L396 102" fill="none" stroke="var(--dg-line)" stroke-width="1.75" marker-end="url(#f3)"/>
+                <text x="353" y="90" text-anchor="middle" dominant-baseline="central" fill="var(--dg-muted)" font-family="Inter, sans-serif" font-size="12" font-weight="400">imports</text>
+                <path d="M190 132 L190 204" fill="none" stroke="var(--dg-line)" stroke-width="1.75" marker-end="url(#f3)"/>
+                <path d="M520 132 L520 186 L340 186 L340 204" fill="none" stroke="var(--dg-line)" stroke-width="1.75" marker-end="url(#f3)"/>
+                <rect x="90" y="208" width="500" height="58" rx="8" fill="var(--dg-fill)" stroke="var(--dg-line)" stroke-width="1.5"/>
+                <text x="340" y="230" text-anchor="middle" dominant-baseline="central" fill="var(--dg-text)" font-family="Inter, sans-serif" font-size="14" font-weight="500">All green · count unchanged · CODEOWNERS quiet</text>
+                <text x="340" y="249" text-anchor="middle" dominant-baseline="central" fill="var(--dg-muted)" font-family="Inter, sans-serif" font-size="12" font-weight="400">nothing it owns was touched</text>
+                <path d="M340 266 L340 296" fill="none" stroke="var(--dg-line)" stroke-width="1.75" marker-end="url(#f3)"/>
+                <rect x="270" y="300" width="140" height="42" rx="8" fill="var(--dg-fill)" stroke="var(--dg-line)" stroke-width="1.5"/>
+                <text x="340" y="321" text-anchor="middle" dominant-baseline="central" fill="var(--dg-text)" font-family="Inter, sans-serif" font-size="14" font-weight="500">Merged</text>
+              </svg>
+              <figcaption>The list covers the file. What the file trusts sits outside it.</figcaption>
+            </figure>
+            <p>Protect a file and you've protected a file. You haven't protected whether what it says is true, because that reaches into everything the file imports.</p>
+          </section>
+
+          <section class="resume-section">
+            <h2>The list I should have written</h2>
+            <p>The fix isn't a longer list. It's a different question when writing it.</p>
+            <p>Not <em>which files are tests?</em> but <strong>what does this assertion's truth depend on?</strong> For me that's:</p>
+            <ul class="case-study-list">
+              <li>the test files</li>
+              <li>helpers, fixtures, factories, custom matchers</li>
+              <li>CI workflow files</li>
+              <li>the gate scripts, and any baseline number they compare against</li>
+              <li>the config that decides which environment the tests run in</li>
+            </ul>
+            <p>That last line is the one that <a href="nothing-was-watching-the-risk.html">caught me out</a>. The setting that chose a fake response over a real call mattered as much as any assertion in the file.</p>
+          </section>
+
+          <section class="resume-section">
+            <h2>CODEOWNERS only works if the agent isn't you</h2>
+            <p>This is the part I got wrong for a while.</p>
+            <p>CODEOWNERS plus branch protection is the standard answer, and it's a good one. A test-path change requires review from a named owner. Machine-enforced, no scripts to maintain.</p>
+            <p>Except GitHub won't let you approve your own pull request. Solo, there is no second party, so there's nothing to enforce. The rule is real and it never fires.</p>
+            <p>It only becomes a gate when the agent commits as someone else — a bot account or a GitHub App. Then you're a genuine reviewer of someone else's change, and the whole native mechanism works.</p>
+            <p>Until then you're writing your own guard. Mine fails a pull request when a protected path changes without a review label:</p>
+            <pre><code>CHANGED=$(git diff --name-only &quot;origin/${BASE_REF}...HEAD&quot; -- \
+  &#39;chat-worker/test/**&#39; &#39;.github/workflows/**&#39; &#39;scripts/audit-*.mjs&#39;)
+
+[ -z &quot;$CHANGED&quot; ] &amp;&amp; exit 0
+
+printf &#39;%s&#39; &quot;$LABELS&quot; | tr &#39;,&#39; &#39;\n&#39; | grep -qx &#39;approved-test-change&#39; \
+  || { echo &quot;::error::Read the diff, then add the label.&quot;; exit 1; }</code></pre>
+            <p>It works. It's also a workaround for not having a second identity, and I'd throw it away the day I set one up.</p>
+          </section>
+
+          <section class="resume-section">
+            <h2>What it still misses</h2>
+            <p>Any path list can be walked around by moving logic somewhere the list doesn't cover. Draw it carefully and you catch today's routes, not tomorrow's.</p>
+            <p>Revisit it every time test infrastructure moves. And keep the assertion itself where you can see it — that is the other half of this.</p>
+          </section>
+
+          <section class="resume-section">
+            <h2>Evidence boundary</h2>
+            <p>The workflow above runs on my own website repository. The bot identity is something I've decided is right and haven't set up. Where a control isn't in place, I've said so.</p>
+          </section>
+
+          <section class="resume-section">
+            <div class="resume-actions">
+              <a class="button primary" href="../newsletter/">Get new insights by email <span aria-hidden="true">→</span></a>
+              <a class="button secondary" href="make-the-banks-deterministic.html">A river can&#39;t be deterministic <span aria-hidden="true">→</span></a>
+            </div>
+          </section>
+        </article>
+      </div>
+    </main>
+    <script src="/assets/js/ask-mantosh-widget.js?v=20260716-17"></script>
+  </body>
+</html>
