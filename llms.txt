@@ -44,6 +44,7 @@ His résumé-backed capabilities include engineering platforms and automation, P
 - [Your Agent's Tests Are the Cheapest Check You Have](https://mantoshkumar1.github.io/insights/tests-are-the-cheapest-check.html)
 - [My Agent's Tests Passed. Nothing Was Watching the Risk.](https://mantoshkumar1.github.io/insights/nothing-was-watching-the-risk.html)
 - [Your Agent Never Edits the Test. It Edits What the Test Imports.](https://mantoshkumar1.github.io/insights/agent-edits-what-the-test-imports.html)
+- [An Agent Can Gut a Helper. It Can't Gut a Line You're Reading.](https://mantoshkumar1.github.io/insights/an-agent-can-gut-a-helper.html)
 
 ## Ask Mantosh
 

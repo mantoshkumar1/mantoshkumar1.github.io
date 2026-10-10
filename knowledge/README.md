@@ -14,7 +14,7 @@ with `_` are intentionally not indexed.
 
 ## Current public corpus
 
-As of 2026-10-10, the public index contains 23 source documents:
+As of 2026-10-10, the public index contains 24 source documents:
 
 - `Project: DogBuild`
 - `Project: Evidence-First Engineering Knowledge System`
@@ -33,6 +33,7 @@ As of 2026-10-10, the public index contains 23 source documents:
 - `Note: Your Agent's Tests Are the Cheapest Check You Have`
 - `Note: My Agent's Tests Passed. Nothing Was Watching the Risk.`
 - `Note: Your Agent Never Edits the Test. It Edits What the Test Imports.`
+- `Note: An Agent Can Gut a Helper. It Can't Gut a Line You're Reading.`
 - `Article: Why Am I Still the Message Bus Between My AI Agents?`
 - `Experience: Engineering Capabilities and Technical Skills`
 - `Experience: Engineering Work Outside Nokia`
