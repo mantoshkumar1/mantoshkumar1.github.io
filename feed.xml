@@ -4,9 +4,19 @@
   <id>https://mantoshkumar1.github.io/</id>
   <link href="https://mantoshkumar1.github.io/" />
   <link href="https://mantoshkumar1.github.io/feed.xml" rel="self" type="application/atom+xml" />
-  <updated>2026-09-17T12:00:00Z</updated>
+  <updated>2026-10-10T12:00:00Z</updated>
   <author><name>Mantosh Kumar</name></author>
   <subtitle>Platform engineering, automation, backend systems, and operational intelligence. Actively targeting Staff/Principal Backend, Platform, or AI Infrastructure roles in Dubai/Abu Dhabi.</subtitle>
+  <entry>
+    <title>My Agent's Tests Passed. Nothing Was Watching the Risk.</title>
+    <id>https://mantoshkumar1.github.io/insights/nothing-was-watching-the-risk.html</id>
+    <link href="https://mantoshkumar1.github.io/insights/nothing-was-watching-the-risk.html" />
+    <published>2026-10-10T12:00:00Z</published>
+    <updated>2026-10-10T12:00:00Z</updated>
+    <author><name>Mantosh Kumar</name></author>
+    <category term="engineering-insight" />
+    <summary>A change passed every check while the feature was broken, because the test used a response written by hand instead of making the real request.</summary>
+  </entry>
   <entry>
     <title>DogBuild: Deterministic AI Agent Coordination</title>
     <id>https://mantoshkumar1.github.io/projects/dogbuild.html</id>
