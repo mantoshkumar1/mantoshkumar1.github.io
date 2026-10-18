@@ -1,3 +1,4 @@
+// Worker release verification: founder merge -> GitHub Actions -> production smoke checks.
 import { fingerprint, isCacheableQuestion, knowledgeVersion, readCachedJson, writeCachedJson } from "./cache.js";
 import { loadConfig } from "./config.js";
 import { assertAllowedOrigin, corsHeaders } from "./cors.js";
