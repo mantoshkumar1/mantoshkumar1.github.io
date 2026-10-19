@@ -1,6 +1,6 @@
 # Review packet: AI-assisted change and production release
 
-Status: author self-review only; independent review and founder editorial approval pending.
+Status: external review received; supported AI-reviewer disclosure correction applied. Independent review of the revised head and founder editorial approval remain pending.
 
 ## Deliverables and scope
 
@@ -20,7 +20,7 @@ All code references below use source e506385c9fa08d11f19d73cfb697ab9782331545.
 | --- | --- | --- |
 | Only specified Worker paths trigger automatic release on main | [Automatic workflow](https://github.com/mantoshkumar1/mantoshkumar1.github.io/blob/e506385c9fa08d11f19d73cfb697ab9782331545/.github/workflows/release-ask-mantosh-on-merge.yml), push paths | Docs/tests/knowledge/static files alone are excluded; do not imply every merge deploys the Worker |
 | Workflow checks founder merge, exact source and first attempt | Same workflow, provenance and repeated source steps | These checks do not validate the substance of independent review |
-| Independent review preceded the canary merge | [Claude CLEAN](https://github.com/mantoshkumar1/mantoshkumar1.github.io/issues/77#issuecomment-6242511814), [Strategy acceptance](https://github.com/mantoshkumar1/mantoshkumar1.github.io/issues/77#issuecomment-6242729948), [PR106](https://github.com/mantoshkumar1/mantoshkumar1.github.io/pull/106) | Do not claim the release YAML itself enforces every review rule |
+| Codex produced the canary change; a separate Claude AI review preceded the founder merge | [Codex producer](https://github.com/mantoshkumar1/mantoshkumar1.github.io/issues/77#issuecomment-6241372275), [Claude AI review CLEAN](https://github.com/mantoshkumar1/mantoshkumar1.github.io/issues/77#issuecomment-6242511814), [Strategy acceptance](https://github.com/mantoshkumar1/mantoshkumar1.github.io/issues/77#issuecomment-6242729948), [PR106](https://github.com/mantoshkumar1/mantoshkumar1.github.io/pull/106) | Do not claim the release YAML itself enforces every review rule |
 | Verification includes tests/evaluation, browser suite, audit and dry run | Automatic workflow verify job; [run39169924619](https://github.com/mantoshkumar1/mantoshkumar1.github.io/actions/runs/39169924619) | No new test-count claim or claim that complete site verification passed |
 | Latest matching receipt must be successful; failed latest receipt is not bypassed | Automatic workflow baseline selection code | A pre-production blocked comment has a different prefix; avoid treating it as a release receipt |
 | Zero exit, version correlation, smoke and final sole-100% observation succeeded | [Bot receipt6255657485](https://github.com/mantoshkumar1/mantoshkumar1.github.io/issues/77#issuecomment-6255657485), automatic workflow predicates and run | Release-time observation only; no independent later Cloudflare observation |
@@ -48,7 +48,7 @@ Before editing, these checks passed: documentation audit, internal link/anchor/a
 Post-draft results:
 
 - `node scripts/audit-docs.mjs` — exit 0; 21 public documents unchanged.
-- `node scripts/audit-links.mjs` — exit 0.
+- `node scripts/audit-links.mjs` — exit 0 for the site's HTML links. This script does not parse the draft Markdown, so this result does not validate the article's own links.
 - `node scripts/audit-ask-mantosh-coverage.mjs` — exit 0; 18 evidence routes, 7 utility routes and 9 non-evidence routes cover the same 33 HTML routes.
 - `node scripts/build-pages.mjs` — exit 0.
 - `npm run audit:performance-budget` — exit 0; public artifact excluding PDF is 692,911 bytes.
@@ -58,6 +58,16 @@ Post-draft results:
 - Chat-link behaviour was traced through the existing widget hash-loading path and client open handler. A new browser run could not start because this environment has no installed Chromium executable; no browser download or installation was performed. Browser opening and layout review remain independent-review/publication checks.
 
 Exact PR-head evidence is recorded in the PR description and canonical #99 comment. Full `npm run verify` and a browser-suite run are not claimed by this documentation draft. All protected files remain unchanged.
+
+## External review and author response — 19 October 2026
+
+[External Claude review6257408542](https://github.com/mantoshkumar1/mantoshkumar1.github.io/pull/107#issuecomment-6257408542) reviewed initial head `ef7c3a8f53b224f1502f7962c6ca5f31747796ac`. It is findings-bearing, not publication approval.
+
+- B2 accepted: article and draft retrieval companion now explicitly identify Codex as AI producer, Claude as a separate AI reviewer, and the founder as the merge decision-maker. The canary evidence mapping names both AI roles.
+- B1 is a source mismatch: the quoted “Reliability boundaries” section, automatic-recovery sentence and stopped-service restart example are absent from the reviewed head. The actual draft explicitly states no automatic rollback or release retry. No nonexistent paragraph was deleted. [Exact-head triage6257430508](https://github.com/mantoshkumar1/mantoshkumar1.github.io/pull/107#issuecomment-6257430508) records this distinction.
+- The external reviewer reports manual draft-link checks and a successful browser check of the existing chat-opening fragment. These are attributed reviewer observations, not new author browser executions. The HTML link audit above does not cover the Markdown draft.
+- Optional editorial suggestions remain suggestions. No fresh private-settings, token-scope or provider-state proof is inferred from a public runbook or review.
+- The author remains recused from independent approval. Review of the revised exact head remains outstanding; the three files stay draft-only, with no publication integration or protected audit changes.
 
 ## Editorial assessment required by AGENTS.md
 

@@ -12,7 +12,7 @@ That small test made the release contract concrete. The AI could help prepare th
 
 ## Make the merge mean something
 
-My operating process separates preparation from approval. A coding worker prepares and self-reviews a change. A different worker provides independent review. I make the final merge decision.
+My operating process separates preparation from approval. Codex, an AI coding agent, prepares and self-reviews a change. Claude, a separate AI reviewer, reviews that change independently. I make the final merge decision.
 
 Those are responsibilities in the development process. The release workflow does not infer that an article is accurate or that a review was thoughtful. It checks a narrower set of machine-readable facts: the expected repository, branch, actor, first run attempt, merged pull request and exact source commit.
 
@@ -91,7 +91,7 @@ There is no automatic rollback or automatic release retry. After a failed or unc
 
 ## What the one-comment test established
 
-[PR #106](https://github.com/mantoshkumar1/mantoshkumar1.github.io/pull/106) added one comment to the Worker entry point. Independent review preceded my merge. The resulting source was `e506385c9fa08d11f19d73cfb697ab9782331545`.
+[PR #106](https://github.com/mantoshkumar1/mantoshkumar1.github.io/pull/106) added one comment to the Worker entry point. Claude's independent AI review of the Codex-produced change preceded my merge. The resulting source was `e506385c9fa08d11f19d73cfb697ab9782331545`.
 
 That merge triggered [automatic release run 39169924619](https://github.com/mantoshkumar1/mantoshkumar1.github.io/actions/runs/39169924619). The verification and release jobs succeeded. The [bot-authored receipt](https://github.com/mantoshkumar1/mantoshkumar1.github.io/issues/77#issuecomment-6255657485) recorded a zero deploy exit, a correlated new production version, successful smoke checks and a successful final version observation. The run completed at **21:58:56 UTC on 18 October 2026**.
 

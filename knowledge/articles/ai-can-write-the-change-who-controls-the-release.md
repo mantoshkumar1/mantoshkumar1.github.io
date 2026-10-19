@@ -4,7 +4,7 @@ slug: "ai-can-write-the-change-who-controls-the-release"
 category: "article"
 tags: [ai-assisted-engineering, ci-cd, release-engineering, operational-intelligence]
 summary: "An Ask Mantosh case study separating AI-assisted preparation, independent review, founder merge authority and deterministic production release evidence."
-last_updated: "2026-10-18"
+last_updated: "2026-10-19"
 related_topics: [automation, deployment-verification, evidence-boundaries]
 visibility: "draft"
 url: "/insights/ai-can-write-the-change-who-controls-the-release.html"
@@ -20,7 +20,7 @@ This is a draft retrieval companion to the article in `docs/drafts/`. Its planne
 
 Ask Mantosh is the assistant on Mantosh Kumar's engineering website. Its purpose is to explain and navigate his published professional work. The chat opens at https://mantoshkumar1.github.io/#ask-mantosh.
 
-The development process separates a coding producer, an independent reviewer and the founder's merge decision. For ordinary qualifying Worker source, configuration or package changes, a founder merge to main can trigger the automatic GitHub Actions release. Static pages, knowledge documents, documentation and tests alone do not trigger that Worker release. The workflow checks provenance; it does not independently establish review quality.
+The development process separates Codex as the AI coding producer, Claude as a separate AI reviewer and the founder's merge decision. For ordinary qualifying Worker source, configuration or package changes, a founder merge to main can trigger the automatic GitHub Actions release. Static pages, knowledge documents, documentation and tests alone do not trigger that Worker release. The workflow checks provenance; it does not independently establish review quality.
 
 The automatic workflow binds verification and release to an exact commit. Verification checks the expected Worker configuration, migration/binding constraints, dependencies, tests/evaluation, browser suite and dry run. Release requires the latest matching unedited bot receipt to be successful and correlated, then checks the observed sole-100% production version against that baseline before writing.
 
@@ -28,7 +28,7 @@ After an attempt, the workflow requires a zero deploy exit and a new observed ve
 
 ## Verified example
 
-On 18 October 2026, PR106 added only one comment to Worker source. Independent review preceded the founder merge. Exact source e506385c9fa08d11f19d73cfb697ab9782331545 triggered automatic run39169924619, completed/success at 21:58:56 UTC. Bot receipt6255657485 reports zero deploy exit, moved-to-this-run correlation, production smoke success and final observation success.
+On 18 October 2026, PR106 added only one comment to Worker source. Claude's independent AI review of the Codex-produced change preceded the founder merge. Exact source e506385c9fa08d11f19d73cfb697ab9782331545 triggered automatic run39169924619, completed/success at 21:58:56 UTC. Bot receipt6255657485 reports zero deploy exit, moved-to-this-run correlation, production smoke success and final observation success.
 
 - PR: https://github.com/mantoshkumar1/mantoshkumar1.github.io/pull/106
 - Run: https://github.com/mantoshkumar1/mantoshkumar1.github.io/actions/runs/39169924619
