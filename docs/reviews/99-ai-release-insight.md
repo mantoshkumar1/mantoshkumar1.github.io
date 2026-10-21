@@ -1,6 +1,6 @@
 # Review packet: AI-assisted change and production release
 
-Status: shortened at the founder's request on 21 October 2026. Independent review of this shorter revision and founder editorial approval remain pending. The earlier CLEAN applies only to head 987154332f723ea7b20c11ea54eef3751ccd1349.
+Status: rewritten as a narrative with a process diagram at the founder's request on 21 October 2026. Review6326381001 at ae9e162b65b73f1fa1bdc7bfd2dc88ddd8c8699b requested a receipt-selection wording correction; addressed in this revision. Independent review of the new wording/diagram and founder editorial approval remain pending.
 
 ## Deliverables and scope
 
@@ -74,6 +74,14 @@ Exact PR-head evidence is recorded in the PR description and canonical #99 comme
 The founder requested a 3–4 minute article after reading the HTML preview. The shorter text keeps the real comment-only release and three lessons: decision ownership, source identity and observed production outcome. Detailed workflow inventories, repeated caveats and recovery instructions stay in this evidence packet and the linked runbook. The knowledge companion names the roles in the specific canary rather than implying permanent model assignments.
 
 [Claude review6280040392](https://github.com/mantoshkumar1/mantoshkumar1.github.io/pull/107#issuecomment-6280040392) was CLEAN at prior head 987154332f723ea7b20c11ea54eef3751ccd1349 and withdrew B1 as a reviewer source error. That verdict does not approve this shortened wording. Author self-review preserves the AI-reviewer disclosure, human merge decision, dated release evidence and release-time limits. Fresh independent review of the shorter revision remains pending.
+
+## Narrative and diagram revision — 21 October 2026
+
+Founder feedback: the shorter version still felt technical and lost the reader halfway through. This revision opens with the real one-comment experiment, uses plain language for the release record, and replaces the numbered technical lessons with a narrative and a Mermaid diagram. The diagram describes process roles, founder merge and the workflow's pass/failure branches; its caption distinguishes review quality from executable checks and states that a failure after deployment can leave production changed.
+
+[Claude review6326381001](https://github.com/mantoshkumar1/mantoshkumar1.github.io/pull/107#issuecomment-6326381001) found R1 at ae9e162b: “latest matching successful release receipt” could imply skipping a failed latest receipt. The article and companion now explicitly select the latest matching record, require success, and stop on failure until reconciled. No new release execution is claimed. The rewrite adds no invented feelings, metrics or outcomes. It retains release-time limits, bounded smoke checks and the authority split, with implementation details linked to the runbook. Earlier reviews apply only to their named revisions.
+
+Claims-table rows concerning manual recovery, concurrency, deterministic profile internals and full verification inventories now support the fuller companion, rather than statements in the narrative. The numerical score below is the historical assessment of the original long version; it is not a fresh independent score for this revision. Current author recommendation remains APPROVED WITH IMPROVEMENTS pending independent review. No new hiring-impact or business-outcome claim is made.
 
 ## Editorial assessment required by AGENTS.md
 

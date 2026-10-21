@@ -2,54 +2,53 @@
 
 > Unpublished draft. Case-study evidence: 18 October 2026.
 
-An AI agent can write a change, run its tests and explain why it looks ready. But who decides it can reach production? And how do you know what actually arrived?
+The change I used to test my automatic release system was one comment.
 
-I had to answer those questions for [Ask Mantosh](https://mantoshkumar1.github.io/#ask-mantosh), the assistant that helps visitors explore my published engineering work. Its release path gave me a small, real example of how to divide responsibility between AI, a person and executable checks.
+It added no feature and changed no behaviour. I wanted to see what happened after I approved a change: would the system release the right version, check that it worked, and leave me something better than “deployment successful”?
 
-## A small change through the real path
+The project was [Ask Mantosh](https://mantoshkumar1.github.io/#ask-mantosh), the assistant on this website that helps visitors explore my published work.
 
-On 18 October, I tested automatic release with one comment in the Worker source. It changed no application behaviour, but exercised the actual path from a reviewed pull request to production.
+## Who gets to say “ship it”?
 
-Codex prepared and self-reviewed the change. Claude, a separate AI reviewer, reviewed it independently. I made the merge decision. Neither AI agent had authority to merge or deploy. For a qualifying Worker change, my merge was the production decision; GitHub Actions then ran verification and release.
+Codex prepared the change and checked its own work. Claude, a separate AI reviewer, reviewed it independently. I decided whether to merge it.
 
-[That pull request](https://github.com/mantoshkumar1/mantoshkumar1.github.io/pull/106) triggered [a successful automatic run](https://github.com/mantoshkumar1/mantoshkumar1.github.io/actions/runs/39169924619). The workflow checked the candidate, deployed it, verified the service and posted [a release receipt](https://github.com/mantoshkumar1/mantoshkumar1.github.io/issues/77#issuecomment-6255657485): a GitHub comment recording the source, version and outcome.
+Two AI agents agreeing gave me another assessment. The decision to put their work into production was still mine. Neither agent had permission to merge or deploy.
 
-Three design choices made that result useful.
+Once I merged this qualifying change, GitHub Actions took over. Here is the division of work:
 
-## 1. Give each decision an owner
+```mermaid
+flowchart TD
+  A["Codex prepares and self-reviews"] --> B["Claude reviews independently"]
+  B --> C["I decide whether to merge"]
+  C -->|"Merge"| D["Workflow checks and releases"]
+  D -->|"All checks pass"| E["Live service verified"]
+  D -->|"A check fails"| F["Stop and inspect the evidence"]
+```
 
-The producer prepares and self-reviews. A different AI reviews independently. I decide whether to merge. The workflow verifies the facts it can check.
+*The AI roles describe our working process. The workflow checks the source and release; it cannot judge how thoughtful a review was. A failure after deployment can leave production changed.*
 
-Two agreeing AI agents are still two AI agents. Their agreement gives me another assessment; I retain the production decision.
+That last distinction matters. I can ask AI to do more of the work without giving it every decision along the way.
 
-The workflow checks that the exact commit came through the required pull request and my merge. It cannot establish whether the review was thoughtful. That remains part of the working process.
+## “Deployed” was only half the answer
 
-Before giving an agent more access, I would answer: what can it prepare, what can it approve, and what action authorizes production?
+Before releasing anything, the system needed to know where the previous attempt had left production.
 
-## 2. Make every green check belong to one change
+It reads the latest matching release record and requires that record to show success. If the latest attempt failed, it stops until I reconcile the failure. It does not search backward for a more convenient green result.
 
-A passing test describes the revision it tested. If the branch changes afterward, the earlier result needs to be read in that context.
+It also checks that production still matches that record, and that the source about to be released is the source I approved. If either has changed, the release stops.
 
-This release carries one commit SHA through verification and deployment. It checks out that source, runs the release checks, and rechecks current `main` before the production write. If `main` has advanced, the older candidate fails that check.
+After deployment, it looks again. Is the expected version actually serving traffic? Does the service respond? Can it answer a public-profile question and finish a streaming response?
 
-Verification includes Worker tests, evaluation, browser checks, a dependency audit and a deployment dry run. Documentation or static-page changes alone do not trigger this Worker release: the website, Worker and knowledge index have separate deployment paths.
+The [test run succeeded](https://github.com/mantoshkumar1/mantoshkumar1.github.io/actions/runs/39169924619). Its [release record](https://github.com/mantoshkumar1/mantoshkumar1.github.io/issues/77#issuecomment-6255657485) tied the approved source to the observed version and those checks.
 
-The lesson is simple: preserve the connection between the change you approved, the source you tested and the source you release.
+That record tells me what happened during this release. It does not promise that every answer is correct or that the service will stay healthy tomorrow. The test also said nothing about recovery or private access settings. Those need their own evidence.
 
-## 3. Verify what happened after the command
+## What I wanted from the automation
 
-Before writing, the workflow compares the live production version with the latest matching successful release receipt. Unexpected state stops the release. This detects drift, although a read followed by a write cannot exclude another authorized writer racing with it.
+I wanted to stop repeating deployment steps by hand while keeping the decision to ship.
 
-Afterward, the observed version must match the version reported by this attempt. The workflow checks health, a public-profile answer and a completed streaming response, then confirms the new version serves all traffic.
+The one-comment test gave me evidence that this arrangement worked from approval through the live service. The useful part was being able to follow the whole change: who prepared it, who reviewed it, who approved it, and what happened afterward.
 
-The receipt records those observations at release time. It does not prove every answer is correct or that production will remain healthy tomorrow.
+If you are letting AI do more of your engineering work, that is a good question to start with: **when it says “done,” what would you need to see before you believe it?**
 
-I kept recovery deliberate: no automatic rollback or release retry. The smoke probe may poll while a version propagates; repeating a deployment requires a separate decision. The [deployment runbook](https://github.com/mantoshkumar1/mantoshkumar1.github.io/blob/e506385c9fa08d11f19d73cfb697ab9782331545/chat-worker/docs/DEPLOYMENT.md) holds the operational details.
-
-## What I would carry to another AI-assisted project
-
-Name the decision-maker. Bind verification to the approved source. Check the production result and keep a record the next release can use.
-
-My one-comment test did not prove recovery or audit private access settings. It gave me evidence of one complete release, with a clear owner for each decision. That is a useful foundation for giving AI more work while keeping production accountable.
-
-[Try Ask Mantosh](https://mantoshkumar1.github.io/#ask-mantosh) to explore the published work behind this case study.
+[Try Ask Mantosh](https://mantoshkumar1.github.io/#ask-mantosh), or see the [release runbook](https://github.com/mantoshkumar1/mantoshkumar1.github.io/blob/e506385c9fa08d11f19d73cfb697ab9782331545/chat-worker/docs/DEPLOYMENT.md) for the implementation.
