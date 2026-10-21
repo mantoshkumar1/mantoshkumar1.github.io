@@ -1,10 +1,10 @@
 # AI Can Write the Change. Who Controls the Release?
 
-*The gap between “tests passed” and “the right change is live.”*
+*When AI writes the code, who gets to ship it?*
 
 > Unpublished draft. Case-study evidence: 18 October 2026.
 
-Passing tests leave several release questions unanswered. Who approved the change? Was the tested version the one deployed? Did the service actually work afterward?
+An AI coding agent can write a change and pass its tests—but that still leaves a decision: should this code reach production?
 
 AI makes those questions harder to ignore. An agent can produce a convincing explanation alongside working code. A second agent can agree with it. Neither answer establishes what is running in production.
 

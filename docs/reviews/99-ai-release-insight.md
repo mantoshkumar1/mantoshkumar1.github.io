@@ -89,6 +89,10 @@ The founder rejected the first-person recap and asked for an engineering story w
 
 Claude review6326538067 was CLEAN only at de4b99f52e89b1123761186d09ee2ad2b4e94084. This copy retains the R1 correction, uses “authority” rather than a private ACL claim, links the comment diff, explicitly states no automatic rollback and preserves the concurrent-writer limit. The companion now describes themes rather than numbered lessons. The diagram names Mantosh instead of “I”. Fresh independent review remains pending; no earlier CLEAN is carried forward. Author recommendation: APPROVED WITH IMPROVEMENTS pending that review; practical value lies in explaining the failure modes and evidence chain. The historical numerical score below remains tied to the long draft.
 
+## Subtitle and opening — founder-directed wording
+
+The founder selected “When AI writes the code, who gets to ship it?” as the subtitle and “An AI coding agent can write a change and pass its tests—but that still leaves a decision: should this code reach production?” as the first body sentence. These replace the earlier subtitle and generic testing opening; all engineering claims, evidence and diagram remain unchanged. Independent review of the current revision remains pending.
+
 ## Editorial assessment required by AGENTS.md
 
 Classification: technical article, using a bounded personal-project case study. Its depth comes from explicit authority, provenance, baseline and recovery decisions, with a real successful run for evidence.
