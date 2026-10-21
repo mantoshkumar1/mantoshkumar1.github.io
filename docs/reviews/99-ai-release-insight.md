@@ -1,6 +1,6 @@
 # Review packet: AI-assisted change and production release
 
-Status: external review received; supported AI-reviewer disclosure correction applied. Independent review of the revised head and founder editorial approval remain pending.
+Status: shortened at the founder's request on 21 October 2026. Independent review of this shorter revision and founder editorial approval remain pending. The earlier CLEAN applies only to head 987154332f723ea7b20c11ea54eef3751ccd1349.
 
 ## Deliverables and scope
 
@@ -68,6 +68,12 @@ Exact PR-head evidence is recorded in the PR description and canonical #99 comme
 - The external reviewer reports manual draft-link checks and a successful browser check of the existing chat-opening fragment. These are attributed reviewer observations, not new author browser executions. The HTML link audit above does not cover the Markdown draft.
 - Optional editorial suggestions remain suggestions. No fresh private-settings, token-scope or provider-state proof is inferred from a public runbook or review.
 - The author remains recused from independent approval. Review of the revised exact head remains outstanding; the three files stay draft-only, with no publication integration or protected audit changes.
+
+## Shorter article revision — 21 October 2026
+
+The founder requested a 3–4 minute article after reading the HTML preview. The shorter text keeps the real comment-only release and three lessons: decision ownership, source identity and observed production outcome. Detailed workflow inventories, repeated caveats and recovery instructions stay in this evidence packet and the linked runbook. The knowledge companion names the roles in the specific canary rather than implying permanent model assignments.
+
+[Claude review6280040392](https://github.com/mantoshkumar1/mantoshkumar1.github.io/pull/107#issuecomment-6280040392) was CLEAN at prior head 987154332f723ea7b20c11ea54eef3751ccd1349 and withdrew B1 as a reviewer source error. That verdict does not approve this shortened wording. Author self-review preserves the AI-reviewer disclosure, human merge decision, dated release evidence and release-time limits. Fresh independent review of the shorter revision remains pending.
 
 ## Editorial assessment required by AGENTS.md
 

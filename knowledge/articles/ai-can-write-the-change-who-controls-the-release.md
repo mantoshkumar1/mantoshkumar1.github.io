@@ -4,7 +4,7 @@ slug: "ai-can-write-the-change-who-controls-the-release"
 category: "article"
 tags: [ai-assisted-engineering, ci-cd, release-engineering, operational-intelligence]
 summary: "An Ask Mantosh case study separating AI-assisted preparation, independent review, founder merge authority and deterministic production release evidence."
-last_updated: "2026-10-19"
+last_updated: "2026-10-21"
 related_topics: [automation, deployment-verification, evidence-boundaries]
 visibility: "draft"
 url: "/insights/ai-can-write-the-change-who-controls-the-release.html"
@@ -20,7 +20,7 @@ This is a draft retrieval companion to the article in `docs/drafts/`. Its planne
 
 Ask Mantosh is the assistant on Mantosh Kumar's engineering website. Its purpose is to explain and navigate his published professional work. The chat opens at https://mantoshkumar1.github.io/#ask-mantosh.
 
-The development process separates Codex as the AI coding producer, Claude as a separate AI reviewer and the founder's merge decision. For ordinary qualifying Worker source, configuration or package changes, a founder merge to main can trigger the automatic GitHub Actions release. Static pages, knowledge documents, documentation and tests alone do not trigger that Worker release. The workflow checks provenance; it does not independently establish review quality.
+For the 18 October canary, Codex prepared and self-reviewed the change, Claude provided independent AI review, and Mantosh made the merge decision. Neither AI agent had merge or deployment authority. The article draws three lessons: name each decision's owner, bind verification and release to the approved source, and verify the resulting production state. For ordinary qualifying Worker source, configuration or package changes, a founder merge to main can trigger the automatic GitHub Actions release. Static pages, knowledge documents, documentation and tests alone do not trigger that Worker release. The workflow checks provenance; it does not independently establish review quality.
 
 The automatic workflow binds verification and release to an exact commit. Verification checks the expected Worker configuration, migration/binding constraints, dependencies, tests/evaluation, browser suite and dry run. Release requires the latest matching unedited bot receipt to be successful and correlated, then checks the observed sole-100% production version against that baseline before writing.
 
