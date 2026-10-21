@@ -83,6 +83,12 @@ Founder feedback: the shorter version still felt technical and lost the reader h
 
 Claims-table rows concerning manual recovery, concurrency, deterministic profile internals and full verification inventories now support the fuller companion, rather than statements in the narrative. The numerical score below is the historical assessment of the original long version; it is not a fresh independent score for this revision. Current author recommendation remains APPROVED WITH IMPROVEMENTS pending independent review. No new hiring-impact or business-outcome claim is made.
 
+## Engineering-story revision — 21 October 2026
+
+The founder rejected the first-person recap and asked for an engineering story with a stronger subtitle. This revision removes first-person narration, keeps the concrete comment-only release, and explains three failure possibilities addressed by the design: source moving after tests, an older success obscuring the latest failure, and a deploy command succeeding without sufficient production evidence. These are design motivations, not claims that those incidents occurred. The subtitle is “The gap between ‘tests passed’ and ‘the right change is live.’”
+
+Claude review6326538067 was CLEAN only at de4b99f52e89b1123761186d09ee2ad2b4e94084. This copy retains the R1 correction, uses “authority” rather than a private ACL claim, links the comment diff, explicitly states no automatic rollback and preserves the concurrent-writer limit. The companion now describes themes rather than numbered lessons. The diagram names Mantosh instead of “I”. Fresh independent review remains pending; no earlier CLEAN is carried forward. Author recommendation: APPROVED WITH IMPROVEMENTS pending that review; practical value lies in explaining the failure modes and evidence chain. The historical numerical score below remains tied to the long draft.
+
 ## Editorial assessment required by AGENTS.md
 
 Classification: technical article, using a bounded personal-project case study. Its depth comes from explicit authority, provenance, baseline and recovery decisions, with a real successful run for evidence.
