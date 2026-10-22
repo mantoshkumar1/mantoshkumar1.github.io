@@ -54,3 +54,8 @@ The Ask Mantosh test demonstrated one complete release. It did not prove every a
 **Give AI room to do the engineering work. Give production a boundary the AI cannot authorize itself to cross.**
 
 [Try Ask Mantosh](https://mantoshkumar1.github.io/#ask-mantosh) or read the [release runbook](https://github.com/mantoshkumar1/mantoshkumar1.github.io/blob/e506385c9fa08d11f19d73cfb697ab9782331545/chat-worker/docs/DEPLOYMENT.md).
+
+## Related reading
+
+- [Your Agent’s Tests Are the Cheapest Check You Have](https://mantoshkumar1.github.io/insights/tests-are-the-cheapest-check.html) — why passing tests should be one layer of evidence.
+- [Release Reports as Operational History](https://mantoshkumar1.github.io/insights/release-reports-as-operational-history.html) — how release records become useful beyond a single deployment.
