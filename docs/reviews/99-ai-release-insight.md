@@ -93,6 +93,10 @@ Claude review6326538067 was CLEAN only at de4b99f52e89b1123761186d09ee2ad2b4e940
 
 The founder selected “When AI writes the code, who gets to ship it?” as the subtitle and “An AI coding agent can write a change and pass its tests—but that still leaves a decision: should this code reach production?” as the first body sentence. These replace the earlier subtitle and generic testing opening; all engineering claims, evidence and diagram remain unchanged. Independent review of the current revision remains pending.
 
+## Authority-boundary revision — founder direction
+
+The founder clarified the intended thesis: AI is a nondeterministic preparation/review tool whose authority must end before production writes or deployment dispatch. A human authorizes the completed work at that boundary; deterministic automation then deploys and records evidence. The article is now lesson-led, with Ask Mantosh as an example rather than a dated event narrative. Access-control statements are prescriptive design guidance, not a fresh audit of effective private permissions. Historical evidence dates remain in this packet and companion. Human review has no promised duration; neither human approval nor deterministic automation is presented as infallible. Diagram and HTML preview reflect the new handoff. Earlier CLEAN verdicts do not approve this revision; independent review remains pending.
+
 ## Editorial assessment required by AGENTS.md
 
 Classification: technical article, using a bounded personal-project case study. Its depth comes from explicit authority, provenance, baseline and recovery decisions, with a real successful run for evidence.
