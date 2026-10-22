@@ -4,17 +4,13 @@ slug: "ai-can-write-the-change-who-controls-the-release"
 category: "article"
 tags: [ai-assisted-engineering, ci-cd, release-engineering, operational-intelligence]
 summary: "A controlled handoff for AI-assisted engineering: AI prepares and reviews, a human authorizes the work, and deterministic automation deploys and records evidence."
-last_updated: "2026-10-21"
+last_updated: "2026-10-22"
 related_topics: [automation, deployment-verification, evidence-boundaries]
-visibility: "draft"
+visibility: "public"
 url: "/insights/ai-can-write-the-change-who-controls-the-release.html"
 ---
 
 # AI Can Write the Change. Who Controls the Release?
-
-## Review status
-
-This is a draft retrieval companion to the article in `docs/drafts/`. Its planned canonical HTML page does not exist yet. It must stay out of public retrieval until editorial and independent technical review, publication integration and founder approval are complete.
 
 ## Evidence and decisions
 

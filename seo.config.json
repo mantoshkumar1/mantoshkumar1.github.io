@@ -539,6 +539,27 @@
       "description": "The requested page could not be found.",
       "kind": "page",
       "noindex": true
+    },
+    "/insights/ai-can-write-the-change-who-controls-the-release.html": {
+      "title": "AI Can Write the Change. Who Controls the Release? | Mantosh Kumar",
+      "description": "How to bound AI coding agents at a human approval handoff, then automate deployment, verification and an auditable release record.",
+      "kind": "article",
+      "schemaType": "TechArticle",
+      "datePublished": "2026-10-22",
+      "dateModified": "2026-10-22",
+      "breadcrumbs": [
+        {
+          "name": "Insights",
+          "path": "/insights/"
+        }
+      ],
+      "card": {
+        "kicker": "AI-assisted engineering",
+        "readTime": "3 minute read",
+        "title": "AI Can Write the Change. Who Controls the Release?",
+        "summary": "Let AI build. Keep production behind a boundary.",
+        "cta": "Read the article"
+      }
     }
   }
 }
