@@ -108,9 +108,16 @@ if (!/\.hero-title-line\s*\{[^}]*display:\s*block;[^}]*white-space:\s*nowrap/is.
 if (!/\.hero\s*\{[^}]*padding:\s*clamp\(3rem,\s*4\.5vw,\s*4rem\)\s+0\s+clamp\(\.75rem,\s*1\.5vw,\s*1\.25rem\)/is.test(stylesheet) || !/@media\s*\(max-width:\s*640px\)[\s\S]*?\.hero\s*\{[^}]*padding:\s*2rem\s+0\s+\.75rem/is.test(stylesheet)) { console.error("stylesheet: homepage hero must preserve the compact top rhythm across desktop and mobile"); failures += 1; }
 if (!/\.hero::after\s*\{[^}]*pointer-events:\s*none;[^}]*animation:\s*hero-orb-breathe\s+11s/is.test(stylesheet) || !/@keyframes\s+hero-orb-breathe\s*\{[\s\S]*?opacity:[\s\S]*?transform:/is.test(stylesheet)) { console.error("stylesheet: hero orb needs a slow, non-interactive transform-and-opacity evolution"); failures += 1; }
 if (!/@media\s*\(prefers-reduced-motion:\s*reduce\)[\s\S]*?\.hero::after\s*\{[^}]*animation:\s*none\s*!important/is.test(stylesheet) || !/html\[data-theme=["']contrast["']\]\s+\.hero::after\s*\{[^}]*display:\s*none/is.test(stylesheet)) { console.error("stylesheet: hero orb needs a static reduced-motion treatment and must be suppressed in contrast mode"); failures += 1; }
-if (!/Aricent → Cisco → Intel → Siemens → KI Labs → Nokia/.test(homeHtml)) { console.error("homepage: career chronology is missing or out of order"); failures += 1; }
+const compactMarkup = (html) => html.replace(/>\s+</g, "><").trim();
+const approvedHeroFacts = "<div class=\"hero-meta\"><div><strong>Staff Software Engineer at Nokia</strong><span>Toronto</span></div><div><strong>Canadian citizen</strong><span>Work authorization: Canada • United States • India</span></div><div><strong>Actively targeting Dubai/Abu Dhabi</strong><span>Staff/Principal Backend, Platform, or AI Infrastructure roles • Available to relocate to the UAE</span></div></div>";
+const approvedRegionalTimeline = "<div class=\"timeline\"><a class=\"timeline-block timeline-link-card\" href=\"experience/#india\"><h3>India</h3><p>Aricent → Cisco</p></a><a class=\"timeline-block timeline-link-card\" href=\"experience/#germany\"><h3>Germany</h3><p>Intel → Siemens → KI Labs</p></a><a class=\"timeline-block timeline-link-card\" href=\"experience/#canada\"><h3>Canada</h3><p>Nokia</p></a></div>";
+const regionalExperience = /<section id="experience" class="section alt-section">([\s\S]*?)<\/section>/.exec(homeHtml)?.[1] || "";
+if (!compactMarkup(homeHtml).includes(approvedHeroFacts) || (homeHtml.match(/class="hero-meta"/g) || []).length !== 1 || !compactMarkup(regionalExperience).includes(approvedRegionalTimeline) || (regionalExperience.match(/class="timeline"/g) || []).length !== 1) {
+  console.error("homepage: three approved hero facts and ordered India/Germany/Canada chronology must remain intact");
+  failures += 1;
+}
 if (/Infinera|acquisition/i.test(homeHtml)) { console.error("homepage: obsolete employer-transition story must stay removed"); failures += 1; }
-if (!/<strong>Staff Software Engineer<\/strong>\s*<span>Toronto<\/span>/.test(homeHtml)) { console.error("homepage: concise role and Toronto location signal is missing"); failures += 1; }
+if (!/<strong>Staff Software Engineer at Nokia<\/strong>\s*<span>Toronto<\/span>/.test(homeHtml)) { console.error("homepage: concise role and Toronto location signal is missing"); failures += 1; }
 if (!/<strong>Canadian citizen<\/strong>\s*<span>Work authorization: Canada • United States • India<\/span>/.test(homeHtml)) { console.error("homepage: citizenship or work authorization signal is missing"); failures += 1; }
 if (/14\+ years • Toronto, Canada • Canadian citizen/.test(homeHtml)) { console.error("homepage: identity summary must stay concise"); failures += 1; }
 if (!/STAFF \/ PRINCIPAL ENGINEERING • PLATFORM &amp; AUTOMATION/.test(homeHtml)) { console.error("homepage: location-neutral Staff/Principal positioning is missing"); failures += 1; }
@@ -182,18 +189,51 @@ if (!/#systems \.project-card \.tech\s*\{[^}]*flex-wrap:\s*nowrap/is.test(styles
   console.error("homepage: project technology tags must share one compact, single-line treatment");
   failures += 1;
 }
-for (const card of homeHtml.matchAll(/<article\b[^>]*class=["'][^"']*project-card[^"']*["'][^>]*>([\s\S]*?)<\/article>/gi)) {
+const approvedProjectActions = [
+  {
+    "title": "DogBuild",
+    "links": "<div class=\"card-links\"><a href=\"https://github.com/mantoshkumar1/dogbuild\" target=\"_blank\" rel=\"noreferrer\">Explore on GitHub ↗</a><a class=\"project-detail-link\" href=\"projects/dogbuild.html\">See the system →</a></div>"
+  },
+  {
+    "title": "Evidence-First Engineering Knowledge System",
+    "links": "<div class=\"card-links\"><a href=\"#ask-mantosh\">Try the live system →</a><a class=\"project-detail-link\" href=\"projects/engineering-knowledge-system.html\">See architecture and controls →</a></div>"
+  },
+  {
+    "title": "PhotoSahi",
+    "links": "<div class=\"card-links\"><a href=\"https://mantoshkumar1.github.io/photosahi/\" target=\"_blank\" rel=\"noreferrer\">Try the live product ↗</a><a class=\"project-detail-link\" href=\"projects/photosahi.html\">See architecture and trade-offs →</a></div>"
+  }
+];
+const selectedProjectCards = [...homeHtml.matchAll(/<article\b[^>]*class=["'][^"']*project-card[^"']*["'][^>]*>([\s\S]*?)<\/article>/gi)];
+if (selectedProjectCards.length !== approvedProjectActions.length) {
+  console.error("homepage: selected projects must remain DogBuild, Evidence-First, then PhotoSahi");
+  failures += 1;
+}
+for (const [cardIndex, card] of selectedProjectCards.entries()) {
   const content = card[1];
+  const expected = approvedProjectActions[cardIndex];
+  const title = /<h3>([^<]+)<\/h3>/.exec(content)?.[1];
+  const actionGroups = [...content.matchAll(/<div class="card-links">([\s\S]*?)<\/div>/g)];
+  if (!expected || title !== expected.title || actionGroups.length !== 1 || compactMarkup(actionGroups[0]?.[0] || "") !== expected.links || (content.match(/<a\b/gi) || []).length !== 2) {
+    console.error("homepage: selected project destinations, labels, and action order must match approved copy");
+    failures += 1;
+  }
   const liveAction = content.search(/>Try (?:the )?live (?:system|product)/i);
   const caseStudyAction = content.search(/>See (?:architecture|decisions)/i);
   const sourceAction = content.search(/>Inspect the source/i);
-  if (caseStudyAction < 0 || (liveAction >= 0 && liveAction > caseStudyAction) || (sourceAction >= 0 && sourceAction < caseStudyAction)) {
-    console.error("homepage: project actions must be ordered live product, case study, then source");
-    failures += 1;
-  }
-  if (liveAction >= 0 && sourceAction >= 0) {
-    console.error("homepage: live project cards should defer source links to their detail pages");
-    failures += 1;
+  if (title === "DogBuild") {
+    if (!content.includes('<p class="project-live"><span class="project-live-dot" aria-hidden="true"></span>Active dogfood</p>') || liveAction >= 0 || />Live</i.test(content)) {
+      console.error("homepage: DogBuild must retain active-dogfood status without a live-product claim");
+      failures += 1;
+    }
+  } else {
+    if (caseStudyAction < 0 || liveAction < 0 || liveAction > caseStudyAction || (sourceAction >= 0 && sourceAction < caseStudyAction)) {
+      console.error("homepage: project actions must be ordered live product, case study, then source");
+      failures += 1;
+    }
+    if (liveAction >= 0 && sourceAction >= 0) {
+      console.error("homepage: live project cards should defer source links to their detail pages");
+      failures += 1;
+    }
   }
   if ((content.match(/<div class=["']tech["']>[\s\S]*?<span>/gi) || []).length !== 1 || (content.match(/<span>[^<]+<\/span>/gi) || []).length !== 3) {
     console.error("homepage: every selected project must present exactly three technology tags");
@@ -242,8 +282,54 @@ for (const region of ["india", "germany", "canada"]) {
 const contactHtml = await readFile(join(root, "contact/index.html"), "utf8");
 if (/senior or staff engineering role/i.test(contactHtml) || !/Staff or Principal Engineer role/.test(contactHtml)) { console.error("contact: Staff/Principal positioning is stale"); failures += 1; }
 const resumeHtml = await readFile(join(root, "resume/index.html"), "utf8");
+const approvedPublicTargeting = {
+  "index.html": [
+    [
+      "Staff Software Engineer Mantosh Kumar builds platforms, automation, backend systems, and operational intelligence. Actively targeting Staff/Principal roles in Dubai/Abu Dhabi, available to relocate to the UAE.",
+      4
+    ],
+    [
+      "Platform engineering, automation, backend systems, and operational intelligence. Actively targeting Staff/Principal Backend, Platform, or AI Infrastructure roles in Dubai/Abu Dhabi.",
+      1
+    ],
+    [
+      "<strong>Actively targeting Dubai/Abu Dhabi</strong><span>Staff/Principal Backend, Platform, or AI Infrastructure roles • Available to relocate to the UAE</span>",
+      1
+    ]
+  ],
+  "contact/index.html": [
+    [
+      "Contact Mantosh Kumar for Staff or Principal Engineer opportunities or platform, automation, backend, and operational intelligence contracts. Actively targeting roles in Dubai/Abu Dhabi. Available to relocate to the UAE.",
+      4
+    ],
+    [
+      "<p><strong>Based in Toronto, Canada</strong> • Open to UAE opportunities • Available to relocate upon accepting an offer</p>",
+      1
+    ]
+  ],
+  "resume/index.html": [
+    [
+      "Resume for Staff Software Engineer Mantosh Kumar actively targeting Staff/Principal Backend, Platform, or AI Infrastructure roles in Dubai/Abu Dhabi. Available to relocate to the UAE.",
+      4
+    ],
+    [
+      "<p>Toronto-based Staff Software Engineer with 14+ years across platform engineering, automation, backend systems, networking, and operational intelligence. Actively targeting Staff or Principal Backend, Platform, or AI Infrastructure roles in Dubai/Abu Dhabi—available to relocate to the UAE.</p>",
+      1
+    ]
+  ]
+};
 for (const [page, html] of [["index.html", homeHtml], ["contact/index.html", contactHtml], ["resume/index.html", resumeHtml]]) {
-  if (/\b(?:Dubai|UAE|United Arab Emirates)\b/i.test(html)) { console.error(`${page}: public hiring copy must not expose private relocation targeting`); failures += 1; }
+  let remainder = compactMarkup(html);
+  let approvedCopyIntact = true;
+  for (const [literal, expectedCount] of approvedPublicTargeting[page]) {
+    const parts = remainder.split(literal);
+    if (parts.length - 1 !== expectedCount) approvedCopyIntact = false;
+    remainder = parts.join("");
+  }
+  if (!approvedCopyIntact || /\b(?:Dubai|Abu Dhabi|UAE|United Arab Emirates|Emirati)\b/i.test(remainder)) {
+    console.error(`${page}: preserve exact approved public targeting; no additional UAE residence or authorization claims`);
+    failures += 1;
+  }
 }
 if (!/<strong>Canadian citizen<\/strong> • Work authorization: Canada • United States • India/.test(contactHtml)) { console.error("contact: citizenship or current work authorization is missing"); failures += 1; }
 if (!/Toronto-based Staff Software Engineer/.test(resumeHtml) || !/Work authorization:<\/strong> Canada • United States • India/.test(resumeHtml)) { console.error("resume: location, role, or current work authorization is missing"); failures += 1; }
