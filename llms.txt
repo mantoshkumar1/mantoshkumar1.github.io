@@ -33,6 +33,8 @@ His résumé-backed capabilities include engineering platforms and automation, P
 
 ## Engineering insights
 
+- [AI Can Write the Change. Who Controls the Release?](https://mantoshkumar1.github.io/insights/ai-can-write-the-change-who-controls-the-release.html)
+
 - [Engineering Philosophy: Build Leverage, Not Just Software](https://mantoshkumar1.github.io/insights/engineering-philosophy.html)
 - [Why Does This Still Require Me?](https://mantoshkumar1.github.io/insights/why-does-this-still-require-me.html)
 - [Release Reports as Operational History](https://mantoshkumar1.github.io/insights/release-reports-as-operational-history.html)

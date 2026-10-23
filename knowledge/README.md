@@ -14,7 +14,7 @@ with `_` are intentionally not indexed.
 
 ## Current public corpus
 
-As of 2026-09-17, the public index contains 21 source documents:
+The publication candidate contains 22 source documents. Live synchronization is verified after merge:
 
 - `Project: DogBuild`
 - `Project: Evidence-First Engineering Knowledge System`
@@ -23,6 +23,7 @@ As of 2026-09-17, the public index contains 21 source documents:
 - `Project: GTT Trigger Price Calculator`
 - `Project: Validation Platform and Release Intelligence`
 - `Project: Legacy Validation Framework Migration`
+- `Article: AI Can Write the Change. Who Controls the Release?`
 - `Note: Engineering Philosophy: Build Leverage, Not Just Software`
 - `Article: Why Does This Still Require Me?`
 - `Note: Release Reports as Operational History`
