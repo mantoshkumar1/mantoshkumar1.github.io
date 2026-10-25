@@ -18,7 +18,7 @@ Last verified Worker deployment: `20a691b8-d3fb-4e97-a178-e79978e64028`. The rep
 ## Published inventory
 
 - SEO-configured public pages: home, projects index, six project case studies, Insights index, seven engineering articles and notes, experience, résumé, contact, a live Buttondown email subscription with RSS, accessibility statement, and custom 404.
-- 22 public Ask Mantosh documents in the publication candidate (live synchronization pending merge): seven project sources, ten Insights sources, three résumé-backed experience and academic-achievement sources, one role-by-role résumé source, and one evidence-backed profile and fit guide.
+- The repository contains 22 public Ask Mantosh documents: seven project sources, ten Insights sources, three résumé-backed experience and academic-achievement sources, one role-by-role résumé source, and one evidence-backed profile and fit guide. This source inventory does not establish the live indexed document count.
 - Whole-site Ask Mantosh coverage: 15 evidence-bearing routes, seven deterministic utility destinations, and nine explicit no-index legacy or error routes cover all 30 public HTML routes.
 - One résumé PDF served for in-browser preview and explicit download.
 - Sitemap, RSS feed, `robots.txt`, `llms.txt`, JSON-LD, Open Graph, Twitter Card, manifest, icons, and a 1200×630 social image.
@@ -109,7 +109,7 @@ The repository currently enforces:
 
 ## Known limits
 
-- Only 17 public knowledge documents are indexed; outside deterministic greetings, courtesies, light banter, and navigation, Ask Mantosh keeps answers within published evidence and clearly redirects unsupported topics.
+- Ask Mantosh's evidence scope is limited to the public repository corpus listed above; outside deterministic greetings, courtesies, light banter, and navigation, Ask Mantosh keeps answers within published evidence and clearly redirects unsupported topics. The live indexed document count has not been verified by this repository inventory.
 - Public evidence has no fabricated employer metrics or inferred organizational outcomes.
 - The Worker uses the Cloudflare free allocation and may return a clear 429 when safety or provider limits are reached.
 - There is no authenticated user account, durable personal profile, staging environment declared in this repository, formal accessibility conformance audit, human-rated response benchmark, live-production retrieval benchmark, or automated production Core Web Vitals trace.
