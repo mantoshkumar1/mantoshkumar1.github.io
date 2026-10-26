@@ -41,12 +41,12 @@ For each applicable row, record the **actual observation**, result, and evidence
 
 ## Result and release-risk record
 
-**Candidate:** PR/commit and exact head SHA:  
-**Source/base SHA:**  
-**Changed surface and focused checks selected:**  
-**Overall result:** `PASS` / `FAIL` / `NOT_RUN` — `PASS` means every selected row matched its expected observation; `FAIL` means at least one did not; `NOT_RUN` means selected evidence is incomplete. This summary is not release approval.  
-**Release risk / affected user path:**  
-**Follow-up owner and issue/PR:**  
+- **Candidate (PR/commit and exact head SHA):** [fill in]
+- **Source/base SHA:** [fill in]
+- **Changed surface and focused checks selected:** [fill in]
+- **Overall result:** `PASS` / `FAIL` / `NOT_RUN` — `PASS` means every selected row matched its expected observation; `FAIL` means at least one did not; `NOT_RUN` means selected evidence is incomplete. This summary is not release approval.
+- **Release risk / affected user path:** [fill in]
+- **Follow-up owner and issue/PR:** [fill in]
 
 For every `FAIL`, include concise reproduction steps, expected versus actual behavior, the exact environment row, impact, and a screenshot/video or other safe evidence. Link the evidence and candidate. Remove personal data, query text, tokens, and contact details from captures and logs. Report a failure against the tested head; rerun affected checks after a fix because a new head invalidates prior observations.
 
