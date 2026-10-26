@@ -113,3 +113,7 @@ An insight is complete only when:
 - documentation and automated audits pass.
 - every configured publication lane contains real public content or an explicit evidence-first empty state.
 - `feed.xml` is regenerated from dated `article` and `project` entries in `seo.config.json` during verification and deployment; never edit it by hand.
+
+## Proposed disclosure checklist (draft)
+
+A [founder-adoption draft checklist](PUBLIC_DISCLOSURE_CHECKLIST.md) is available for review. It is not adopted or an enforced publication gate; the evidence and source requirements above remain in force.
