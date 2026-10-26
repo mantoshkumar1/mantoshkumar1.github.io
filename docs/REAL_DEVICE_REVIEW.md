@@ -44,7 +44,7 @@ For each applicable row, record the **actual observation**, result, and evidence
 **Candidate:** PR/commit and exact head SHA:  
 **Source/base SHA:**  
 **Changed surface and focused checks selected:**  
-**Overall result:** `PASS` / `FAIL` / `NOT_RUN` (a required `NOT_RUN` is incomplete evidence, not a pass)  
+**Overall result:** `PASS` / `FAIL` / `NOT_RUN` — `PASS` means every selected row matched its expected observation; `FAIL` means at least one did not; `NOT_RUN` means selected evidence is incomplete. This summary is not release approval.  
 **Release risk / affected user path:**  
 **Follow-up owner and issue/PR:**  
 
