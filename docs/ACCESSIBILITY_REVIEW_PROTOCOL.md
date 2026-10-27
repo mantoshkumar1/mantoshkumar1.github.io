@@ -90,7 +90,7 @@ Recheck historical observations only when a new admitted task pins a new source.
 
 ## Public-statement and conformance boundary
 
-The existing [accessibility statement](/accessibility/) describes features and support. This proposal does not verify or revise its claims. Update public wording only after a limitation or finding is verified on a pinned candidate and its owner approves the exact wording.
+The existing [accessibility statement](../accessibility/) describes features and support. This proposal does not verify or revise its claims. Update public wording only after a limitation or finding is verified on a pinned candidate and its owner approves the exact wording.
 
 A proposed WCAG target is not a conformance claim. A bounded sample, clean automated scan, or this methodology alone does not establish conformance. Any future public statement must define its scope and evaluation date, follow normative WCAG conformance requirements, identify limitations accurately, and be maintained by the site owner. WCAG-EM 2.0 notes that its use alone does not support conformance claims in most situations.
 
