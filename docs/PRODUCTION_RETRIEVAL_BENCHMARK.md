@@ -1,0 +1,72 @@
+# Production retrieval benchmark — proposal
+
+**Status:** Draft proposal only. No live or local benchmark was run. This document defines a bounded future evaluation; it does not authorize production requests, adopt a release gate, or claim live retrieval quality.
+
+**Repository source pin:** `main` at `d8cdb221e47cea9d64eec146ad40a2fbd021c3e1` (2026-10-27). A repository source pin is not proof of the deployed Worker revision or the live indexed corpus.
+
+## What this benchmark can answer
+
+The proposed benchmark asks a small fixed set of synthetic questions about published engineering work and checks whether the public Ask Mantosh response cites the expected source, supports its material claims, returns a valid response, and completes within a bounded time. It is a repeatable public-API smoke benchmark, not a statistically representative measure of general recall.
+
+The current architecture uses D1 FTS5/BM25 and Vectorize candidates, reciprocal-rank fusion, and a bounded selected context. A public answer's `sources` and `confidenceDetails` can support checks of returned citations and exposed retrieval summaries. They do **not** expose the full candidate set, ranking trace, hidden cache decisions, or proof that Vectorize found every relevant document. Therefore:
+
+- Report **expected-source citation hit rate** as an observable proxy, never as Vectorize recall.
+- Review answer facts against the pinned source separately from citation presence; a citation does not make every sentence correct.
+- Record any route or cache state as `unknown` unless the response or separately approved evidence establishes it. Do not infer a backend path from wording or elapsed time.
+- Report end-to-end request completion time and HTTP/contract failures. The active handler does not expose reliable phase timings. The current widget uses SSE and receives a complete answer event after the Worker has produced the response; this is not token-by-token generation.
+
+Architecture and contracts were checked in [RAG_ARCHITECTURE.md](https://github.com/mantoshkumar1/mantoshkumar1.github.io/blob/d8cdb221e47cea9d64eec146ad40a2fbd021c3e1/chat-worker/docs/RAG_ARCHITECTURE.md), [EVALUATION.md](https://github.com/mantoshkumar1/mantoshkumar1.github.io/blob/d8cdb221e47cea9d64eec146ad40a2fbd021c3e1/chat-worker/docs/EVALUATION.md), [the active Worker handler](https://github.com/mantoshkumar1/mantoshkumar1.github.io/blob/d8cdb221e47cea9d64eec146ad40a2fbd021c3e1/chat-worker/src/index.js), [retrieval implementation](https://github.com/mantoshkumar1/mantoshkumar1.github.io/blob/d8cdb221e47cea9d64eec146ad40a2fbd021c3e1/chat-worker/src/retrieval.js), [analytics service](https://github.com/mantoshkumar1/mantoshkumar1.github.io/blob/d8cdb221e47cea9d64eec146ad40a2fbd021c3e1/chat-worker/src/intelligence/analytics-service.js), [quota guards](https://github.com/mantoshkumar1/mantoshkumar1.github.io/blob/d8cdb221e47cea9d64eec146ad40a2fbd021c3e1/chat-worker/src/quota.js), and the separately proposed [latency protocol at its exact PR head](https://github.com/mantoshkumar1/mantoshkumar1.github.io/blob/5e6df0fb0ec6bff81591179cf05e8a8de8583557/docs/ASK_MANTOSH_LATENCY_PROTOCOL.md). The latency protocol's browser-specific observations are not reused as live retrieval measurements.
+
+## Fixed public-evidence cases
+
+Questions below are synthetic and version-controlled with this proposal. Each source reference is pinned to the same repository commit; the accompanying generated HTML was also inspected at that commit. These pins identify expected public evidence, **not** a claim that the live index contains that revision.
+
+| ID | Synthetic question | Expected source and pinned identity | Required supporting facts |
+| --- | --- | --- | --- |
+| `RB-01` | “How does the engineering knowledge system combine exact-term and semantic retrieval, and what bounds the context sent to the model?” | [Engineering Knowledge System](https://github.com/mantoshkumar1/mantoshkumar1.github.io/blob/d8cdb221e47cea9d64eec146ad40a2fbd021c3e1/knowledge/projects/engineering-knowledge-system.md) — blob `037fd45528a0fe75d39f5276` — [repository-rendered page](https://github.com/mantoshkumar1/mantoshkumar1.github.io/blob/d8cdb221e47cea9d64eec146ad40a2fbd021c3e1/projects/engineering-knowledge-system.html), blob `dd39ea1739c3d7a3d7b8308b`. | D1 FTS5/BM25 covers exact terms; Vectorize provides semantic candidates; reciprocal-rank fusion combines them; the model receives selected public context with a five-chunk / 8,000-character bound. Do not say the case proves live index contents or recall. |
+| `RB-02` | “Which decisions remain with people in DogBuild, and which coordination guarantees are still under development?” | [DogBuild](https://github.com/mantoshkumar1/mantoshkumar1.github.io/blob/d8cdb221e47cea9d64eec146ad40a2fbd021c3e1/knowledge/projects/dogbuild.md) — blob `91ebbd5d43f267b05521e187405e7b21d04572b9` — [repository-rendered page](https://github.com/mantoshkumar1/mantoshkumar1.github.io/blob/d8cdb221e47cea9d64eec146ad40a2fbd021c3e1/projects/dogbuild.html), blob `b49d17147833c149083a4acb`. | Humans decide irreversible work such as merge/deployment; GitHub carries durable control/evidence; universal mechanical authority enforcement and autonomous invocation remain under development. Do not call DogBuild a production-ready autonomous platform. |
+| `RB-03` | “What price-distance rules does the GTT calculator apply, and what is deliberately outside its boundary?” | [GTT Trigger Price Calculator](https://github.com/mantoshkumar1/mantoshkumar1.github.io/blob/d8cdb221e47cea9d64eec146ad40a2fbd021c3e1/knowledge/projects/gtt-price-calculator.md) — blob `dcd252715b8409adac7410384fcc2d388222ce50` — [repository-rendered page](https://github.com/mantoshkumar1/mantoshkumar1.github.io/blob/d8cdb221e47cea9d64eec146ad40a2fbd021c3e1/projects/gtt-price-calculator.html), blob `d5394a090ed980ae6dc39605ef17aed6`. | At prices of ₹50 or more it applies a 0.256% distance buffer; below ₹50 it applies ₹0.09; candidate values are rounded. It has no broker API, account authentication, live-price integration, or trade execution. Do not present the assumptions as current broker rules or financial advice. |
+| `RB-04` | “How can comparable release reports help identify a trend, and which conclusions still need engineering judgment?” | [Release Reports as Operational History](https://github.com/mantoshkumar1/mantoshkumar1.github.io/blob/d8cdb221e47cea9d64eec146ad40a2fbd021c3e1/knowledge/notes/release-reports-as-operational-history.md) — blob `c223d8306afe3ef103d2b1caaf65eef34cc2f03b` — [repository-rendered page](https://github.com/mantoshkumar1/mantoshkumar1.github.io/blob/d8cdb221e47cea9d64eec146ad40a2fbd021c3e1/insights/release-reports-as-operational-history.html), blob `9124bf0d6d57faf47463724c`. | Stable, comparable reports can show direction and recurring patterns; AI may surface patterns, but causality, release health, and intervention success require context, data-quality checks, and accountable judgment. The note reports no measured improvement. |
+| `RB-05` | “What did the October release canary demonstrate, and what broader guarantees did it leave unproved?” | [AI Can Write the Change. Who Controls the Release?](https://github.com/mantoshkumar1/mantoshkumar1.github.io/blob/d8cdb221e47cea9d64eec146ad40a2fbd021c3e1/knowledge/articles/ai-can-write-the-change-who-controls-the-release.md) — blob `89e173db6db966aa63688a0d0929462655f91984` — [repository-rendered page](https://github.com/mantoshkumar1/mantoshkumar1.github.io/blob/d8cdb221e47cea9d64eec146ad40a2fbd021c3e1/insights/ai-can-write-the-change-who-controls-the-release.html), blob `224380c0dd1c9b272d458ee5`. | The article records one 18 October canary: founder merge, exact-source automatic run and a correlated release receipt with smoke/final-observation success. It explicitly does not prove future correctness, continuous monitoring, race exclusion, or business impact. Do not generalize one event into a reliability rate. |
+
+The article, note, and project HTML were inspected as repository artifacts at the pinned commit. No claim is made that GitHub Pages or the production Worker currently serves that exact commit.
+
+## Proposed run and scorecard
+
+A future separately authorized run would send **one request per case, serially, with no runner retry** to the existing public chat route using the current visitor request mode. It would capture only the fixed synthetic case ID, pinned expected source, returned public source URLs, response/contract outcome, elapsed time, and non-secret run metadata. It would not store visitor questions, answers, identifiers, or other visitor data. The case questions themselves are public synthetic inputs and may be retained with this proposal.
+
+For each attempt, record HTTP outcome; valid response-contract outcome; expected-source hit; source-to-claim support review; material unsupported-claim finding; total request-to-complete-response milliseconds; and whether the result was complete or a timeout. Keep all five denominators visible. A timeout, non-2xx, malformed response, or stopped run remains a failed attempt, never a zero-millisecond success. Report per-case times, median, and maximum for this five-case set; do not report a statistically meaningful p95 from five observations.
+
+Candidate thresholds for discussion—not an adopted SLO or release gate:
+
+- **Expected-source hit:** 5/5 cases cite the pinned expected public source.
+- **Factual support:** all material answer claims are supported by the cited public source; zero material unsupported claims.
+- **Availability/contract:** 5/5 valid responses; zero timeout, non-2xx, or schema failure.
+- **Latency:** each complete response at or below 30,000 ms, measured end-to-end. This is an initial review ceiling, not a measured baseline or adopted user-facing promise; calibrate against separately authorized observations before any release decision.
+
+Any miss is a benchmark failure for this candidate set. It is not proof of a site-wide regression by itself: a human must inspect source changes, live corpus/deployment identity, cache/route uncertainty, and repeatability before deciding whether deployment should be blocked. Threshold adoption and release-gate authority require a separate decision.
+
+## Privacy, traffic isolation, and budget prerequisites
+
+The pinned code does not document a supported synthetic-traffic identifier or an analytics exclusion for benchmark requests. The analytics service hashes normalized query dimensions, but still increments aggregate event counts; a synthetic query can therefore change visitor-facing operational aggregates even though the raw query is not stored there. The Worker also retains bounded conversation turns in D1 for its configured TTL. The exact-origin CORS rule is not an authentication mechanism or benchmark identifier. A made-up header, custom `conversationId`, query parameter, or origin value must not be treated as isolation.
+
+Before **any** future live request, a separately approved mechanism must distinguish benchmark activity in every relevant analytics/retention view without bypassing CORS, authentication, relevance checks, the mandatory per-client limiter, or shared daily quotas. This proposal does not define or activate such a mechanism. Until it exists and is independently verified, the live run is **blocked**; do not send a “small” probe.
+
+If separately authorized after that prerequisite, the proposed hard request budget is five serial POST attempts per run, one per case, no automatic runner retries, and stop at the first non-2xx, timeout, invalid response, unexpected source, revision/corpus mismatch, isolation failure, or quota warning. At the pinned code/configuration, each retrieval-bound request increments one shared D1 AI-request window; worst-case model work is up to one embedding call and two generation attempts per case (the Worker has a one-shot invalid-output retry), with the configured 300-token output cap per generation attempt. Thus the conservative run ceiling is at most five shared retrieval-request units, five embedding calls, and ten generation attempts—not a fixed Neuron charge. Current-source limits of 30 per minute and 450 per UTC day are shared safeguards, not a benchmark allotment; exact deployed settings and remaining provider allocation must be checked through separately authorized evidence before execution. No paid usage, threshold increase, quota bypass, repeated attempt, or automatic schedule is proposed.
+
+## Required preflight and stop conditions
+
+A future run needs a separately recorded authorization and must stop before the first request unless all of the following are evidenced:
+
+1. Exact deployed Worker revision, effective configuration, and indexed public-corpus revision match the approved run manifest. The Git source pin above alone is insufficient.
+2. The synthetic traffic isolation mechanism is implemented, permitted, and proven not to change visitor analytics or retain anything but the fixed synthetic inputs.
+3. The five-request and model-operation ceilings fit a reviewed shared quota reserve; the effective rate limit is verified and no quota warning is present.
+4. The endpoint, request mode, fixed case-set digest, source pins, scoring rubric, and stop conditions are recorded. No query is added during a run.
+5. A non-secret evidence record captures results and limitations. Do not store tokens, authorization headers, raw visitor material, or private inputs.
+6. The run stops immediately on a prerequisite mismatch, isolation uncertainty, first observed failure, unexpected source, or quota warning. Do not retry, change settings, deploy, or widen the case set to make a result pass.
+
+## Relationship to existing tests and release controls
+
+The 554-case offline evaluator uses controlled D1, Vectorize, Workers AI, and rate-limiter fixtures. It is deterministic and does not call the deployed Worker. This proposal does not replace it, relabel it as live evidence, add expected answers to `knowledge/`, change tests/eval fixtures, or establish production recall.
+
+No scheduler, workflow, instrumentation, quota change, or production release gate is created here. A future implementation or live run requires its own bounded authority and independent review. Issue #29 remains open for its live-path, traffic-isolation, baseline, and release-threshold acceptance criteria.
