@@ -54,3 +54,6 @@ node_modules/
 dist/
 playwright-report/
 test-results/
+
+# Local insight HTML backup files
+/insights/*.html.bak_*
