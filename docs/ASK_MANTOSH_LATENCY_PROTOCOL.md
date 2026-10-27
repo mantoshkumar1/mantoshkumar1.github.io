@@ -1,3 +1,4 @@
+
 # Ask Mantosh latency and recovery measurement protocol
 
 **Status:** Proposed measurement protocol only. No measurements have been collected, no latency or error budget is adopted, and this document does not authorize production probes, instrumentation, provider access, or a release gate.
