@@ -111,7 +111,7 @@
                 </div>
                 <div class="dogbuild-map-node dogbuild-map-workers">
                   <strong>Claude, Cursor and Codex</strong>
-                  <span>Use the Cloudflare MCP portal's validated server connections for bounded task access.</span>
+                  <span>The cited portal inventory captured tool schemas; it did not test server operations or effective GitHub permissions.</span>
                 </div>
                 <div class="dogbuild-map-node dogbuild-map-ci">
                   <strong>GitHub Actions</strong>
@@ -129,7 +129,7 @@
             <p><strong>Architecture in use (as of September 2026):</strong></p>
             <ul class="case-study-list">
               <li><strong>GitHub-first evidence:</strong> The control model records current routing and authority lineage on <a href="https://github.com/mantoshkumar1/dogbuild/issues/180">control board #180</a>. Detailed append-only evidence—plans, findings, corrections, and proof—remains on canonical issues and PRs. Chat is a wake interface only.</li>
-              <li><strong>Three-server MCP portal:</strong> A Cloudflare gateway routes requests through three validated MCP servers (Claude, Cursor, Codex), providing documented tool access without needing unrestricted GitHub permissions. Portal connectivity and tool inventory are end-to-end validated through lived use; tool-surface enforcement and least-privilege boundaries remain in development per <a href="https://github.com/mantoshkumar1/dogbuild/issues/169">#169</a> and <a href="https://github.com/mantoshkumar1/dogbuild/issues/167">#167</a>.</li>
+              <li><strong>MCP clients and upstreams:</strong> Claude, Cursor, and Codex are client names, not the three GitHub upstream-server identities. The portal-connected 2026-09-08 inventory captured 53 tool names and schemas but performed no GitHub or portal operations. The 2026-09-17 Matrix V3 classification categorizes that inventory; it does not establish operational access or effective permissions. A separate 2026-10-25 portal-list observation recorded three listed upstream labels—<code>dogbuild-github-actions-readonly</code>, <code>dogbuild-github-core</code>, and <code>dogbuild-github-projects</code>—but did not verify effective credential scope or deployed permission enforcement. Those states remain unverified by these records. See <a href="https://github.com/mantoshkumar1/dogbuild/issues/169">#169</a> and <a href="https://github.com/mantoshkumar1/dogbuild/issues/167">#167</a>.</li>
               <li><strong>Append-only evidence:</strong> Worker plans, findings, and corrections are all timestamped and preserved on GitHub—corrections supersede earlier evidence without silent rewrites.</li>
               <li><strong>Authority tiers:</strong> Founder approves irreversible actions (merge, deploy, spend). Strategy routes work and reconciles evidence. Workers are bounded to assigned tasks.</li>
               <li><strong>Exact-SHA verification:</strong> Current policy and design in <a href="https://github.com/mantoshkumar1/dogbuild/pull/184">PR #184</a> document that GitHub mutations include exact head SHA and CI evidence linked on the control board for independent review. Universal mechanical enforcement of this policy remains under development per <a href="https://github.com/mantoshkumar1/dogbuild/issues/176">#176</a>.</li>
@@ -168,11 +168,11 @@
 
           <section class="content-card section-block">
             <h2>Outcome</h2>
-            <p><strong>Completed and in use today:</strong></p>
+            <p><strong>Completed evidence and observed practices:</strong></p>
             <ul class="case-study-list">
               <li>GitHub-first control board and append-only communication model—demonstrates the approach through lived dogfooding</li>
-              <li>Three-server Cloudflare MCP portal—end-to-end validated through lived use</li>
-              <li>53-tool MCP inventory and independent <a href="https://github.com/mantoshkumar1/dogbuild/issues/169">Matrix V3 classification</a>—every tool's authority tier is documented</li>
+              <li>Portal-connected tool-schema inventory captured on 2026-09-08; the capture did not perform GitHub or portal operations</li>
+              <li>53-tool inventory and Matrix V3 classification—a dated schema inventory and documented categories, not proof of effective permissions</li>
               <li>Founder/Strategy/worker authority model—<a href="https://github.com/mantoshkumar1/dogbuild/issues/180">GitHub-documented</a> and process-in-use through lived dogfooding; universal mechanical enforcement remains under development</li>
             </ul>
             <p><strong>In review or awaiting deployment:</strong></p>
