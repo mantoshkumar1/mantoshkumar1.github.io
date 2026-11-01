@@ -4,7 +4,7 @@ The site uses layered checks because no single test can protect content, navigat
 
 ## Before deployment
 
-Every pull request runs the deterministic static audits, 89 Worker tests, the 554-case Ask Mantosh evaluation, and 22 browser checks: eleven visitor journeys in desktop Chromium and a mobile Chromium viewport.
+Every pull request runs the deterministic static audits, the Worker test suite, the Ask Mantosh evaluation, and Playwright browser checks. The current Worker-test floor is 93, recorded in [`.test-count`](https://github.com/mantoshkumar1/mantoshkumar1.github.io/blob/33017cbae70ab527402c4127d26f14a6d112c619/.test-count) and enforced by [`scripts/audit-test-floor.mjs`](https://github.com/mantoshkumar1/mantoshkumar1.github.io/blob/33017cbae70ab527402c4127d26f14a6d112c619/scripts/audit-test-floor.mjs). In the hosted PR #126 merge-check run on 2026-10-27, the raw logs recorded 93/93 Worker tests passed, 554/554 Ask Mantosh evaluation cases and 9,734/9,734 assertions passed, and 62/62 browser checks passed across the configured desktop Chromium and mobile Chromium projects. The 62 is the aggregate from that dated run; no fixed per-project or visitor-journey count is implied. See the [raw floor job log](https://github.com/mantoshkumar1/mantoshkumar1.github.io/actions/runs/40558194878/job/122379812354), [raw audit job log](https://github.com/mantoshkumar1/mantoshkumar1.github.io/actions/runs/40558194877/job/122379813314), and [`playwright.config.mjs`](https://github.com/mantoshkumar1/mantoshkumar1.github.io/blob/33017cbae70ab527402c4127d26f14a6d112c619/playwright.config.mjs).
 
 The browser checks cover:
 
