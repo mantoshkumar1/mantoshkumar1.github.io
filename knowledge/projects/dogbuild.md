@@ -4,7 +4,7 @@ slug: "dogbuild"
 category: "project"
 tags: [multi-agent-coordination, ai-agents, github-first-control, deterministic-routing, append-only-evidence]
 summary: "An experimental deterministic control and orchestration layer for coordinating multiple AI coding agents through GitHub."
-last_updated: "2026-09-17"
+last_updated: "2026-10-26"
 related_topics: [agent-coordination, authority-model, durable-control]
 visibility: "public"
 url: "/projects/dogbuild.html"
@@ -55,8 +55,8 @@ DogBuild is under active development and is not yet a production-ready autonomou
 Key milestones achieved:
 - Defined founder/Strategy/worker authority model
 - Made GitHub the durable communication and evidence layer for live state
-- Built and validated a three-server MCP portal path
-- Inventoried and classified 53 live MCP tools
+- Recorded a portal-connected inventory on 2026-09-08: 53 tool names and schemas; that capture performed no GitHub or portal operations.
+- Documented Matrix V3 categories for the captured inventory on 2026-09-17; they do not establish effective GitHub credential scope or deployed permission enforcement.
 - Implemented a narrow read-only DogBuild control-server package
 - Built a deterministic listener prototype and identified safety gaps
 
