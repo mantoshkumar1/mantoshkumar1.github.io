@@ -41,7 +41,11 @@ For each row, leave the count blank unless an authorized input reports it. Recor
 
 ## Human disposition
 
-Select one only after separately approved repeat-window, minimum-sample, and suppression criteria are available and met. Those criteria are intentionally unset here. If input or criteria are unavailable, leave the disposition blank and make no finding or publication decision.
+Use only separately approved repeat-window, minimum-sample, and suppression criteria with authorized input:
+
+- If authorized input or any criterion needed to interpret it is unavailable, leave the disposition blank.
+- If complete authorized input satisfies the approved repeat-window and suppression criteria and its observed volume is below the approved minimum, select `INSUFFICIENT_VOLUME`; this is a volume finding only and authorizes no content action.
+- Select `REVIEW_PUBLIC_EVIDENCE` or `KEEP_UNSUPPORTED` only when the approved minimum and other applicable criteria are met, and only under the public-evidence and editorial boundaries below.
 
 - [ ] `INSUFFICIENT_VOLUME`
 - [ ] `REVIEW_PUBLIC_EVIDENCE`
