@@ -38,3 +38,4 @@ The smoke check retries briefly to accommodate GitHub Pages propagation. A faile
 - The Buttondown subscription is validated up to the browser hand-off; CI does not create real subscribers.
 - The production smoke test checks availability and deterministic integration, not live AI retrieval quality or quota-bearing generation.
 - Human visual judgment, real-device review, and production Core Web Vitals remain separate from these automated gates.
+- A separate human-review [rubric proposal](ASK_MANTOSH_HUMAN_REVIEW.md) and [versioned synthetic question set](ASK_MANTOSH_HUMAN_QUESTIONS.md) propose re-evaluation after material model/provider, retrieval/public-source-set, answer-policy/prompt, or answer rendering/navigation changes. Both remain proposals; any capture needs separate authorization, and this adds no release gate or changes the existing checks.
