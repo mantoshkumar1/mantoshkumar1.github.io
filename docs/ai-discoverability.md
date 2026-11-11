@@ -61,6 +61,10 @@ documents that power the site and Ask Mantosh.
 4. Confirm reports use the GitHub Pages canonical host, not an alternate host or
    a non-canonical URL form.
 
+ChatGPT Search, Perplexity, and Claude do not have an equivalent public
+webmaster URL-submission workflow documented here. Rely on crawlability,
+canonical content, links, and sitemaps rather than claiming a submission path.
+
 ## Post-publication review (proposed)
 
 For a significant publication change, record a small manual snapshot at the
@@ -115,10 +119,6 @@ Write an actual numeric zero only when the report shows zero. Use `not shown`,
 zero. Leave this record blank until someone performs the review. Do not claim
 property verification, submission, baseline measurement, or indexing from this
 proposal.
-
-ChatGPT Search, Perplexity, and Claude do not have an equivalent public
-webmaster URL-submission workflow documented here. Rely on crawlability,
-canonical content, links, and sitemaps rather than claiming a submission path.
 
 ## AI referral analytics
 
