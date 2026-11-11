@@ -61,6 +61,61 @@ documents that power the site and Ask Mantosh.
 4. Confirm reports use the GitHub Pages canonical host, not an alternate host or
    a non-canonical URL form.
 
+## Post-publication review (proposed)
+
+For a significant publication change, record a small manual snapshot at the
+next monthly content or maintenance review. Check sooner only if a provider
+report shows a concrete issue. Repeat at the next monthly review only while a
+material item remains unresolved. This is a suggested internal cadence, not a
+crawl-time expectation or provider service level; it creates no scheduled task
+or automatic submission.
+
+For the verified canonical property in each provider:
+
+- Record the sitemap's reported processing status and last-read date, plus
+  submitted or discovered URL counts when shown. A sitemap being read or URLs
+  being discovered does not establish that each URL was crawled or indexed.
+- Check a small, consistent sample of newly published or materially changed
+  canonical Insights and Projects. In Google's [Sitemaps report](https://support.google.com/webmasters/answer/7451001),
+  [Page indexing report](https://support.google.com/webmasters/answer/7440203),
+  and [URL Inspection](https://support.google.com/webmasters/answer/9012289),
+  record each state and reason as reported. In Bing, use its
+  [Sitemaps](https://www2.bing.com/webmasters/help/sitemaps-3b5cf6ed)
+  and [URL Inspection](https://www.bing.com/webmasters/help/URL-Inspection-55a30305)
+  reports. Keep discovery, crawl eligibility, crawling, and indexing distinct.
+  A discovered or crawlable URL is not necessarily indexed.
+- Record clicks, impressions, and a few query or landing-page rows only when
+  visible for an explicit date range in Google's
+  [Search results Performance report](https://support.google.com/webmasters/answer/7576553)
+  or Bing's [Search Performance report](https://www.bing.com/webmasters/help/search-performance-c680da36).
+  Do not export query data for this review.
+
+Use the report's reason and the page's intended canonical and crawl settings to
+triage an exclusion. An intentional duplicate, alternate, or noindex page is
+not automatically a defect. For a possible site issue, recheck the live
+canonical URL, response, robots/noindex directives, sitemap entry, and internal
+links; record a separate issue if a reproducible code change is needed. An
+unclear reason stays unclear until investigated. Do not call ordinary elapsed
+time a defect by itself or infer a provider result from static configuration.
+
+### Blank review record
+
+- Release date (UTC) / exact deployed revision:
+- Sitemap URL / provider property / review date:
+- Report date range:
+- Sitemap status / last-read date / submitted or discovered count (if shown):
+- Sample canonical URLs and provider-reported state, reason, and check date:
+- Clicks / impressions / visible queries or landing pages:
+- Missing information (for example, no access, no report row, or data not shown):
+- Triage (intentional exclusion / reproducible site issue / unclear) and evidence:
+- Next manual review date, if a material item remains open:
+
+Write an actual numeric zero only when the report shows zero. Use `not shown`,
+`unavailable`, or `not assessed` when data or access is absent; absence is not
+zero. Leave this record blank until someone performs the review. Do not claim
+property verification, submission, baseline measurement, or indexing from this
+proposal.
+
 ChatGPT Search, Perplexity, and Claude do not have an equivalent public
 webmaster URL-submission workflow documented here. Rely on crawlability,
 canonical content, links, and sitemaps rather than claiming a submission path.
