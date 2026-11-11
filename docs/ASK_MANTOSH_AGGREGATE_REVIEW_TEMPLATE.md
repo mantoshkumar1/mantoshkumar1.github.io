@@ -12,14 +12,14 @@ Exclude unprefixed/hashed `track()` rows. Hashing is not proof of anonymity and 
 
 ## Review record
 
-- Review date (UTC): ____________________
-- Window start (UTC, inclusive): ____________________
-- Window end (UTC, exclusive): ____________________
-- Source revision: ____________________
-- Aggregate input provenance and separate authorization (who/what authorized, extraction date and method):  
-  ______________________________________________________________________
-- Input completeness or known gaps:  
-  ______________________________________________________________________
+| Field | Entry |
+|---|---|
+| Review date (UTC) |  |
+| Window start (UTC, inclusive) |  |
+| Window end (UTC, exclusive) |  |
+| Source revision |  |
+| Aggregate input provenance and separate authorization reference (no personal details) |  |
+| Input completeness or known gaps |  |
 
 ## Optional allowlisted counts
 
@@ -47,11 +47,10 @@ Select one only after separately approved repeat-window, minimum-sample, and sup
 - [ ] `REVIEW_PUBLIC_EVIDENCE`
 - [ ] `KEEP_UNSUPPORTED`
 
-- Public evidence independently reviewed (URL and revision; not inferred from aggregate counts):  
-  ______________________________________________________________________
-- Rationale and limits:  
-  ______________________________________________________________________
-- Follow-up, if any (requires ordinary editorial authority; no automatic backlog creation):  
-  ______________________________________________________________________
+| Field | Entry |
+|---|---|
+| Public evidence independently reviewed (URL and revision; not inferred from aggregate counts) |  |
+| Rationale and limits |  |
+| Follow-up, if any (requires ordinary editorial authority; no automatic backlog creation) |  |
 
 A repeated aggregate pattern can at most prompt an authorized human to review existing public evidence or retain an unsupported boundary. It cannot identify which topic, source, or document is missing. Any content decision must rest on independently verified public evidence and ordinary editorial authority.
