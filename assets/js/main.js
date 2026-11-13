@@ -488,6 +488,7 @@ class AskMantoshApp {
         if (type === "error") throw new Error(data.message || "The response stream was interrupted.");
       });
       cancelPendingRender();
+      if (generation !== this.generation) return;
       this.finish(assistant);
     } catch (error) {
       cancelPendingRender();
