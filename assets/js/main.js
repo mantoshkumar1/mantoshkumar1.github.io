@@ -141,15 +141,21 @@ class ChatApi {
     }
     const reader = response.body.pipeThrough(new TextDecoderStream()).getReader();
     let buffer = "";
+    let receivedDone = false;
+    const handleEvent = (type, data) => {
+      if (type === "done") receivedDone = true;
+      onEvent(type, data);
+    };
     while (true) {
       const { done, value } = await reader.read();
       if (done) break;
       buffer += value;
       const frames = buffer.split("\n\n");
       buffer = frames.pop();
-      frames.forEach((frame) => this.parseFrame(frame, onEvent));
+      frames.forEach((frame) => this.parseFrame(frame, handleEvent));
     }
-    if (buffer.trim()) this.parseFrame(buffer, onEvent);
+    if (buffer.trim()) this.parseFrame(buffer, handleEvent);
+    if (!receivedDone) throw new Error("The response stream was interrupted.");
   }
 
   parseFrame(frame, onEvent) {
