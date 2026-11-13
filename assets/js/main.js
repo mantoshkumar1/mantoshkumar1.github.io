@@ -322,7 +322,7 @@ class AskMantoshApp {
     toggle.addEventListener("click", () => this.open()); exportButton.addEventListener("click", () => this.exportConversation()); minimize.addEventListener("click", () => this.close()); clear.addEventListener("click", () => this.clearConversation()); backdrop.addEventListener("click", () => this.close());
     form.addEventListener("submit", (event) => { event.preventDefault(); this.ask(input.value); });
     suggestions.addEventListener("click", (event) => { const button = event.target.closest("[data-suggestion]"); if (button) this.ask(button.dataset.suggestion); });
-    input.addEventListener("input", () => this.resize()); input.addEventListener("keydown", (event) => { if (event.key === "Enter" && !event.shiftKey) { event.preventDefault(); this.ask(input.value); } });
+    input.addEventListener("input", () => this.resize()); input.addEventListener("keydown", (event) => { if (event.key === "Enter" && !event.shiftKey && !event.isComposing) { event.preventDefault(); this.ask(input.value); } });
     document.addEventListener("keydown", (event) => { if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") { event.preventDefault(); this.open(); } if (event.key === "Escape" && !panel.hidden) this.close(); });
     panel.addEventListener("keydown", (event) => this.trapFocus(event));
     this.view.onAsk = (question) => this.ask(question);
