@@ -415,7 +415,7 @@ class AskMantoshApp {
     const panel = this.elements.panel;
     const selector = "button, [href], input, select, textarea, [tabindex]";
     const focusable = [...panel.querySelectorAll(selector)].filter((element) => {
-      if (element.matches(":disabled") || element.getAttribute("aria-disabled") === "true") return false;
+      if (element.matches(":disabled") || (element.getAttribute("aria-disabled") === "true" && element !== this.elements.exportButton)) return false;
       if (element.closest("[hidden], [inert]")) return false;
       const style = window.getComputedStyle(element);
       if (style.display === "none" || style.visibility === "hidden") return false;
