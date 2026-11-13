@@ -3208,7 +3208,7 @@ main.project-shell > .container > .section-block {
 
   .hero-discovery {
     width: 100%;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     gap: .75rem;
     margin-bottom: 1.25rem;
   }
