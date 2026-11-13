@@ -95,16 +95,30 @@
       const copyEmailButton = document.querySelector("#copy-email");
       const copyEmailStatus = document.querySelector("#copy-email-status");
       const emailAddress = "mantoshk234@gmail.com";
+      let copyEmailAttempt = 0;
+      let copyEmailResetTimer = null;
 
       copyEmailButton.addEventListener("click", async () => {
+        const attempt = ++copyEmailAttempt;
+        if (copyEmailResetTimer !== null) {
+          window.clearTimeout(copyEmailResetTimer);
+          copyEmailResetTimer = null;
+        }
+        copyEmailButton.textContent = "Copy email";
+        copyEmailStatus.textContent = "";
         try {
           await navigator.clipboard.writeText(emailAddress);
+          if (attempt !== copyEmailAttempt) return;
           copyEmailButton.textContent = "Copied";
           copyEmailStatus.textContent = `Copied: ${emailAddress}`;
-          window.setTimeout(() => {
+          copyEmailResetTimer = window.setTimeout(() => {
+            if (attempt !== copyEmailAttempt) return;
             copyEmailButton.textContent = "Copy email";
+            copyEmailResetTimer = null;
           }, 1800);
         } catch {
+          if (attempt !== copyEmailAttempt) return;
+          copyEmailButton.textContent = "Copy email";
           copyEmailStatus.textContent = `Could not copy. Email ${emailAddress} directly.`;
         }
       });
