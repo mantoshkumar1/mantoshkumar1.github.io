@@ -56,7 +56,9 @@
     menuButton.setAttribute("aria-expanded", "false");
     menuButton.setAttribute("aria-label", currentPage ? `Open navigation. Current page: ${currentPage}` : "Open navigation");
     menuButton.textContent = `${closedLabel} ▾`;
-    navigation.insertBefore(menuButton, navigation.querySelector(".appearance-control"));
+    const firstNavigationLink = Array.from(navigation.children).find((child) => child.matches("a"));
+    const appearanceControl = Array.from(navigation.children).find((child) => child.matches(".appearance-control"));
+    navigation.insertBefore(menuButton, firstNavigationLink || appearanceControl);
 
     const setNavigationOpen = (open) => {
       navigation.classList.toggle("mobile-nav-expanded", open);
