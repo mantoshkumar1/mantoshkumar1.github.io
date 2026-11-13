@@ -163,7 +163,7 @@ class ChatApi {
 class ConversationView {
   constructor({ messages, suggestions, jump, status, markdown }) {
     this.messages = messages; this.suggestions = suggestions; this.jump = jump; this.status = status; this.markdown = markdown;
-    this.nodes = new Map(); this.followUps = [];
+    this.nodes = new Map(); this.followUps = []; this.copyFeedback = new WeakMap();
     messages.addEventListener("scroll", () => this.updateJump());
     jump.addEventListener("click", () => this.scrollToLatest(true));
     messages.addEventListener("click", (event) => this.handleAction(event));
@@ -267,7 +267,42 @@ class ConversationView {
     if (copy) {
       const article = copy.closest(".ask-mantosh-message"); const message = this.getMessage?.(article?.dataset.messageId);
       const content = copy.hasAttribute("data-copy-code") ? copy.closest("pre")?.querySelector("code")?.innerText : message?.text;
-      if (content) navigator.clipboard?.writeText(content).then(() => { const label = copy.textContent; copy.textContent = "Copied"; setTimeout(() => { copy.textContent = label; }, 1200); });
+      if (content) {
+        let state = this.copyFeedback.get(copy);
+        if (!state) {
+          state = { label: copy.textContent, timer: null, request: 0 };
+          this.copyFeedback.set(copy, state);
+        }
+        const request = ++state.request;
+        if (state.timer !== null) clearTimeout(state.timer);
+        state.timer = null;
+        copy.textContent = state.label;
+
+        try {
+          const clipboard = navigator.clipboard;
+          if (typeof clipboard?.writeText !== "function") return;
+          const write = clipboard.writeText(content);
+          if (!write || typeof write.then !== "function") return;
+          Promise.resolve(write).then(() => {
+            if (state.request !== request) return;
+            copy.textContent = "Copied";
+            state.timer = setTimeout(() => {
+              if (state.request !== request) return;
+              copy.textContent = state.label;
+              state.timer = null;
+            }, 1200);
+          }).catch(() => {
+            if (state.request !== request) return;
+            copy.textContent = state.label;
+            state.timer = null;
+          });
+        } catch {
+          if (state.request === request) {
+            copy.textContent = state.label;
+            state.timer = null;
+          }
+        }
+      }
     }
     const retry = event.target.closest("[data-retry-id]"); if (retry) this.onRetry?.(retry.dataset.retryId);
     const suggestion = event.target.closest("[data-suggestion]"); if (suggestion) this.onAsk?.(suggestion.dataset.suggestion);
