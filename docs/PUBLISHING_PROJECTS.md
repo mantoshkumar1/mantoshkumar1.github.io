@@ -114,3 +114,7 @@ unintended.
 `scripts/audit-homepage-projects.mjs` is part of `npm run verify`, the
 README's documented verification gate, and both `.github/workflows/technical-seo.yml`
 and `.github/workflows/deploy-pages.yml`.
+
+## Proposed disclosure checklist (draft)
+
+A [founder-adoption draft checklist](PUBLIC_DISCLOSURE_CHECKLIST.md) is available for review. It is not adopted or an enforced publication gate; the evidence and source requirements above remain in force.
