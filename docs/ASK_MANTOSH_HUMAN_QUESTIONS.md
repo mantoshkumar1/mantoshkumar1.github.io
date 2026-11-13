@@ -5,7 +5,7 @@
 - **Set ID:** `AM-HRQ`
 - **Version:** `1.0.0`
 - **Public evidence snapshot:** repository `main` at `d8cdb221e47cea9d64eec146ad40a2fbd021c3e1` (2026-10-27)
-- **Companion method:** [proposed rubric #120 at its exact draft head](https://github.com/mantoshkumar1/mantoshkumar1.github.io/blob/8d5ddd146625a970795be29b694cd30a4e657447/docs/ASK_MANTOSH_HUMAN_REVIEW.md), blob `953d2a7db6d7623661d4fa8a69d60b518e059723`. That file is still a draft proposal, not an adopted policy or main-branch file.
+- **Companion method:** [proposed rubric #120 at its exact draft head](https://github.com/mantoshkumar1/mantoshkumar1.github.io/blob/8d5ddd146625a970795be29b694cd30a4e657447/docs/ASK_MANTOSH_HUMAN_REVIEW.md), blob `953d2a7db6d7623661d4fa8a69d60b518e059723`. That rubric is now on main at the same blob `953d2a7db6d7623661d4fa8a69d60b518e059723`, but remains a proposal, not adopted policy or a release gate.
 
 The five one-turn prompts below are synthetic review cases, not ideal answers, fixtures, production questions, or evidence about a live index. The repository pin identifies the expected public source snapshot only; it does not prove that a deployed Worker or indexed corpus uses it. Use the five rubric dimensions separately. Do not write a universal answer, assign scores in advance, or add a threshold. Version metadata below describes this proposal; every capture and score field remains blank until a separately authorized review.
 
