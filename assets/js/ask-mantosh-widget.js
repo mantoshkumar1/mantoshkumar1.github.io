@@ -126,7 +126,11 @@
       const client = document.createElement("script");
       client.src = "/assets/js/main.js?v=20260716-13";
       client.addEventListener("load", resolve, { once: true });
-      client.addEventListener("error", reject, { once: true });
+      client.addEventListener("error", () => {
+        clientPromise = null;
+        client.remove();
+        reject(new Error("Ask Mantosh client failed to load"));
+      }, { once: true });
       document.body.append(client);
     });
     return clientPromise;
@@ -141,7 +145,7 @@
       toggle.dataset.clientReady = "true";
       toggle.click();
     }).catch(() => {
-      toggle.setAttribute("aria-disabled", "true");
+      // Keep the launcher available so a later explicit click can retry.
     });
   }, { capture: true });
 
@@ -153,10 +157,14 @@
     loadClient().then(() => {
       toggle.dataset.clientReady = "true";
       trigger.click();
+    }).catch(() => {
+      // A later explicit activation may retry after a load failure.
     });
   }, { capture: true });
 
   if (window.location.hash === "#ask-mantosh") {
-    loadClient().then(() => { toggle.dataset.clientReady = "true"; });
+    loadClient().then(() => { toggle.dataset.clientReady = "true"; }).catch(() => {
+      // Leave later explicit launcher activation available after a load failure.
+    });
   }
 })();
