@@ -31,7 +31,18 @@ production state; this one records intent.
 > never exercise it), create the `approved-test-change` label, and decide the
 > bot-identity question below. Porting to PingStep remains worthwhile — that is
 > where the least-read changes happen.
-> **Update 2026-11-13.** The August wait for a website PR is superseded: PR #110's guard failed without `approved-test-change` ([guard](https://github.com/mantoshkumar1/mantoshkumar1.github.io/actions/runs/40033313198/job/120686626101), [floor 93](https://github.com/mantoshkumar1/mantoshkumar1.github.io/actions/runs/40033313198/job/120686625766)) and passed with the label present ([guard](https://github.com/mantoshkumar1/mantoshkumar1.github.io/actions/runs/40114987514/job/120934309388), [floor 93](https://github.com/mantoshkumar1/mantoshkumar1.github.io/actions/runs/40114987514/job/120934309180)) on the same candidate, base, and merge ([accepted independent review](https://github.com/mantoshkumar1/mantoshkumar1.github.io/issues/57#issuecomment-6443975740)). PR #125 passed the ordinary no-protected-path route ([guard](https://github.com/mantoshkumar1/mantoshkumar1.github.io/actions/runs/40454768837/job/122025410163), [floor 93](https://github.com/mantoshkumar1/mantoshkumar1.github.io/actions/runs/40454768837/job/122025410532)). These are observed outcomes only; they do not isolate the label as the sole difference or prove effective merge enforcement. Credential identity, label actor/time, PingStep port, and publication remain unresolved.
+>
+> **Update 2026-11-13.** The August wait for a website PR is superseded. PR #110's
+> guard failed without `approved-test-change` ([guard](https://github.com/mantoshkumar1/mantoshkumar1.github.io/actions/runs/40033313198/job/120686626101), [floor 93](https://github.com/mantoshkumar1/mantoshkumar1.github.io/actions/runs/40033313198/job/120686625766)) and
+> passed with the label present ([guard](https://github.com/mantoshkumar1/mantoshkumar1.github.io/actions/runs/40114987514/job/120934309388), [floor 93](https://github.com/mantoshkumar1/mantoshkumar1.github.io/actions/runs/40114987514/job/120934309180)) on the same
+> candidate, base, and merge ([accepted independent review](https://github.com/mantoshkumar1/mantoshkumar1.github.io/issues/57#issuecomment-6443975740)).
+>
+> PR #125's ordinary no-protected-path guard and floor passed
+> ([guard](https://github.com/mantoshkumar1/mantoshkumar1.github.io/actions/runs/40454768837/job/122025410163), [floor 93](https://github.com/mantoshkumar1/mantoshkumar1.github.io/actions/runs/40454768837/job/122025410532)). The floor held at 93 in all three runs.
+>
+> These are observed outcomes only: they do not isolate the label as the sole
+> difference or prove effective merge enforcement. Credential identity, label
+> actor/time, PingStep port, and publication remain unresolved.
 
 **Blocks:** the technical article "Stop the agent editing its own tests"
 **Related published work:** [A river can't be deterministic. Its banks can be.](../insights/make-the-banks-deterministic.html)
