@@ -170,12 +170,12 @@ class ConversationView {
   }
 
   isNearBottom() { return this.messages.scrollHeight - this.messages.scrollTop - this.messages.clientHeight < 96; }
-  scrollToLatest(force = false) { if (force || this.isNearBottom()) this.messages.scrollTo({ top: this.messages.scrollHeight, behavior: "smooth" }); this.updateJump(); }
+  scrollToLatest(force = false) { if (force || this.isNearBottom()) this.messages.scrollTo({ top: this.messages.scrollHeight, behavior: "auto" }); this.updateJump(); }
   scrollToMessageStart(node) {
     const messagesRect = this.messages.getBoundingClientRect();
     const messageRect = node.getBoundingClientRect();
     const top = this.messages.scrollTop + messageRect.top - messagesRect.top - 4;
-    this.messages.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+    this.messages.scrollTo({ top: Math.max(0, top), behavior: "auto" });
     this.updateJump();
   }
   updateJump() { this.jump.hidden = this.isNearBottom(); }
