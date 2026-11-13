@@ -1666,7 +1666,7 @@ body.ask-mantosh-open {
 .project-related h2 { margin-bottom: 0.8rem; font-size: clamp(1.25rem, 2.4vw, 1.6rem); }
 .project-related-grid a { color: inherit; transition: border-color 0.15s ease, transform 0.15s ease; }
 .project-related-grid a:hover,
-.project-related-grid a:focus-visible { border-color: var(--primary); transform: translateY(-1px); outline: none; }
+.project-related-grid a:focus-visible { border-color: var(--primary); transform: translateY(-1px); }
 
 /* DogBuild is a long-form case study nested inside a resume card. Give its
    sections their own insets and rhythm without changing other project pages. */
