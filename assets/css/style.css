@@ -3799,7 +3799,7 @@ html[data-theme="contrast"] .ask-mantosh-send:focus-visible { background: #fff; 
 
 .newsletter-form input[type="email"]::placeholder {
   color: var(--muted);
-  opacity: .85;
+  opacity: 1;
 }
 
 .newsletter-form input[type="email"]:focus-visible {
