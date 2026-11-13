@@ -129,7 +129,10 @@ class ChatApi {
     });
     if (!response.ok || !response.body) {
       const payload = await response.json().catch(() => ({}));
-      throw new Error(payload.error?.message || "I couldn't answer that right now. Please try again.");
+      const error = new Error(payload.error?.message || "I couldn't answer that right now. Please try again.");
+      error.status = response.status;
+      error.code = payload.error?.code;
+      throw error;
     }
     const contentType = response.headers.get("Content-Type") || "";
     if (contentType.includes("application/json")) {
@@ -225,7 +228,7 @@ class ConversationView {
   renderMeta(node, message) {
     node.querySelector(".ask-mantosh-answer")?.parentElement.querySelector(".ask-mantosh-response-meta")?.remove();
     const meta = document.createElement("div"); meta.className = "ask-mantosh-response-meta";
-    if (message.error) meta.innerHTML = `<div class=\"ask-mantosh-error\"><p>${this.escape(message.error)}</p><button type=\"button\" data-retry-id=\"${this.escape(String(message.id))}\">Try again</button></div>`;
+    if (message.error) meta.innerHTML = `<div class=\"ask-mantosh-error\"><p>${this.escape(message.error)}</p><button type=\"button\" data-retry-id=\"${this.escape(String(message.id))}\">${message.reuseQuestion ? "Use this question" : "Try again"}</button></div>`;
     if (message.action?.type === "navigate" && message.action.url) {
       meta.insertAdjacentHTML("beforeend", `<a class=\"button secondary\" href=\"${this.safeUrl(message.action.url)}\" target=\"_blank\" rel=\"noopener noreferrer\">Open ${this.escape(message.action.label || "page")} <span aria-hidden=\"true\">↗</span></a>`);
     }
@@ -312,7 +315,7 @@ class AskMantoshApp {
   }
   saveSession() {
     try {
-      const messages = this.messages.slice(-20).map(({ id, role, text, question, sources, recommendations, followUps, error, action, attemptErrors }) => ({ id, role, text, question, sources, recommendations, followUps, error, action, attemptErrors }));
+      const messages = this.messages.slice(-20).map(({ id, role, text, question, sources, recommendations, followUps, error, action, attemptErrors, reuseQuestion }) => ({ id, role, text, question, sources, recommendations, followUps, error, action, attemptErrors, reuseQuestion }));
       window.sessionStorage.setItem(this.storageKey, JSON.stringify({ conversationId: this.conversationId, messages }));
     } catch { /* Chat remains usable when storage is unavailable. */ }
   }
@@ -436,6 +439,20 @@ class AskMantoshApp {
   retry(messageId) {
     const assistant = this.messages.find((message) => String(message.id) === String(messageId) && message.role === "assistant");
     if (!assistant?.question || this.controller) return;
+    if (assistant.reuseQuestion) {
+      const { input } = this.elements;
+      if (input.value === "") {
+        input.value = assistant.question;
+        this.resize();
+        this.showTemporaryStatus("Original question ready. You can send it after the stated wait.");
+      } else if (input.value.trim() !== assistant.question.trim()) {
+        this.showTemporaryStatus("Your draft is unchanged. Replace it with the original question manually if you prefer.");
+      } else {
+        this.showTemporaryStatus("Original question is ready to send after the stated wait.");
+      }
+      input.focus();
+      return;
+    }
     assistant.attemptErrors ||= [];
     if (assistant.error) assistant.attemptErrors.push(assistant.error);
     assistant.error = "";
@@ -497,6 +514,7 @@ class AskMantoshApp {
         assistant.error = error instanceof TypeError
           ? "Ask Mantosh couldn't be reached. Check your connection and try again."
           : (error.message || "I couldn't answer that right now. Please try again.");
+        assistant.reuseQuestion = error.status === 429 && error.code === "request_rate_limit_reached";
         this.finish(assistant);
       }
     } finally { if (this.controller === controller) { this.controller = null; this.updateExportAvailability(); } }
