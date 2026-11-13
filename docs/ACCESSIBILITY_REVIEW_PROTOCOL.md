@@ -26,7 +26,7 @@ Evaluate each applicable Level A and AA criterion against actual page content an
 
 | Dimension | Record when applicable |
 |---|---|
-| Keyboard and focus | Tab and Shift+Tab order; skip links; visible and unobscured focus; menus/dialogs; focus entry, containment where intended, close and return; keyboard traps. |
+| Keyboard and focus | Tab and Shift+Tab order; skip links; visible and unobscured focus; menus/dialogs; focus entry, containment where intended, close and return; keyboard traps. At each relevant responsive navigation breakpoint, verify collapsed hidden links stay out of the Tab sequence, keyboard opening exposes visible links in intended DOM/focus order, and the implemented close/return path works; CSS visual order alone does not establish keyboard order. |
 | Structure and screen readers | Headings, landmarks, names, roles, states, instructions, errors and status announcements. Test with the named browser/OS/assistive-technology combination; DOM inspection alone does not establish what a screen reader announces. |
 | Contrast and appearance | Text, controls, focus indicators and meaningful graphics in relevant themes, forced-colors and interaction states. Record measurements and tested foreground/background; do not infer contrast from a theme label. |
 | Zoom and reflow | Viewport, browser zoom or text scaling, orientation, wrapping, clipping, overlap, and whether each task remains usable. A bounding box beyond the viewport alone does not prove visible or functional failure. |
