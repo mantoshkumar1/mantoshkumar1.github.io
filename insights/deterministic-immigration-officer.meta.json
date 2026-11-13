@@ -1,0 +1,16 @@
+{
+  "route": "/insights/deterministic-immigration-officer.html",
+  "title": "Deterministic Systems Should Be the Immigration Officers for AI | Mantosh Kumar",
+  "description": "A first-person engineering lesson on putting deterministic safety gates at the borders of AI-assisted development so unsafe transitions fail closed.",
+  "kind": "article",
+  "schemaType": "TechArticle",
+  "datePublished": "2026-08-29",
+  "dateModified": "2026-08-29",
+  "card": {
+    "kicker": "AI-assisted engineering",
+    "readTime": "6 minute read",
+    "title": "Deterministic systems should be the immigration officers for AI",
+    "summary": "Let agents reason freely inside bounded space, but require exact deterministic proof before anything crosses a sensitive engineering boundary.",
+    "cta": "Read the article"
+  }
+}
