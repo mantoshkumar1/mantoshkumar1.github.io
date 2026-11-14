@@ -2000,7 +2000,6 @@ body.ask-mantosh-open {
 }
 
 .ask-mantosh-composer textarea:focus {
-  outline: none;
   border-color: var(--primary);
 }
 
