@@ -111,7 +111,14 @@ class MarkdownService {
       const language = [...code.classList].find((name) => name.startsWith("language-"))?.replace("language-", "") || "text";
       const toolbar = document.createElement("div");
       toolbar.className = "ask-mantosh-code-toolbar";
-      toolbar.innerHTML = `<span>${language}</span><button type="button" data-copy-code aria-label="Copy ${language} code">Copy code</button>`;
+      const languageLabel = document.createElement("span");
+      languageLabel.textContent = language;
+      const copyButton = document.createElement("button");
+      copyButton.type = "button";
+      copyButton.setAttribute("data-copy-code", "");
+      copyButton.setAttribute("aria-label", `Copy ${language} code`);
+      copyButton.textContent = "Copy code";
+      toolbar.append(languageLabel, copyButton);
       pre.prepend(toolbar);
     });
   }
