@@ -395,7 +395,10 @@ class AskMantoshApp {
       "",
       ...visibleMessages.flatMap((message) => {
         const failedAttempts = (message.attemptErrors || []).map((error) => `[Previous attempt failed: ${error}]`);
-        const content = message.text.trim() || `[Error: ${message.error}]`;
+        const content = [
+          message.text.trim(),
+          message.error ? `[Error: ${message.error}]` : ""
+        ].filter(Boolean).join("\n");
         return [message.role === "user" ? "You" : "Ask Mantosh", ...failedAttempts, content, ""];
       })
     ].join("\n").trimEnd() + "\n";
