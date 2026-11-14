@@ -302,7 +302,7 @@ class AskMantoshApp {
       });
       this.id = this.messages.reduce((highest, message) => Math.max(highest, Number(message.id) || 0), 0);
       const latestAssistant = [...this.messages].reverse().find((message) => message.role === "assistant");
-      if (latestAssistant?.followUps?.length) {
+      if (latestAssistant?.followUps?.length && !latestAssistant.error) {
         latestAssistant.followUps = this.unaskedFollowUps(this.usableFollowUps(latestAssistant.followUps));
         if (!latestAssistant.followUps.length) latestAssistant.followUps = this.unaskedFollowUps(this.contextualFollowUps(latestAssistant));
         this.view.setSuggestions(latestAssistant.followUps, (question) => this.ask(question), true);
