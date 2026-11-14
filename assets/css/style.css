@@ -1975,7 +1975,6 @@ body.ask-mantosh-open {
   transform: translateY(-1px);
   border-color: var(--primary);
   background: rgba(59, 130, 246, 0.08);
-  outline: none;
 }
 
 .ask-mantosh-composer {
