@@ -165,7 +165,10 @@ class ConversationView {
     this.messages = messages; this.suggestions = suggestions; this.jump = jump; this.status = status; this.markdown = markdown;
     this.nodes = new Map(); this.followUps = [];
     messages.addEventListener("scroll", () => this.updateJump());
-    jump.addEventListener("click", () => this.scrollToLatest(true));
+    jump.addEventListener("click", () => {
+      if (document.activeElement === jump) this.messages.focus({ preventScroll: true });
+      this.scrollToLatest(true);
+    });
     messages.addEventListener("click", (event) => this.handleAction(event));
   }
 
