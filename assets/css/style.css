@@ -1432,7 +1432,6 @@ body.ask-mantosh-open {
   border-color: var(--primary);
   background: rgba(59, 130, 246, 0.12);
   color: #fff;
-  outline: none;
 }
 
 .ask-mantosh-clear:hover,
