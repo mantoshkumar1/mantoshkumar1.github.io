@@ -469,6 +469,12 @@ class AskMantoshApp {
     const generation = this.generation;
     const assistant = retryAssistant || (this.add("user", question), this.add("assistant", "", { question, sources: [], attemptErrors: [] }));
     if (retryAssistant) this.view.updateAssistant(assistant, { streaming: true });
+    const activeSuggestion = document.activeElement;
+    if (!retryAssistant && activeSuggestion?.matches("button[data-suggestion]")
+      && this.elements.suggestions.contains(activeSuggestion)
+      && activeSuggestion.dataset.suggestion.trim() === question) {
+      this.elements.input.focus({ preventScroll: true });
+    }
     this.elements.input.value = ""; this.resize(); this.view.setSuggestions([], () => this.ask()); this.view.setStreaming(true); this.view.setStatus("Searching published engineering knowledge…");
     const controller = new AbortController(); this.controller = controller; let frameId = 0;
     this.updateExportAvailability();
