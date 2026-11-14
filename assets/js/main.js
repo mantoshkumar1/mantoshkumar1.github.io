@@ -326,7 +326,13 @@ class AskMantoshApp {
     document.addEventListener("keydown", (event) => { if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") { event.preventDefault(); this.open(); } if (event.key === "Escape" && !panel.hidden) this.close(); });
     panel.addEventListener("keydown", (event) => this.trapFocus(event));
     this.view.onAsk = (question) => this.ask(question);
-    this.view.onRetry = (messageId) => this.retry(messageId);
+    this.view.onRetry = (messageId) => {
+      if (this.controller) {
+        this.showTemporaryStatus("Please wait for the current answer.");
+        return;
+      }
+      this.retry(messageId);
+    };
     if (!this.loadSession()) this.view.showEmpty((question) => this.ask(question));
     this.updateExportAvailability();
     this.resize();
