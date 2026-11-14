@@ -208,6 +208,9 @@ class ConversationView {
   updateAssistant(message, { streaming = false, focus = true } = {}) {
     const node = this.nodes.get(message.id); if (!node) return;
     const answer = node.querySelector(".ask-mantosh-answer");
+    for (const button of node.querySelectorAll("[data-copy-answer], [data-copy-markdown]")) {
+      button.disabled = !message.text;
+    }
     let rendered;
     if (streaming) { node.querySelector(".ask-mantosh-response-meta")?.remove(); answer.textContent = message.text; }
     else rendered = this.markdown.render(message.text, answer).catch(() => { answer.textContent = message.text; });
