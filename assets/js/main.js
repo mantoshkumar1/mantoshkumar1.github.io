@@ -364,6 +364,12 @@ class AskMantoshApp {
       this.clientScript?.remove();
       this.clientScript = null;
       this.previousFocus?.focus?.();
+      const active = document.activeElement;
+      if (!active || active === document || active === document.body
+        || active === document.documentElement || active.isConnected === false
+        || this.elements.panel.contains(active)) {
+        this.elements.toggle.focus({ preventScroll: true });
+      }
     }
   }
   clearConversation() {
