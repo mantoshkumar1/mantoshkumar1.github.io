@@ -466,6 +466,12 @@ class AskMantoshApp {
       return;
     }
     clearTimeout(this.emptyStatusTimer); this.emptyStatusTimer = null; this.open();
+    const activeSuggestion = document.activeElement;
+    if (!retryAssistant && activeSuggestion?.matches("button[data-suggestion]")
+      && this.elements.suggestions.contains(activeSuggestion)
+      && activeSuggestion.dataset.suggestion.trim() === question) {
+      this.elements.input.focus({ preventScroll: true });
+    }
     const generation = this.generation;
     const assistant = retryAssistant || (this.add("user", question), this.add("assistant", "", { question, sources: [], attemptErrors: [] }));
     if (retryAssistant) this.view.updateAssistant(assistant, { streaming: true });
