@@ -218,7 +218,11 @@ class ConversationView {
     } else {
       this.renderMeta(node, message);
     }
-    if (!streaming && focus) rendered.finally(() => requestAnimationFrame(() => this.scrollToMessageStart(node)));
+    if (!streaming && focus) rendered.finally(() => requestAnimationFrame(() => {
+      if (this.nodes.get(message.id) === node && this.messages.contains(node)) {
+        this.scrollToMessageStart(node);
+      }
+    }));
     else this.updateJump();
   }
 
