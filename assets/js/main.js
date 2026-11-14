@@ -98,10 +98,11 @@ class MarkdownService {
     return this.loader;
   }
 
-  async render(markdown, target) {
+  async render(markdown, target, isCurrent = () => true) {
     this.renderBasic(markdown, target);
     let tools;
     try { tools = await this.load(); } catch { return; }
+    if (!isCurrent()) return;
     const { marked, sanitize, highlight } = tools;
     target.innerHTML = sanitize(marked.parse(markdown, { gfm: true, breaks: true }));
     target.querySelectorAll("a").forEach((link) => { link.target = "_blank"; link.rel = "noopener noreferrer"; });
@@ -210,7 +211,13 @@ class ConversationView {
     const answer = node.querySelector(".ask-mantosh-answer");
     let rendered;
     if (streaming) { node.querySelector(".ask-mantosh-response-meta")?.remove(); answer.textContent = message.text; }
-    else rendered = this.markdown.render(message.text, answer).catch(() => { answer.textContent = message.text; });
+    else {
+      const renderedText = message.text;
+      const isCurrentRender = () => message.text === renderedText && !node.classList.contains("is-streaming");
+      rendered = this.markdown.render(renderedText, answer, isCurrentRender).catch(() => {
+        if (isCurrentRender()) answer.textContent = renderedText;
+      });
+    }
     node.classList.toggle("is-streaming", streaming);
     if (streaming) {
       if (!node.querySelector(".ask-mantosh-cursor")) answer.insertAdjacentHTML("beforeend", "<span class=\"ask-mantosh-cursor\" aria-hidden=\"true\"></span>");
