@@ -469,7 +469,7 @@ class AskMantoshApp {
     const generation = this.generation;
     const assistant = retryAssistant || (this.add("user", question), this.add("assistant", "", { question, sources: [], attemptErrors: [] }));
     if (retryAssistant) this.view.updateAssistant(assistant, { streaming: true });
-    this.elements.input.value = ""; this.resize(); this.view.setSuggestions([], () => this.ask()); this.view.setStreaming(true); this.view.setStatus("Searching published engineering knowledge…");
+    if (!retryAssistant) this.elements.input.value = ""; this.resize(); this.view.setSuggestions([], () => this.ask()); this.view.setStreaming(true); this.view.setStatus("Searching published engineering knowledge…");
     const controller = new AbortController(); this.controller = controller; let frameId = 0;
     this.updateExportAvailability();
     const render = () => { frameId = 0; this.view.updateAssistant(assistant, { streaming: true }); };
