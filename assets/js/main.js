@@ -134,6 +134,9 @@ class ChatApi {
     const contentType = response.headers.get("Content-Type") || "";
     if (contentType.includes("application/json")) {
       const payload = await response.json();
+      if (typeof payload?.answer !== "string" || !payload.answer.trim()) {
+        throw new Error("I couldn't answer that right now. Please try again.");
+      }
       onEvent("metadata", payload);
       if (payload.answer) onEvent("response.output_text.delta", { delta: payload.answer });
       onEvent("done", {});
