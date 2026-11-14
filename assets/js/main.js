@@ -73,10 +73,18 @@ class MarkdownService {
         const node = document.createElement(heading[1].length <= 2 ? "h2" : "h3");
         this.appendInline(node, heading[2]); target.append(node); continue;
       }
-      const bullet = /^(?:[-*•]|\d+[.)])\s+(.+)$/.exec(line);
-      if (bullet) {
-        if (!list) { list = document.createElement("ul"); target.append(list); }
-        const item = document.createElement("li"); this.appendInline(item, bullet[1]); list.append(item); continue;
+      const ordered = /^(\d+)[.)]\s+(.+)$/.exec(line);
+      const bullet = /^[-*•]\s+(.+)$/.exec(line);
+      if (ordered || bullet) {
+        const kind = ordered ? "ol" : "ul";
+        if (!list || list.localName !== kind) {
+          list = document.createElement(kind);
+          if (ordered) list.setAttribute("start", ordered[1]);
+          target.append(list);
+        }
+        const item = document.createElement("li");
+        this.appendInline(item, ordered ? ordered[2] : bullet[1]);
+        list.append(item); continue;
       }
       list = null;
       const paragraph = document.createElement("p"); this.appendInline(paragraph, line); target.append(paragraph);
