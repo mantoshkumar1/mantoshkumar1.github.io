@@ -83,6 +83,8 @@
     window.matchMedia("(min-width: 641px)").addEventListener?.("change", (event) => {
       if (event.matches) setNavigationOpen(false);
     });
+    navigation.parentElement?.classList.add("mobile-nav-ready");
+    navigation.classList.add("mobile-nav-enhanced");
   }
 
   document.querySelector(".skip-link")?.addEventListener("click", (event) => {
