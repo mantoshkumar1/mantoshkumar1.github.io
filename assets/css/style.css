@@ -3112,7 +3112,28 @@ main.project-shell > .container > .section-block {
     scrollbar-width: none;
   }
 
-  .navbar nav:not(.mobile-nav-expanded) > a {
+  .nav-wrap:not(.mobile-nav-ready) {
+    height: auto;
+    min-height: 62px;
+    flex-wrap: wrap;
+    padding-block: .5rem;
+  }
+
+  .navbar nav:not(.mobile-nav-enhanced) {
+    flex: 1 1 100%;
+    max-width: none;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+
+  .navbar nav:not(.mobile-nav-enhanced) > a {
+    display: flex;
+    min-height: 44px;
+    align-items: center;
+    white-space: normal;
+  }
+
+  .navbar nav.mobile-nav-enhanced:not(.mobile-nav-expanded) > a {
     display: none;
   }
 
