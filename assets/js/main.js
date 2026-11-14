@@ -443,6 +443,9 @@ class AskMantoshApp {
     assistant.sources = [];
     assistant.recommendations = [];
     assistant.followUps = [];
+    if (document.activeElement?.getAttribute("data-retry-id") === String(assistant.id)) {
+      this.elements.input.focus({ preventScroll: true });
+    }
     this.ask(assistant.question, { retryAssistant: assistant });
   }
   showTemporaryStatus(message) {
