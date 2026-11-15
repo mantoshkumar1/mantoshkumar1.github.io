@@ -3767,6 +3767,13 @@ html[data-theme="contrast"] .ask-mantosh-send:focus-visible { background: #fff; 
   font-size: .92rem;
 }
 
+@media (forced-colors: none) {
+  html[data-theme="light"] .ask-mantosh-error button[data-retry-id]:focus-visible,
+  html[data-theme="soft"] .ask-mantosh-error button[data-retry-id]:focus-visible {
+    outline-color: var(--primary);
+  }
+}
+
 .newsletter-form {
   display: grid;
   max-width: 620px;
