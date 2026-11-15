@@ -71,7 +71,7 @@ class MarkdownService {
       if (openingFence) {
         let closingIndex = -1;
         for (let candidateIndex = index + 1; candidateIndex < lines.length; candidateIndex += 1) {
-          const closingFence = /^ {0,3}(`+)[ \t]*$/.exec(lines[candidateIndex]);
+          const closingFence = /^ {0,3}(`+)[ \t]*\r?$/.exec(lines[candidateIndex]);
           if (closingFence && closingFence[1].length >= openingFence[1].length) {
             closingIndex = candidateIndex;
             break;
