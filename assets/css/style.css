@@ -3715,6 +3715,9 @@ html[data-theme="contrast"] .ask-mantosh-send:focus-visible { background: #fff; 
   html:not([data-theme]) .ask-mantosh-toggle,
   html:not([data-theme]) .ask-mantosh-panel { background: rgba(255,255,255,.96); }
   html:not([data-theme]) .ask-mantosh-answer pre { background: #eef2f7; }
+  @media (forced-colors: none) {
+    html:not([data-theme]) .ask-mantosh-message.user header > span { color: var(--primary); }
+  }
   html:not([data-theme]) .ask-mantosh-source::after { background: #fff; }
   html:not([data-theme]) .ask-mantosh-jump { background: #e8f1fd; }
   html:not([data-theme]) .appearance-control select { color-scheme: light; }
