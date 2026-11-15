@@ -3830,3 +3830,17 @@ html[data-theme="contrast"] .ask-mantosh-send:focus-visible { background: #fff; 
     grid-template-columns: 1fr;
   }
 }
+
+
+@media (forced-colors: none) {
+  html[data-theme="light"] .ask-mantosh-source:focus-visible,
+  html[data-theme="soft"] .ask-mantosh-source:focus-visible {
+    outline-color: currentColor;
+  }
+}
+
+@media (prefers-color-scheme: light) and (forced-colors: none) {
+  html:not([data-theme]) .ask-mantosh-source:focus-visible {
+    outline-color: currentColor;
+  }
+}
