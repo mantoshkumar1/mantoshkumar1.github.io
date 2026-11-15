@@ -3727,6 +3727,25 @@ html[data-theme="contrast"] .ask-mantosh-send:focus-visible { background: #fff; 
   }
 }
 
+@media (forced-colors: none) {
+  html[data-theme="light"] .ask-mantosh-message-actions button[data-copy-answer]:focus-visible,
+  html[data-theme="light"] .ask-mantosh-message-actions button[data-copy-markdown]:focus-visible,
+  html[data-theme="light"] .ask-mantosh-code-toolbar button[data-copy-code]:focus-visible,
+  html[data-theme="soft"] .ask-mantosh-message-actions button[data-copy-answer]:focus-visible,
+  html[data-theme="soft"] .ask-mantosh-message-actions button[data-copy-markdown]:focus-visible,
+  html[data-theme="soft"] .ask-mantosh-code-toolbar button[data-copy-code]:focus-visible {
+    outline-color: var(--primary);
+  }
+}
+
+@media (prefers-color-scheme: light) and (forced-colors: none) {
+  html:not([data-theme]) .ask-mantosh-message-actions button[data-copy-answer]:focus-visible,
+  html:not([data-theme]) .ask-mantosh-message-actions button[data-copy-markdown]:focus-visible,
+  html:not([data-theme]) .ask-mantosh-code-toolbar button[data-copy-code]:focus-visible {
+    outline-color: var(--primary);
+  }
+}
+
 .resume-list {
   padding-left: 1.25rem;
 }
@@ -3828,24 +3847,5 @@ html[data-theme="contrast"] .ask-mantosh-send:focus-visible { background: #fff; 
 @media (max-width: 420px) {
   .newsletter-form-row {
     grid-template-columns: 1fr;
-  }
-}
-
-@media (forced-colors: none) {
-  html[data-theme="light"] .ask-mantosh-message-actions button[data-copy-answer]:focus-visible,
-  html[data-theme="light"] .ask-mantosh-message-actions button[data-copy-markdown]:focus-visible,
-  html[data-theme="light"] .ask-mantosh-code-toolbar button[data-copy-code]:focus-visible,
-  html[data-theme="soft"] .ask-mantosh-message-actions button[data-copy-answer]:focus-visible,
-  html[data-theme="soft"] .ask-mantosh-message-actions button[data-copy-markdown]:focus-visible,
-  html[data-theme="soft"] .ask-mantosh-code-toolbar button[data-copy-code]:focus-visible {
-    outline-color: var(--primary);
-  }
-}
-
-@media (prefers-color-scheme: light) and (forced-colors: none) {
-  html:not([data-theme]) .ask-mantosh-message-actions button[data-copy-answer]:focus-visible,
-  html:not([data-theme]) .ask-mantosh-message-actions button[data-copy-markdown]:focus-visible,
-  html:not([data-theme]) .ask-mantosh-code-toolbar button[data-copy-code]:focus-visible {
-    outline-color: var(--primary);
   }
 }
