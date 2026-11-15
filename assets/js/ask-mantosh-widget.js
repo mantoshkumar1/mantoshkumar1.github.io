@@ -54,7 +54,7 @@
     menuButton.dataset.hasCurrent = currentPage ? "true" : "false";
     menuButton.setAttribute("aria-controls", navigation.id);
     menuButton.setAttribute("aria-expanded", "false");
-    menuButton.setAttribute("aria-label", currentPage ? `Open navigation. Current page: ${currentPage}` : "Open navigation");
+    menuButton.setAttribute("aria-label", currentPage ? `Open navigation. Current page: ${currentPage}` : "Menu: open navigation");
     menuButton.textContent = `${closedLabel} ▾`;
     const firstNavigationLink = Array.from(navigation.children).find((child) => child.matches("a"));
     const appearanceControl = Array.from(navigation.children).find((child) => child.matches(".appearance-control"));
@@ -63,7 +63,7 @@
     const setNavigationOpen = (open) => {
       navigation.classList.toggle("mobile-nav-expanded", open);
       menuButton.setAttribute("aria-expanded", String(open));
-      menuButton.setAttribute("aria-label", open ? "Close navigation" : (currentPage ? `Open navigation. Current page: ${currentPage}` : "Open navigation"));
+      menuButton.setAttribute("aria-label", open ? "Close navigation" : (currentPage ? `Open navigation. Current page: ${currentPage}` : "Menu: open navigation"));
       menuButton.textContent = open ? "Close" : `${closedLabel} ▾`;
     };
 
