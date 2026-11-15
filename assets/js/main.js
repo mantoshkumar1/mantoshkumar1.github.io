@@ -233,8 +233,28 @@ class ConversationView {
       const related = this.relatedReading(message);
       if (related.length) meta.insertAdjacentHTML("beforeend", `<section class=\"ask-mantosh-related\"><h4>Related reading</h4><div class=\"ask-mantosh-reading-list\">${related.map((item) => `<a href=\"${this.safeUrl(item.url)}\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"ask-mantosh-reading-link\"><span>${this.escape(item.category || "Read")}</span><strong>${this.escape(item.title)}</strong><span aria-hidden=\"true\">→</span></a>`).join("")}</div></section>`);
       if (message.sources?.length) {
-        const sourceList = message.sources.map((source) => `<a class=\"ask-mantosh-source\" href=\"${this.safeUrl(source.url)}\" target=\"_blank\" rel=\"noopener noreferrer\" data-summary=\"${this.escape(source.summary || "Published engineering knowledge")}\"><span aria-hidden=\"true\">✓</span><span>${this.escape(source.label)}</span></a>`).join("");
-        meta.insertAdjacentHTML("beforeend", `<footer class=\"ask-mantosh-sources\"><h4>Grounded in</h4><div>${sourceList}</div></footer>`);
+        const footer = document.createElement("footer");
+        footer.className = "ask-mantosh-sources";
+        const heading = document.createElement("h4");
+        heading.textContent = "Grounded in";
+        const sourceList = document.createElement("div");
+        message.sources.forEach((source) => {
+          const link = document.createElement("a");
+          link.className = "ask-mantosh-source";
+          link.href = this.safeUrl(source.url);
+          link.target = "_blank";
+          link.rel = "noopener noreferrer";
+          link.setAttribute("data-summary", source.summary || "Published engineering knowledge");
+          const icon = document.createElement("span");
+          icon.setAttribute("aria-hidden", "true");
+          icon.textContent = "✓";
+          const label = document.createElement("span");
+          label.textContent = source.label || "";
+          link.append(icon, label);
+          sourceList.append(link);
+        });
+        footer.append(heading, sourceList);
+        meta.append(footer);
       }
     }
     if (meta.childElementCount) node.append(meta);
