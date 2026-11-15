@@ -439,6 +439,7 @@ class AskMantoshApp {
     assistant.attemptErrors ||= [];
     if (assistant.error) assistant.attemptErrors.push(assistant.error);
     assistant.error = "";
+    assistant.action = null;
     assistant.text = "";
     assistant.sources = [];
     assistant.recommendations = [];
