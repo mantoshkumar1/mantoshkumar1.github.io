@@ -259,7 +259,30 @@ class ConversationView {
     const visible = compact ? this.followUps.slice(0, 1) : this.followUps;
     this.suggestions.hidden = !this.followUps.length;
     this.suggestions.classList.toggle("is-compact", compact && visible.length > 0);
-    this.suggestions.innerHTML = `<div>${visible.map((question) => `<button class=\"ask-mantosh-chip${compact ? " ask-mantosh-next" : ""}\" type=\"button\" data-suggestion=\"${this.escape(question)}\">${compact ? '<span class=\"ask-mantosh-next-label\">Next question</span>' : ""}<span>${this.escape(question)}</span>${compact ? '<span aria-hidden=\"true\">→</span>' : ""}</button>`).join("")}</div>`;
+    const group = document.createElement("div");
+    visible.forEach((question) => {
+      const button = document.createElement("button");
+      button.className = `ask-mantosh-chip${compact ? " ask-mantosh-next" : ""}`;
+      button.type = "button";
+      button.dataset.suggestion = question;
+      if (compact) {
+        const label = document.createElement("span");
+        label.className = "ask-mantosh-next-label";
+        label.textContent = "Next question";
+        button.append(label);
+      }
+      const text = document.createElement("span");
+      text.textContent = question;
+      button.append(text);
+      if (compact) {
+        const arrow = document.createElement("span");
+        arrow.setAttribute("aria-hidden", "true");
+        arrow.textContent = "→";
+        button.append(arrow);
+      }
+      group.append(button);
+    });
+    this.suggestions.replaceChildren(group);
     this.onAsk = onAsk;
   }
   handleAction(event) {
