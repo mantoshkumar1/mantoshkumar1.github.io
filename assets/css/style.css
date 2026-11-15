@@ -2183,6 +2183,7 @@ body.ask-mantosh-open {
 .ask-mantosh-message header > span { color: var(--primary); font-size: 0.72rem; font-weight: 700; letter-spacing: .15em; text-transform: uppercase; }
 .ask-mantosh-message.user header > span { color: #b9d6ff; }
 .ask-mantosh-message p { margin: 0; white-space: pre-wrap; }
+.ask-mantosh-message.user p { overflow-wrap: anywhere; }
 .ask-mantosh-answer { overflow-wrap: anywhere; }
 .ask-mantosh-answer > :first-child { margin-top: 0; }
 .ask-mantosh-answer > :last-child { margin-bottom: 0; }
