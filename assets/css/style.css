@@ -3720,6 +3720,19 @@ html[data-theme="contrast"] .ask-mantosh-send:focus-visible { background: #fff; 
   html:not([data-theme]) .appearance-control select { color-scheme: light; }
 }
 
+@media (forced-colors: none) {
+  html[data-theme="light"],
+  html[data-theme="soft"] {
+    scrollbar-color: var(--muted) var(--bg);
+  }
+}
+
+@media (prefers-color-scheme: light) and (forced-colors: none) {
+  html:not([data-theme]) {
+    scrollbar-color: var(--muted) var(--bg);
+  }
+}
+
 @media (max-width: 640px) {
   .appearance-control select {
     min-width: 3.35rem;
