@@ -3717,6 +3717,13 @@ html[data-theme="contrast"] .ask-mantosh-send:focus-visible { background: #fff; 
   html:not([data-theme]) .ask-mantosh-answer pre { background: #eef2f7; }
   html:not([data-theme]) .ask-mantosh-source::after { background: #fff; }
   html:not([data-theme]) .ask-mantosh-jump { background: #e8f1fd; }
+  @media (forced-colors: none) {
+    html:not([data-theme]) .ask-mantosh-error {
+      border-color: #be123c;
+      background: #fff1f2;
+      color: #881337;
+    }
+  }
   html:not([data-theme]) .appearance-control select { color-scheme: light; }
 }
 
