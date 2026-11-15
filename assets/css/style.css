@@ -3830,3 +3830,35 @@ html[data-theme="contrast"] .ask-mantosh-send:focus-visible { background: #fff; 
     grid-template-columns: 1fr;
   }
 }
+
+/* Keep the Minimize and Clear SVGs legible on light Ask Mantosh surfaces. */
+@media (forced-colors: none) {
+  html[data-theme="light"] #ask-mantosh-minimize svg,
+  html[data-theme="light"] #ask-mantosh-clear svg,
+  html[data-theme="soft"] #ask-mantosh-minimize svg,
+  html[data-theme="soft"] #ask-mantosh-clear svg {
+    color: var(--text);
+  }
+
+  html[data-theme="light"] #ask-mantosh-clear:hover svg,
+  html[data-theme="light"] #ask-mantosh-clear:focus-visible svg {
+    color: #881337;
+  }
+
+  html[data-theme="soft"] #ask-mantosh-clear:hover svg,
+  html[data-theme="soft"] #ask-mantosh-clear:focus-visible svg {
+    color: #7a271a;
+  }
+}
+
+@media (forced-colors: none) and (prefers-color-scheme: light) {
+  html:not([data-theme]) #ask-mantosh-minimize svg,
+  html:not([data-theme]) #ask-mantosh-clear svg {
+    color: var(--text);
+  }
+
+  html:not([data-theme]) #ask-mantosh-clear:hover svg,
+  html:not([data-theme]) #ask-mantosh-clear:focus-visible svg {
+    color: #881337;
+  }
+}
