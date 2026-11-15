@@ -3831,7 +3831,6 @@ html[data-theme="contrast"] .ask-mantosh-send:focus-visible { background: #fff; 
   }
 }
 
-
 @media (forced-colors: none) {
   html[data-theme="light"] .ask-mantosh-source:focus-visible,
   html[data-theme="soft"] .ask-mantosh-source:focus-visible {
