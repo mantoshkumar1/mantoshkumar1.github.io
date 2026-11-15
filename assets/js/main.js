@@ -64,7 +64,31 @@ class MarkdownService {
   renderBasic(markdown, target) {
     target.replaceChildren();
     let list = null;
-    for (const rawLine of markdown.split("\n")) {
+    const lines = markdown.split("\n");
+    for (let index = 0; index < lines.length; index += 1) {
+      const rawLine = lines[index];
+      const openingFence = /^ {0,3}(`{3,})[^`]*$/.exec(rawLine);
+      if (openingFence) {
+        let closingIndex = -1;
+        for (let candidateIndex = index + 1; candidateIndex < lines.length; candidateIndex += 1) {
+          const closingFence = /^ {0,3}(`+)[ \t]*$/.exec(lines[candidateIndex]);
+          if (closingFence && closingFence[1].length >= openingFence[1].length) {
+            closingIndex = candidateIndex;
+            break;
+          }
+        }
+        if (closingIndex >= 0) {
+          list = null;
+          const pre = document.createElement("pre");
+          const code = document.createElement("code");
+          const codeLines = lines.slice(index + 1, closingIndex);
+          code.textContent = codeLines.length ? `${codeLines.join("\n")}\n` : "";
+          pre.append(code);
+          target.append(pre);
+          index = closingIndex;
+          continue;
+        }
+      }
       const line = rawLine.trim();
       if (!line) { list = null; continue; }
       const heading = /^(#{1,4})\s+(.+)$/.exec(line);
