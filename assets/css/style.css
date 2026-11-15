@@ -3671,6 +3671,12 @@ html[data-theme="contrast"] .ask-mantosh-send,
 html[data-theme="contrast"] .ask-mantosh-send:hover,
 html[data-theme="contrast"] .ask-mantosh-send:focus-visible { background: #fff; color: #000; }
 
+@media (prefers-color-scheme: light) and (forced-colors: none) {
+  html:not([data-theme]) .navbar .appearance-control select:focus-visible {
+    outline-color: var(--primary);
+  }
+}
+
 @media (prefers-color-scheme: light) {
   html:not([data-theme]) {
     color-scheme: light;
