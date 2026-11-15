@@ -3484,6 +3484,13 @@ button,
   }
 }
 
+@media (forced-colors: none) {
+  html[data-theme="light"] .navbar .appearance-control select:focus-visible,
+  html[data-theme="soft"] .navbar .appearance-control select:focus-visible {
+    outline-color: var(--primary);
+  }
+}
+
 /* Visitor-controlled appearance: Auto follows the operating system. */
 .appearance-control {
   position: relative;
