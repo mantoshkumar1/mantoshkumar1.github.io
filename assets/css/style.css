@@ -3564,6 +3564,11 @@ html[data-theme="light"] .ask-mantosh-answer pre { background: #eef2f7; }
 html[data-theme="light"] .ask-mantosh-source::after { background: #fff; }
 html[data-theme="light"] .ask-mantosh-jump { background: #e8f1fd; }
 html[data-theme="light"] .ask-mantosh-error { border-color: #be123c; background: #fff1f2; color: #881337; }
+@media (forced-colors: none) {
+  html[data-theme="light"] .ask-mantosh-export:not([aria-disabled="true"]),
+  html[data-theme="soft"] .ask-mantosh-export:not([aria-disabled="true"]) { color: var(--text); }
+}
+
 html[data-theme="light"] .ask-mantosh-send { background: #075fbd; }
 html[data-theme="light"] .ask-mantosh-send:hover,
 html[data-theme="light"] .ask-mantosh-send:focus-visible { background: #054e9d; }
@@ -3670,6 +3675,10 @@ html[data-theme="contrast"] .ask-mantosh-error { border-color: #ff8080; backgrou
 html[data-theme="contrast"] .ask-mantosh-send,
 html[data-theme="contrast"] .ask-mantosh-send:hover,
 html[data-theme="contrast"] .ask-mantosh-send:focus-visible { background: #fff; color: #000; }
+
+@media (prefers-color-scheme: light) and (forced-colors: none) {
+  html:not([data-theme]) .ask-mantosh-export:not([aria-disabled="true"]) { color: var(--text); }
+}
 
 @media (prefers-color-scheme: light) {
   html:not([data-theme]) {
