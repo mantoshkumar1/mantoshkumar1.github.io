@@ -3297,6 +3297,19 @@ main.project-shell > .container > .section-block {
   }
 }
 
+@media (max-width: 640px) and (forced-colors: none) {
+  html[data-theme="light"] .navbar .mobile-nav-toggle:focus-visible,
+  html[data-theme="soft"] .navbar .mobile-nav-toggle:focus-visible {
+    outline-color: var(--primary);
+  }
+}
+
+@media (max-width: 640px) and (forced-colors: none) and (prefers-color-scheme: light) {
+  html:not([data-theme]) .navbar .mobile-nav-toggle:focus-visible {
+    outline-color: var(--primary);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after {
