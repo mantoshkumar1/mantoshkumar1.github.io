@@ -3735,6 +3735,12 @@ html[data-theme="contrast"] .ask-mantosh-send:focus-visible { background: #fff; 
   color: var(--primary);
 }
 
+@media (prefers-color-scheme: light) and (forced-colors: none) {
+  html:not([data-theme]) .ask-mantosh-error button[data-retry-id]:focus-visible {
+    outline-color: var(--primary);
+  }
+}
+
 .resume-resource-actions {
   display: flex;
   flex-wrap: wrap;
