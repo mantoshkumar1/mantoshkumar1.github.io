@@ -2915,6 +2915,11 @@ main.project-shell > .container > .section-block {
   margin: .85rem 0 0;
 }
 
+.reading-page pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
 .capability-section {
   padding-top: clamp(1.1rem, 2vw, 1.5rem);
 }
